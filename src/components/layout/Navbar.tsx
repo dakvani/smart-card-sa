@@ -36,9 +36,9 @@ export function Navbar() {
   const [isAdmin, setIsAdmin] = useState(false);
   
   const { scrollY } = useScroll();
-  const headerOpacity = useTransform(scrollY, [0, 80], [0.55, 0.98]);
+  const headerOpacity = useTransform(scrollY, [0, 60], [0.75, 0.96]);
   const headerScale = useTransform(scrollY, [0, 120], [1, 0.96]);
-  const headerBlur = useTransform(scrollY, [0, 80], [10, 24]);
+  const headerBlur = useTransform(scrollY, [0, 60], [18, 36]);
   const headerBackdrop = useTransform(headerBlur, (v) => `blur(${v}px) saturate(180%)`);
 
   // Check auth state and get user info
