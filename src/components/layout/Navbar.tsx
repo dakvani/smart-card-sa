@@ -39,7 +39,10 @@ export function Navbar() {
   const lastScrollY = useRef(0);
   
   const { scrollY } = useScroll();
-  const headerOpacity = useTransform(scrollY, [0, 50], [0.6, 0.95]);
+  const headerOpacity = useTransform(scrollY, [0, 80], [0.55, 0.98]);
+  const headerScale = useTransform(scrollY, [0, 120], [1, 0.96]);
+  const headerBlur = useTransform(scrollY, [0, 80], [10, 24]);
+  const headerBackdrop = useTransform(headerBlur, (v) => `blur(${v}px) saturate(180%)`);
 
   // Check auth state and get user info
   useEffect(() => {
@@ -138,18 +141,28 @@ export function Navbar() {
     <motion.header
       initial={{ y: -20, opacity: 0 }}
       animate={{ 
-        y: isVisible ? 0 : -100, 
+        y: isVisible ? 0 : -120, 
         opacity: isVisible ? 1 : 0 
       }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-6 z-50"
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      style={{ scale: headerScale }}
+      className="fixed top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-6 z-50 origin-top"
       role="banner"
     >
       <motion.div 
-        className={`absolute inset-0 glass-heavy rounded-2xl sm:rounded-full transition-shadow duration-300 ${
-          hasScrolled ? "shadow-[0_10px_40px_-10px_rgba(0,0,0,0.45)] ring-1 ring-border/40" : "shadow-[0_6px_24px_-12px_rgba(0,0,0,0.35)] ring-1 ring-border/20"
+        className={`absolute inset-0 rounded-2xl sm:rounded-full bg-background/60 border border-border/40 transition-all duration-500 ${
+          hasScrolled
+            ? "shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5),0_0_0_1px_hsl(var(--primary)/0.15),0_0_40px_-10px_hsl(var(--primary)/0.25)] border-primary/20"
+            : "shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)]"
         }`}
-        style={{ opacity: headerOpacity }}
+        style={{ opacity: headerOpacity, backdropFilter: headerBackdrop, WebkitBackdropFilter: headerBackdrop as any }}
+        aria-hidden="true"
+      />
+      {/* Animated shimmer line on scroll */}
+      <motion.div
+        className="absolute inset-x-8 -bottom-px h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full pointer-events-none"
+        animate={{ opacity: hasScrolled ? 1 : 0 }}
+        transition={{ duration: 0.4 }}
         aria-hidden="true"
       />
       <nav 
