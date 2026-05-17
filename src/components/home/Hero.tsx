@@ -41,59 +41,6 @@ export function Hero() {
         style={{ y: backgroundY }}
       />
 
-      {/* SVG water/ripple displacement filter */}
-      <svg className="absolute w-0 h-0" aria-hidden="true">
-        <defs>
-          <filter id="water-ripple">
-            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="3">
-              <animate attributeName="baseFrequency" dur="22s" values="0.012 0.02;0.02 0.014;0.012 0.02" repeatCount="indefinite" />
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" scale="22" />
-          </filter>
-        </defs>
-      </svg>
-
-      {/* Animated brand logo background (low opacity) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <motion.img
-          src="/favicon.png"
-          alt=""
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: [0.05, 0.10, 0.05],
-            rotate: [0, 360],
-            scale: [1, 1.08, 1],
-          }}
-          transition={{
-            opacity: { duration: 8, repeat: Infinity, ease: "easeInOut" },
-            rotate: { duration: 90, repeat: Infinity, ease: "linear" },
-            scale: { duration: 14, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] max-w-[720px] h-auto blur-[2px] mix-blend-screen"
-          style={{ filter: "url(#water-ripple)" }}
-        />
-        <motion.img
-          src="/favicon.png"
-          alt=""
-          animate={{ opacity: [0.04, 0.08, 0.04], rotate: [0, -360] }}
-          transition={{
-            opacity: { duration: 10, repeat: Infinity, ease: "easeInOut" },
-            rotate: { duration: 140, repeat: Infinity, ease: "linear" },
-          }}
-          className="absolute top-[10%] right-[8%] w-40 sm:w-56 blur-[3px] mix-blend-screen"
-        />
-        <motion.img
-          src="/favicon.png"
-          alt=""
-          animate={{ opacity: [0.03, 0.07, 0.03], y: [0, -20, 0] }}
-          transition={{
-            opacity: { duration: 9, repeat: Infinity, ease: "easeInOut" },
-            y: { duration: 11, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="absolute bottom-[12%] left-[6%] w-32 sm:w-48 blur-[3px] mix-blend-screen"
-        />
-      </div>
-      
       {/* Faded blurry orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
