@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { Menu, X, LayoutDashboard, Home, Settings, Package, LogOut, ChevronDown, Shield } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -30,13 +30,10 @@ export function Navbar() {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  
-  const lastScrollY = useRef(0);
   
   const { scrollY } = useScroll();
   const headerOpacity = useTransform(scrollY, [0, 80], [0.55, 0.98]);
@@ -112,8 +109,6 @@ export function Navbar() {
   // Track scroll position for styling only — header stays visible
   useMotionValueEvent(scrollY, "change", (currentScrollY) => {
     setHasScrolled(currentScrollY > 20);
-    setIsVisible(true);
-    lastScrollY.current = currentScrollY;
   });
 
   // Close mobile menu on route change
@@ -124,13 +119,10 @@ export function Navbar() {
   return (
     <motion.header
       initial={{ y: -20, opacity: 0 }}
-      animate={{ 
-        y: isVisible ? 0 : -120, 
-        opacity: isVisible ? 1 : 0 
-      }}
+      animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       style={{ scale: headerScale }}
-      className="fixed top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-6 z-50 origin-top"
+      className="sticky top-3 mx-3 sm:top-4 sm:mx-6 z-50 origin-top"
       role="banner"
     >
       <motion.div 
