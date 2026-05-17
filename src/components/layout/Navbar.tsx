@@ -38,6 +38,7 @@ export function Navbar() {
   const { scrollY } = useScroll();
   const headerOpacity = useTransform(scrollY, [0, 60], [0.75, 0.96]);
   const headerScale = useTransform(scrollY, [0, 120], [1, 0.96]);
+  const headerY = useTransform(scrollY, [0, 120], [0, 4]);
   const headerBlur = useTransform(scrollY, [0, 60], [18, 36]);
   const headerBackdrop = useTransform(headerBlur, (v) => `blur(${v}px) saturate(180%)`);
 
@@ -118,11 +119,11 @@ export function Navbar() {
 
   return (
     <motion.header
-      initial={{ y: -20, opacity: 0 }}
+      initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      style={{ scale: headerScale }}
-      className="sticky top-3 mx-3 sm:top-4 sm:mx-6 z-50 origin-top"
+      transition={{ type: "spring", stiffness: 120, damping: 18, mass: 0.8 }}
+      style={{ scale: headerScale, y: headerY }}
+      className="fixed top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-6 z-50 origin-top will-change-transform"
       role="banner"
     >
       <motion.div 
