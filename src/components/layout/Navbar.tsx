@@ -317,7 +317,7 @@ export function Navbar() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden glass-heavy border-b border-border/30"
+          className="md:hidden mt-2 glass-heavy rounded-2xl ring-1 ring-border/30 shadow-2xl overflow-hidden"
           role="menu"
           aria-label="Mobile navigation menu"
         >
