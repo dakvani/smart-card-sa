@@ -34,12 +34,65 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24">
       {/* Dark gradient background with blur */}
       <motion.div 
         className="absolute inset-0 gradient-dark"
         style={{ y: backgroundY }}
       />
+
+      {/* SVG water/ripple displacement filter */}
+      <svg className="absolute w-0 h-0" aria-hidden="true">
+        <defs>
+          <filter id="water-ripple">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="3">
+              <animate attributeName="baseFrequency" dur="22s" values="0.012 0.02;0.02 0.014;0.012 0.02" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" scale="22" />
+          </filter>
+        </defs>
+      </svg>
+
+      {/* Animated brand logo background (low opacity) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <motion.img
+          src="/favicon.png"
+          alt=""
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0.05, 0.10, 0.05],
+            rotate: [0, 360],
+            scale: [1, 1.08, 1],
+          }}
+          transition={{
+            opacity: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+            rotate: { duration: 90, repeat: Infinity, ease: "linear" },
+            scale: { duration: 14, repeat: Infinity, ease: "easeInOut" },
+          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] max-w-[720px] h-auto blur-[2px] mix-blend-screen"
+          style={{ filter: "url(#water-ripple)" }}
+        />
+        <motion.img
+          src="/favicon.png"
+          alt=""
+          animate={{ opacity: [0.04, 0.08, 0.04], rotate: [0, -360] }}
+          transition={{
+            opacity: { duration: 10, repeat: Infinity, ease: "easeInOut" },
+            rotate: { duration: 140, repeat: Infinity, ease: "linear" },
+          }}
+          className="absolute top-[10%] right-[8%] w-40 sm:w-56 blur-[3px] mix-blend-screen"
+        />
+        <motion.img
+          src="/favicon.png"
+          alt=""
+          animate={{ opacity: [0.03, 0.07, 0.03], y: [0, -20, 0] }}
+          transition={{
+            opacity: { duration: 9, repeat: Infinity, ease: "easeInOut" },
+            y: { duration: 11, repeat: Infinity, ease: "easeInOut" },
+          }}
+          className="absolute bottom-[12%] left-[6%] w-32 sm:w-48 blur-[3px] mix-blend-screen"
+        />
+      </div>
       
       {/* Faded blurry orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -58,6 +111,34 @@ export function Hero() {
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-muted/10 blur-[150px]"
         />
+
+        {/* Water wave layers */}
+        <svg className="absolute bottom-0 left-0 w-full h-48 opacity-40" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
+          <motion.path
+            fill="hsl(var(--primary) / 0.18)"
+            initial={{ d: "M0,120 C240,180 480,60 720,110 C960,160 1200,80 1440,120 L1440,200 L0,200 Z" }}
+            animate={{
+              d: [
+                "M0,120 C240,180 480,60 720,110 C960,160 1200,80 1440,120 L1440,200 L0,200 Z",
+                "M0,100 C240,60 480,170 720,130 C960,90 1200,170 1440,110 L1440,200 L0,200 Z",
+                "M0,120 C240,180 480,60 720,110 C960,160 1200,80 1440,120 L1440,200 L0,200 Z",
+              ],
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.path
+            fill="hsl(var(--accent) / 0.14)"
+            initial={{ d: "M0,140 C320,90 640,180 960,130 C1200,95 1320,150 1440,140 L1440,200 L0,200 Z" }}
+            animate={{
+              d: [
+                "M0,140 C320,90 640,180 960,130 C1200,95 1320,150 1440,140 L1440,200 L0,200 Z",
+                "M0,150 C320,180 640,80 960,140 C1200,180 1320,100 1440,150 L1440,200 L0,200 Z",
+                "M0,140 C320,90 640,180 960,130 C1200,95 1320,150 1440,140 L1440,200 L0,200 Z",
+              ],
+            }}
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </svg>
       </div>
 
       <motion.div 
