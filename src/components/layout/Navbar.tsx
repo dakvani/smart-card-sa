@@ -119,11 +119,11 @@ export function Navbar() {
 
   return (
     <motion.header
-      initial={{ y: -20, opacity: 0 }}
+      initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      style={{ scale: headerScale }}
-      className="sticky top-3 mx-3 sm:top-4 sm:mx-6 z-50 origin-top"
+      transition={{ type: "spring", stiffness: 120, damping: 18, mass: 0.8 }}
+      style={{ scale: headerScale, y: headerY }}
+      className="fixed top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-6 z-50 origin-top will-change-transform"
       role="banner"
     >
       <motion.div 
