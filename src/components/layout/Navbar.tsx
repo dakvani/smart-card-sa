@@ -142,20 +142,18 @@ export function Navbar() {
         opacity: isVisible ? 1 : 0 
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        hasScrolled 
-          ? "border-b border-border/30" 
-          : "border-b border-transparent"
-      }`}
+      className="fixed top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-6 z-50"
       role="banner"
     >
       <motion.div 
-        className="absolute inset-0 glass-heavy"
+        className={`absolute inset-0 glass-heavy rounded-2xl sm:rounded-full transition-shadow duration-300 ${
+          hasScrolled ? "shadow-[0_10px_40px_-10px_rgba(0,0,0,0.45)] ring-1 ring-border/40" : "shadow-[0_6px_24px_-12px_rgba(0,0,0,0.35)] ring-1 ring-border/20"
+        }`}
         style={{ opacity: headerOpacity }}
         aria-hidden="true"
       />
       <nav 
-        className="container mx-auto px-4 h-16 flex items-center justify-between relative z-10"
+        className="container mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between relative z-10"
         role="navigation"
         aria-label="Main navigation"
       >
