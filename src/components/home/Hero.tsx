@@ -41,52 +41,22 @@ export function Hero() {
         style={{ y: backgroundY }}
       />
 
-      {/* Faded blurry orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Subtle blurred orbs */}
+      <motion.div
+        className="absolute inset-0 overflow-hidden pointer-events-none"
+        style={{ opacity: useTransform(scrollYProgress, [0, 0.3], [1, 0.35]) }}
+      >
         <motion.div
-          animate={{ y: [-30, 30, -30], rotate: [0, 8, 0], scale: [1, 1.1, 1] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-[5%] w-96 h-96 rounded-full bg-primary/10 blur-[100px]"
+          animate={{ y: [-12, 12, -12], scale: [1, 1.04, 1] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/4 left-[5%] w-96 h-96 rounded-full bg-primary/[0.06] blur-[120px]"
         />
         <motion.div
-          animate={{ y: [30, -30, 30], rotate: [0, -8, 0], scale: [1.1, 1, 1.1] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-1/3 right-[5%] w-[500px] h-[500px] rounded-full bg-accent/15 blur-[120px]"
+          animate={{ y: [12, -12, 12], scale: [1.04, 1, 1.04] }}
+          transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-1/3 right-[5%] w-[500px] h-[500px] rounded-full bg-accent/[0.08] blur-[140px]"
         />
-        <motion.div
-          animate={{ x: [-20, 20, -20], y: [20, -20, 20] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-muted/10 blur-[150px]"
-        />
-
-        {/* Water wave layers */}
-        <svg className="absolute bottom-0 left-0 w-full h-48 opacity-40" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
-          <motion.path
-            fill="hsl(var(--primary) / 0.18)"
-            initial={{ d: "M0,120 C240,180 480,60 720,110 C960,160 1200,80 1440,120 L1440,200 L0,200 Z" }}
-            animate={{
-              d: [
-                "M0,120 C240,180 480,60 720,110 C960,160 1200,80 1440,120 L1440,200 L0,200 Z",
-                "M0,100 C240,60 480,170 720,130 C960,90 1200,170 1440,110 L1440,200 L0,200 Z",
-                "M0,120 C240,180 480,60 720,110 C960,160 1200,80 1440,120 L1440,200 L0,200 Z",
-              ],
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.path
-            fill="hsl(var(--accent) / 0.14)"
-            initial={{ d: "M0,140 C320,90 640,180 960,130 C1200,95 1320,150 1440,140 L1440,200 L0,200 Z" }}
-            animate={{
-              d: [
-                "M0,140 C320,90 640,180 960,130 C1200,95 1320,150 1440,140 L1440,200 L0,200 Z",
-                "M0,150 C320,180 640,80 960,140 C1200,180 1320,100 1440,150 L1440,200 L0,200 Z",
-                "M0,140 C320,90 640,180 960,130 C1200,95 1320,150 1440,140 L1440,200 L0,200 Z",
-              ],
-            }}
-            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </svg>
-      </div>
+      </motion.div>
 
       <motion.div 
         className="container mx-auto px-4 relative z-10"
