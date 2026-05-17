@@ -109,26 +109,10 @@ export function Navbar() {
     return userEmail.charAt(0).toUpperCase();
   };
 
-  // Handle scroll direction for show/hide
+  // Track scroll position for styling only — header stays visible
   useMotionValueEvent(scrollY, "change", (currentScrollY) => {
-    // Always show at top
-    if (currentScrollY < 50) {
-      setIsVisible(true);
-      setHasScrolled(false);
-    } else {
-      setHasScrolled(true);
-      // Show when scrolling up (with threshold for sensitivity)
-      const scrollDiff = currentScrollY - lastScrollY.current;
-      
-      if (scrollDiff < -5) {
-        // Scrolling up
-        setIsVisible(true);
-      } else if (scrollDiff > 10 && currentScrollY > 100) {
-        // Scrolling down significantly
-        setIsVisible(false);
-      }
-    }
-    
+    setHasScrolled(currentScrollY > 20);
+    setIsVisible(true);
     lastScrollY.current = currentScrollY;
   });
 
