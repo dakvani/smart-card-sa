@@ -126,10 +126,10 @@ export function Navbar() {
       role="banner"
     >
       <motion.div 
-        className={`absolute inset-0 rounded-2xl sm:rounded-full bg-background/60 border border-border/40 transition-all duration-500 ${
+        className={`absolute inset-0 rounded-2xl sm:rounded-full bg-background/80 border border-border/50 transition-all duration-500 ${
           hasScrolled
-            ? "shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5),0_0_0_1px_hsl(var(--primary)/0.15),0_0_40px_-10px_hsl(var(--primary)/0.25)] border-primary/20"
-            : "shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)]"
+            ? "shadow-[0_24px_80px_-16px_rgba(0,0,0,0.6),0_0_0_1px_hsl(var(--primary)/0.25),0_0_60px_-12px_hsl(var(--primary)/0.3)] border-primary/30"
+            : "shadow-[0_12px_40px_-10px_rgba(0,0,0,0.45)]"
         }`}
         style={{ opacity: headerOpacity, backdropFilter: headerBackdrop, WebkitBackdropFilter: headerBackdrop as any }}
         aria-hidden="true"
