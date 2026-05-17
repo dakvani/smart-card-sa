@@ -290,8 +290,8 @@ export function AdminTableViewer() {
     setSaving(true);
 
     try {
-      const { error } = await supabase
-        .from(selectedTable)
+      const { error } = await (supabase
+        .from(selectedTable) as any)
         .update(formData)
         .eq("id", editingRow.id as string);
 

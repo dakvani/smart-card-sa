@@ -224,7 +224,7 @@ export default function Dashboard() {
 
       const { error } = await supabase
         .from("profiles")
-        .update(dbUpdates)
+        .update(dbUpdates as never)
         .eq("id", profile.id);
 
       if (error) throw error;
