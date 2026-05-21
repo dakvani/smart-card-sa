@@ -36,8 +36,7 @@ export function AnimatedRoutes() {
       <BackToTopButton />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<PageTransition><NFCProducts /></PageTransition>} />
-          <Route path="/welcome" element={<PageTransition><Index /></PageTransition>} />
+          <Route path="/" element={<PageTransition><Index /></PageTransition>} />
           <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
           <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
           <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
