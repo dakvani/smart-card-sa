@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Sparkles, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { SubmitButton } from "@/components/ui/form-feedback";
 import { PhoneMockup } from "./PhoneMockup";
+import { CircuitRootBackground } from "./CircuitRootBackground";
 import { useUsernameCheck } from "@/hooks/use-username-check";
 
 export function Hero() {
@@ -40,6 +41,14 @@ export function Hero() {
         className="absolute inset-0 gradient-dark"
         style={{ y: backgroundY }}
       />
+
+      {/* Circuit-root animated brand background */}
+      <motion.div
+        className="absolute inset-0"
+        style={{ opacity: useTransform(scrollYProgress, [0, 0.4], [1, 0.25]), y: backgroundY }}
+      >
+        <CircuitRootBackground />
+      </motion.div>
 
       {/* Subtle blurred orbs */}
       <motion.div
