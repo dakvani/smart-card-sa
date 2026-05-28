@@ -1,11 +1,20 @@
+import smartcardNfcCardPhoto from "@/assets/products/smartcard-nfc-card.jpg";
+import smartcardPhoneStickerPhoto from "@/assets/products/smartcard-phone-sticker.jpg";
+import smartcardNfcStickerPhoto from "@/assets/products/smartcard-nfc-sticker.jpg";
+import smartcardKeychainPhoto from "@/assets/products/smartcard-keychain.jpg";
+import smartcardSocialTagPhoto from "@/assets/products/smartcard-social-tag.jpg";
+import smartcardReviewCardPhoto from "@/assets/products/smartcard-review-card.jpg";
+
 export interface NFCProduct {
   id: string;
   name: string;
   description: string;
   basePrice: number;
   image: string;
+  photo?: string;
   category: 'card' | 'sticker' | 'band' | 'keychain' | 'review';
 }
+
 
 export interface SideCustomization {
   backgroundColor: string;
