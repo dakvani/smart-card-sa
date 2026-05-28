@@ -107,6 +107,7 @@ export const nfcProducts: NFCProduct[] = [
     basePrice: 24.99,
     image: 'from-violet-500 to-purple-600',
     category: 'card',
+    photo: smartcardNfcCardPhoto,
   },
   {
     id: 'smartcard-phone-sticker',
@@ -115,6 +116,7 @@ export const nfcProducts: NFCProduct[] = [
     basePrice: 12.99,
     image: 'from-cyan-500 to-blue-600',
     category: 'sticker',
+    photo: smartcardPhoneStickerPhoto,
   },
   {
     id: 'smartcard-nfc-sticker',
@@ -123,6 +125,7 @@ export const nfcProducts: NFCProduct[] = [
     basePrice: 9.99,
     image: 'from-teal-500 to-cyan-600',
     category: 'sticker',
+    photo: smartcardNfcStickerPhoto,
   },
   {
     id: 'smartcard-keychain',
@@ -131,6 +134,7 @@ export const nfcProducts: NFCProduct[] = [
     basePrice: 14.99,
     image: 'from-orange-500 to-amber-600',
     category: 'keychain',
+    photo: smartcardKeychainPhoto,
   },
   {
     id: 'smartcard-social-tag',
@@ -139,6 +143,7 @@ export const nfcProducts: NFCProduct[] = [
     basePrice: 16.99,
     image: 'from-green-500 to-emerald-600',
     category: 'band',
+    photo: smartcardSocialTagPhoto,
   },
   {
     id: 'smartcard-review-card',
@@ -147,6 +152,7 @@ export const nfcProducts: NFCProduct[] = [
     basePrice: 29.99,
     image: 'from-pink-500 to-rose-600',
     category: 'review',
+    photo: smartcardReviewCardPhoto,
   },
 ];
 

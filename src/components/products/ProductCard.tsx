@@ -63,8 +63,20 @@ export function ProductCard({ product, isSelected, onSelect }: ProductCardProps)
             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
           />
           
-          {/* Product Animation */}
-          <div className="relative z-10 w-full h-full">
+          {/* Product Photo */}
+          {product.photo && (
+            <img
+              src={product.photo}
+              alt={product.name}
+              loading="lazy"
+              width={1024}
+              height={768}
+              className="absolute inset-0 w-full h-full object-cover z-[5] transition-transform duration-500 group-hover:scale-105"
+            />
+          )}
+
+          {/* Product Animation overlay */}
+          <div className="relative z-10 w-full h-full mix-blend-overlay opacity-40">
             <AnimationComponent />
           </div>
           
