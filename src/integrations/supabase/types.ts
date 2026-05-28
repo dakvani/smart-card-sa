@@ -216,6 +216,54 @@ export type Database = {
           },
         ]
       }
+      nfc_catalog_products: {
+        Row: {
+          base_price: number
+          category: string
+          created_at: string
+          description: string
+          gradient: string
+          id: string
+          is_active: boolean
+          name: string
+          photo_url: string | null
+          position: number
+          slug: string
+          stock_quantity: number
+          updated_at: string
+        }
+        Insert: {
+          base_price?: number
+          category?: string
+          created_at?: string
+          description?: string
+          gradient?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          photo_url?: string | null
+          position?: number
+          slug: string
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          base_price?: number
+          category?: string
+          created_at?: string
+          description?: string
+          gradient?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          photo_url?: string | null
+          position?: number
+          slug?: string
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       nfc_orders: {
         Row: {
           created_at: string

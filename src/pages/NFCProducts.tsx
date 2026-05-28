@@ -9,7 +9,7 @@ import { LivePreview } from "@/components/products/LivePreview";
 import { CheckoutSummary } from "@/components/products/CheckoutSummary";
 import { DraftManager } from "@/components/products/DraftManager";
 import { CostComparisonCalculator } from "@/components/products/CostComparisonCalculator";
-import { nfcProducts, defaultCustomization, CartItem, DesignCustomization, NFCProduct } from "@/components/products/types";
+import { nfcProducts as fallbackProducts, defaultCustomization, CartItem, DesignCustomization, NFCProduct } from "@/components/products/types";
 import { ArrowRight, ShoppingCart, ArrowLeft, Wifi, History } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,6 +26,33 @@ export default function NFCProducts() {
   const [customization, setCustomization] = useState<DesignCustomization>(defaultCustomization);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const [products, setProducts] = useState<NFCProduct[]>(fallbackProducts);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      const { data, error } = await supabase
+        .from("nfc_catalog_products")
+        .select("*")
+        .eq("is_active", true)
+        .order("position", { ascending: true });
+      if (!error && data && data.length > 0) {
+        const fallbackBySlug = new Map(fallbackProducts.map((p) => [p.id, p]));
+        const mapped: NFCProduct[] = data.map((r) => ({
+          id: r.slug,
+          name: r.name,
+          description: r.description,
+          basePrice: Number(r.base_price),
+          image: r.gradient,
+          photo: r.photo_url || fallbackBySlug.get(r.slug)?.photo,
+          category: (r.category as NFCProduct["category"]) || "card",
+        }));
+        setProducts(mapped);
+      }
+      setLoadingProducts(false);
+    };
+    load();
+  }, []);
 
   useEffect(() => {
     // Get initial user
@@ -319,7 +346,7 @@ export default function NFCProducts() {
                 transition={{ duration: 0.3 }}
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mb-12">
-                  {nfcProducts.map((product, index) => (
+                  {products.map((product, index) => (
                     <motion.div
                       key={product.id}
                       initial={{ opacity: 0, y: 30 }}
