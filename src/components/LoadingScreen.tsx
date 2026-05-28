@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
 
 interface LoadingScreenProps {
   onComplete?: () => void;
