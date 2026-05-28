@@ -346,6 +346,8 @@ export default function NFCProducts() {
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </div>
+
+                <CostComparisonCalculator />
               </motion.div>
             )}
 
