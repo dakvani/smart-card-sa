@@ -153,16 +153,15 @@ export function Navbar() {
           className="flex items-center gap-2 group"
           aria-label="SmartCard - Go to homepage"
         >
-          <motion.img
-            src="/favicon.png"
-            alt=""
+          <motion.div
             whileHover={{ scale: 1.08, rotate: -4 }}
             transition={{ type: "spring", stiffness: 300 }}
-            className="w-9 h-9 object-contain drop-shadow-[0_2px_8px_rgba(184,115,51,0.45)]"
-            aria-hidden="true"
-          />
+            className="text-primary"
+          >
+            <SmartCardLogo className="w-7 h-7" />
+          </motion.div>
           <span className="font-bold text-xl tracking-tight text-foreground/90 group-hover:text-foreground transition-colors">
-            Smart<span className="text-[hsl(20_70%_55%)]">Card</span>
+            Smart<span className="text-primary">Card</span>
           </span>
         </Link>
 
