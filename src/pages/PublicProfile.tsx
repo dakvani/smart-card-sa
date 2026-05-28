@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { Loader2, Star } from "lucide-react";
+import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
 import { SocialIcons } from "@/components/profile/SocialIcons";
 import { EmailSignup } from "@/components/profile/EmailSignup";
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
@@ -388,7 +389,7 @@ export default function PublicProfile() {
             to="/" 
             className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-primary-foreground transition-colors text-sm"
           >
-            <img src="/favicon.png" alt="" className="w-5 h-5 rounded" />
+            <SmartCardLogo className="w-4 h-4" />
             Made with SmartCard
           </Link>
         </motion.div>
