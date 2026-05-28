@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
 
 const footerLinks = {
   Product: [
