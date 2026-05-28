@@ -389,7 +389,7 @@ export default function PublicProfile() {
             to="/" 
             className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-primary-foreground transition-colors text-sm"
           >
-            <img src="/favicon.png" alt="" className="w-5 h-5 rounded" />
+            <SmartCardLogo className="w-4 h-4" />
             Made with SmartCard
           </Link>
         </motion.div>
