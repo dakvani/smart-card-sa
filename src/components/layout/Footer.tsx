@@ -35,14 +35,9 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-2.5 mb-4 group" aria-label="SmartCard - Go to homepage">
-              <img
-                src="/favicon.png"
-                alt=""
-                className="w-9 h-9 object-contain drop-shadow-[0_2px_8px_rgba(184,115,51,0.4)] transition-transform group-hover:scale-110 group-hover:-rotate-3"
-                aria-hidden="true"
-              />
+              <SmartCardLogo className="w-7 h-7 text-primary transition-transform group-hover:scale-110 group-hover:-rotate-3" />
               <span className="font-bold text-xl tracking-tight">
-                Smart<span className="text-[hsl(20_70%_55%)]">Card</span>
+                Smart<span className="text-primary">Card</span>
               </span>
             </Link>
             <p className="text-sm text-muted-foreground">
