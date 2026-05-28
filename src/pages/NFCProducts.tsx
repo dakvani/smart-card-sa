@@ -8,6 +8,7 @@ import { DesignCustomizer } from "@/components/products/DesignCustomizer";
 import { LivePreview } from "@/components/products/LivePreview";
 import { CheckoutSummary } from "@/components/products/CheckoutSummary";
 import { DraftManager } from "@/components/products/DraftManager";
+import { CostComparisonCalculator } from "@/components/products/CostComparisonCalculator";
 import { nfcProducts, defaultCustomization, CartItem, DesignCustomization, NFCProduct } from "@/components/products/types";
 import { ArrowRight, ShoppingCart, ArrowLeft, Wifi, History } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
