@@ -11,9 +11,8 @@ import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import ResetPassword from "@/pages/ResetPassword";
 import AdminLogin from "@/pages/AdminLogin";
-import Pricing from "@/pages/Pricing";
-import Templates from "@/pages/Templates";
-import Products from "@/pages/Products";
+import SmartLinkBio from "@/pages/SmartLinkBio";
+import Contact from "@/pages/Contact";
 import NFCProducts from "@/pages/NFCProducts";
 import OrderHistory from "@/pages/OrderHistory";
 import AdminOrders from "@/pages/AdminOrders";
@@ -42,9 +41,12 @@ export function AnimatedRoutes() {
           <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
           <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
           <Route path="/admin-login" element={<PageTransition><AdminLogin /></PageTransition>} />
-          <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
-          <Route path="/templates" element={<PageTransition><Templates /></PageTransition>} />
-          <Route path="/products" element={<PageTransition><Products /></PageTransition>} />
+          <Route path="/smartlink-bio" element={<PageTransition><SmartLinkBio /></PageTransition>} />
+          <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+          {/* Legacy routes redirect into the merged SmartLink Bio page */}
+          <Route path="/pricing" element={<Navigate to="/smartlink-bio#pricing" replace />} />
+          <Route path="/templates" element={<Navigate to="/smartlink-bio#templates" replace />} />
+          <Route path="/products" element={<Navigate to="/smartlink-bio#features" replace />} />
           <Route path="/nfc-products" element={<PageTransition><NFCProducts /></PageTransition>} />
           <Route path="/order-history" element={<PageTransition><OrderHistory /></PageTransition>} />
           <Route path="/admin" element={<PageTransition><AdminDashboard /></PageTransition>} />

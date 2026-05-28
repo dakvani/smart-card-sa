@@ -18,11 +18,10 @@ import { toast } from "sonner";
 import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
 
 const navLinks = [
-  { name: "Templates", href: "/templates" },
-  { name: "Products", href: "/products" },
-  { name: "NFC Products", href: "/nfc-products" },
+  { name: "SmartCard Products", href: "/nfc-products" },
+  { name: "SmartLink Bio", href: "/smartlink-bio" },
   { name: "Marketplace", href: "/marketplace" },
-  { name: "Pricing", href: "/pricing" },
+  { name: "Contact Us", href: "/contact" },
   { name: "Learn", href: "/learn" },
 ];
 
