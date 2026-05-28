@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { Loader2, Star } from "lucide-react";
+import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
 import { SocialIcons } from "@/components/profile/SocialIcons";
 import { EmailSignup } from "@/components/profile/EmailSignup";
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
