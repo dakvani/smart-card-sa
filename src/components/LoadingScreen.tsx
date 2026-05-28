@@ -54,19 +54,13 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
         />
         
         {/* Icon */}
-        <motion.img
-          src="/favicon.png"
-          alt="SmartCard"
-          className="w-24 h-24 rounded-2xl relative z-10"
-          animate={{ 
-            rotate: [0, 5, -5, 0],
-          }}
-          transition={{ 
-            duration: 2, 
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
+        <motion.div
+          className="w-24 h-24 rounded-2xl relative z-10 flex items-center justify-center bg-background/60 backdrop-blur border border-border text-primary"
+          animate={{ rotate: [0, 5, -5, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <SmartCardLogo className="w-14 h-14" />
+        </motion.div>
         
         {/* Pulse rings */}
         {[0, 1, 2].map((i) => (
