@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminTableViewer } from "@/components/admin/AdminTableViewer";
 import { AdminUserManager } from "@/components/admin/AdminUserManager";
 import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
+import { AdminProductManager } from "@/components/admin/AdminProductManager";
 import { useAdminOrderNotifications } from "@/hooks/use-admin-order-notifications";
 import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
 import { format } from "date-fns";
@@ -337,10 +338,14 @@ export default function AdminDashboard() {
             transition={{ delay: 0.2 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+              <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid">
                 <TabsTrigger value="overview" className="gap-2">
                   <BarChart3 className="w-4 h-4" />
                   <span className="hidden sm:inline">Overview</span>
+                </TabsTrigger>
+                <TabsTrigger value="products" className="gap-2">
+                  <ShoppingBag className="w-4 h-4" />
+                  <span className="hidden sm:inline">Products</span>
                 </TabsTrigger>
                 <TabsTrigger value="orders" className="gap-2">
                   <Package className="w-4 h-4" />
@@ -503,6 +508,11 @@ export default function AdminDashboard() {
                     </div>
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              {/* Products Tab */}
+              <TabsContent value="products">
+                <AdminProductManager />
               </TabsContent>
 
               {/* Orders Tab - Inline */}
