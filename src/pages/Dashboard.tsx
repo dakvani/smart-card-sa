@@ -19,7 +19,7 @@ import {
   verticalListSortingStrategy 
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder } from "lucide-react";
+import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder, Eye, MousePointerClick, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import type { User, Session } from "@supabase/supabase-js";
 import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
@@ -408,61 +408,92 @@ export default function Dashboard() {
       : profile.custom_bg_color,
   } : undefined;
 
+  const visibleLinks = links.filter(l => l.visible).length;
+
   return (
-    <div className="min-h-screen bg-secondary/30">
+    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
       {/* Header */}
-      <header className="bg-background border-b border-border sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">S</span>
+      <header className="bg-background/70 backdrop-blur-xl border-b border-border/60 sticky top-0 z-50">
+        <div className="container mx-auto px-4 h-14 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-7 h-7 rounded-md gradient-primary flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform">
+              <span className="text-primary-foreground font-bold text-xs">S</span>
             </div>
-            <span className="font-bold text-xl">SmartCard</span>
+            <span className="font-bold text-base tracking-tight">SmartCard</span>
+            <span className="hidden md:inline-flex items-center gap-1 ml-2 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider">
+              <Sparkles className="w-2.5 h-2.5" /> Pro
+            </span>
           </Link>
-          <div className="flex items-center gap-3">
-            <Button variant="gradient" size="sm" onClick={copyProfileUrl}>
-              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-              <span className="hidden sm:inline">{copied ? "Copied!" : "Share"}</span>
+          <div className="flex items-center gap-2">
+            <Button variant="gradient" size="sm" onClick={copyProfileUrl} className="h-8 text-xs px-3">
+              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+              <span className="hidden sm:inline">{copied ? "Copied" : "Share"}</span>
             </Button>
             <QRCodeGenerator username={profile.username} />
             <Link to={`/${profile.username}`} target="_blank">
-              <Button variant="outline" size="sm">
-                <ExternalLink className="w-4 h-4" />
+              <Button variant="outline" size="sm" className="h-8 text-xs px-3">
+                <ExternalLink className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">View</span>
               </Button>
             </Link>
-            <Button variant="ghost" size="icon" onClick={handleLogout}>
-              <LogOut className="w-4 h-4" />
+            <Button variant="ghost" size="icon" onClick={handleLogout} className="h-8 w-8">
+              <LogOut className="w-3.5 h-3.5" />
             </Button>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Profile Share Card - Prominent at top */}
+      <div className="container mx-auto px-4 py-5">
+        {/* Compact Stats Bar */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-4">
+          {[
+            { label: "Profile Views", value: analytics.views, icon: Eye, color: "text-blue-400", bg: "from-blue-500/10 to-blue-500/0" },
+            { label: "Total Clicks", value: analytics.clicks, icon: MousePointerClick, color: "text-pink-400", bg: "from-pink-500/10 to-pink-500/0" },
+            { label: "Active Links", value: visibleLinks, icon: Link2, color: "text-emerald-400", bg: "from-emerald-500/10 to-emerald-500/0" },
+            { label: "Groups", value: groups.length, icon: Folder, color: "text-amber-400", bg: "from-amber-500/10 to-amber-500/0" },
+          ].map((stat) => (
+            <motion.div
+              key={stat.label}
+              whileHover={{ y: -2 }}
+              className={`relative overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br ${stat.bg} bg-background/40 backdrop-blur-sm p-3`}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{stat.label}</p>
+                  <p className="text-xl font-bold mt-0.5 tabular-nums">{stat.value.toLocaleString()}</p>
+                </div>
+                <div className={`w-8 h-8 rounded-lg bg-background/60 border border-border/40 flex items-center justify-center ${stat.color}`}>
+                  <stat.icon className="w-4 h-4" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Profile Share Card */}
         <ProfileShareCard username={profile.username} />
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-5 mt-4">
           {/* Editor Panel */}
           <div className="flex-1 lg:w-[60%]">
             {/* Tabs */}
-            <div className="flex gap-1 p-1 bg-background rounded-xl border border-border mb-6">
+            <div className="flex gap-1 p-1 bg-background/60 backdrop-blur-sm rounded-lg border border-border/60 mb-4">
               {tabs.map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all ${
-                    activeTab === tab.id ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md text-xs font-semibold transition-all ${
+                    activeTab === tab.id ? "bg-primary text-primary-foreground shadow-sm" : "hover:bg-secondary text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <tab.icon className="w-4 h-4" />
+                  <tab.icon className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               ))}
             </div>
 
             {/* Tab Content */}
-            <div className="bg-background rounded-2xl border border-border p-6">
+            <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 p-4 shadow-sm">
               {activeTab === "links" && (
                 <div className="space-y-6">
                   {/* Group Manager */}
@@ -714,47 +745,52 @@ export default function Dashboard() {
           </div>
 
           {/* Preview Panel */}
-          <div className="lg:w-[40%] lg:sticky lg:top-24 lg:h-fit">
-            <div className="bg-background rounded-2xl border border-border p-4">
-              <p className="text-sm text-muted-foreground text-center mb-4">Live Preview</p>
+          <div className="lg:w-[40%] lg:sticky lg:top-20 lg:h-fit">
+            <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 p-3 shadow-sm">
+              <div className="flex items-center justify-between mb-3 px-1">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Live Preview</p>
+                <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live
+                </span>
+              </div>
               <div 
-                className={`rounded-[2rem] p-6 min-h-[600px] overflow-hidden relative ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
+                className={`rounded-[1.75rem] p-5 min-h-[540px] overflow-hidden relative ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
                 style={previewStyle}
               >
                 {/* Animated Background Preview */}
-                <div className="absolute inset-0 rounded-[2rem] overflow-hidden">
+                <div className="absolute inset-0 rounded-[1.75rem] overflow-hidden">
                   <AnimatedBackground 
                     animationType={profile.animation_type} 
                     config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
                   />
                 </div>
                 
-                <div className="text-center mb-6 relative z-10">
-                  <div className="w-20 h-20 mx-auto rounded-full bg-primary-foreground/20 backdrop-blur mb-3 flex items-center justify-center overflow-hidden">
+                <div className="text-center mb-5 relative z-10">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-primary-foreground/20 backdrop-blur mb-2.5 flex items-center justify-center overflow-hidden ring-2 ring-primary-foreground/10">
                     {profile.avatar_url ? (
                       <img src={profile.avatar_url} alt={profile.title} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-2xl font-bold text-primary-foreground">
+                      <span className="text-xl font-bold text-primary-foreground">
                         {profile.username[0]?.toUpperCase()}
                       </span>
                     )}
                   </div>
-                  <h2 className="text-lg font-bold text-primary-foreground">{profile.title}</h2>
+                  <h2 className="text-base font-bold text-primary-foreground">{profile.title}</h2>
                   {profile.bio && (
-                    <p className="text-primary-foreground/70 text-sm mt-1">{profile.bio}</p>
+                    <p className="text-primary-foreground/70 text-xs mt-1">{profile.bio}</p>
                   )}
                   <SocialIcons socialLinks={profile.social_links || {}} />
                 </div>
-                <div className="space-y-3 relative z-10">
+                <div className="space-y-2 relative z-10">
                   {links.filter(l => l.visible).map(link => (
-                    <div key={link.id} className="flex items-center gap-3 py-3 px-4 rounded-xl bg-primary-foreground/20 backdrop-blur">
+                    <div key={link.id} className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-primary-foreground/20 backdrop-blur">
                       {link.thumbnail_url && (
-                        <img src={link.thumbnail_url} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                        <img src={link.thumbnail_url} alt="" className="w-7 h-7 rounded-md object-cover flex-shrink-0" />
                       )}
-                      <span className="flex-1 text-primary-foreground font-medium text-center text-sm">
+                      <span className="flex-1 text-primary-foreground font-medium text-center text-xs">
                         {link.title || "Untitled Link"}
                       </span>
-                      {link.thumbnail_url && <div className="w-8" />}
+                      {link.thumbnail_url && <div className="w-7" />}
                     </div>
                   ))}
                 </div>
