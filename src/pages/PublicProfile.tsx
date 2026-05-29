@@ -225,17 +225,32 @@ export default function PublicProfile() {
     : '';
 
   return (
-    <div 
-      className={`min-h-screen py-12 px-4 relative overflow-hidden ${bgClass}`}
-      style={bgStyle}
-    >
-      {/* Animated Background */}
-      <AnimatedBackground 
-        animationType={profile.animation_type} 
-        config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
-      />
-      
-      <div className="max-w-md mx-auto relative z-10">
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 sm:py-10 sm:px-4 flex items-start sm:items-center justify-center">
+      {/* Desktop: phone-frame wrapper. Mobile: full-bleed. */}
+      <div className="w-full sm:w-auto">
+        <div
+          className={`
+            relative w-full min-h-screen overflow-hidden
+            sm:min-h-0 sm:w-[390px] sm:h-[820px] sm:rounded-[3rem]
+            sm:border-[10px] sm:border-slate-800
+            sm:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6),0_0_0_2px_rgba(255,255,255,0.04)_inset]
+            sm:ring-1 sm:ring-white/5
+          `}
+        >
+          {/* Notch (desktop only) */}
+          <div className="hidden sm:block absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-900 rounded-b-2xl z-30" />
+
+          <div
+            className={`relative h-full overflow-y-auto py-12 px-4 ${bgClass}`}
+            style={bgStyle}
+          >
+            <AnimatedBackground
+              animationType={profile.animation_type}
+              config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
+            />
+
+            <div className="max-w-md mx-auto relative z-10">
+
         {/* Profile Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -393,6 +408,9 @@ export default function PublicProfile() {
             Made with SmartCard
           </Link>
         </motion.div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
