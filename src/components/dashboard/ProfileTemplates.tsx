@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +8,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { UnlockProDialog } from "./UnlockProDialog";
+
 
 interface Template {
   id: string;
@@ -83,6 +84,9 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [applying, setApplying] = useState<string | null>(null);
+  const [unlockOpen, setUnlockOpen] = useState(false);
+  const [unlockFeature, setUnlockFeature] = useState<string | undefined>();
+
 
   useEffect(() => {
     loadTemplates();
@@ -106,9 +110,11 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
 
   const applyTemplate = async (template: Template) => {
     if (template.is_premium && !isPro) {
-      toast.error("This template is Pro-only. Upgrade to unlock!");
+      setUnlockFeature(template.name);
+      setUnlockOpen(true);
       return;
     }
+
     setApplying(template.id);
     try {
       onApply({
@@ -197,12 +203,21 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
                   <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur" />
                 </div>
                 {locked && (
-                  <div className="absolute inset-0 bg-background/50 backdrop-blur-[2px] flex items-center justify-center z-20">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUnlockFeature(template.name);
+                      setUnlockOpen(true);
+                    }}
+                    className="absolute inset-0 bg-background/50 backdrop-blur-[2px] flex items-center justify-center z-20 cursor-pointer hover:bg-background/40 transition"
+                    aria-label={`Unlock ${template.name}`}
+                  >
                     <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shadow-glow">
                       <Lock className="w-3.5 h-3.5 text-primary-foreground" />
                     </div>
-                  </div>
+                  </button>
                 )}
+
               </div>
 
               {/* Info */}
@@ -222,12 +237,19 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
                     <p className="text-xs text-muted-foreground">{template.description}</p>
                   </div>
                   {locked ? (
-                    <Link to="/pricing" className="shrink-0">
-                      <Button size="sm" variant="gradient">
-                        <Lock className="w-3.5 h-3.5" /> Unlock
-                      </Button>
-                    </Link>
+                    <Button
+                      size="sm"
+                      variant="gradient"
+                      className="shrink-0"
+                      onClick={() => {
+                        setUnlockFeature(template.name);
+                        setUnlockOpen(true);
+                      }}
+                    >
+                      <Lock className="w-3.5 h-3.5" /> Unlock
+                    </Button>
                   ) : (
+
                     <Button
                       size="sm"
                       variant={isActive ? "outline" : "gradient"}
@@ -259,6 +281,9 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
           );
         })}
       </div>
+
+      <UnlockProDialog open={unlockOpen} onOpenChange={setUnlockOpen} featureName={unlockFeature} />
     </div>
   );
+
 }

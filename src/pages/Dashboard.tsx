@@ -19,7 +19,7 @@ import {
   verticalListSortingStrategy 
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder, Eye, MousePointerClick, Sparkles } from "lucide-react";
+import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder, Eye, MousePointerClick, Sparkles, Undo2, Redo2, Save } from "lucide-react";
 import { toast } from "sonner";
 import type { User, Session } from "@supabase/supabase-js";
 import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
@@ -101,6 +101,11 @@ export default function Dashboard() {
   const [groups, setGroups] = useState<LinkGroup[]>([]);
   const [analytics, setAnalytics] = useState({ views: 0, clicks: 0 });
   const { isPro } = usePlan(user?.id);
+
+  // History stack for undo/redo of profile changes
+  const [past, setPast] = useState<Profile[]>([]);
+  const [future, setFuture] = useState<Profile[]>([]);
+
 
   // DnD sensors
   const sensors = useSensors(
@@ -213,31 +218,62 @@ export default function Dashboard() {
   };
 
   // Profile operations
-  const updateProfile = async (updates: Partial<Profile>) => {
-    if (!profile || !user) return;
+  const persistProfile = async (next: Profile, opts?: { silent?: boolean }) => {
+    if (!user) return;
     setSaving(true);
-    
     try {
-      // Convert social_links to JSON-compatible format for Supabase
-      const dbUpdates = { ...updates } as Record<string, unknown>;
-      if (updates.social_links) {
-        dbUpdates.social_links = updates.social_links as Record<string, string>;
-      }
-
+      const dbUpdates = { ...next } as Record<string, unknown>;
+      // Strip readonly / non-column fields if needed (id stays)
+      delete (dbUpdates as any).created_at;
+      delete (dbUpdates as any).updated_at;
       const { error } = await supabase
         .from("profiles")
         .update(dbUpdates as never)
-        .eq("id", profile.id);
-
+        .eq("id", next.id);
       if (error) throw error;
-      setProfile({ ...profile, ...updates });
-      toast.success("Profile updated!");
+      if (!opts?.silent) toast.success("Saved to your live page");
     } catch (error: any) {
       toast.error("Failed to update: " + error.message);
     } finally {
       setSaving(false);
     }
   };
+
+  const updateProfile = async (updates: Partial<Profile>) => {
+    if (!profile || !user) return;
+    // push current snapshot to history
+    setPast((p) => [...p.slice(-29), profile]);
+    setFuture([]);
+    const next = { ...profile, ...updates } as Profile;
+    setProfile(next);
+    await persistProfile(next, { silent: true });
+  };
+
+  const handleUndo = async () => {
+    if (!profile || past.length === 0) return;
+    const prev = past[past.length - 1];
+    setPast((p) => p.slice(0, -1));
+    setFuture((f) => [profile, ...f].slice(0, 30));
+    setProfile(prev);
+    await persistProfile(prev, { silent: true });
+    toast.success("Undid last change");
+  };
+
+  const handleRedo = async () => {
+    if (!profile || future.length === 0) return;
+    const nxt = future[0];
+    setFuture((f) => f.slice(1));
+    setPast((p) => [...p.slice(-29), profile]);
+    setProfile(nxt);
+    await persistProfile(nxt, { silent: true });
+    toast.success("Redid change");
+  };
+
+  const handleSaveNow = async () => {
+    if (!profile) return;
+    await persistProfile(profile);
+  };
+
 
   // Link operations
   const addLink = async () => {
@@ -514,11 +550,44 @@ export default function Dashboard() {
                     {tabs.find(x => x.id === activeTab)?.label} Builder
                   </h2>
                 </div>
-                {saving && (
-                  <span className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                    <Loader2 className="w-3 h-3 animate-spin" /> Saving…
-                  </span>
-                )}
+                <div className="flex items-center gap-1.5">
+                  {saving && (
+                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground mr-1">
+                      <Loader2 className="w-3 h-3 animate-spin" /> Saving…
+                    </span>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={handleUndo}
+                    disabled={past.length === 0 || saving}
+                    title="Undo (last profile change)"
+                  >
+                    <Undo2 className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={handleRedo}
+                    disabled={future.length === 0 || saving}
+                    title="Redo"
+                  >
+                    <Redo2 className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    variant="gradient"
+                    size="sm"
+                    className="h-7 text-[11px] px-2.5"
+                    onClick={handleSaveNow}
+                    disabled={saving}
+                    title="Save & publish to your live page"
+                  >
+                    <Save className="w-3.5 h-3.5" /> Save
+                  </Button>
+                </div>
+
               </div>
               <div className="p-4">
               {activeTab === "links" && (
