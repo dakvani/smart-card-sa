@@ -204,41 +204,42 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main id="main-content" className="flex-1 pt-24 pb-16">
-        <div className="container px-4 mx-auto max-w-7xl">
+      <main id="main-content" className="flex-1 pt-20 pb-10">
+        <div className="container px-3 mx-auto max-w-7xl">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-4"
           >
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-                  <Shield className="w-7 h-7 text-primary" />
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-foreground">Admin Control Center</h1>
-                  <p className="text-muted-foreground mt-0.5">Full account overview & management</p>
+                  <h1 className="text-xl font-bold text-foreground leading-tight">Admin Control Center</h1>
+                  <p className="text-xs text-muted-foreground">Full account overview & management</p>
                 </div>
               </div>
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex gap-1.5 flex-wrap">
                 {hasNewOrders && (
                   <Button
+                    size="sm"
                     variant="default"
                     onClick={() => { clearNotifications(); setActiveTab("orders"); }}
-                    className="gap-2 animate-pulse"
+                    className="gap-1.5 animate-pulse h-8 text-xs"
                   >
-                    <Bell className="w-4 h-4" />
-                    {notificationCount} New Order{notificationCount > 1 ? 's' : ''}
+                    <Bell className="w-3.5 h-3.5" />
+                    {notificationCount} New
                   </Button>
                 )}
-                <Button variant="outline" onClick={loadAllData} disabled={refreshing}>
-                  <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                <Button size="sm" variant="outline" onClick={loadAllData} disabled={refreshing} className="h-8 text-xs">
+                  <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${refreshing ? 'animate-spin' : ''}`} />
                   Refresh
                 </Button>
-                <Button variant="outline" onClick={handleAdminLogout} className="gap-2 text-destructive hover:text-destructive">
-                  <LogOut className="w-4 h-4" />
+                <Button size="sm" variant="outline" onClick={handleAdminLogout} className="gap-1.5 text-destructive hover:text-destructive h-8 text-xs">
+                  <LogOut className="w-3.5 h-3.5" />
                   Logout
                 </Button>
               </div>
@@ -250,20 +251,20 @@ export default function AdminDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-4"
           >
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-green-500/20 cursor-pointer" onClick={() => setActiveTab("orders")}>
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-muted-foreground font-medium">Total Revenue</p>
-                          <p className="text-3xl font-bold text-foreground mt-1">${totalRevenue.toFixed(2)}</p>
+                    <CardContent className="p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-[11px] text-muted-foreground font-medium">Revenue</p>
+                          <p className="text-lg font-bold text-foreground leading-tight truncate">${totalRevenue.toFixed(2)}</p>
                         </div>
-                        <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center">
-                          <DollarSign className="w-6 h-6 text-green-500" />
+                        <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
+                          <DollarSign className="w-4 h-4 text-green-500" />
                         </div>
                       </div>
                     </CardContent>
@@ -275,14 +276,14 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-blue-500/10 to-sky-500/5 border-blue-500/20 cursor-pointer" onClick={() => setActiveTab("users")}>
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-muted-foreground font-medium">Total Users</p>
-                          <p className="text-3xl font-bold text-foreground mt-1">{stats.find(s => s.name === "Users")?.count.toLocaleString() || 0}</p>
+                    <CardContent className="p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-[11px] text-muted-foreground font-medium">Total Users</p>
+                          <p className="text-lg font-bold text-foreground leading-tight">{stats.find(s => s.name === "Users")?.count.toLocaleString() || 0}</p>
                         </div>
-                        <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                          <Users className="w-6 h-6 text-blue-500" />
+                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
+                          <Users className="w-4 h-4 text-blue-500" />
                         </div>
                       </div>
                     </CardContent>
@@ -294,14 +295,14 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-yellow-500/10 to-amber-500/5 border-yellow-500/20 cursor-pointer" onClick={() => setActiveTab("orders")}>
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-muted-foreground font-medium">Pending Orders</p>
-                          <p className="text-3xl font-bold text-foreground mt-1">{pendingOrders}</p>
+                    <CardContent className="p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-[11px] text-muted-foreground font-medium">Pending Orders</p>
+                          <p className="text-lg font-bold text-foreground leading-tight">{pendingOrders}</p>
                         </div>
-                        <div className="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center">
-                          <Clock className="w-6 h-6 text-yellow-500" />
+                        <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center shrink-0">
+                          <Clock className="w-4 h-4 text-yellow-500" />
                         </div>
                       </div>
                     </CardContent>
@@ -313,14 +314,14 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-purple-500/10 to-violet-500/5 border-purple-500/20 cursor-pointer" onClick={() => setActiveTab("tables")}>
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-muted-foreground font-medium">Total Records</p>
-                          <p className="text-3xl font-bold text-foreground mt-1">{totalRecords.toLocaleString()}</p>
+                    <CardContent className="p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-[11px] text-muted-foreground font-medium">Total Records</p>
+                          <p className="text-lg font-bold text-foreground leading-tight">{totalRecords.toLocaleString()}</p>
                         </div>
-                        <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                          <Database className="w-6 h-6 text-purple-500" />
+                        <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
+                          <Database className="w-4 h-4 text-purple-500" />
                         </div>
                       </div>
                     </CardContent>
@@ -337,39 +338,39 @@ export default function AdminDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid">
-                <TabsTrigger value="overview" className="gap-2">
-                  <BarChart3 className="w-4 h-4" />
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+              <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid h-9">
+                <TabsTrigger value="overview" className="gap-1.5 text-xs h-7">
+                  <BarChart3 className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Overview</span>
                 </TabsTrigger>
-                <TabsTrigger value="products" className="gap-2">
-                  <ShoppingBag className="w-4 h-4" />
+                <TabsTrigger value="products" className="gap-1.5 text-xs h-7">
+                  <ShoppingBag className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Products</span>
                 </TabsTrigger>
-                <TabsTrigger value="orders" className="gap-2">
-                  <Package className="w-4 h-4" />
+                <TabsTrigger value="orders" className="gap-1.5 text-xs h-7">
+                  <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
                 </TabsTrigger>
-                <TabsTrigger value="tables" className="gap-2">
-                  <Database className="w-4 h-4" />
+                <TabsTrigger value="tables" className="gap-1.5 text-xs h-7">
+                  <Database className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Database</span>
                 </TabsTrigger>
-                <TabsTrigger value="users" className="gap-2">
-                  <Users className="w-4 h-4" />
+                <TabsTrigger value="users" className="gap-1.5 text-xs h-7">
+                  <Users className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Users</span>
                 </TabsTrigger>
-                <TabsTrigger value="audit" className="gap-2">
-                  <Clock className="w-4 h-4" />
+                <TabsTrigger value="audit" className="gap-1.5 text-xs h-7">
+                  <Clock className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Audit</span>
                 </TabsTrigger>
               </TabsList>
 
               {/* Overview Tab */}
-              <TabsContent value="overview" className="space-y-6">
+              <TabsContent value="overview" className="space-y-4">
                 {/* Stats Grid */}
                 <TooltipProvider delayDuration={200}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5">
                     {stats.map((stat, index) => (
                       <motion.div
                         key={stat.name}
@@ -380,17 +381,16 @@ export default function AdminDashboard() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Card className="hover:shadow-md transition-shadow cursor-pointer group" onClick={() => setActiveTab(stat.tab)}>
-                              <CardContent className="p-4">
-                                <div className="flex items-center gap-4">
-                                  <div className={`p-3 rounded-xl bg-muted ${stat.color}`}>
-                                    <stat.icon className="w-5 h-5" />
+                              <CardContent className="p-3">
+                                <div className="flex items-center gap-2.5">
+                                  <div className={`p-2 rounded-lg bg-muted ${stat.color} shrink-0`}>
+                                    <stat.icon className="w-4 h-4" />
                                   </div>
-                                  <div className="flex-1">
-                                    <p className="text-sm text-muted-foreground">{stat.name}</p>
-                                    <p className="text-2xl font-bold">{stat.count.toLocaleString()}</p>
-                                    <p className="text-xs text-muted-foreground mt-0.5">{stat.description}</p>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-[11px] text-muted-foreground leading-none">{stat.name}</p>
+                                    <p className="text-lg font-bold leading-tight">{stat.count.toLocaleString()}</p>
                                   </div>
-                                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                                  <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
                                 </div>
                               </CardContent>
                             </Card>
@@ -406,38 +406,38 @@ export default function AdminDashboard() {
                 <AdminOverviewCharts />
 
                 {/* Recent Activity Row */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                   {/* Recent Orders */}
                   <Card>
-                    <CardHeader className="pb-3">
+                    <CardHeader className="p-3 pb-2">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <ShoppingBag className="w-5 h-5 text-primary" />
+                        <CardTitle className="text-sm flex items-center gap-1.5">
+                          <ShoppingBag className="w-4 h-4 text-primary" />
                           Recent Orders
                         </CardTitle>
-                        <Button variant="ghost" size="sm" onClick={() => setActiveTab("orders")} className="gap-1 text-xs">
+                        <Button variant="ghost" size="sm" onClick={() => setActiveTab("orders")} className="gap-1 text-xs h-7">
                           View All <ArrowUpRight className="w-3 h-3" />
                         </Button>
                       </div>
                     </CardHeader>
-                    <CardContent className="space-y-3">
+                    <CardContent className="p-3 pt-0 space-y-1.5">
                       {recentOrders.length === 0 ? (
-                        <p className="text-sm text-muted-foreground text-center py-6">No orders yet</p>
+                        <p className="text-xs text-muted-foreground text-center py-4">No orders yet</p>
                       ) : (
                         recentOrders.map((order) => (
-                          <div key={order.id} className="flex items-center justify-between p-3 rounded-lg border bg-muted/30 hover:bg-muted/50 transition-colors">
+                          <div key={order.id} className="flex items-center justify-between p-2 rounded-md border bg-muted/30 hover:bg-muted/50 transition-colors">
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
-                                <p className="font-medium text-sm">#{order.order_number}</p>
-                                <Badge variant="outline" className={`text-xs ${statusColors[order.status] || ''}`}>
+                              <div className="flex items-center gap-1.5">
+                                <p className="font-medium text-xs">#{order.order_number}</p>
+                                <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-4 ${statusColors[order.status] || ''}`}>
                                   {order.status}
                                 </Badge>
                               </div>
-                              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                              <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
                                 {order.shipping_info?.name || 'Unknown'} • {format(new Date(order.created_at), "MMM d, h:mm a")}
                               </p>
                             </div>
-                            <span className="font-bold text-sm">${Number(order.total).toFixed(2)}</span>
+                            <span className="font-bold text-xs">${Number(order.total).toFixed(2)}</span>
                           </div>
                         ))
                       )}
@@ -446,29 +446,29 @@ export default function AdminDashboard() {
 
                   {/* Recent Users */}
                   <Card>
-                    <CardHeader className="pb-3">
+                    <CardHeader className="p-3 pb-2">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <Users className="w-5 h-5 text-primary" />
+                        <CardTitle className="text-sm flex items-center gap-1.5">
+                          <Users className="w-4 h-4 text-primary" />
                           Recent Users
                         </CardTitle>
-                        <Button variant="ghost" size="sm" onClick={() => setActiveTab("users")} className="gap-1 text-xs">
+                        <Button variant="ghost" size="sm" onClick={() => setActiveTab("users")} className="gap-1 text-xs h-7">
                           View All <ArrowUpRight className="w-3 h-3" />
                         </Button>
                       </div>
                     </CardHeader>
-                    <CardContent className="space-y-3">
+                    <CardContent className="p-3 pt-0 space-y-1.5">
                       {recentUsers.length === 0 ? (
-                        <p className="text-sm text-muted-foreground text-center py-6">No users yet</p>
+                        <p className="text-xs text-muted-foreground text-center py-4">No users yet</p>
                       ) : (
                         recentUsers.map((user) => (
-                          <div key={user.id} className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30 hover:bg-muted/50 transition-colors">
-                            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
+                          <div key={user.id} className="flex items-center gap-2.5 p-2 rounded-md border bg-muted/30 hover:bg-muted/50 transition-colors">
+                            <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">
                               {user.username.charAt(0).toUpperCase()}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-sm truncate">{user.username}</p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="font-medium text-xs truncate">{user.username}</p>
+                              <p className="text-[11px] text-muted-foreground">
                                 Joined {format(new Date(user.created_at), "MMM d, yyyy")}
                               </p>
                             </div>
@@ -481,29 +481,29 @@ export default function AdminDashboard() {
 
                 {/* Quick Actions */}
                 <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-primary" />
+                  <CardHeader className="p-3 pb-2">
+                    <CardTitle className="text-sm flex items-center gap-1.5">
+                      <Activity className="w-4 h-4 text-primary" />
                       Quick Actions
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      <Button variant="outline" className="h-auto py-4 flex-col gap-2" onClick={() => setActiveTab("orders")}>
-                        <Package className="w-5 h-5 text-primary" />
-                        <span className="text-xs">Manage Orders</span>
+                  <CardContent className="p-3 pt-0">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      <Button variant="outline" className="h-auto py-2.5 flex-col gap-1" onClick={() => setActiveTab("orders")}>
+                        <Package className="w-4 h-4 text-primary" />
+                        <span className="text-[11px]">Manage Orders</span>
                       </Button>
-                      <Button variant="outline" className="h-auto py-4 flex-col gap-2" onClick={() => setActiveTab("users")}>
-                        <Users className="w-5 h-5 text-primary" />
-                        <span className="text-xs">Manage Users</span>
+                      <Button variant="outline" className="h-auto py-2.5 flex-col gap-1" onClick={() => setActiveTab("users")}>
+                        <Users className="w-4 h-4 text-primary" />
+                        <span className="text-[11px]">Manage Users</span>
                       </Button>
-                      <Button variant="outline" className="h-auto py-4 flex-col gap-2" onClick={() => setActiveTab("tables")}>
-                        <Database className="w-5 h-5 text-primary" />
-                        <span className="text-xs">View Database</span>
+                      <Button variant="outline" className="h-auto py-2.5 flex-col gap-1" onClick={() => setActiveTab("tables")}>
+                        <Database className="w-4 h-4 text-primary" />
+                        <span className="text-[11px]">View Database</span>
                       </Button>
-                      <Button variant="outline" className="h-auto py-4 flex-col gap-2" onClick={() => setActiveTab("audit")}>
-                        <FileText className="w-5 h-5 text-primary" />
-                        <span className="text-xs">Audit Logs</span>
+                      <Button variant="outline" className="h-auto py-2.5 flex-col gap-1" onClick={() => setActiveTab("audit")}>
+                        <FileText className="w-4 h-4 text-primary" />
+                        <span className="text-[11px]">Audit Logs</span>
                       </Button>
                     </div>
                   </CardContent>
@@ -637,59 +637,59 @@ function AdminOrdersInline() {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="p-3 pb-2">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-1.5 text-sm">
+              <Package className="w-4 h-4" />
               Order Management
             </CardTitle>
-            <CardDescription>{orders.length} total orders</CardDescription>
+            <CardDescription className="text-xs">{orders.length} total orders</CardDescription>
           </div>
-          <Button variant="outline" onClick={loadOrders} size="sm">
-            <RefreshCw className="w-4 h-4 mr-2" />
+          <Button variant="outline" onClick={loadOrders} size="sm" className="h-8 text-xs">
+            <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
             Refresh
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="p-3 pt-0 space-y-2">
         {orders.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            <Package className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>No orders yet</p>
+          <div className="text-center py-8 text-muted-foreground">
+            <Package className="w-10 h-10 mx-auto mb-2 opacity-50" />
+            <p className="text-sm">No orders yet</p>
           </div>
         ) : (
           orders.map((order) => (
-            <div key={order.id} className="border rounded-xl overflow-hidden">
+            <div key={order.id} className="border rounded-lg overflow-hidden">
               <button
                 onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                className="w-full p-4 flex items-center justify-between hover:bg-muted/30 transition-colors text-left"
+                className="w-full p-2.5 flex items-center justify-between hover:bg-muted/30 transition-colors text-left gap-2"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Package className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                    <Package className="w-4 h-4 text-primary" />
                   </div>
-                  <div>
-                    <p className="font-medium text-sm">#{order.order_number}</p>
-                    <p className="text-xs text-muted-foreground">
+                  <div className="min-w-0">
+                    <p className="font-medium text-xs">#{order.order_number}</p>
+                    <p className="text-[11px] text-muted-foreground truncate">
                       {order.shipping_info?.name} • {format(new Date(order.created_at), "MMM d, h:mm a")}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge variant="outline" className={statusColors[order.status] || ''}>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-5 ${statusColors[order.status] || ''}`}>
                     {order.status}
                   </Badge>
-                  <span className="font-bold">${Number(order.total).toFixed(2)}</span>
-                  <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${expandedOrder === order.id ? 'rotate-90' : ''}`} />
+                  <span className="font-bold text-xs">${Number(order.total).toFixed(2)}</span>
+                  <ChevronRight className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${expandedOrder === order.id ? 'rotate-90' : ''}`} />
                 </div>
               </button>
               {expandedOrder === order.id && (
-                <div className="border-t p-4 bg-muted/20 space-y-4">
-                  <div className="grid sm:grid-cols-2 gap-4">
+                <div className="border-t p-3 bg-muted/20 space-y-3">
+                  <div className="grid sm:grid-cols-2 gap-3">
                     <div>
-                      <h4 className="font-medium text-sm mb-2">Shipping Info</h4>
-                      <div className="text-sm text-muted-foreground space-y-1">
+                      <h4 className="font-medium text-xs mb-1.5">Shipping Info</h4>
+                      <div className="text-xs text-muted-foreground space-y-0.5">
                         <p className="text-foreground font-medium">{order.shipping_info?.name}</p>
                         <p>{order.shipping_info?.email}</p>
                         <p>{order.shipping_info?.address}</p>
@@ -697,14 +697,14 @@ function AdminOrdersInline() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-medium text-sm mb-2">Update Status</h4>
-                      <div className="flex flex-wrap gap-2">
+                      <h4 className="font-medium text-xs mb-1.5">Update Status</h4>
+                      <div className="flex flex-wrap gap-1.5">
                         {statusOptions.map(status => (
                           <Button
                             key={status}
                             variant={order.status === status ? "default" : "outline"}
                             size="sm"
-                            className="text-xs capitalize"
+                            className="text-[11px] capitalize h-7 px-2"
                             disabled={updatingOrder === order.id}
                             onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, status); }}
                           >
@@ -714,7 +714,7 @@ function AdminOrdersInline() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-between text-sm border-t pt-3">
+                  <div className="flex justify-between text-xs border-t pt-2">
                     <span className="text-muted-foreground">Subtotal: ${Number(order.subtotal).toFixed(2)}</span>
                     <span className="text-muted-foreground">Shipping: {Number(order.shipping_cost) === 0 ? "Free" : `$${Number(order.shipping_cost).toFixed(2)}`}</span>
                     <span className="font-bold">Total: ${Number(order.total).toFixed(2)}</span>
