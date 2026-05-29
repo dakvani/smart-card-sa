@@ -43,12 +43,15 @@ export function EmailAuthForm({ mode, onToggleMode }: EmailAuthFormProps) {
           toast.success("Check your email to confirm your account!");
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) {
           toast.error(error.message);
+        } else if (data?.session) {
+          // Explicit redirect — don't rely solely on onAuthStateChange listeners
+          navigate("/dashboard", { replace: true });
         }
       }
     } catch (err) {
