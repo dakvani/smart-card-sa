@@ -228,12 +228,19 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
                     <p className="text-xs text-muted-foreground">{template.description}</p>
                   </div>
                   {locked ? (
-                    <Link to="/pricing" className="shrink-0">
-                      <Button size="sm" variant="gradient">
-                        <Lock className="w-3.5 h-3.5" /> Unlock
-                      </Button>
-                    </Link>
+                    <Button
+                      size="sm"
+                      variant="gradient"
+                      className="shrink-0"
+                      onClick={() => {
+                        setUnlockFeature(template.name);
+                        setUnlockOpen(true);
+                      }}
+                    >
+                      <Lock className="w-3.5 h-3.5" /> Unlock
+                    </Button>
                   ) : (
+
                     <Button
                       size="sm"
                       variant={isActive ? "outline" : "gradient"}
