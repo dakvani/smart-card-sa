@@ -127,7 +127,23 @@ export function EmailAuthForm({ mode, onToggleMode }: EmailAuthFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <>
+      {redirecting && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-pink-500 flex items-center justify-center shadow-lg shadow-primary/30 animate-pulse">
+                <Loader2 className="w-7 h-7 animate-spin text-primary-foreground" />
+              </div>
+            </div>
+            <div className="text-center">
+              <p className="text-base font-semibold text-foreground">Signing you in…</p>
+              <p className="text-sm text-muted-foreground mt-1">Taking you to your dashboard</p>
+            </div>
+          </div>
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="space-y-4">
       {mode === "signup" && (
         <div className="space-y-2">
           <Label htmlFor="username" className="text-sm text-muted-foreground">
