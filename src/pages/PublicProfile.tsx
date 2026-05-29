@@ -149,40 +149,29 @@ export default function PublicProfile() {
 
   const handleLinkClick = async (linkId: string, url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
-    
+
     if (!profile) return;
 
-    try {
-      // Parse user agent for detailed analytics
-      const uaData = parseUserAgent(navigator.userAgent);
+    // Fire-and-forget but reliable: atomic RPC + detailed click row in parallel
+    const ua = parseUserAgent(navigator.userAgent);
 
-      // Record detailed click data
-      await supabase.from("link_clicks").insert({
+    void supabase.rpc("increment_link_click", { link_uuid: linkId }).then(({ error }) => {
+      if (error) console.warn("increment_link_click failed:", error.message);
+    });
+
+    void supabase
+      .from("link_clicks")
+      .insert({
         link_id: linkId,
         profile_id: profile.id,
-        device_type: uaData.device_type,
-        browser: uaData.browser,
-        os: uaData.os,
+        device_type: ua.device_type,
+        browser: ua.browser,
+        os: ua.os,
         referrer: document.referrer || null,
-        // Note: country/city would require a geolocation API
+      })
+      .then(({ error }) => {
+        if (error) console.warn("link_clicks insert failed:", error.message);
       });
-
-      // Also update click count on link
-      const { data: currentLink } = await supabase
-        .from("links")
-        .select("click_count")
-        .eq("id", linkId)
-        .single();
-      
-      if (currentLink) {
-        await supabase
-          .from("links")
-          .update({ click_count: (currentLink.click_count || 0) + 1 })
-          .eq("id", linkId);
-      }
-    } catch {
-      // Silently fail - click tracking is not critical
-    }
   };
 
   if (loading) {
