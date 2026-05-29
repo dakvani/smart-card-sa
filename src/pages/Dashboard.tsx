@@ -105,6 +105,9 @@ export default function Dashboard() {
   // History stack for undo/redo of profile changes
   const [past, setPast] = useState<Profile[]>([]);
   const [future, setFuture] = useState<Profile[]>([]);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+
 
 
   // DnD sensors
