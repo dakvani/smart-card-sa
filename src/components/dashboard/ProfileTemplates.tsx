@@ -281,6 +281,9 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
           );
         })}
       </div>
+
+      <UnlockProDialog open={unlockOpen} onOpenChange={setUnlockOpen} featureName={unlockFeature} />
     </div>
   );
+
 }
