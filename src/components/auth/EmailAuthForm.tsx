@@ -239,5 +239,6 @@ export function EmailAuthForm({ mode, onToggleMode }: EmailAuthFormProps) {
         </button>
       </p>
     </form>
+    </>
   );
 }
