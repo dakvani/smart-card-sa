@@ -224,9 +224,9 @@ export default function Dashboard() {
   const persistProfile = async (next: Profile, opts?: { silent?: boolean }) => {
     if (!user) return;
     setSaving(true);
+    setSaveStatus("saving");
     try {
       const dbUpdates = { ...next } as Record<string, unknown>;
-      // Strip readonly / non-column fields if needed (id stays)
       delete (dbUpdates as any).created_at;
       delete (dbUpdates as any).updated_at;
       const { error } = await supabase
@@ -234,13 +234,17 @@ export default function Dashboard() {
         .update(dbUpdates as never)
         .eq("id", next.id);
       if (error) throw error;
+      setSaveStatus("saved");
+      setLastSavedAt(new Date());
       if (!opts?.silent) toast.success("Saved to your live page");
     } catch (error: any) {
+      setSaveStatus("error");
       toast.error("Failed to update: " + error.message);
     } finally {
       setSaving(false);
     }
   };
+
 
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!profile || !user) return;
