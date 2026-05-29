@@ -265,7 +265,7 @@ export default function PublicProfile() {
         </motion.div>
 
         {/* Links */}
-        <div className="space-y-6">
+        <div className="space-y-2.5">
           {/* Featured Links - Always at top with special styling */}
           {links.filter(l => l.is_featured).length > 0 && (
             <div className="space-y-3">
@@ -280,7 +280,7 @@ export default function PublicProfile() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => handleLinkClick(link.id, link.url)}
-                  className="w-full flex items-center gap-4 py-5 px-6 rounded-2xl bg-primary-foreground/30 backdrop-blur border border-primary-foreground/20 hover:bg-primary-foreground/40 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg"
+                  className="w-full flex items-center gap-3 py-3.5 px-5 rounded-2xl bg-primary-foreground/30 backdrop-blur border border-primary-foreground/20 hover:bg-primary-foreground/40 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg"
                 >
                   {link.thumbnail_url && (
                     <img 
@@ -300,7 +300,7 @@ export default function PublicProfile() {
 
           {/* Ungrouped Links (non-featured) */}
           {links.filter(l => !l.group_id && !l.is_featured).length > 0 && (
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               {links.filter(l => !l.group_id && !l.is_featured).map((link, index) => (
                 <motion.button
                   key={link.id}
@@ -308,7 +308,7 @@ export default function PublicProfile() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => handleLinkClick(link.id, link.url)}
-                  className="w-full flex items-center gap-4 py-4 px-6 rounded-2xl bg-primary-foreground/20 backdrop-blur hover:bg-primary-foreground/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  className="w-full flex items-center gap-3 py-3 px-5 rounded-2xl bg-primary-foreground/20 backdrop-blur hover:bg-primary-foreground/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
                   {link.thumbnail_url && (
                     <img 
@@ -349,7 +349,7 @@ export default function PublicProfile() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 + index * 0.05 }}
                       onClick={() => handleLinkClick(link.id, link.url)}
-                      className="w-full flex items-center gap-4 py-4 px-6 rounded-2xl bg-primary-foreground/20 backdrop-blur hover:bg-primary-foreground/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                      className="w-full flex items-center gap-3 py-3 px-5 rounded-2xl bg-primary-foreground/20 backdrop-blur hover:bg-primary-foreground/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
                       {link.thumbnail_url && (
                         <img 
