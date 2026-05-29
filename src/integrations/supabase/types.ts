@@ -384,6 +384,45 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_upgrade_requests: {
+        Row: {
+          admin_note: string | null
+          created_at: string
+          feature_context: string | null
+          id: string
+          requested_plan: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          created_at?: string
+          feature_context?: string | null
+          id?: string
+          requested_plan?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          created_at?: string
+          feature_context?: string | null
+          id?: string
+          requested_plan?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       product_reviews: {
         Row: {
           content: string | null
@@ -668,6 +707,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_link_click: { Args: { link_uuid: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
