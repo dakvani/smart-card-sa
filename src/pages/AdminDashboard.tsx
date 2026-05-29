@@ -338,39 +338,39 @@ export default function AdminDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid">
-                <TabsTrigger value="overview" className="gap-2">
-                  <BarChart3 className="w-4 h-4" />
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+              <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid h-9">
+                <TabsTrigger value="overview" className="gap-1.5 text-xs h-7">
+                  <BarChart3 className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Overview</span>
                 </TabsTrigger>
-                <TabsTrigger value="products" className="gap-2">
-                  <ShoppingBag className="w-4 h-4" />
+                <TabsTrigger value="products" className="gap-1.5 text-xs h-7">
+                  <ShoppingBag className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Products</span>
                 </TabsTrigger>
-                <TabsTrigger value="orders" className="gap-2">
-                  <Package className="w-4 h-4" />
+                <TabsTrigger value="orders" className="gap-1.5 text-xs h-7">
+                  <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
                 </TabsTrigger>
-                <TabsTrigger value="tables" className="gap-2">
-                  <Database className="w-4 h-4" />
+                <TabsTrigger value="tables" className="gap-1.5 text-xs h-7">
+                  <Database className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Database</span>
                 </TabsTrigger>
-                <TabsTrigger value="users" className="gap-2">
-                  <Users className="w-4 h-4" />
+                <TabsTrigger value="users" className="gap-1.5 text-xs h-7">
+                  <Users className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Users</span>
                 </TabsTrigger>
-                <TabsTrigger value="audit" className="gap-2">
-                  <Clock className="w-4 h-4" />
+                <TabsTrigger value="audit" className="gap-1.5 text-xs h-7">
+                  <Clock className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Audit</span>
                 </TabsTrigger>
               </TabsList>
 
               {/* Overview Tab */}
-              <TabsContent value="overview" className="space-y-6">
+              <TabsContent value="overview" className="space-y-4">
                 {/* Stats Grid */}
                 <TooltipProvider delayDuration={200}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5">
                     {stats.map((stat, index) => (
                       <motion.div
                         key={stat.name}
@@ -381,17 +381,16 @@ export default function AdminDashboard() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Card className="hover:shadow-md transition-shadow cursor-pointer group" onClick={() => setActiveTab(stat.tab)}>
-                              <CardContent className="p-4">
-                                <div className="flex items-center gap-4">
-                                  <div className={`p-3 rounded-xl bg-muted ${stat.color}`}>
-                                    <stat.icon className="w-5 h-5" />
+                              <CardContent className="p-3">
+                                <div className="flex items-center gap-2.5">
+                                  <div className={`p-2 rounded-lg bg-muted ${stat.color} shrink-0`}>
+                                    <stat.icon className="w-4 h-4" />
                                   </div>
-                                  <div className="flex-1">
-                                    <p className="text-sm text-muted-foreground">{stat.name}</p>
-                                    <p className="text-2xl font-bold">{stat.count.toLocaleString()}</p>
-                                    <p className="text-xs text-muted-foreground mt-0.5">{stat.description}</p>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-[11px] text-muted-foreground leading-none">{stat.name}</p>
+                                    <p className="text-lg font-bold leading-tight">{stat.count.toLocaleString()}</p>
                                   </div>
-                                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                                  <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
                                 </div>
                               </CardContent>
                             </Card>
