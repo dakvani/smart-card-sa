@@ -406,38 +406,38 @@ export default function AdminDashboard() {
                 <AdminOverviewCharts />
 
                 {/* Recent Activity Row */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                   {/* Recent Orders */}
                   <Card>
-                    <CardHeader className="pb-3">
+                    <CardHeader className="p-3 pb-2">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <ShoppingBag className="w-5 h-5 text-primary" />
+                        <CardTitle className="text-sm flex items-center gap-1.5">
+                          <ShoppingBag className="w-4 h-4 text-primary" />
                           Recent Orders
                         </CardTitle>
-                        <Button variant="ghost" size="sm" onClick={() => setActiveTab("orders")} className="gap-1 text-xs">
+                        <Button variant="ghost" size="sm" onClick={() => setActiveTab("orders")} className="gap-1 text-xs h-7">
                           View All <ArrowUpRight className="w-3 h-3" />
                         </Button>
                       </div>
                     </CardHeader>
-                    <CardContent className="space-y-3">
+                    <CardContent className="p-3 pt-0 space-y-1.5">
                       {recentOrders.length === 0 ? (
-                        <p className="text-sm text-muted-foreground text-center py-6">No orders yet</p>
+                        <p className="text-xs text-muted-foreground text-center py-4">No orders yet</p>
                       ) : (
                         recentOrders.map((order) => (
-                          <div key={order.id} className="flex items-center justify-between p-3 rounded-lg border bg-muted/30 hover:bg-muted/50 transition-colors">
+                          <div key={order.id} className="flex items-center justify-between p-2 rounded-md border bg-muted/30 hover:bg-muted/50 transition-colors">
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
-                                <p className="font-medium text-sm">#{order.order_number}</p>
-                                <Badge variant="outline" className={`text-xs ${statusColors[order.status] || ''}`}>
+                              <div className="flex items-center gap-1.5">
+                                <p className="font-medium text-xs">#{order.order_number}</p>
+                                <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-4 ${statusColors[order.status] || ''}`}>
                                   {order.status}
                                 </Badge>
                               </div>
-                              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                              <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
                                 {order.shipping_info?.name || 'Unknown'} • {format(new Date(order.created_at), "MMM d, h:mm a")}
                               </p>
                             </div>
-                            <span className="font-bold text-sm">${Number(order.total).toFixed(2)}</span>
+                            <span className="font-bold text-xs">${Number(order.total).toFixed(2)}</span>
                           </div>
                         ))
                       )}
@@ -446,29 +446,29 @@ export default function AdminDashboard() {
 
                   {/* Recent Users */}
                   <Card>
-                    <CardHeader className="pb-3">
+                    <CardHeader className="p-3 pb-2">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <Users className="w-5 h-5 text-primary" />
+                        <CardTitle className="text-sm flex items-center gap-1.5">
+                          <Users className="w-4 h-4 text-primary" />
                           Recent Users
                         </CardTitle>
-                        <Button variant="ghost" size="sm" onClick={() => setActiveTab("users")} className="gap-1 text-xs">
+                        <Button variant="ghost" size="sm" onClick={() => setActiveTab("users")} className="gap-1 text-xs h-7">
                           View All <ArrowUpRight className="w-3 h-3" />
                         </Button>
                       </div>
                     </CardHeader>
-                    <CardContent className="space-y-3">
+                    <CardContent className="p-3 pt-0 space-y-1.5">
                       {recentUsers.length === 0 ? (
-                        <p className="text-sm text-muted-foreground text-center py-6">No users yet</p>
+                        <p className="text-xs text-muted-foreground text-center py-4">No users yet</p>
                       ) : (
                         recentUsers.map((user) => (
-                          <div key={user.id} className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30 hover:bg-muted/50 transition-colors">
-                            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
+                          <div key={user.id} className="flex items-center gap-2.5 p-2 rounded-md border bg-muted/30 hover:bg-muted/50 transition-colors">
+                            <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">
                               {user.username.charAt(0).toUpperCase()}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-sm truncate">{user.username}</p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="font-medium text-xs truncate">{user.username}</p>
+                              <p className="text-[11px] text-muted-foreground">
                                 Joined {format(new Date(user.created_at), "MMM d, yyyy")}
                               </p>
                             </div>
@@ -481,29 +481,29 @@ export default function AdminDashboard() {
 
                 {/* Quick Actions */}
                 <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-primary" />
+                  <CardHeader className="p-3 pb-2">
+                    <CardTitle className="text-sm flex items-center gap-1.5">
+                      <Activity className="w-4 h-4 text-primary" />
                       Quick Actions
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      <Button variant="outline" className="h-auto py-4 flex-col gap-2" onClick={() => setActiveTab("orders")}>
-                        <Package className="w-5 h-5 text-primary" />
-                        <span className="text-xs">Manage Orders</span>
+                  <CardContent className="p-3 pt-0">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      <Button variant="outline" className="h-auto py-2.5 flex-col gap-1" onClick={() => setActiveTab("orders")}>
+                        <Package className="w-4 h-4 text-primary" />
+                        <span className="text-[11px]">Manage Orders</span>
                       </Button>
-                      <Button variant="outline" className="h-auto py-4 flex-col gap-2" onClick={() => setActiveTab("users")}>
-                        <Users className="w-5 h-5 text-primary" />
-                        <span className="text-xs">Manage Users</span>
+                      <Button variant="outline" className="h-auto py-2.5 flex-col gap-1" onClick={() => setActiveTab("users")}>
+                        <Users className="w-4 h-4 text-primary" />
+                        <span className="text-[11px]">Manage Users</span>
                       </Button>
-                      <Button variant="outline" className="h-auto py-4 flex-col gap-2" onClick={() => setActiveTab("tables")}>
-                        <Database className="w-5 h-5 text-primary" />
-                        <span className="text-xs">View Database</span>
+                      <Button variant="outline" className="h-auto py-2.5 flex-col gap-1" onClick={() => setActiveTab("tables")}>
+                        <Database className="w-4 h-4 text-primary" />
+                        <span className="text-[11px]">View Database</span>
                       </Button>
-                      <Button variant="outline" className="h-auto py-4 flex-col gap-2" onClick={() => setActiveTab("audit")}>
-                        <FileText className="w-5 h-5 text-primary" />
-                        <span className="text-xs">Audit Logs</span>
+                      <Button variant="outline" className="h-auto py-2.5 flex-col gap-1" onClick={() => setActiveTab("audit")}>
+                        <FileText className="w-4 h-4 text-primary" />
+                        <span className="text-[11px]">Audit Logs</span>
                       </Button>
                     </div>
                   </CardContent>
