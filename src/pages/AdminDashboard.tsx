@@ -524,6 +524,12 @@ export default function AdminDashboard() {
                 <AdminOrdersInline />
               </TabsContent>
 
+              <TabsContent value="pro">
+                <AdminProRequests />
+              </TabsContent>
+
+
+
               <TabsContent value="tables">
                 <AdminTableViewer />
               </TabsContent>
