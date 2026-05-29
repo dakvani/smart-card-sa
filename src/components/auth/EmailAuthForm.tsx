@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface EmailAuthFormProps {
   mode: "login" | "signup";
@@ -13,6 +13,7 @@ interface EmailAuthFormProps {
 }
 
 export function EmailAuthForm({ mode, onToggleMode }: EmailAuthFormProps) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -42,12 +43,15 @@ export function EmailAuthForm({ mode, onToggleMode }: EmailAuthFormProps) {
           toast.success("Check your email to confirm your account!");
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) {
           toast.error(error.message);
+        } else if (data?.session) {
+          // Explicit redirect — don't rely solely on onAuthStateChange listeners
+          navigate("/dashboard", { replace: true });
         }
       }
     } catch (err) {
