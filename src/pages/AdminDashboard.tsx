@@ -204,41 +204,42 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main id="main-content" className="flex-1 pt-24 pb-16">
-        <div className="container px-4 mx-auto max-w-7xl">
+      <main id="main-content" className="flex-1 pt-20 pb-10">
+        <div className="container px-3 mx-auto max-w-7xl">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-4"
           >
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-                  <Shield className="w-7 h-7 text-primary" />
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-foreground">Admin Control Center</h1>
-                  <p className="text-muted-foreground mt-0.5">Full account overview & management</p>
+                  <h1 className="text-xl font-bold text-foreground leading-tight">Admin Control Center</h1>
+                  <p className="text-xs text-muted-foreground">Full account overview & management</p>
                 </div>
               </div>
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex gap-1.5 flex-wrap">
                 {hasNewOrders && (
                   <Button
+                    size="sm"
                     variant="default"
                     onClick={() => { clearNotifications(); setActiveTab("orders"); }}
-                    className="gap-2 animate-pulse"
+                    className="gap-1.5 animate-pulse h-8 text-xs"
                   >
-                    <Bell className="w-4 h-4" />
-                    {notificationCount} New Order{notificationCount > 1 ? 's' : ''}
+                    <Bell className="w-3.5 h-3.5" />
+                    {notificationCount} New
                   </Button>
                 )}
-                <Button variant="outline" onClick={loadAllData} disabled={refreshing}>
-                  <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                <Button size="sm" variant="outline" onClick={loadAllData} disabled={refreshing} className="h-8 text-xs">
+                  <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${refreshing ? 'animate-spin' : ''}`} />
                   Refresh
                 </Button>
-                <Button variant="outline" onClick={handleAdminLogout} className="gap-2 text-destructive hover:text-destructive">
-                  <LogOut className="w-4 h-4" />
+                <Button size="sm" variant="outline" onClick={handleAdminLogout} className="gap-1.5 text-destructive hover:text-destructive h-8 text-xs">
+                  <LogOut className="w-3.5 h-3.5" />
                   Logout
                 </Button>
               </div>
