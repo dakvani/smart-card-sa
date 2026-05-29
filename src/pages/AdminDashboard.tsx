@@ -637,59 +637,59 @@ function AdminOrdersInline() {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="p-3 pb-2">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-1.5 text-sm">
+              <Package className="w-4 h-4" />
               Order Management
             </CardTitle>
-            <CardDescription>{orders.length} total orders</CardDescription>
+            <CardDescription className="text-xs">{orders.length} total orders</CardDescription>
           </div>
-          <Button variant="outline" onClick={loadOrders} size="sm">
-            <RefreshCw className="w-4 h-4 mr-2" />
+          <Button variant="outline" onClick={loadOrders} size="sm" className="h-8 text-xs">
+            <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
             Refresh
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="p-3 pt-0 space-y-2">
         {orders.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            <Package className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>No orders yet</p>
+          <div className="text-center py-8 text-muted-foreground">
+            <Package className="w-10 h-10 mx-auto mb-2 opacity-50" />
+            <p className="text-sm">No orders yet</p>
           </div>
         ) : (
           orders.map((order) => (
-            <div key={order.id} className="border rounded-xl overflow-hidden">
+            <div key={order.id} className="border rounded-lg overflow-hidden">
               <button
                 onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                className="w-full p-4 flex items-center justify-between hover:bg-muted/30 transition-colors text-left"
+                className="w-full p-2.5 flex items-center justify-between hover:bg-muted/30 transition-colors text-left gap-2"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Package className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                    <Package className="w-4 h-4 text-primary" />
                   </div>
-                  <div>
-                    <p className="font-medium text-sm">#{order.order_number}</p>
-                    <p className="text-xs text-muted-foreground">
+                  <div className="min-w-0">
+                    <p className="font-medium text-xs">#{order.order_number}</p>
+                    <p className="text-[11px] text-muted-foreground truncate">
                       {order.shipping_info?.name} • {format(new Date(order.created_at), "MMM d, h:mm a")}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge variant="outline" className={statusColors[order.status] || ''}>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-5 ${statusColors[order.status] || ''}`}>
                     {order.status}
                   </Badge>
-                  <span className="font-bold">${Number(order.total).toFixed(2)}</span>
-                  <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${expandedOrder === order.id ? 'rotate-90' : ''}`} />
+                  <span className="font-bold text-xs">${Number(order.total).toFixed(2)}</span>
+                  <ChevronRight className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${expandedOrder === order.id ? 'rotate-90' : ''}`} />
                 </div>
               </button>
               {expandedOrder === order.id && (
-                <div className="border-t p-4 bg-muted/20 space-y-4">
-                  <div className="grid sm:grid-cols-2 gap-4">
+                <div className="border-t p-3 bg-muted/20 space-y-3">
+                  <div className="grid sm:grid-cols-2 gap-3">
                     <div>
-                      <h4 className="font-medium text-sm mb-2">Shipping Info</h4>
-                      <div className="text-sm text-muted-foreground space-y-1">
+                      <h4 className="font-medium text-xs mb-1.5">Shipping Info</h4>
+                      <div className="text-xs text-muted-foreground space-y-0.5">
                         <p className="text-foreground font-medium">{order.shipping_info?.name}</p>
                         <p>{order.shipping_info?.email}</p>
                         <p>{order.shipping_info?.address}</p>
@@ -697,14 +697,14 @@ function AdminOrdersInline() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-medium text-sm mb-2">Update Status</h4>
-                      <div className="flex flex-wrap gap-2">
+                      <h4 className="font-medium text-xs mb-1.5">Update Status</h4>
+                      <div className="flex flex-wrap gap-1.5">
                         {statusOptions.map(status => (
                           <Button
                             key={status}
                             variant={order.status === status ? "default" : "outline"}
                             size="sm"
-                            className="text-xs capitalize"
+                            className="text-[11px] capitalize h-7 px-2"
                             disabled={updatingOrder === order.id}
                             onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, status); }}
                           >
@@ -714,7 +714,7 @@ function AdminOrdersInline() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-between text-sm border-t pt-3">
+                  <div className="flex justify-between text-xs border-t pt-2">
                     <span className="text-muted-foreground">Subtotal: ${Number(order.subtotal).toFixed(2)}</span>
                     <span className="text-muted-foreground">Shipping: {Number(order.shipping_cost) === 0 ? "Free" : `$${Number(order.shipping_cost).toFixed(2)}`}</span>
                     <span className="font-bold">Total: ${Number(order.total).toFixed(2)}</span>
