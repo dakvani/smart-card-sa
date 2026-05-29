@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Loader2, Check, Palette, Briefcase, Camera, Sparkles } from "lucide-react";
+import {
+  Loader2, Check, Palette, Briefcase, Camera, Sparkles, Lock,
+  Stethoscope, Home, Trophy, Music, UtensilsCrossed, Dumbbell,
+  Code, Star, GraduationCap,
+} from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
@@ -27,18 +32,39 @@ interface ProfileTemplatesProps {
     animation_type: string | null;
   }) => void;
   currentThemeName: string;
+  isPro?: boolean;
 }
 
 const categoryIcons: Record<string, React.ElementType> = {
   creator: Camera,
   business: Briefcase,
   portfolio: Palette,
+  doctor: Stethoscope,
+  realtor: Home,
+  coach: Trophy,
+  musician: Music,
+  restaurant: UtensilsCrossed,
+  fitness: Dumbbell,
+  photographer: Camera,
+  developer: Code,
+  influencer: Star,
+  educator: GraduationCap,
 };
 
 const categoryLabels: Record<string, string> = {
   creator: "Creator",
   business: "Business",
   portfolio: "Portfolio",
+  doctor: "Doctor",
+  realtor: "Realtor",
+  coach: "Coach",
+  musician: "Musician",
+  restaurant: "Restaurant",
+  fitness: "Fitness",
+  photographer: "Photographer",
+  developer: "Developer",
+  influencer: "Influencer",
+  educator: "Educator",
 };
 
 const animationLabels: Record<string, string> = {
@@ -52,7 +78,7 @@ const animationLabels: Record<string, string> = {
   neon: "💡 Neon",
 };
 
-export function ProfileTemplates({ onApply, currentThemeName }: ProfileTemplatesProps) {
+export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: ProfileTemplatesProps) {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -79,6 +105,10 @@ export function ProfileTemplates({ onApply, currentThemeName }: ProfileTemplates
   };
 
   const applyTemplate = async (template: Template) => {
+    if (template.is_premium && !isPro) {
+      toast.error("This template is Pro-only. Upgrade to unlock!");
+      return;
+    }
     setApplying(template.id);
     try {
       onApply({
@@ -143,6 +173,7 @@ export function ProfileTemplates({ onApply, currentThemeName }: ProfileTemplates
         {filteredTemplates.map(template => {
           const isActive = template.theme_name === currentThemeName;
           const Icon = categoryIcons[template.category] || Palette;
+          const locked = template.is_premium && !isPro;
           
           return (
             <div
@@ -165,6 +196,13 @@ export function ProfileTemplates({ onApply, currentThemeName }: ProfileTemplates
                 <div className="h-full w-full flex items-center justify-center relative z-10">
                   <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur" />
                 </div>
+                {locked && (
+                  <div className="absolute inset-0 bg-background/50 backdrop-blur-[2px] flex items-center justify-center z-20">
+                    <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shadow-glow">
+                      <Lock className="w-3.5 h-3.5 text-primary-foreground" />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Info */}
@@ -183,29 +221,37 @@ export function ProfileTemplates({ onApply, currentThemeName }: ProfileTemplates
                     </div>
                     <p className="text-xs text-muted-foreground">{template.description}</p>
                   </div>
-                  <Button
-                    size="sm"
-                    variant={isActive ? "outline" : "gradient"}
-                    onClick={() => applyTemplate(template)}
-                    disabled={applying === template.id}
-                    className="shrink-0"
-                  >
-                    {applying === template.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : isActive ? (
-                      <>
-                        <Check className="w-4 h-4" />
-                        Applied
-                      </>
-                    ) : (
-                      "Apply"
-                    )}
-                  </Button>
+                  {locked ? (
+                    <Link to="/pricing" className="shrink-0">
+                      <Button size="sm" variant="gradient">
+                        <Lock className="w-3.5 h-3.5" /> Unlock
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant={isActive ? "outline" : "gradient"}
+                      onClick={() => applyTemplate(template)}
+                      disabled={applying === template.id}
+                      className="shrink-0"
+                    >
+                      {applying === template.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : isActive ? (
+                        <>
+                          <Check className="w-4 h-4" />
+                          Applied
+                        </>
+                      ) : (
+                        "Apply"
+                      )}
+                    </Button>
+                  )}
                 </div>
               </div>
 
               {template.is_premium && (
-                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-yellow-500/90 text-yellow-900 text-[10px] font-bold uppercase">
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-yellow-950 text-[10px] font-bold uppercase shadow-sm z-30">
                   Pro
                 </div>
               )}
