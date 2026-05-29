@@ -774,57 +774,96 @@ export default function Dashboard() {
           </div>
 
 
-          {/* Preview Panel */}
-          <div className="lg:w-[40%] lg:sticky lg:top-20 lg:h-fit">
-            <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 p-3 shadow-sm">
+          {/* Preview Panel - iPhone Frame */}
+          <div className="lg:w-[360px] lg:sticky lg:top-20 lg:h-fit">
+            <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 p-4 shadow-sm">
               <div className="flex items-center justify-between mb-3 px-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Live Preview</p>
-                <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live
+                  </span>
+                  <Link to={`/${profile.username}`} target="_blank" className="text-[10px] text-primary hover:underline flex items-center gap-1">
+                    <ExternalLink className="w-2.5 h-2.5" /> Open
+                  </Link>
+                </div>
               </div>
-              <div 
-                className={`rounded-[1.75rem] p-5 min-h-[540px] overflow-hidden relative ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
-                style={previewStyle}
-              >
-                {/* Animated Background Preview */}
-                <div className="absolute inset-0 rounded-[1.75rem] overflow-hidden">
-                  <AnimatedBackground 
-                    animationType={profile.animation_type} 
-                    config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
-                  />
-                </div>
-                
-                <div className="text-center mb-5 relative z-10">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-primary-foreground/20 backdrop-blur mb-2.5 flex items-center justify-center overflow-hidden ring-2 ring-primary-foreground/10">
-                    {profile.avatar_url ? (
-                      <img src={profile.avatar_url} alt={profile.title} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-xl font-bold text-primary-foreground">
-                        {profile.username[0]?.toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <h2 className="text-base font-bold text-primary-foreground">{profile.title}</h2>
-                  {profile.bio && (
-                    <p className="text-primary-foreground/70 text-xs mt-1">{profile.bio}</p>
-                  )}
-                  <SocialIcons socialLinks={profile.social_links || {}} />
-                </div>
-                <div className="space-y-2 relative z-10">
-                  {links.filter(l => l.visible).map(link => (
-                    <div key={link.id} className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-primary-foreground/20 backdrop-blur">
-                      {link.thumbnail_url && (
-                        <img src={link.thumbnail_url} alt="" className="w-7 h-7 rounded-md object-cover flex-shrink-0" />
-                      )}
-                      <span className="flex-1 text-primary-foreground font-medium text-center text-xs">
-                        {link.title || "Untitled Link"}
-                      </span>
-                      {link.thumbnail_url && <div className="w-7" />}
+
+              {/* iPhone Frame */}
+              <div className="mx-auto" style={{ width: 280 }}>
+                <div className="relative rounded-[2.75rem] bg-neutral-900 p-[10px] shadow-2xl ring-1 ring-white/10">
+                  {/* Side buttons */}
+                  <div className="absolute -left-[3px] top-24 w-[3px] h-8 rounded-l-md bg-neutral-700" />
+                  <div className="absolute -left-[3px] top-36 w-[3px] h-12 rounded-l-md bg-neutral-700" />
+                  <div className="absolute -left-[3px] top-52 w-[3px] h-12 rounded-l-md bg-neutral-700" />
+                  <div className="absolute -right-[3px] top-32 w-[3px] h-16 rounded-r-md bg-neutral-700" />
+
+                  {/* Screen */}
+                  <div
+                    className={`relative rounded-[2.25rem] overflow-hidden ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
+                    style={{ ...previewStyle, height: 560 }}
+                  >
+                    {/* Status bar */}
+                    <div className="absolute top-0 inset-x-0 z-30 flex items-center justify-between px-6 pt-2 pb-1 text-[10px] font-semibold text-primary-foreground">
+                      <span>9:41</span>
+                      <div className="flex items-center gap-1">
+                        <span>●●●</span>
+                        <span>􀙇</span>
+                        <span>100%</span>
+                      </div>
                     </div>
-                  ))}
+
+                    {/* Dynamic Island / Notch */}
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 z-40 w-24 h-6 rounded-full bg-black" />
+
+                    {/* Animated bg */}
+                    <div className="absolute inset-0 overflow-hidden">
+                      <AnimatedBackground
+                        animationType={profile.animation_type}
+                        config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
+                      />
+                    </div>
+
+                    {/* Content - scrollable */}
+                    <div className="absolute inset-0 pt-10 pb-4 px-4 overflow-y-auto scrollbar-hide">
+                      <div className="text-center mb-4 relative z-10">
+                        <div className="w-16 h-16 mx-auto rounded-full bg-primary-foreground/20 backdrop-blur mb-2 flex items-center justify-center overflow-hidden ring-2 ring-primary-foreground/20">
+                          {profile.avatar_url ? (
+                            <img src={profile.avatar_url} alt={profile.title} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-xl font-bold text-primary-foreground">
+                              {profile.username[0]?.toUpperCase()}
+                            </span>
+                          )}
+                        </div>
+                        <h2 className="text-sm font-bold text-primary-foreground">{profile.title}</h2>
+                        {profile.bio && (
+                          <p className="text-primary-foreground/70 text-[11px] mt-1 px-2">{profile.bio}</p>
+                        )}
+                        <SocialIcons socialLinks={profile.social_links || {}} />
+                      </div>
+                      <div className="space-y-2 relative z-10">
+                        {links.filter(l => l.visible).map(link => (
+                          <div key={link.id} className="flex items-center gap-2 py-2.5 px-3 rounded-xl bg-primary-foreground/20 backdrop-blur">
+                            {link.thumbnail_url && (
+                              <img src={link.thumbnail_url} alt="" className="w-6 h-6 rounded-md object-cover flex-shrink-0" />
+                            )}
+                            <span className="flex-1 text-primary-foreground font-medium text-center text-[11px]">
+                              {link.title || "Untitled Link"}
+                            </span>
+                            {link.thumbnail_url && <div className="w-6" />}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Home indicator */}
+                    <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-24 h-1 rounded-full bg-primary-foreground/70 z-30" />
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
             </div>
           </div>
         </div>
