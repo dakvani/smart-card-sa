@@ -230,7 +230,7 @@ export default function PublicProfile() {
           <div className="hidden sm:block absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-900 rounded-b-2xl z-30" />
 
           <div
-            className={`relative h-full overflow-y-auto py-12 px-4 ${bgClass}`}
+            className={`relative h-full overflow-y-auto pt-8 pb-10 px-4 sm:pt-12 ${bgClass}`}
             style={bgStyle}
           >
             <AnimatedBackground
@@ -240,26 +240,26 @@ export default function PublicProfile() {
 
             <div className="max-w-md mx-auto relative z-10">
 
-        {/* Profile Header */}
+        {/* Profile Header — compact link-in-bio */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
+          className="text-center mb-5 sm:mb-6"
         >
-          <div className="w-24 h-24 mx-auto rounded-full bg-primary-foreground/20 backdrop-blur mb-4 flex items-center justify-center overflow-hidden">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full bg-primary-foreground/20 backdrop-blur mb-3 flex items-center justify-center overflow-hidden ring-2 ring-primary-foreground/20">
             {profile.avatar_url ? (
               <img src={profile.avatar_url} alt={profile.title} className="w-full h-full object-cover" />
             ) : (
-              <span className="text-3xl font-bold text-primary-foreground">
+              <span className="text-2xl sm:text-3xl font-bold text-primary-foreground">
                 {profile.username[0]?.toUpperCase()}
               </span>
             )}
           </div>
-          <h1 className="text-2xl font-bold text-primary-foreground">{profile.title}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground leading-tight">{profile.title}</h1>
           {profile.bio && (
-            <p className="text-primary-foreground/70 mt-2 max-w-xs mx-auto">{profile.bio}</p>
+            <p className="text-sm text-primary-foreground/70 mt-1.5 max-w-xs mx-auto leading-snug">{profile.bio}</p>
           )}
-          
+
           {/* Social Icons */}
           <SocialIcons socialLinks={profile.social_links || {}} />
         </motion.div>
