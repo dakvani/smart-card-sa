@@ -102,6 +102,11 @@ export default function Dashboard() {
   const [analytics, setAnalytics] = useState({ views: 0, clicks: 0 });
   const { isPro } = usePlan(user?.id);
 
+  // History stack for undo/redo of profile changes
+  const [past, setPast] = useState<Profile[]>([]);
+  const [future, setFuture] = useState<Profile[]>([]);
+
+
   // DnD sensors
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
