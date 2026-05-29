@@ -272,9 +272,14 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
                 </div>
               </div>
 
-              {template.is_premium && (
+              {template.is_premium && !isPro && (
                 <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-yellow-950 text-[10px] font-bold uppercase shadow-sm z-30">
                   Pro
+                </div>
+              )}
+              {template.is_premium && isPro && (
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] font-semibold uppercase shadow-sm z-30 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" /> Pro
                 </div>
               )}
             </div>
