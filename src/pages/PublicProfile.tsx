@@ -390,17 +390,43 @@ export default function PublicProfile() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-12 text-center"
+          className="mt-10 sm:mt-12 text-center"
         >
-          <Link 
-            to="/" 
-            className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-primary-foreground transition-colors text-sm"
-          >
-            <SmartCardLogo className="w-4 h-4" />
-            Made with SmartCard
-          </Link>
+          {profile.plan !== "pro" && (
+            <div className="inline-flex items-center gap-2 flex-wrap justify-center">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-primary-foreground transition-colors text-xs sm:text-sm"
+              >
+                <SmartCardLogo className="w-4 h-4" />
+                Made with SmartCard
+              </Link>
+              <Link to="/auth?signup=true">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-7 px-2.5 text-[11px] rounded-full bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/20"
+                >
+                  Join free
+                </Button>
+              </Link>
+            </div>
+          )}
         </motion.div>
             </div>
+          </div>
+
+          {/* Desktop-only: scan-to-mobile QR badge, anchored outside the phone frame */}
+          <div className="hidden sm:flex absolute -right-44 top-6 w-40 flex-col items-center gap-2 rounded-2xl border border-white/10 bg-slate-900/70 backdrop-blur p-3 shadow-xl">
+            <div className="bg-white p-2 rounded-lg">
+              <QRCodeSVG value={typeof window !== "undefined" ? window.location.href : ""} size={120} level="M" />
+            </div>
+            <p className="text-[11px] font-medium text-primary-foreground/80 text-center leading-tight">
+              View on mobile
+            </p>
+            <p className="text-[10px] text-primary-foreground/50 text-center leading-tight">
+              Scan to open on your phone
+            </p>
           </div>
         </div>
       </div>
