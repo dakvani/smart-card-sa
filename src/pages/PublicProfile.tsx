@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { Loader2, Star } from "lucide-react";
 import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
+import { QRCodeSVG } from "qrcode.react";
+import { Button } from "@/components/ui/button";
 import { SocialIcons } from "@/components/profile/SocialIcons";
 import { EmailSignup } from "@/components/profile/EmailSignup";
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
