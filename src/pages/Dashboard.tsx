@@ -745,47 +745,52 @@ export default function Dashboard() {
           </div>
 
           {/* Preview Panel */}
-          <div className="lg:w-[40%] lg:sticky lg:top-24 lg:h-fit">
-            <div className="bg-background rounded-2xl border border-border p-4">
-              <p className="text-sm text-muted-foreground text-center mb-4">Live Preview</p>
+          <div className="lg:w-[40%] lg:sticky lg:top-20 lg:h-fit">
+            <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 p-3 shadow-sm">
+              <div className="flex items-center justify-between mb-3 px-1">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Live Preview</p>
+                <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live
+                </span>
+              </div>
               <div 
-                className={`rounded-[2rem] p-6 min-h-[600px] overflow-hidden relative ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
+                className={`rounded-[1.75rem] p-5 min-h-[540px] overflow-hidden relative ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
                 style={previewStyle}
               >
                 {/* Animated Background Preview */}
-                <div className="absolute inset-0 rounded-[2rem] overflow-hidden">
+                <div className="absolute inset-0 rounded-[1.75rem] overflow-hidden">
                   <AnimatedBackground 
                     animationType={profile.animation_type} 
                     config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
                   />
                 </div>
                 
-                <div className="text-center mb-6 relative z-10">
-                  <div className="w-20 h-20 mx-auto rounded-full bg-primary-foreground/20 backdrop-blur mb-3 flex items-center justify-center overflow-hidden">
+                <div className="text-center mb-5 relative z-10">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-primary-foreground/20 backdrop-blur mb-2.5 flex items-center justify-center overflow-hidden ring-2 ring-primary-foreground/10">
                     {profile.avatar_url ? (
                       <img src={profile.avatar_url} alt={profile.title} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-2xl font-bold text-primary-foreground">
+                      <span className="text-xl font-bold text-primary-foreground">
                         {profile.username[0]?.toUpperCase()}
                       </span>
                     )}
                   </div>
-                  <h2 className="text-lg font-bold text-primary-foreground">{profile.title}</h2>
+                  <h2 className="text-base font-bold text-primary-foreground">{profile.title}</h2>
                   {profile.bio && (
-                    <p className="text-primary-foreground/70 text-sm mt-1">{profile.bio}</p>
+                    <p className="text-primary-foreground/70 text-xs mt-1">{profile.bio}</p>
                   )}
                   <SocialIcons socialLinks={profile.social_links || {}} />
                 </div>
-                <div className="space-y-3 relative z-10">
+                <div className="space-y-2 relative z-10">
                   {links.filter(l => l.visible).map(link => (
-                    <div key={link.id} className="flex items-center gap-3 py-3 px-4 rounded-xl bg-primary-foreground/20 backdrop-blur">
+                    <div key={link.id} className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-primary-foreground/20 backdrop-blur">
                       {link.thumbnail_url && (
-                        <img src={link.thumbnail_url} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                        <img src={link.thumbnail_url} alt="" className="w-7 h-7 rounded-md object-cover flex-shrink-0" />
                       )}
-                      <span className="flex-1 text-primary-foreground font-medium text-center text-sm">
+                      <span className="flex-1 text-primary-foreground font-medium text-center text-xs">
                         {link.title || "Untitled Link"}
                       </span>
-                      {link.thumbnail_url && <div className="w-8" />}
+                      {link.thumbnail_url && <div className="w-7" />}
                     </div>
                   ))}
                 </div>
