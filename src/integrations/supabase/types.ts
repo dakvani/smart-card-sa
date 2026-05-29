@@ -534,6 +534,7 @@ export type Database = {
           email_collection_enabled: boolean | null
           gradient_direction: string | null
           id: string
+          plan: string
           social_links: Json | null
           theme_gradient: string | null
           theme_name: string | null
@@ -555,6 +556,7 @@ export type Database = {
           email_collection_enabled?: boolean | null
           gradient_direction?: string | null
           id?: string
+          plan?: string
           social_links?: Json | null
           theme_gradient?: string | null
           theme_name?: string | null
@@ -576,6 +578,7 @@ export type Database = {
           email_collection_enabled?: boolean | null
           gradient_direction?: string | null
           id?: string
+          plan?: string
           social_links?: Json | null
           theme_gradient?: string | null
           theme_name?: string | null
