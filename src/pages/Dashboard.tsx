@@ -100,6 +100,7 @@ export default function Dashboard() {
   const [links, setLinks] = useState<LinkItem[]>([]);
   const [groups, setGroups] = useState<LinkGroup[]>([]);
   const [analytics, setAnalytics] = useState({ views: 0, clicks: 0 });
+  const { isPro } = usePlan(user?.id);
 
   // DnD sensors
   const sensors = useSensors(
