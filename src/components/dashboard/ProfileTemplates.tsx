@@ -110,9 +110,11 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
 
   const applyTemplate = async (template: Template) => {
     if (template.is_premium && !isPro) {
-      toast.error("This template is Pro-only. Upgrade to unlock!");
+      setUnlockFeature(template.name);
+      setUnlockOpen(true);
       return;
     }
+
     setApplying(template.id);
     try {
       onApply({
