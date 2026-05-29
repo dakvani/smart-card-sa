@@ -78,7 +78,7 @@ const animationLabels: Record<string, string> = {
   neon: "💡 Neon",
 };
 
-export function ProfileTemplates({ onApply, currentThemeName }: ProfileTemplatesProps) {
+export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: ProfileTemplatesProps) {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
