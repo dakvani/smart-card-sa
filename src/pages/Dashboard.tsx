@@ -766,8 +766,10 @@ export default function Dashboard() {
                   </div>
                 </div>
               )}
+              </div>
             </div>
           </div>
+
 
           {/* Preview Panel */}
           <div className="lg:w-[40%] lg:sticky lg:top-20 lg:h-fit">
