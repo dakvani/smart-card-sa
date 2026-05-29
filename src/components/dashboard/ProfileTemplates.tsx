@@ -203,12 +203,21 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
                   <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur" />
                 </div>
                 {locked && (
-                  <div className="absolute inset-0 bg-background/50 backdrop-blur-[2px] flex items-center justify-center z-20">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUnlockFeature(template.name);
+                      setUnlockOpen(true);
+                    }}
+                    className="absolute inset-0 bg-background/50 backdrop-blur-[2px] flex items-center justify-center z-20 cursor-pointer hover:bg-background/40 transition"
+                    aria-label={`Unlock ${template.name}`}
+                  >
                     <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shadow-glow">
                       <Lock className="w-3.5 h-3.5 text-primary-foreground" />
                     </div>
-                  </div>
+                  </button>
                 )}
+
               </div>
 
               {/* Info */}
