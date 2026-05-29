@@ -339,7 +339,7 @@ export default function AdminDashboard() {
             transition={{ delay: 0.2 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid h-9">
+              <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:inline-grid h-9">
                 <TabsTrigger value="overview" className="gap-1.5 text-xs h-7">
                   <BarChart3 className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Overview</span>
@@ -351,6 +351,10 @@ export default function AdminDashboard() {
                 <TabsTrigger value="orders" className="gap-1.5 text-xs h-7">
                   <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
+                </TabsTrigger>
+                <TabsTrigger value="pro" className="gap-1.5 text-xs h-7">
+                  <Star className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Pro</span>
                 </TabsTrigger>
                 <TabsTrigger value="tables" className="gap-1.5 text-xs h-7">
                   <Database className="w-3.5 h-3.5" />
