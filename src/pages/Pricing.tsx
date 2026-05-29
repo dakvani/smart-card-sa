@@ -1,9 +1,10 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, ArrowLeft, Sparkles } from "lucide-react";
+
 
 const plans = [
   {
@@ -56,12 +57,31 @@ const plans = [
 ];
 
 export default function Pricing() {
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  const returnTo = params.get("returnTo");
+  const feature = params.get("feature");
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 pt-24">
+        {returnTo && (
+          <div className="container mx-auto px-4">
+            <div className="rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                You're upgrading to unlock <strong>{feature || "a Pro feature"}</strong>. We'll send you right back when you're done.
+              </p>
+              <Button variant="ghost" size="sm" onClick={() => navigate(returnTo)}>
+                <ArrowLeft className="w-4 h-4" /> Back
+              </Button>
+            </div>
+          </div>
+        )}
         {/* Header */}
         <section className="py-16 text-center">
+
           <div className="container mx-auto px-4">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}

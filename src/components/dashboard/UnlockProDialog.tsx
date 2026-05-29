@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Sparkles, Lock, Check } from "lucide-react";
 import {
   Dialog,
@@ -14,6 +14,8 @@ interface UnlockProDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   featureName?: string;
+  /** Where to send the user back to after upgrading. Defaults to current URL. */
+  returnTo?: string;
 }
 
 const benefits = [
@@ -23,7 +25,18 @@ const benefits = [
   "Detailed analytics & email capture",
 ];
 
-export function UnlockProDialog({ open, onOpenChange, featureName }: UnlockProDialogProps) {
+export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: UnlockProDialogProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleUpgrade = () => {
+    const back = returnTo || `${location.pathname}${location.search}${location.hash}`;
+    onOpenChange(false);
+    navigate(`/pricing?returnTo=${encodeURIComponent(back)}&feature=${encodeURIComponent(featureName || "pro")}`, {
+      state: { returnTo: back, feature: featureName },
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -36,7 +49,8 @@ export function UnlockProDialog({ open, onOpenChange, featureName }: UnlockProDi
             Unlock {featureName || "this Pro feature"}
           </DialogTitle>
           <DialogDescription className="text-center">
-            Upgrade to SmartCard Pro to access premium templates and advanced builder tools.
+            Upgrade to SmartCard Pro to unlock this template and every premium builder tool. We'll bring you right
+            back here when you're done.
           </DialogDescription>
         </DialogHeader>
 
@@ -53,11 +67,9 @@ export function UnlockProDialog({ open, onOpenChange, featureName }: UnlockProDi
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
             Maybe later
           </Button>
-          <Link to="/pricing" onClick={() => onOpenChange(false)}>
-            <Button variant="gradient" size="sm">
-              <Sparkles className="w-4 h-4" /> Upgrade to Pro
-            </Button>
-          </Link>
+          <Button variant="gradient" size="sm" onClick={handleUpgrade}>
+            <Sparkles className="w-4 h-4" /> Upgrade to Pro
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

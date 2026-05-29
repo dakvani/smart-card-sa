@@ -105,6 +105,9 @@ export default function Dashboard() {
   // History stack for undo/redo of profile changes
   const [past, setPast] = useState<Profile[]>([]);
   const [future, setFuture] = useState<Profile[]>([]);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+
 
 
   // DnD sensors
@@ -221,9 +224,9 @@ export default function Dashboard() {
   const persistProfile = async (next: Profile, opts?: { silent?: boolean }) => {
     if (!user) return;
     setSaving(true);
+    setSaveStatus("saving");
     try {
       const dbUpdates = { ...next } as Record<string, unknown>;
-      // Strip readonly / non-column fields if needed (id stays)
       delete (dbUpdates as any).created_at;
       delete (dbUpdates as any).updated_at;
       const { error } = await supabase
@@ -231,13 +234,17 @@ export default function Dashboard() {
         .update(dbUpdates as never)
         .eq("id", next.id);
       if (error) throw error;
+      setSaveStatus("saved");
+      setLastSavedAt(new Date());
       if (!opts?.silent) toast.success("Saved to your live page");
     } catch (error: any) {
+      setSaveStatus("error");
       toast.error("Failed to update: " + error.message);
     } finally {
       setSaving(false);
     }
   };
+
 
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!profile || !user) return;
@@ -551,11 +558,44 @@ export default function Dashboard() {
                   </h2>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  {saving && (
-                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground mr-1">
-                      <Loader2 className="w-3 h-3 animate-spin" /> Saving…
-                    </span>
-                  )}
+                  {/* Autosave status pill */}
+                  <div
+                    data-testid="autosave-status"
+                    className={`flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded-full mr-1 border transition-colors ${
+                      saveStatus === "saving"
+                        ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                        : saveStatus === "error"
+                        ? "bg-destructive/10 text-destructive border-destructive/30"
+                        : saveStatus === "saved"
+                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                        : "bg-secondary/60 text-muted-foreground border-border/60"
+                    }`}
+                  >
+                    {saveStatus === "saving" && (
+                      <>
+                        <Loader2 className="w-3 h-3 animate-spin" /> Saving…
+                      </>
+                    )}
+                    {saveStatus === "saved" && (
+                      <>
+                        <Check className="w-3 h-3" />
+                        {lastSavedAt
+                          ? `Saved ${lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+                          : "Saved"}
+                      </>
+                    )}
+                    {saveStatus === "error" && (
+                      <>
+                        <span className="w-1.5 h-1.5 rounded-full bg-destructive" /> Save failed
+                      </>
+                    )}
+                    {saveStatus === "idle" && (
+                      <>
+                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" /> Not saved yet
+                      </>
+                    )}
+                  </div>
+
                   <Button
                     variant="ghost"
                     size="icon"
