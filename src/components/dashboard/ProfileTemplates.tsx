@@ -84,6 +84,9 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [applying, setApplying] = useState<string | null>(null);
+  const [unlockOpen, setUnlockOpen] = useState(false);
+  const [unlockFeature, setUnlockFeature] = useState<string | undefined>();
+
 
   useEffect(() => {
     loadTemplates();
