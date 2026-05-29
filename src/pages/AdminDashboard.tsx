@@ -19,6 +19,7 @@ import { AdminTableViewer } from "@/components/admin/AdminTableViewer";
 import { AdminUserManager } from "@/components/admin/AdminUserManager";
 import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
 import { AdminProductManager } from "@/components/admin/AdminProductManager";
+import { AdminProRequests } from "@/components/admin/AdminProRequests";
 import { useAdminOrderNotifications } from "@/hooks/use-admin-order-notifications";
 import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
 import { format } from "date-fns";
