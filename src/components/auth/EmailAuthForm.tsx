@@ -18,6 +18,7 @@ export function EmailAuthForm({ mode, onToggleMode }: EmailAuthFormProps) {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
@@ -42,6 +43,7 @@ export function EmailAuthForm({ mode, onToggleMode }: EmailAuthFormProps) {
         } else {
           toast.success("Check your email to confirm your account!");
         }
+        setLoading(false);
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -49,14 +51,17 @@ export function EmailAuthForm({ mode, onToggleMode }: EmailAuthFormProps) {
         });
         if (error) {
           toast.error(error.message);
+          setLoading(false);
         } else if (data?.session) {
-          // Explicit redirect — don't rely solely on onAuthStateChange listeners
-          navigate("/dashboard", { replace: true });
+          setRedirecting(true);
+          // Brief delay so the overlay renders before navigation
+          setTimeout(() => navigate("/dashboard", { replace: true }), 150);
+        } else {
+          setLoading(false);
         }
       }
     } catch (err) {
       toast.error("Something went wrong. Please try again.");
-    } finally {
       setLoading(false);
     }
   };
