@@ -44,17 +44,18 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-function renderTemplates(props: { isPro: boolean; onApply?: () => void }) {
+function renderTemplates(props: { isPro: boolean; onApply?: () => void; currentThemeName?: string }) {
   return render(
     <MemoryRouter>
       <ProfileTemplates
-        currentThemeName="Midnight"
+        currentThemeName={props.currentThemeName ?? "SomeOtherTheme"}
         isPro={props.isPro}
         onApply={props.onApply || vi.fn()}
       />
     </MemoryRouter>
   );
 }
+
 
 describe("ProfileTemplates — Pro gating", () => {
   beforeEach(() => vi.clearAllMocks());
