@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Loader2, Check, Palette, Briefcase, Camera, Sparkles } from "lucide-react";
+import {
+  Loader2, Check, Palette, Briefcase, Camera, Sparkles, Lock,
+  Stethoscope, Home, Trophy, Music, UtensilsCrossed, Dumbbell,
+  Code, Star, GraduationCap,
+} from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
@@ -27,18 +32,39 @@ interface ProfileTemplatesProps {
     animation_type: string | null;
   }) => void;
   currentThemeName: string;
+  isPro?: boolean;
 }
 
 const categoryIcons: Record<string, React.ElementType> = {
   creator: Camera,
   business: Briefcase,
   portfolio: Palette,
+  doctor: Stethoscope,
+  realtor: Home,
+  coach: Trophy,
+  musician: Music,
+  restaurant: UtensilsCrossed,
+  fitness: Dumbbell,
+  photographer: Camera,
+  developer: Code,
+  influencer: Star,
+  educator: GraduationCap,
 };
 
 const categoryLabels: Record<string, string> = {
   creator: "Creator",
   business: "Business",
   portfolio: "Portfolio",
+  doctor: "Doctor",
+  realtor: "Realtor",
+  coach: "Coach",
+  musician: "Musician",
+  restaurant: "Restaurant",
+  fitness: "Fitness",
+  photographer: "Photographer",
+  developer: "Developer",
+  influencer: "Influencer",
+  educator: "Educator",
 };
 
 const animationLabels: Record<string, string> = {
