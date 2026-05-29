@@ -35,6 +35,7 @@ interface Profile {
   animation_type: string | null;
   animation_speed: number;
   animation_intensity: number;
+  plan?: string;
 }
 
 interface LinkItem {
