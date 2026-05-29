@@ -218,31 +218,62 @@ export default function Dashboard() {
   };
 
   // Profile operations
-  const updateProfile = async (updates: Partial<Profile>) => {
-    if (!profile || !user) return;
+  const persistProfile = async (next: Profile, opts?: { silent?: boolean }) => {
+    if (!user) return;
     setSaving(true);
-    
     try {
-      // Convert social_links to JSON-compatible format for Supabase
-      const dbUpdates = { ...updates } as Record<string, unknown>;
-      if (updates.social_links) {
-        dbUpdates.social_links = updates.social_links as Record<string, string>;
-      }
-
+      const dbUpdates = { ...next } as Record<string, unknown>;
+      // Strip readonly / non-column fields if needed (id stays)
+      delete (dbUpdates as any).created_at;
+      delete (dbUpdates as any).updated_at;
       const { error } = await supabase
         .from("profiles")
         .update(dbUpdates as never)
-        .eq("id", profile.id);
-
+        .eq("id", next.id);
       if (error) throw error;
-      setProfile({ ...profile, ...updates });
-      toast.success("Profile updated!");
+      if (!opts?.silent) toast.success("Saved to your live page");
     } catch (error: any) {
       toast.error("Failed to update: " + error.message);
     } finally {
       setSaving(false);
     }
   };
+
+  const updateProfile = async (updates: Partial<Profile>) => {
+    if (!profile || !user) return;
+    // push current snapshot to history
+    setPast((p) => [...p.slice(-29), profile]);
+    setFuture([]);
+    const next = { ...profile, ...updates } as Profile;
+    setProfile(next);
+    await persistProfile(next, { silent: true });
+  };
+
+  const handleUndo = async () => {
+    if (!profile || past.length === 0) return;
+    const prev = past[past.length - 1];
+    setPast((p) => p.slice(0, -1));
+    setFuture((f) => [profile, ...f].slice(0, 30));
+    setProfile(prev);
+    await persistProfile(prev, { silent: true });
+    toast.success("Undid last change");
+  };
+
+  const handleRedo = async () => {
+    if (!profile || future.length === 0) return;
+    const nxt = future[0];
+    setFuture((f) => f.slice(1));
+    setPast((p) => [...p.slice(-29), profile]);
+    setProfile(nxt);
+    await persistProfile(nxt, { silent: true });
+    toast.success("Redid change");
+  };
+
+  const handleSaveNow = async () => {
+    if (!profile) return;
+    await persistProfile(profile);
+  };
+
 
   // Link operations
   const addLink = async () => {
