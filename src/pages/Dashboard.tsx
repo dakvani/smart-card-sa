@@ -550,11 +550,44 @@ export default function Dashboard() {
                     {tabs.find(x => x.id === activeTab)?.label} Builder
                   </h2>
                 </div>
-                {saving && (
-                  <span className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                    <Loader2 className="w-3 h-3 animate-spin" /> Saving…
-                  </span>
-                )}
+                <div className="flex items-center gap-1.5">
+                  {saving && (
+                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground mr-1">
+                      <Loader2 className="w-3 h-3 animate-spin" /> Saving…
+                    </span>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={handleUndo}
+                    disabled={past.length === 0 || saving}
+                    title="Undo (last profile change)"
+                  >
+                    <Undo2 className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={handleRedo}
+                    disabled={future.length === 0 || saving}
+                    title="Redo"
+                  >
+                    <Redo2 className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    variant="gradient"
+                    size="sm"
+                    className="h-7 text-[11px] px-2.5"
+                    onClick={handleSaveNow}
+                    disabled={saving}
+                    title="Save & publish to your live page"
+                  >
+                    <Save className="w-3.5 h-3.5" /> Save
+                  </Button>
+                </div>
+
               </div>
               <div className="p-4">
               {activeTab === "links" && (
