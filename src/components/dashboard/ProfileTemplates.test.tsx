@@ -96,9 +96,10 @@ describe("ProfileTemplates — Pro gating", () => {
     // No Unlock button for Pro users
     expect(screen.queryByRole("button", { name: /Unlock/i })).not.toBeInTheDocument();
 
-    // Two Apply buttons (one per template) — click the second (premium)
+    // Both templates show Apply for Pro user
     const applyButtons = screen.getAllByRole("button", { name: /^Apply$/i });
     expect(applyButtons.length).toBe(2);
+    // Click the premium one
     fireEvent.click(applyButtons[1]);
 
     await waitFor(() =>
@@ -111,6 +112,7 @@ describe("ProfileTemplates — Pro gating", () => {
       )
     );
   });
+
 
   it("Free user: free templates apply normally", async () => {
     const onApply = vi.fn();
