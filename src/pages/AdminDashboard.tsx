@@ -19,6 +19,7 @@ import { AdminTableViewer } from "@/components/admin/AdminTableViewer";
 import { AdminUserManager } from "@/components/admin/AdminUserManager";
 import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
 import { AdminProductManager } from "@/components/admin/AdminProductManager";
+import { AdminProRequests } from "@/components/admin/AdminProRequests";
 import { useAdminOrderNotifications } from "@/hooks/use-admin-order-notifications";
 import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
 import { format } from "date-fns";
@@ -339,7 +340,7 @@ export default function AdminDashboard() {
             transition={{ delay: 0.2 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid h-9">
+              <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:inline-grid h-9">
                 <TabsTrigger value="overview" className="gap-1.5 text-xs h-7">
                   <BarChart3 className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Overview</span>
@@ -351,6 +352,10 @@ export default function AdminDashboard() {
                 <TabsTrigger value="orders" className="gap-1.5 text-xs h-7">
                   <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
+                </TabsTrigger>
+                <TabsTrigger value="pro" className="gap-1.5 text-xs h-7">
+                  <Star className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Pro</span>
                 </TabsTrigger>
                 <TabsTrigger value="tables" className="gap-1.5 text-xs h-7">
                   <Database className="w-3.5 h-3.5" />
@@ -519,6 +524,12 @@ export default function AdminDashboard() {
               <TabsContent value="orders">
                 <AdminOrdersInline />
               </TabsContent>
+
+              <TabsContent value="pro">
+                <AdminProRequests />
+              </TabsContent>
+
+
 
               <TabsContent value="tables">
                 <AdminTableViewer />

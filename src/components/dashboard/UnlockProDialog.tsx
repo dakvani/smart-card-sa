@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Sparkles, Lock, Check } from "lucide-react";
+import { Sparkles, Lock, Check, Loader2, Clock } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -9,12 +10,14 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useProRequest } from "@/hooks/use-pro-request";
+import { toast } from "sonner";
 
 interface UnlockProDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   featureName?: string;
-  /** Where to send the user back to after upgrading. Defaults to current URL. */
   returnTo?: string;
 }
 
@@ -28,14 +31,43 @@ const benefits = [
 export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: UnlockProDialogProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [userId, setUserId] = useState<string | undefined>();
+  const [submitting, setSubmitting] = useState(false);
+  const { status, requestPro, refresh } = useProRequest(userId);
 
-  const handleUpgrade = () => {
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id));
+  }, []);
+
+  useEffect(() => {
+    if (open) refresh();
+  }, [open, refresh]);
+
+  const handleRequest = async () => {
+    if (!userId) {
+      const back = returnTo || `${location.pathname}${location.search}${location.hash}`;
+      onOpenChange(false);
+      navigate(`/login?returnTo=${encodeURIComponent(back)}`);
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await requestPro(featureName);
+      toast.success("Request sent! An admin will review your upgrade shortly.");
+    } catch (e: any) {
+      toast.error(e.message || "Could not send request");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleViewPricing = () => {
     const back = returnTo || `${location.pathname}${location.search}${location.hash}`;
     onOpenChange(false);
-    navigate(`/pricing?returnTo=${encodeURIComponent(back)}&feature=${encodeURIComponent(featureName || "pro")}`, {
-      state: { returnTo: back, feature: featureName },
-    });
+    navigate(`/pricing?returnTo=${encodeURIComponent(back)}&feature=${encodeURIComponent(featureName || "pro")}`);
   };
+
+  const pending = status === "pending";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -49,8 +81,9 @@ export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: U
             Unlock {featureName || "this Pro feature"}
           </DialogTitle>
           <DialogDescription className="text-center">
-            Upgrade to SmartCard Pro to unlock this template and every premium builder tool. We'll bring you right
-            back here when you're done.
+            {pending
+              ? "Your upgrade request is pending admin approval. You'll get Pro access as soon as it's reviewed."
+              : "Request Pro access — an admin will be notified instantly and can grant you the upgrade."}
           </DialogDescription>
         </DialogHeader>
 
@@ -63,13 +96,20 @@ export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: U
           ))}
         </ul>
 
-        <DialogFooter className="sm:justify-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
-            Maybe later
+        <DialogFooter className="sm:justify-center gap-2 flex-wrap">
+          <Button variant="outline" size="sm" onClick={handleViewPricing}>
+            View pricing
           </Button>
-          <Button variant="gradient" size="sm" onClick={handleUpgrade}>
-            <Sparkles className="w-4 h-4" /> Upgrade to Pro
-          </Button>
+          {pending ? (
+            <Button variant="gradient" size="sm" disabled>
+              <Clock className="w-4 h-4" /> Awaiting approval
+            </Button>
+          ) : (
+            <Button variant="gradient" size="sm" onClick={handleRequest} disabled={submitting}>
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              Request Pro access
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
