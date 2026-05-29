@@ -67,7 +67,7 @@ describe("ProfileTemplates — Pro gating", () => {
 
     // Pro badge appears on premium card
     expect(screen.getAllByText(/Pro/i).length).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: /Unlock/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Unlock$/ })).toBeInTheDocument();
     // Free template shows Apply
     expect(screen.getByRole("button", { name: /^Apply$/i })).toBeInTheDocument();
   });
@@ -78,7 +78,7 @@ describe("ProfileTemplates — Pro gating", () => {
 
     await waitFor(() => expect(screen.getByText("Pro Doctor")).toBeInTheDocument());
 
-    fireEvent.click(screen.getByRole("button", { name: /Unlock/i }));
+    fireEvent.click(screen.getByRole("button", { name: /^Unlock$/ }));
 
     await waitFor(() =>
       expect(screen.getByText(/Unlock Pro Doctor/i)).toBeInTheDocument()
@@ -94,7 +94,7 @@ describe("ProfileTemplates — Pro gating", () => {
     await waitFor(() => expect(screen.getByText("Pro Doctor")).toBeInTheDocument());
 
     // No Unlock button for Pro users
-    expect(screen.queryByRole("button", { name: /Unlock/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Unlock$/ })).not.toBeInTheDocument();
 
     // Both templates show Apply for Pro user
     const applyButtons = screen.getAllByRole("button", { name: /^Apply$/i });
