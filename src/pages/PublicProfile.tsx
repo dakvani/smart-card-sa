@@ -408,6 +408,9 @@ export default function PublicProfile() {
             Made with SmartCard
           </Link>
         </motion.div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
