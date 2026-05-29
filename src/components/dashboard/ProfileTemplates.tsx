@@ -173,6 +173,7 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
         {filteredTemplates.map(template => {
           const isActive = template.theme_name === currentThemeName;
           const Icon = categoryIcons[template.category] || Palette;
+          const locked = template.is_premium && !isPro;
           
           return (
             <div
@@ -195,6 +196,13 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
                 <div className="h-full w-full flex items-center justify-center relative z-10">
                   <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur" />
                 </div>
+                {locked && (
+                  <div className="absolute inset-0 bg-background/50 backdrop-blur-[2px] flex items-center justify-center z-20">
+                    <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shadow-glow">
+                      <Lock className="w-3.5 h-3.5 text-primary-foreground" />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Info */}
@@ -213,29 +221,37 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
                     </div>
                     <p className="text-xs text-muted-foreground">{template.description}</p>
                   </div>
-                  <Button
-                    size="sm"
-                    variant={isActive ? "outline" : "gradient"}
-                    onClick={() => applyTemplate(template)}
-                    disabled={applying === template.id}
-                    className="shrink-0"
-                  >
-                    {applying === template.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : isActive ? (
-                      <>
-                        <Check className="w-4 h-4" />
-                        Applied
-                      </>
-                    ) : (
-                      "Apply"
-                    )}
-                  </Button>
+                  {locked ? (
+                    <Link to="/pricing" className="shrink-0">
+                      <Button size="sm" variant="gradient">
+                        <Lock className="w-3.5 h-3.5" /> Unlock
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant={isActive ? "outline" : "gradient"}
+                      onClick={() => applyTemplate(template)}
+                      disabled={applying === template.id}
+                      className="shrink-0"
+                    >
+                      {applying === template.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : isActive ? (
+                        <>
+                          <Check className="w-4 h-4" />
+                          Applied
+                        </>
+                      ) : (
+                        "Apply"
+                      )}
+                    </Button>
+                  )}
                 </div>
               </div>
 
               {template.is_premium && (
-                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-yellow-500/90 text-yellow-900 text-[10px] font-bold uppercase">
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-yellow-950 text-[10px] font-bold uppercase shadow-sm z-30">
                   Pro
                 </div>
               )}
