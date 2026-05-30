@@ -451,15 +451,14 @@ export default function PublicProfile() {
                       <SmartCardLogo className="w-4 h-4" />
                       Made with SmartCard
                     </Link>
-                    <Link to="/auth?signup=true">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-7 px-2.5 text-[11px] rounded-full bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/20"
-                      >
-                        Join free
-                      </Button>
-                    </Link>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setClaimOpen(true)}
+                      className="h-7 px-2.5 text-[11px] rounded-full bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/20"
+                    >
+                      Join free
+                    </Button>
                   </div>
                 )}
               </motion.div>
