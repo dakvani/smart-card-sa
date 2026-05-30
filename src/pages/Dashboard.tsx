@@ -37,6 +37,7 @@ import { LinkGroupManager, LinkGroup } from "@/components/dashboard/LinkGroupMan
 import { FavoritePresets } from "@/components/dashboard/FavoritePresets";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePlan } from "@/hooks/use-plan";
+import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
 
 interface Profile {
   id: string;
