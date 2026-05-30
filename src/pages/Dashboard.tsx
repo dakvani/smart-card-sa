@@ -37,6 +37,7 @@ import { LinkGroupManager, LinkGroup } from "@/components/dashboard/LinkGroupMan
 import { FavoritePresets } from "@/components/dashboard/FavoritePresets";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePlan } from "@/hooks/use-plan";
+import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
 
 interface Profile {
   id: string;
@@ -100,7 +101,7 @@ export default function Dashboard() {
   const [links, setLinks] = useState<LinkItem[]>([]);
   const [groups, setGroups] = useState<LinkGroup[]>([]);
   const [analytics, setAnalytics] = useState({ views: 0, clicks: 0 });
-  const { isPro } = usePlan(user?.id);
+  const { plan, planLabel, isPro, loading: planLoading } = usePlan(user?.id);
 
   // History stack for undo/redo of profile changes
   const [past, setPast] = useState<Profile[]>([]);
@@ -457,6 +458,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
+      <PlanWelcomeDialog userId={user?.id} plan={plan} loading={planLoading} />
       {/* Header */}
       <header className="bg-background/70 backdrop-blur-xl border-b border-border/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
@@ -465,11 +467,18 @@ export default function Dashboard() {
               <span className="text-primary-foreground font-bold text-xs">S</span>
             </div>
             <span className="font-bold text-base tracking-tight">SmartCard</span>
-            {isPro && (
-              <span className="hidden md:inline-flex items-center gap-1 ml-2 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider">
-                <Sparkles className="w-2.5 h-2.5" /> Pro
-              </span>
-            )}
+            <span
+              className={`hidden md:inline-flex items-center gap-1 ml-2 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${
+                plan === "free"
+                  ? "bg-muted text-muted-foreground"
+                  : plan === "starter"
+                  ? "bg-blue-500/15 text-blue-400"
+                  : "gradient-primary text-primary-foreground shadow-glow"
+              }`}
+              title={`Account status: ${planLabel}`}
+            >
+              <Sparkles className="w-2.5 h-2.5" /> {planLabel}
+            </span>
           </Link>
           <div className="flex items-center gap-2">
             <Button variant="gradient" size="sm" onClick={copyProfileUrl} className="h-8 text-xs px-3">

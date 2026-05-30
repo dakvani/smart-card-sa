@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type UserPlan = "free" | "pro" | "pro_plus" | "business" | "enterprise" | "lifetime";
+export type UserPlan = "free" | "starter" | "pro" | "pro_plus" | "business" | "enterprise" | "lifetime";
+
+export const PLAN_LABELS: Record<UserPlan, string> = {
+  free: "Free",
+  starter: "Starter",
+  pro: "Pro",
+  pro_plus: "Pro Plus",
+  business: "Business",
+  enterprise: "Enterprise",
+  lifetime: "Lifetime",
+};
 
 export function usePlan(userId?: string) {
   const [plan, setPlan] = useState<UserPlan>("free");
@@ -29,6 +39,5 @@ export function usePlan(userId?: string) {
     };
   }, [userId]);
 
-  return { plan, isPro: plan !== "free", loading };
+  return { plan, planLabel: PLAN_LABELS[plan] ?? "Free", isPro: plan !== "free", loading };
 }
-
