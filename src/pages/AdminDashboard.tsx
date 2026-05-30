@@ -226,14 +226,25 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <div className="flex gap-1.5 flex-wrap">
+                {pendingProCount > 0 && (
+                  <Button
+                    size="sm"
+                    variant="default"
+                    onClick={() => setActiveTab("pro")}
+                    className="gap-1.5 h-8 text-xs animate-attention bg-gradient-to-r from-primary to-purple-500 text-primary-foreground"
+                  >
+                    <Bell className="w-3.5 h-3.5 animate-wiggle" />
+                    {pendingProCount} Pro request{pendingProCount > 1 ? "s" : ""}
+                  </Button>
+                )}
                 {hasNewOrders && (
                   <Button
                     size="sm"
                     variant="default"
                     onClick={() => { clearNotifications(); setActiveTab("orders"); }}
-                    className="gap-1.5 animate-pulse h-8 text-xs"
+                    className="gap-1.5 animate-attention h-8 text-xs"
                   >
-                    <Bell className="w-3.5 h-3.5" />
+                    <Bell className="w-3.5 h-3.5 animate-wiggle" />
                     {notificationCount} New
                   </Button>
                 )}
