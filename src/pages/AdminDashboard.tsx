@@ -343,9 +343,9 @@ export default function AdminDashboard() {
                 <TabsTrigger value="orders" className="gap-1.5 text-xs h-7 relative">
                   <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
-                  {pendingOrders > 0 && (
+                  {pendingOrderNotifCount > 0 && (
                     <span className="ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-yellow-500 text-background animate-attention">
-                      {pendingOrders}
+                      {pendingOrderNotifCount}
                     </span>
                   )}
                 </TabsTrigger>
