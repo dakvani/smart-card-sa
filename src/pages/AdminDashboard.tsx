@@ -20,8 +20,8 @@ import { AdminUserManager } from "@/components/admin/AdminUserManager";
 import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
 import { AdminProductManager } from "@/components/admin/AdminProductManager";
 import { AdminProRequests } from "@/components/admin/AdminProRequests";
-import { useAdminOrderNotifications } from "@/hooks/use-admin-order-notifications";
-import { usePendingProRequests } from "@/hooks/use-pending-pro-requests";
+import { AdminNotificationBell } from "@/components/admin/AdminNotificationBell";
+import { useAdminNotifications } from "@/hooks/use-admin-notifications";
 import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
 import { format } from "date-fns";
 
@@ -63,8 +63,7 @@ export default function AdminDashboard() {
   const [pendingOrders, setPendingOrders] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
   
-  const { hasNewOrders, notificationCount, clearNotifications } = useAdminOrderNotifications(isAdmin);
-  const { count: pendingProCount } = usePendingProRequests(isAdmin);
+  const { proCount: pendingProCount, orderCount: pendingOrderNotifCount } = useAdminNotifications(isAdmin);
 
   useEffect(() => {
     checkAdminAndLoadStats();
@@ -225,29 +224,8 @@ export default function AdminDashboard() {
                   <p className="text-xs text-muted-foreground">Full account overview & management</p>
                 </div>
               </div>
-              <div className="flex gap-1.5 flex-wrap">
-                {pendingProCount > 0 && (
-                  <Button
-                    size="sm"
-                    variant="default"
-                    onClick={() => setActiveTab("pro")}
-                    className="gap-1.5 h-8 text-xs animate-attention bg-gradient-to-r from-primary to-purple-500 text-primary-foreground"
-                  >
-                    <Bell className="w-3.5 h-3.5 animate-wiggle" />
-                    {pendingProCount} Pro request{pendingProCount > 1 ? "s" : ""}
-                  </Button>
-                )}
-                {hasNewOrders && (
-                  <Button
-                    size="sm"
-                    variant="default"
-                    onClick={() => { clearNotifications(); setActiveTab("orders"); }}
-                    className="gap-1.5 animate-attention h-8 text-xs"
-                  >
-                    <Bell className="w-3.5 h-3.5 animate-wiggle" />
-                    {notificationCount} New
-                  </Button>
-                )}
+              <div className="flex gap-1.5 flex-wrap items-center">
+                <AdminNotificationBell isAdmin={isAdmin} onOpenTab={setActiveTab} />
                 <Button size="sm" variant="outline" onClick={loadAllData} disabled={refreshing} className="h-8 text-xs">
                   <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${refreshing ? 'animate-spin' : ''}`} />
                   Refresh
@@ -365,9 +343,9 @@ export default function AdminDashboard() {
                 <TabsTrigger value="orders" className="gap-1.5 text-xs h-7 relative">
                   <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
-                  {pendingOrders > 0 && (
+                  {pendingOrderNotifCount > 0 && (
                     <span className="ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-yellow-500 text-background animate-attention">
-                      {pendingOrders}
+                      {pendingOrderNotifCount}
                     </span>
                   )}
                 </TabsTrigger>
