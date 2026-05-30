@@ -228,6 +228,10 @@ function PlanPicker({
         <SelectContent>
           <SelectItem value="free">Free</SelectItem>
           <SelectItem value="pro">Pro</SelectItem>
+          <SelectItem value="pro_plus">Pro Plus</SelectItem>
+          <SelectItem value="business">Business</SelectItem>
+          <SelectItem value="enterprise">Enterprise</SelectItem>
+          <SelectItem value="lifetime">Lifetime</SelectItem>
         </SelectContent>
       </Select>
       <Button
