@@ -20,8 +20,8 @@ import { AdminUserManager } from "@/components/admin/AdminUserManager";
 import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
 import { AdminProductManager } from "@/components/admin/AdminProductManager";
 import { AdminProRequests } from "@/components/admin/AdminProRequests";
-import { useAdminOrderNotifications } from "@/hooks/use-admin-order-notifications";
-import { usePendingProRequests } from "@/hooks/use-pending-pro-requests";
+import { AdminNotificationBell } from "@/components/admin/AdminNotificationBell";
+import { useAdminNotifications } from "@/hooks/use-admin-notifications";
 import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
 import { format } from "date-fns";
 
