@@ -101,7 +101,7 @@ export default function Dashboard() {
   const [links, setLinks] = useState<LinkItem[]>([]);
   const [groups, setGroups] = useState<LinkGroup[]>([]);
   const [analytics, setAnalytics] = useState({ views: 0, clicks: 0 });
-  const { isPro } = usePlan(user?.id);
+  const { plan, planLabel, isPro, loading: planLoading } = usePlan(user?.id);
 
   // History stack for undo/redo of profile changes
   const [past, setPast] = useState<Profile[]>([]);
