@@ -21,6 +21,7 @@ import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
 import { AdminProductManager } from "@/components/admin/AdminProductManager";
 import { AdminProRequests } from "@/components/admin/AdminProRequests";
 import { useAdminOrderNotifications } from "@/hooks/use-admin-order-notifications";
+import { usePendingProRequests } from "@/hooks/use-pending-pro-requests";
 import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
 import { format } from "date-fns";
 
@@ -63,6 +64,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   
   const { hasNewOrders, notificationCount, clearNotifications } = useAdminOrderNotifications(isAdmin);
+  const { count: pendingProCount } = usePendingProRequests(isAdmin);
 
   useEffect(() => {
     checkAdminAndLoadStats();
@@ -224,14 +226,25 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <div className="flex gap-1.5 flex-wrap">
+                {pendingProCount > 0 && (
+                  <Button
+                    size="sm"
+                    variant="default"
+                    onClick={() => setActiveTab("pro")}
+                    className="gap-1.5 h-8 text-xs animate-attention bg-gradient-to-r from-primary to-purple-500 text-primary-foreground"
+                  >
+                    <Bell className="w-3.5 h-3.5 animate-wiggle" />
+                    {pendingProCount} Pro request{pendingProCount > 1 ? "s" : ""}
+                  </Button>
+                )}
                 {hasNewOrders && (
                   <Button
                     size="sm"
                     variant="default"
                     onClick={() => { clearNotifications(); setActiveTab("orders"); }}
-                    className="gap-1.5 animate-pulse h-8 text-xs"
+                    className="gap-1.5 animate-attention h-8 text-xs"
                   >
-                    <Bell className="w-3.5 h-3.5" />
+                    <Bell className="w-3.5 h-3.5 animate-wiggle" />
                     {notificationCount} New
                   </Button>
                 )}
@@ -349,13 +362,23 @@ export default function AdminDashboard() {
                   <ShoppingBag className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Products</span>
                 </TabsTrigger>
-                <TabsTrigger value="orders" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="orders" className="gap-1.5 text-xs h-7 relative">
                   <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
+                  {pendingOrders > 0 && (
+                    <span className="ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-yellow-500 text-background animate-attention">
+                      {pendingOrders}
+                    </span>
+                  )}
                 </TabsTrigger>
-                <TabsTrigger value="pro" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="pro" className="gap-1.5 text-xs h-7 relative">
                   <Star className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Pro</span>
+                  {pendingProCount > 0 && (
+                    <span className="ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-primary text-primary-foreground animate-attention">
+                      {pendingProCount}
+                    </span>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger value="tables" className="gap-1.5 text-xs h-7">
                   <Database className="w-3.5 h-3.5" />
