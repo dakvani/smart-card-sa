@@ -222,7 +222,7 @@ function PlanPicker({
   return (
     <div className="flex items-center gap-1">
       <Select value={plan} onValueChange={setPlan}>
-        <SelectTrigger className="h-8 w-[100px] text-xs">
+        <SelectTrigger className="h-8 w-[130px] text-xs">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
