@@ -10,8 +10,9 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { useProRequest } from "@/hooks/use-pro-request";
+import { useProRequest, type RequestablePlan } from "@/hooks/use-pro-request";
 import { toast } from "sonner";
 
 interface UnlockProDialogProps {
