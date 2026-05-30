@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { SocialIcons } from "@/components/profile/SocialIcons";
 import { EmailSignup } from "@/components/profile/EmailSignup";
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
+import { ClaimSmartCardDialog } from "@/components/profile/ClaimSmartCardDialog";
 import { parseUserAgent } from "@/lib/userAgentParser";
 
 interface SocialLinks {
