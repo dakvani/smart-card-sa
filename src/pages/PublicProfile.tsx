@@ -481,6 +481,7 @@ export default function PublicProfile() {
           )}
         </div>
       </div>
+      <ClaimSmartCardDialog open={claimOpen} onOpenChange={setClaimOpen} />
     </div>
   );
 }
