@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { SocialIcons } from "@/components/profile/SocialIcons";
 import { EmailSignup } from "@/components/profile/EmailSignup";
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
+import { ClaimSmartCardDialog } from "@/components/profile/ClaimSmartCardDialog";
 import { parseUserAgent } from "@/lib/userAgentParser";
 
 interface SocialLinks {
@@ -108,6 +109,7 @@ export default function PublicProfile() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("phone");
+  const [claimOpen, setClaimOpen] = useState(false);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -449,15 +451,14 @@ export default function PublicProfile() {
                       <SmartCardLogo className="w-4 h-4" />
                       Made with SmartCard
                     </Link>
-                    <Link to="/auth?signup=true">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-7 px-2.5 text-[11px] rounded-full bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/20"
-                      >
-                        Join free
-                      </Button>
-                    </Link>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setClaimOpen(true)}
+                      className="h-7 px-2.5 text-[11px] rounded-full bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/20"
+                    >
+                      Join free
+                    </Button>
                   </div>
                 )}
               </motion.div>
@@ -480,6 +481,7 @@ export default function PublicProfile() {
           )}
         </div>
       </div>
+      <ClaimSmartCardDialog open={claimOpen} onOpenChange={setClaimOpen} />
     </div>
   );
 }
