@@ -63,8 +63,7 @@ export default function AdminDashboard() {
   const [pendingOrders, setPendingOrders] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
   
-  const { hasNewOrders, notificationCount, clearNotifications } = useAdminOrderNotifications(isAdmin);
-  const { count: pendingProCount } = usePendingProRequests(isAdmin);
+  const { proCount: pendingProCount, orderCount: pendingOrderNotifCount } = useAdminNotifications(isAdmin);
 
   useEffect(() => {
     checkAdminAndLoadStats();
