@@ -362,13 +362,23 @@ export default function AdminDashboard() {
                   <ShoppingBag className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Products</span>
                 </TabsTrigger>
-                <TabsTrigger value="orders" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="orders" className="gap-1.5 text-xs h-7 relative">
                   <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
+                  {pendingOrders > 0 && (
+                    <span className="ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-yellow-500 text-background animate-attention">
+                      {pendingOrders}
+                    </span>
+                  )}
                 </TabsTrigger>
-                <TabsTrigger value="pro" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="pro" className="gap-1.5 text-xs h-7 relative">
                   <Star className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Pro</span>
+                  {pendingProCount > 0 && (
+                    <span className="ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-primary text-primary-foreground animate-attention">
+                      {pendingProCount}
+                    </span>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger value="tables" className="gap-1.5 text-xs h-7">
                   <Database className="w-3.5 h-3.5" />
