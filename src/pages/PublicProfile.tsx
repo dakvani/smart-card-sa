@@ -250,7 +250,8 @@ export default function PublicProfile() {
     : "";
 
   const isCompact = previewMode === "compact";
-  const isPro = profile.plan === "pro";
+  // Any paid tier (pro, pro_plus, business, enterprise, lifetime) removes the SmartCard badge
+  const isPro = !!profile.plan && profile.plan !== "free";
 
   // Reusable QR block (inline in footer for compact mode and small screens)
   const InlineQR = (
