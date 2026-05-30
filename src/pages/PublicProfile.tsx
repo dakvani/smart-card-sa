@@ -109,6 +109,7 @@ export default function PublicProfile() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("phone");
+  const [claimOpen, setClaimOpen] = useState(false);
 
   useEffect(() => {
     const loadProfile = async () => {
