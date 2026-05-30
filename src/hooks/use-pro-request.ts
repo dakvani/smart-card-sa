@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export type ProRequestStatus = "pending" | "approved" | "rejected" | null;
+export type RequestablePlan = "starter" | "pro";
 
 export function useProRequest(userId?: string) {
   const [status, setStatus] = useState<ProRequestStatus>(null);
@@ -27,11 +28,11 @@ export function useProRequest(userId?: string) {
     refresh();
   }, [refresh]);
 
-  const requestPro = async (feature?: string) => {
+  const requestPro = async (feature?: string, plan: RequestablePlan = "pro") => {
     if (!userId) throw new Error("Not signed in");
     const { error } = await supabase.from("pro_upgrade_requests").insert({
       user_id: userId,
-      requested_plan: "pro",
+      requested_plan: plan,
       status: "pending",
       feature_context: feature ?? null,
     } as any);
