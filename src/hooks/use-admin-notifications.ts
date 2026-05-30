@@ -133,7 +133,7 @@ export function useAdminNotifications(isAdmin: boolean) {
     if (!isAdmin || !adminId) return;
 
     const channel = supabase
-      .channel("admin-notifications-stream")
+      .channel(`admin-notifications-${adminId}-${Math.random().toString(36).slice(2, 8)}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "pro_upgrade_requests" },
