@@ -21,6 +21,7 @@ import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
 import { AdminProductManager } from "@/components/admin/AdminProductManager";
 import { AdminProRequests } from "@/components/admin/AdminProRequests";
 import { useAdminOrderNotifications } from "@/hooks/use-admin-order-notifications";
+import { usePendingProRequests } from "@/hooks/use-pending-pro-requests";
 import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
 import { format } from "date-fns";
 
