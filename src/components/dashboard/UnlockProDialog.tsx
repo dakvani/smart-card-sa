@@ -34,6 +34,7 @@ export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: U
   const location = useLocation();
   const [userId, setUserId] = useState<string | undefined>();
   const [submitting, setSubmitting] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<RequestablePlan>("pro");
   const { status, requestPro, refresh } = useProRequest(userId);
 
   useEffect(() => {
@@ -53,8 +54,8 @@ export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: U
     }
     setSubmitting(true);
     try {
-      await requestPro(featureName);
-      toast.success("Request sent! An admin will review your upgrade shortly.");
+      await requestPro(featureName, selectedPlan);
+      toast.success(`${selectedPlan === "starter" ? "Starter" : "Pro"} request sent! An admin will review shortly.`);
     } catch (e: any) {
       toast.error(e.message || "Could not send request");
     } finally {
