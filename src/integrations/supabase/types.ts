@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_notification_dismissals: {
+        Row: {
+          admin_user_id: string
+          dismissed_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+        }
+        Insert: {
+          admin_user_id: string
+          dismissed_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+        }
+        Update: {
+          admin_user_id?: string
+          dismissed_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
