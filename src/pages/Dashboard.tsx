@@ -458,6 +458,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
+      <PlanWelcomeDialog userId={user?.id} plan={plan} loading={planLoading} />
       {/* Header */}
       <header className="bg-background/70 backdrop-blur-xl border-b border-border/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
