@@ -98,6 +98,21 @@ export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: U
           ))}
         </ul>
 
+        {!pending && (
+          <div className="flex items-center gap-2 justify-center pb-1">
+            <span className="text-xs text-muted-foreground">Plan:</span>
+            <Select value={selectedPlan} onValueChange={(v) => setSelectedPlan(v as RequestablePlan)}>
+              <SelectTrigger className="h-8 w-[140px] text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="starter">Starter</SelectItem>
+                <SelectItem value="pro">Pro</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
         <DialogFooter className="sm:justify-center gap-2 flex-wrap">
           <Button variant="outline" size="sm" onClick={handleViewPricing}>
             View pricing
@@ -109,7 +124,7 @@ export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: U
           ) : (
             <Button variant="gradient" size="sm" onClick={handleRequest} disabled={submitting}>
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-              Request Pro access
+              Request {selectedPlan === "starter" ? "Starter" : "Pro"} access
             </Button>
           )}
         </DialogFooter>
