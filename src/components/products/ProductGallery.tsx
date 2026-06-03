@@ -4,7 +4,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { NFCProduct } from "./types";
 import { 
-import { formatSAR } from "@/lib/currency";
   ZoomIn, 
   ZoomOut, 
   RotateCcw, 
@@ -14,6 +13,7 @@ import { formatSAR } from "@/lib/currency";
   Maximize2,
   Move
 } from "lucide-react";
+import { formatSAR } from "@/lib/currency";
 
 interface ProductGalleryProps {
   product: NFCProduct;
