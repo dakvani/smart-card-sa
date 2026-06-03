@@ -41,7 +41,7 @@ export function usePlan(userId?: string) {
 
     // Realtime: react instantly when admin updates this user's plan
     const channel = supabase
-      .channel(`profile-plan-${userId}`)
+      .channel(`profile-plan-${userId}-${Math.random().toString(36).slice(2, 8)}`)
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "profiles", filter: `user_id=eq.${userId}` },
