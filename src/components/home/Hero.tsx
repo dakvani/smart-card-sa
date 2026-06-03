@@ -179,7 +179,7 @@ export function Hero() {
               className="mt-12"
             >
               <p className="text-sm text-muted-foreground mb-4">Trusted by creators at</p>
-              <div className="flex flex-wrap items-center gap-4 sm:gap-8 text-muted-foreground/40">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-8 text-muted-foreground/40">
                 {["TikTok", "Instagram", "YouTube", "Spotify", "Twitch"].map((brand, index) => (
                   <motion.span 
                     key={brand} 
