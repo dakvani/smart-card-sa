@@ -19,11 +19,13 @@ export function usePlan(userId?: string) {
 
   useEffect(() => {
     if (!userId) {
+      setPlan("free");
       setLoading(false);
       return;
     }
     let active = true;
-    (async () => {
+
+    const fetchPlan = async () => {
       const { data } = await supabase
         .from("profiles")
         .select("plan")
@@ -33,9 +35,37 @@ export function usePlan(userId?: string) {
         setPlan(((data as any)?.plan as UserPlan) || "free");
         setLoading(false);
       }
-    })();
+    };
+
+    fetchPlan();
+
+    // Realtime: react instantly when admin updates this user's plan
+    const channel = supabase
+      .channel(`profile-plan-${userId}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "profiles", filter: `user_id=eq.${userId}` },
+        (payload) => {
+          const next = ((payload.new as any)?.plan as UserPlan) || "free";
+          if (active) setPlan(next);
+        },
+      )
+      .subscribe();
+
+    // Poll as a safety net (covers cases where realtime isn't enabled on the table)
+    const interval = window.setInterval(fetchPlan, 20000);
+
+    // Re-fetch when the tab becomes visible (e.g. user returns after admin approval)
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") fetchPlan();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
     return () => {
       active = false;
+      supabase.removeChannel(channel);
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [userId]);
 

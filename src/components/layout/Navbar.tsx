@@ -16,6 +16,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
+import { PlanStatusBadge } from "@/components/PlanStatusBadge";
+import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
+import { usePlan } from "@/hooks/use-plan";
 
 const navLinks = [
   { name: "SmartCard Products", href: "/nfc-products" },
@@ -31,6 +34,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -47,6 +51,7 @@ export function Navbar() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setIsAuthenticated(!!user);
       setUserEmail(user?.email ?? null);
+      setUserId(user?.id ?? null);
       if (user) {
         fetchUserProfile(user.id);
         checkAdminRole(user.id);
@@ -56,6 +61,7 @@ export function Navbar() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session?.user);
       setUserEmail(session?.user?.email ?? null);
+      setUserId(session?.user?.id ?? null);
       if (session?.user) {
         setTimeout(() => {
           fetchUserProfile(session.user.id);
@@ -107,6 +113,8 @@ export function Navbar() {
     return userEmail.charAt(0).toUpperCase();
   };
 
+  const { plan, loading: planLoading } = usePlan(userId ?? undefined);
+
   // Track scroll position for styling only — header stays visible
   useMotionValueEvent(scrollY, "change", (currentScrollY) => {
     setHasScrolled(currentScrollY > 20);
@@ -126,6 +134,9 @@ export function Navbar() {
       className="fixed top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-6 z-50 origin-top will-change-transform"
       role="banner"
     >
+      {isAuthenticated && userId && (
+        <PlanWelcomeDialog userId={userId} plan={plan} loading={planLoading} />
+      )}
       <motion.div 
         className={`absolute inset-0 rounded-2xl sm:rounded-full bg-background/80 border border-border/50 transition-all duration-500 ${
           hasScrolled
@@ -163,6 +174,9 @@ export function Navbar() {
           <span className="font-bold text-xl tracking-tight text-foreground/90 group-hover:text-foreground transition-colors">
             Smart<span className="text-primary">Card</span>
           </span>
+          {isAuthenticated && (
+            <PlanStatusBadge userId={userId ?? undefined} className="hidden sm:inline-flex ml-1" />
+          )}
         </Link>
 
         {/* Desktop Navigation */}
