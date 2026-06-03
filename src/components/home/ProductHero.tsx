@@ -1,49 +1,54 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Zap, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import heroVideo from "@/assets/smartcard-hero.mp4.asset.json";
 
 export function ProductHero() {
-  const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.4]);
-  const scale = useTransform(scrollYProgress, [0, 0.3], [1, 0.96]);
+  // Only mount the hero video on larger screens with enough bandwidth.
+  // On mobile we render a static gradient — the 4MB autoplay loop + a
+  // backdrop-blur overlay on top of it was the main cause of jank.
+  const [showVideo, setShowVideo] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const conn = (navigator as any).connection;
+    const saveData = !!conn?.saveData;
+    const slow = conn?.effectiveType && /(^|-)2g$/.test(conn.effectiveType);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setShowVideo(mq.matches && !saveData && !slow && !reduceMotion);
+  }, []);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24">
-      {/* Background video */}
-      <div className="absolute inset-0 z-0">
-        <video
-          src={heroVideo.url}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/30 to-background" />
+      {/* Background */}
+      <div className="absolute inset-0 z-0 gradient-dark">
+        {showVideo && (
+          <video
+            src={heroVideo.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-cover opacity-60"
+          />
+        )}
+        {/* Solid overlay instead of backdrop-blur over animated video — blur
+            forces full-layer re-rasterization every frame on mobile. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/55 to-background" />
       </div>
 
       {/* Subtle orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
-        <motion.div
-          animate={{ y: [-12, 12, -12], scale: [1, 1.04, 1] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-[5%] w-96 h-96 rounded-full bg-primary/[0.08] blur-[120px]"
-        />
-        <motion.div
-          animate={{ y: [12, -12, 12], scale: [1.04, 1, 1.04] }}
-          transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-1/3 right-[5%] w-[500px] h-[500px] rounded-full bg-accent/[0.1] blur-[140px]"
-        />
+        <div className="absolute top-1/4 left-[5%] w-96 h-96 rounded-full bg-primary/[0.08] blur-[120px]" />
+        <div className="absolute bottom-1/3 right-[5%] w-[500px] h-[500px] rounded-full bg-accent/[0.1] blur-[140px]" />
       </div>
 
-      <motion.div
-        className="container mx-auto px-4 relative z-10"
-        style={{ opacity, scale }}
-      >
+      <div className="container mx-auto px-4 relative z-10">
+
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
