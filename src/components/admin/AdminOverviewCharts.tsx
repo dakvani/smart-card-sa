@@ -156,7 +156,7 @@ export function AdminOverviewCharts() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={{ stroke: "hsl(var(--border))" }} />
-                <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={{ stroke: "hsl(var(--border))" }} tickFormatter={v => `SAR ${v}`} />
+                <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={{ stroke: "hsl(var(--border))" }} tickFormatter={(v: number) => formatSARInt(v)} />
                 <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [`${formatSAR(value)}`, "Revenue"]} />
                 <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#revenueGrad)" />
               </AreaChart>
