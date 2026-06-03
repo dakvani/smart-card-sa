@@ -134,6 +134,9 @@ export function Navbar() {
       className="fixed top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-6 z-50 origin-top will-change-transform"
       role="banner"
     >
+      {isAuthenticated && userId && (
+        <PlanWelcomeDialog userId={userId} plan={plan} loading={planLoading} />
+      )}
       <motion.div 
         className={`absolute inset-0 rounded-2xl sm:rounded-full bg-background/80 border border-border/50 transition-all duration-500 ${
           hasScrolled
