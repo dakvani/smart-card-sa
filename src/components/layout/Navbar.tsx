@@ -180,7 +180,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-1" role="menubar">
+        <div className="hidden lg:flex items-center gap-1" role="menubar">
           {navLinks.map((link, index) => (
             <motion.div
               key={link.name}
@@ -206,7 +206,7 @@ export function Navbar() {
         </div>
 
         {/* Auth Buttons & Theme Toggle */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           <ThemeToggle />
           {isAuthenticated ? (
             <>
@@ -299,7 +299,7 @@ export function Navbar() {
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-2">
           <ThemeToggle />
           <button
             className="p-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -320,7 +320,7 @@ export function Navbar() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden mt-2 glass-heavy rounded-2xl ring-1 ring-border/30 shadow-2xl overflow-hidden"
+          className="lg:hidden mt-2 glass-heavy rounded-2xl ring-1 ring-border/30 shadow-2xl overflow-hidden"
           role="menu"
           aria-label="Mobile navigation menu"
         >

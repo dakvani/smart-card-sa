@@ -64,7 +64,7 @@ export function Hero() {
       >
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
           {/* Left side - Text content */}
-          <div className="text-left order-2 lg:order-1">
+          <div className="text-center lg:text-left order-2 lg:order-1">
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
@@ -92,7 +92,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl"
+              className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl mx-auto lg:mx-0"
             >
               Join millions of creators using SmartCard for their link in bio. One link to help you share everything you create, curate, and sell.
             </motion.p>
@@ -103,7 +103,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.7, delay: 0.3 }}
               onSubmit={handleClaim}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 max-w-lg"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 max-w-lg mx-auto lg:mx-0"
             >
               <div className="relative flex-1">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -179,7 +179,7 @@ export function Hero() {
               className="mt-12"
             >
               <p className="text-sm text-muted-foreground mb-4">Trusted by creators at</p>
-              <div className="flex flex-wrap items-center gap-4 sm:gap-8 text-muted-foreground/40">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-8 text-muted-foreground/40">
                 {["TikTok", "Instagram", "YouTube", "Spotify", "Twitch"].map((brand, index) => (
                   <motion.span 
                     key={brand} 
