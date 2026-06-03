@@ -5,9 +5,9 @@ import { ArrowRight, Star, Users, Zap } from "lucide-react";
 import { useRef } from "react";
 
 const stats = [
-  { icon: Users, value: "30M+", label: "Creators" },
-  { icon: Star, value: "4.9", label: "App Rating" },
-  { icon: Zap, value: "1B+", label: "Link Clicks" },
+  { icon: Users, value: "50K+", label: "Cards shipped" },
+  { icon: Star, value: "4.9", label: "Customer rating" },
+  { icon: Zap, value: "<1s", label: "Tap to connect" },
 ];
 
 export function CTA() {
@@ -59,16 +59,16 @@ export function CTA() {
             className="text-left"
           >
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-foreground/95 text-balance">
-              Ready to simplify your online presence?
+              Order your SmartCard today. Tap into tomorrow.
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-lg">
-              Join millions of creators who trust SmartCard to connect with their audience.
+              Free worldwide shipping on orders over $50. Ships in 48 hours. Lifetime profile included.
             </p>
             <div className="flex flex-col sm:flex-row items-start gap-4">
-              <Link to="/signup">
+              <Link to="/nfc-products">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                   <Button variant="hero" size="xl" className="glass-heavy border-primary/30 hover:border-primary/50 shadow-glow">
-                    Get started for free
+                    Shop now
                     <ArrowRight className="w-5 h-5" />
                   </Button>
                 </motion.div>
