@@ -171,6 +171,9 @@ export function Navbar() {
           <span className="font-bold text-xl tracking-tight text-foreground/90 group-hover:text-foreground transition-colors">
             Smart<span className="text-primary">Card</span>
           </span>
+          {isAuthenticated && (
+            <PlanStatusBadge userId={userId ?? undefined} className="hidden sm:inline-flex ml-1" />
+          )}
         </Link>
 
         {/* Desktop Navigation */}
