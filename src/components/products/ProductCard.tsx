@@ -44,7 +44,7 @@ export function ProductCard({ product, isSelected, onSelect }: ProductCardProps)
         }`}
         role="button"
         aria-pressed={isSelected}
-        aria-label={`Select ${product.name} - $${product.basePrice.toFixed(2)}`}
+        aria-label={`Select ${product.name} - SAR ${product.basePrice.toFixed(2)}`}
       >
         {/* Product Animation Area */}
         <div 
@@ -141,9 +141,9 @@ export function ProductCard({ product, isSelected, onSelect }: ProductCardProps)
           <div className="flex items-center justify-between pt-3 border-t border-border/50">
             <div>
               <span className="text-2xl font-bold text-primary">
-                ${product.basePrice.toFixed(2)}
+                SAR {product.basePrice.toFixed(2)}
               </span>
-              <span className="text-xs text-muted-foreground ml-1">USD</span>
+              <span className="text-xs text-muted-foreground ml-1">SAR</span>
             </div>
             
             <motion.div

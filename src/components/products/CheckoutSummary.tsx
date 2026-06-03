@@ -187,7 +187,7 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
 
                 {/* Price & Remove */}
                 <div className="text-right">
-                  <p className="font-bold">${(item.product.basePrice * item.quantity).toFixed(2)}</p>
+                  <p className="font-bold">SAR {(item.product.basePrice * item.quantity).toFixed(2)}</p>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -305,21 +305,21 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
           <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">Order Summary</h4>
           <div className="flex justify-between text-muted-foreground">
             <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>SAR {subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-muted-foreground">
             <span>Shipping</span>
-            <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+            <span>{shipping === 0 ? "Free" : `SAR ${shipping.toFixed(2)}`}</span>
           </div>
           {subtotal < 50 && (
             <p className="text-xs text-muted-foreground">
-              Add ${(50 - subtotal).toFixed(2)} more for free shipping!
+              Add SAR {(50 - subtotal).toFixed(2)} more for free shipping!
             </p>
           )}
           <Separator />
           <div className="flex justify-between text-lg font-bold">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>SAR {total.toFixed(2)}</span>
           </div>
         </div>
 

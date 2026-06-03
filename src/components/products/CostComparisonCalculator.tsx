@@ -77,7 +77,7 @@ export function CostComparisonCalculator() {
               <RefreshCw className="w-4 h-4" />
               Paper cards
             </div>
-            <div className="text-3xl font-bold">${paperTotal.toFixed(2)}</div>
+            <div className="text-3xl font-bold">SAR {paperTotal.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground mt-1">
               Recurring print &amp; reorder cost
             </p>
@@ -88,7 +88,7 @@ export function CostComparisonCalculator() {
               <TrendingDown className="w-4 h-4" />
               SmartCard
             </div>
-            <div className="text-3xl font-bold">${smartcardTotal.toFixed(2)}</div>
+            <div className="text-3xl font-bold">SAR {smartcardTotal.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground mt-1">
               One-time purchase, edit anytime
             </p>
@@ -100,7 +100,7 @@ export function CostComparisonCalculator() {
               Your savings
             </div>
             <div className="text-3xl font-bold text-emerald-500">
-              ${savings.toFixed(2)}
+              SAR {savings.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               ≈ {treesSaved.toFixed(2)} trees saved 🌱

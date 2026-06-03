@@ -120,7 +120,7 @@ export function AdminOverviewCharts() {
             <DollarSign className="w-3.5 h-3.5" />
             <span className="text-xs">Revenue ({period}d)</span>
           </div>
-          <p className="text-lg font-bold">${totalRevenue.toFixed(2)}</p>
+          <p className="text-lg font-bold">SAR {totalRevenue.toFixed(2)}</p>
         </div>
         <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10">
           <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
@@ -155,8 +155,8 @@ export function AdminOverviewCharts() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={{ stroke: "hsl(var(--border))" }} />
-                <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={{ stroke: "hsl(var(--border))" }} tickFormatter={v => `$${v}`} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [`$${value.toFixed(2)}`, "Revenue"]} />
+                <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={{ stroke: "hsl(var(--border))" }} tickFormatter={v => `SAR ${v}`} />
+                <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [`SAR ${value.toFixed(2)}`, "Revenue"]} />
                 <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#revenueGrad)" />
               </AreaChart>
             </ResponsiveContainer>

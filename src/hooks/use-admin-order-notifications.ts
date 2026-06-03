@@ -39,7 +39,7 @@ export function useAdminOrderNotifications(isAdmin: boolean) {
           
           toast({
             title: "🛒 New Order!",
-            description: `Order #${newOrder.order_number} - $${newOrder.total.toFixed(2)}`,
+            description: `Order #${newOrder.order_number} - SAR ${newOrder.total.toFixed(2)}`,
           });
         }
       )

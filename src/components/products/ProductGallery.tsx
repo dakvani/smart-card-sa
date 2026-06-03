@@ -325,8 +325,8 @@ export function ProductGallery({ product, isOpen, onClose }: ProductGalleryProps
                 <p className="text-sm text-muted-foreground">{product.description}</p>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-bold text-primary">${product.basePrice.toFixed(2)}</span>
-                <span className="text-sm text-muted-foreground ml-1">USD</span>
+                <span className="text-2xl font-bold text-primary">SAR {product.basePrice.toFixed(2)}</span>
+                <span className="text-sm text-muted-foreground ml-1">SAR</span>
               </div>
             </div>
           </div>

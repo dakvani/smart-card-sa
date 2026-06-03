@@ -89,7 +89,7 @@ export function ProductShowcase() {
                     <div className="flex items-start justify-between gap-4 mb-2">
                       <h3 className="font-bold text-lg leading-tight text-foreground/95">{product.name}</h3>
                       <span className="shrink-0 text-xl font-bold gradient-text">
-                        ${product.basePrice.toFixed(2)}
+                        SAR {product.basePrice.toFixed(2)}
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{product.description}</p>

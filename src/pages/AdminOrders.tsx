@@ -394,7 +394,7 @@ export default function AdminOrders() {
                             )}
                           </div>
 
-                          <span className="font-bold text-lg">${Number(order.total).toFixed(2)}</span>
+                          <span className="font-bold text-lg">SAR {Number(order.total).toFixed(2)}</span>
                         </div>
                       </div>
 
@@ -434,7 +434,7 @@ export default function AdminOrders() {
                                   <div className="flex-1">
                                     <p className="font-medium">{item.product.name}</p>
                                     <p className="text-sm text-muted-foreground">
-                                      Qty: {item.quantity} • ${(item.product.basePrice * item.quantity).toFixed(2)}
+                                      Qty: {item.quantity} • SAR {(item.product.basePrice * item.quantity).toFixed(2)}
                                     </p>
                                     {item.customization.name && (
                                       <p className="text-sm text-muted-foreground">
@@ -480,15 +480,15 @@ export default function AdminOrders() {
                             <div className="mt-6 pt-4 border-t border-border">
                               <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Subtotal</span>
-                                <span>${Number(order.subtotal).toFixed(2)}</span>
+                                <span>SAR {Number(order.subtotal).toFixed(2)}</span>
                               </div>
                               <div className="flex justify-between text-sm mt-1">
                                 <span className="text-muted-foreground">Shipping</span>
-                                <span>{Number(order.shipping_cost) === 0 ? "Free" : `$${Number(order.shipping_cost).toFixed(2)}`}</span>
+                                <span>{Number(order.shipping_cost) === 0 ? "Free" : `SAR ${Number(order.shipping_cost).toFixed(2)}`}</span>
                               </div>
                               <div className="flex justify-between font-bold mt-2 pt-2 border-t border-border">
                                 <span>Total</span>
-                                <span>${Number(order.total).toFixed(2)}</span>
+                                <span>SAR {Number(order.total).toFixed(2)}</span>
                               </div>
                             </div>
 

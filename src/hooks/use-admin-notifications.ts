@@ -108,7 +108,7 @@ export function useAdminNotifications(isAdmin: boolean) {
           id: o.id,
           kind: "order" as const,
           title: `New order #${o.order_number}`,
-          description: `${ship?.name || "Customer"} · $${Number(o.total).toFixed(2)}`,
+          description: `${ship?.name || "Customer"} · SAR ${Number(o.total).toFixed(2)}`,
           created_at: o.created_at,
           meta: { order_number: o.order_number, total: o.total },
         };
@@ -164,7 +164,7 @@ export function useAdminNotifications(isAdmin: boolean) {
           ) {
             toast({
               title: "🛒 New order",
-              description: `Order #${row.order_number} · $${Number(row.total).toFixed(2)}`,
+              description: `Order #${row.order_number} · SAR ${Number(row.total).toFixed(2)}`,
             });
           }
           refresh();
