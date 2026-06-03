@@ -140,6 +140,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "email_subscribers_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       link_clicks: {
@@ -192,6 +199,13 @@ export type Database = {
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "link_clicks_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_public"
             referencedColumns: ["id"]
           },
         ]
@@ -582,6 +596,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "profile_views_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -721,7 +742,114 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      nfc_catalog_products_public: {
+        Row: {
+          base_price: number | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          gradient: string | null
+          id: string | null
+          is_active: boolean | null
+          name: string | null
+          photo_url: string | null
+          position: number | null
+          slug: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          base_price?: number | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          gradient?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          photo_url?: string | null
+          position?: number | null
+          slug?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          base_price?: number | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          gradient?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          photo_url?: string | null
+          position?: number | null
+          slug?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles_public: {
+        Row: {
+          animation_intensity: number | null
+          animation_speed: number | null
+          animation_type: string | null
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          custom_accent_color: string | null
+          custom_bg_color: string | null
+          email_collection_enabled: boolean | null
+          gradient_direction: string | null
+          id: string | null
+          social_links: Json | null
+          theme_gradient: string | null
+          theme_name: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+          username: string | null
+        }
+        Insert: {
+          animation_intensity?: number | null
+          animation_speed?: number | null
+          animation_type?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          custom_accent_color?: string | null
+          custom_bg_color?: string | null
+          email_collection_enabled?: boolean | null
+          gradient_direction?: string | null
+          id?: string | null
+          social_links?: Json | null
+          theme_gradient?: string | null
+          theme_name?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Update: {
+          animation_intensity?: number | null
+          animation_speed?: number | null
+          animation_type?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          custom_accent_color?: string | null
+          custom_bg_color?: string | null
+          email_collection_enabled?: boolean | null
+          gradient_direction?: string | null
+          id?: string | null
+          social_links?: Json | null
+          theme_gradient?: string | null
+          theme_name?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
