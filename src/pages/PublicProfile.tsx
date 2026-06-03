@@ -122,7 +122,7 @@ export default function PublicProfile() {
       try {
         const { data: profileData, error: profileError } = await supabase
           .from("profiles")
-          .select("id,user_id,username,title,bio,avatar_url,theme_name,theme_gradient,gradient_direction,social_links,custom_bg_color,custom_accent_color,animation_type,animation_speed,animation_intensity,created_at,updated_at")
+          .select("id,user_id,username,title,bio,avatar_url,theme_name,theme_gradient,gradient_direction,social_links,custom_bg_color,custom_accent_color,animation_type,animation_speed,animation_intensity,email_collection_enabled,created_at,updated_at")
           .eq("username", username.toLowerCase())
           .maybeSingle();
 
