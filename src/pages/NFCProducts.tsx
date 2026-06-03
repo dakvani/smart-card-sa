@@ -33,7 +33,7 @@ export default function NFCProducts() {
     const load = async () => {
       const { data, error } = await supabase
         .from("nfc_catalog_products")
-        .select("*")
+        .select("id,slug,name,description,base_price,gradient,photo_url,category,position,is_active")
         .eq("is_active", true)
         .order("position", { ascending: true });
       if (!error && data && data.length > 0) {
