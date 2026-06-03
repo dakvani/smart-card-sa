@@ -37,7 +37,7 @@ const benefits = [
 export function ProductBenefits() {
   return (
     <section className="py-24 relative overflow-hidden bg-secondary/10">
-      <div className="absolute inset-0 backdrop-blur-3xl" />
+      
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
