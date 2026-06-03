@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckoutAuth } from "./CheckoutAuth";
+import { formatSAR } from "@/lib/currency";
 
 interface CheckoutSummaryProps {
   cart: CartItem[];
@@ -187,7 +188,7 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
 
                 {/* Price & Remove */}
                 <div className="text-right">
-                  <p className="font-bold">SAR {(item.product.basePrice * item.quantity).toFixed(2)}</p>
+                  <p className="font-bold">{formatSAR((item.product.basePrice * item.quantity))}</p>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -305,21 +306,21 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
           <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">Order Summary</h4>
           <div className="flex justify-between text-muted-foreground">
             <span>Subtotal</span>
-            <span>SAR {subtotal.toFixed(2)}</span>
+            <span>{formatSAR(subtotal)}</span>
           </div>
           <div className="flex justify-between text-muted-foreground">
             <span>Shipping</span>
-            <span>{shipping === 0 ? "Free" : `SAR ${shipping.toFixed(2)}`}</span>
+            <span>{shipping === 0 ? "Free" : `${formatSAR(shipping)}`}</span>
           </div>
           {subtotal < 50 && (
             <p className="text-xs text-muted-foreground">
-              Add SAR {(50 - subtotal).toFixed(2)} more for free shipping!
+              Add {formatSAR((50 - subtotal))} more for free shipping!
             </p>
           )}
           <Separator />
           <div className="flex justify-between text-lg font-bold">
             <span>Total</span>
-            <span>SAR {total.toFixed(2)}</span>
+            <span>{formatSAR(total)}</span>
           </div>
         </div>
 

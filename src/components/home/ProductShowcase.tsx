@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { nfcProducts as fallbackProducts, NFCProduct } from "@/components/products/types";
 import { productAnimations } from "@/components/products/ProductAnimations";
+import { formatSAR } from "@/lib/currency";
 
 export function ProductShowcase() {
   const [products, setProducts] = useState<NFCProduct[]>(fallbackProducts);
@@ -89,7 +90,7 @@ export function ProductShowcase() {
                     <div className="flex items-start justify-between gap-4 mb-2">
                       <h3 className="font-bold text-lg leading-tight text-foreground/95">{product.name}</h3>
                       <span className="shrink-0 text-xl font-bold gradient-text">
-                        SAR {product.basePrice.toFixed(2)}
+                        {formatSAR(product.basePrice)}
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{product.description}</p>

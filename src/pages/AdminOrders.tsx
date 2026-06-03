@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { formatSAR } from "@/lib/currency";
 
 interface OrderItem {
   product: {
@@ -394,7 +395,7 @@ export default function AdminOrders() {
                             )}
                           </div>
 
-                          <span className="font-bold text-lg">SAR {Number(order.total).toFixed(2)}</span>
+                          <span className="font-bold text-lg">{formatSAR(Number(order.total))}</span>
                         </div>
                       </div>
 
@@ -434,7 +435,7 @@ export default function AdminOrders() {
                                   <div className="flex-1">
                                     <p className="font-medium">{item.product.name}</p>
                                     <p className="text-sm text-muted-foreground">
-                                      Qty: {item.quantity} • SAR {(item.product.basePrice * item.quantity).toFixed(2)}
+                                      Qty: {item.quantity} • {formatSAR((item.product.basePrice * item.quantity))}
                                     </p>
                                     {item.customization.name && (
                                       <p className="text-sm text-muted-foreground">
@@ -480,15 +481,15 @@ export default function AdminOrders() {
                             <div className="mt-6 pt-4 border-t border-border">
                               <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Subtotal</span>
-                                <span>SAR {Number(order.subtotal).toFixed(2)}</span>
+                                <span>{formatSAR(Number(order.subtotal))}</span>
                               </div>
                               <div className="flex justify-between text-sm mt-1">
                                 <span className="text-muted-foreground">Shipping</span>
-                                <span>{Number(order.shipping_cost) === 0 ? "Free" : `SAR ${Number(order.shipping_cost).toFixed(2)}`}</span>
+                                <span>{Number(order.shipping_cost) === 0 ? "Free" : `${formatSAR(Number(order.shipping_cost))}`}</span>
                               </div>
                               <div className="flex justify-between font-bold mt-2 pt-2 border-t border-border">
                                 <span>Total</span>
-                                <span>SAR {Number(order.total).toFixed(2)}</span>
+                                <span>{formatSAR(Number(order.total))}</span>
                               </div>
                             </div>
 

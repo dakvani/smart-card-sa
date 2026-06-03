@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Slider } from "@/components/ui/slider";
 import { Leaf, TrendingDown, RefreshCw } from "lucide-react";
+import { formatSAR } from "@/lib/currency";
 
 const PAPER_COST_PER_CARD = 0.35; // average printed business card cost
 const REPRINTS_PER_YEAR = 4; // box of 250 reprinted ~4x/year for active networkers
@@ -77,7 +78,7 @@ export function CostComparisonCalculator() {
               <RefreshCw className="w-4 h-4" />
               Paper cards
             </div>
-            <div className="text-3xl font-bold">SAR {paperTotal.toFixed(2)}</div>
+            <div className="text-3xl font-bold">{formatSAR(paperTotal)}</div>
             <p className="text-xs text-muted-foreground mt-1">
               Recurring print &amp; reorder cost
             </p>
@@ -88,7 +89,7 @@ export function CostComparisonCalculator() {
               <TrendingDown className="w-4 h-4" />
               SmartCard
             </div>
-            <div className="text-3xl font-bold">SAR {smartcardTotal.toFixed(2)}</div>
+            <div className="text-3xl font-bold">{formatSAR(smartcardTotal)}</div>
             <p className="text-xs text-muted-foreground mt-1">
               One-time purchase, edit anytime
             </p>
@@ -100,7 +101,7 @@ export function CostComparisonCalculator() {
               Your savings
             </div>
             <div className="text-3xl font-bold text-emerald-500">
-              SAR {savings.toFixed(2)}
+              {formatSAR(savings)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               ≈ {treesSaved.toFixed(2)} trees saved 🌱

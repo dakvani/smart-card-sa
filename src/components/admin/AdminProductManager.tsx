@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Plus, Pencil, Trash2, Upload, Package, RefreshCw, Image as ImageIcon } from "lucide-react";
+import { formatSAR } from "@/lib/currency";
 
 interface CatalogProduct {
   id: string;
@@ -207,7 +208,7 @@ export function AdminProductManager() {
                   <p className="text-xs text-muted-foreground truncate">{p.slug} • Stock: {p.stock_quantity}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="font-bold">SAR {Number(p.base_price).toFixed(2)}</p>
+                  <p className="font-bold">{formatSAR(Number(p.base_price))}</p>
                 </div>
                 <div className="flex gap-1 shrink-0">
                   <Button variant="ghost" size="icon" onClick={() => openEdit(p)}>

@@ -4,6 +4,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { format, subDays, startOfDay, eachDayOfInterval } from "date-fns";
 import { Loader2, TrendingUp, DollarSign, Users, ShoppingBag } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatSAR } from "@/lib/currency";
 
 interface ChartData {
   date: string;
@@ -120,7 +121,7 @@ export function AdminOverviewCharts() {
             <DollarSign className="w-3.5 h-3.5" />
             <span className="text-xs">Revenue ({period}d)</span>
           </div>
-          <p className="text-lg font-bold">SAR {totalRevenue.toFixed(2)}</p>
+          <p className="text-lg font-bold">{formatSAR(totalRevenue)}</p>
         </div>
         <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10">
           <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
@@ -156,7 +157,7 @@ export function AdminOverviewCharts() {
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={{ stroke: "hsl(var(--border))" }} />
                 <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={{ stroke: "hsl(var(--border))" }} tickFormatter={v => `SAR ${v}`} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [`SAR ${value.toFixed(2)}`, "Revenue"]} />
+                <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [`${formatSAR(value)}`, "Revenue"]} />
                 <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#revenueGrad)" />
               </AreaChart>
             </ResponsiveContainer>
