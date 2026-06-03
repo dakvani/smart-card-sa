@@ -31,6 +31,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
