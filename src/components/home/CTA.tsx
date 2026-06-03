@@ -5,9 +5,9 @@ import { ArrowRight, Star, Users, Zap } from "lucide-react";
 import { useRef } from "react";
 
 const stats = [
-  { icon: Users, value: "30M+", label: "Creators" },
-  { icon: Star, value: "4.9", label: "App Rating" },
-  { icon: Zap, value: "1B+", label: "Link Clicks" },
+  { icon: Users, value: "50K+", label: "Cards shipped" },
+  { icon: Star, value: "4.9", label: "Customer rating" },
+  { icon: Zap, value: "<1s", label: "Tap to connect" },
 ];
 
 export function CTA() {
