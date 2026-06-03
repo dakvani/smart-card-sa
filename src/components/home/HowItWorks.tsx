@@ -40,7 +40,7 @@ export function HowItWorks() {
         className="absolute inset-0 bg-secondary/20"
         style={{ y: backgroundY }}
       />
-      <div className="absolute inset-0 backdrop-blur-3xl" />
+      
       
       <motion.div className="container mx-auto px-4 relative z-10" style={{ opacity }}>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
