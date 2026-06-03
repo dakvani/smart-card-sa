@@ -16,6 +16,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
+import { PlanStatusBadge } from "@/components/PlanStatusBadge";
+import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
+import { usePlan } from "@/hooks/use-plan";
 
 const navLinks = [
   { name: "SmartCard Products", href: "/nfc-products" },
