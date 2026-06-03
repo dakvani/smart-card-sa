@@ -103,7 +103,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.7, delay: 0.3 }}
               onSubmit={handleClaim}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 max-w-lg"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 max-w-lg mx-auto lg:mx-0"
             >
               <div className="relative flex-1">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
