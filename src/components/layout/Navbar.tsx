@@ -113,6 +113,8 @@ export function Navbar() {
     return userEmail.charAt(0).toUpperCase();
   };
 
+  const { plan, loading: planLoading } = usePlan(userId ?? undefined);
+
   // Track scroll position for styling only — header stays visible
   useMotionValueEvent(scrollY, "change", (currentScrollY) => {
     setHasScrolled(currentScrollY > 20);
