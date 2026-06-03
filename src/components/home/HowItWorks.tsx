@@ -52,10 +52,10 @@ export function HowItWorks() {
             transition={{ duration: 0.6 }}
             className="text-left"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground/95">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-foreground/95 text-balance">
               Up and running in <span className="gradient-text">3 simple steps</span>
             </h2>
-            <p className="text-xl text-muted-foreground mb-10 max-w-lg">
+            <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-lg">
               No design skills needed. Create your SmartCard in minutes.
             </p>
             
