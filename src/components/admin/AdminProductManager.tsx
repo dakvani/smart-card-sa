@@ -207,7 +207,7 @@ export function AdminProductManager() {
                   <p className="text-xs text-muted-foreground truncate">{p.slug} • Stock: {p.stock_quantity}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="font-bold">${Number(p.base_price).toFixed(2)}</p>
+                  <p className="font-bold">SAR {Number(p.base_price).toFixed(2)}</p>
                 </div>
                 <div className="flex gap-1 shrink-0">
                   <Button variant="ghost" size="icon" onClick={() => openEdit(p)}>
