@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Box, X, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { formatSAR } from "@/lib/currency";
 
 interface Product3DViewerProps {
   product: NFCProduct;
@@ -440,7 +441,7 @@ export function Product3DViewer({ product, isOpen, onClose }: Product3DViewerPro
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                SAR {product.basePrice.toFixed(2)}
+                {formatSAR(product.basePrice)}
               </motion.div>
             </motion.div>
           </DialogContent>

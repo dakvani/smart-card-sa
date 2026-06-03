@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Package, Clock, CheckCircle, Truck, XCircle, ArrowLeft, ShoppingBag } from "lucide-react";
 import { format } from "date-fns";
+import { formatSAR } from "@/lib/currency";
 
 interface OrderItem {
   product: {
@@ -184,7 +185,7 @@ export default function OrderHistory() {
                           <StatusIcon className="w-3 h-3 mr-1" />
                           {statusInfo.label}
                         </Badge>
-                        <span className="font-bold">SAR {Number(order.total).toFixed(2)}</span>
+                        <span className="font-bold">{formatSAR(Number(order.total))}</span>
                       </div>
                     </button>
 
@@ -215,7 +216,7 @@ export default function OrderHistory() {
                                   <div className="flex-1">
                                     <p className="font-medium">{item.product.name}</p>
                                     <p className="text-sm text-muted-foreground">
-                                      Qty: {item.quantity} • SAR {(item.product.basePrice * item.quantity).toFixed(2)}
+                                      Qty: {item.quantity} • {formatSAR((item.product.basePrice * item.quantity))}
                                     </p>
                                   </div>
                                 </div>
@@ -236,15 +237,15 @@ export default function OrderHistory() {
                             <div className="mt-6 pt-4 border-t border-border">
                               <div className="flex justify-between text-sm">
                                 <span className="text-muted-foreground">Subtotal</span>
-                                <span>SAR {Number(order.subtotal).toFixed(2)}</span>
+                                <span>{formatSAR(Number(order.subtotal))}</span>
                               </div>
                               <div className="flex justify-between text-sm mt-1">
                                 <span className="text-muted-foreground">Shipping</span>
-                                <span>{Number(order.shipping_cost) === 0 ? "Free" : `SAR ${Number(order.shipping_cost).toFixed(2)}`}</span>
+                                <span>{Number(order.shipping_cost) === 0 ? "Free" : `${formatSAR(Number(order.shipping_cost))}`}</span>
                               </div>
                               <div className="flex justify-between font-bold mt-2 pt-2 border-t border-border">
                                 <span>Total</span>
-                                <span>SAR {Number(order.total).toFixed(2)}</span>
+                                <span>{formatSAR(Number(order.total))}</span>
                               </div>
                             </div>
                           </div>

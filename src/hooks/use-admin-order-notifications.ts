@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { formatSAR } from "@/lib/currency";
 
 interface OrderNotification {
   id: string;
@@ -39,7 +40,7 @@ export function useAdminOrderNotifications(isAdmin: boolean) {
           
           toast({
             title: "🛒 New Order!",
-            description: `Order #${newOrder.order_number} - SAR ${newOrder.total.toFixed(2)}`,
+            description: `Order #${newOrder.order_number} - ${formatSAR(newOrder.total)}`,
           });
         }
       )

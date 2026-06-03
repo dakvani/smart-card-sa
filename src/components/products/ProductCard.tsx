@@ -8,6 +8,7 @@ import { ProductGallery } from "./ProductGallery";
 import { ProductReviews } from "./ProductReviews";
 import { ProductRatingBadge } from "./ProductRatingBadge";
 import { WishlistButton } from "./WishlistButton";
+import { formatSAR } from "@/lib/currency";
 
 interface ProductCardProps {
   product: NFCProduct;
@@ -44,7 +45,7 @@ export function ProductCard({ product, isSelected, onSelect }: ProductCardProps)
         }`}
         role="button"
         aria-pressed={isSelected}
-        aria-label={`Select ${product.name} - SAR ${product.basePrice.toFixed(2)}`}
+        aria-label={`Select ${product.name} - ${formatSAR(product.basePrice)}`}
       >
         {/* Product Animation Area */}
         <div 
@@ -141,7 +142,7 @@ export function ProductCard({ product, isSelected, onSelect }: ProductCardProps)
           <div className="flex items-center justify-between pt-3 border-t border-border/50">
             <div>
               <span className="text-2xl font-bold text-primary">
-                SAR {product.basePrice.toFixed(2)}
+                {formatSAR(product.basePrice)}
               </span>
               <span className="text-xs text-muted-foreground ml-1">SAR</span>
             </div>

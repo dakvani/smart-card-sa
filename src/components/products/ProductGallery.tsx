@@ -13,6 +13,7 @@ import {
   Maximize2,
   Move
 } from "lucide-react";
+import { formatSAR } from "@/lib/currency";
 
 interface ProductGalleryProps {
   product: NFCProduct;
@@ -325,7 +326,7 @@ export function ProductGallery({ product, isOpen, onClose }: ProductGalleryProps
                 <p className="text-sm text-muted-foreground">{product.description}</p>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-bold text-primary">SAR {product.basePrice.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-primary">{formatSAR(product.basePrice)}</span>
                 <span className="text-sm text-muted-foreground ml-1">SAR</span>
               </div>
             </div>
