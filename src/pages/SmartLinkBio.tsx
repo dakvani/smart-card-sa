@@ -30,17 +30,17 @@ const features = [
 
 const plans = [
   {
-    name: "Free", price: "$0", description: "Get started in minutes",
+    name: "Free", price: "SAR 0", description: "Get started in minutes",
     features: ["Unlimited links", "5 base themes", "Tip jar", "28-day analytics"],
     cta: "Start free", popular: false,
   },
   {
-    name: "Starter", price: "$5", period: "/mo", description: "For growing creators",
+    name: "Starter", price: "SAR 19", period: "/mo", description: "For growing creators",
     features: ["Everything in Free", "Custom fonts & BGs", "Spotlight links", "6 months analytics", "Priority support"],
     cta: "Try Starter", popular: true,
   },
   {
-    name: "Pro", price: "$15", period: "/mo", description: "Power users & brands",
+    name: "Pro", price: "SAR 56", period: "/mo", description: "Power users & brands",
     features: ["Everything in Starter", "Remove branding", "Export email list", "GA / Pixel", "Custom CSS", "API access"],
     cta: "Try Pro", popular: false,
   },

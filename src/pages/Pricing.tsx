@@ -9,7 +9,7 @@ import { Check, ArrowLeft, Sparkles } from "lucide-react";
 const plans = [
   {
     name: "Free",
-    price: "$0",
+    price: "SAR 0",
     description: "Perfect for getting started",
     features: [
       "Unlimited Links",
@@ -23,7 +23,7 @@ const plans = [
   },
   {
     name: "Starter",
-    price: "$5",
+    price: "SAR 19",
     period: "/mo",
     description: "For growing creators",
     features: [
@@ -39,7 +39,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "$15",
+    price: "SAR 56",
     period: "/mo",
     description: "For power users & brands",
     features: [

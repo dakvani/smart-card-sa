@@ -253,7 +253,7 @@ export default function AdminDashboard() {
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
                           <p className="text-[11px] text-muted-foreground font-medium">Revenue</p>
-                          <p className="text-lg font-bold text-foreground leading-tight truncate">${totalRevenue.toFixed(2)}</p>
+                          <p className="text-lg font-bold text-foreground leading-tight truncate">SAR {totalRevenue.toFixed(2)}</p>
                         </div>
                         <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
                           <DollarSign className="w-4 h-4 text-green-500" />
@@ -443,7 +443,7 @@ export default function AdminDashboard() {
                                 {order.shipping_info?.name || 'Unknown'} • {format(new Date(order.created_at), "MMM d, h:mm a")}
                               </p>
                             </div>
-                            <span className="font-bold text-xs">${Number(order.total).toFixed(2)}</span>
+                            <span className="font-bold text-xs">SAR {Number(order.total).toFixed(2)}</span>
                           </div>
                         ))
                       )}
@@ -692,7 +692,7 @@ function AdminOrdersInline() {
                   <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-5 ${statusColors[order.status] || ''}`}>
                     {order.status}
                   </Badge>
-                  <span className="font-bold text-xs">${Number(order.total).toFixed(2)}</span>
+                  <span className="font-bold text-xs">SAR {Number(order.total).toFixed(2)}</span>
                   <ChevronRight className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${expandedOrder === order.id ? 'rotate-90' : ''}`} />
                 </div>
               </button>
@@ -727,9 +727,9 @@ function AdminOrdersInline() {
                     </div>
                   </div>
                   <div className="flex justify-between text-xs border-t pt-2">
-                    <span className="text-muted-foreground">Subtotal: ${Number(order.subtotal).toFixed(2)}</span>
-                    <span className="text-muted-foreground">Shipping: {Number(order.shipping_cost) === 0 ? "Free" : `$${Number(order.shipping_cost).toFixed(2)}`}</span>
-                    <span className="font-bold">Total: ${Number(order.total).toFixed(2)}</span>
+                    <span className="text-muted-foreground">Subtotal: SAR {Number(order.subtotal).toFixed(2)}</span>
+                    <span className="text-muted-foreground">Shipping: {Number(order.shipping_cost) === 0 ? "Free" : `SAR ${Number(order.shipping_cost).toFixed(2)}`}</span>
+                    <span className="font-bold">Total: SAR {Number(order.total).toFixed(2)}</span>
                   </div>
                 </div>
               )}

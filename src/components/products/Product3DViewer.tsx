@@ -440,7 +440,7 @@ export function Product3DViewer({ product, isOpen, onClose }: Product3DViewerPro
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                ${product.basePrice.toFixed(2)}
+                SAR {product.basePrice.toFixed(2)}
               </motion.div>
             </motion.div>
           </DialogContent>
