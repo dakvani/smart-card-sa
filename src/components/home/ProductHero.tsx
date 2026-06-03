@@ -115,7 +115,7 @@ export function ProductHero() {
             ))}
           </motion.div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
