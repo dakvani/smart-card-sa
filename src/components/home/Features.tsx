@@ -59,10 +59,10 @@ export function Features() {
             transition={{ duration: 0.6 }}
             className="text-left"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground/95">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-foreground/95 text-balance">
               Everything you need to <span className="gradient-text">stand out</span>
             </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-lg">
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg">
               Powerful features to help you grow your audience and monetize your content.
             </p>
             
