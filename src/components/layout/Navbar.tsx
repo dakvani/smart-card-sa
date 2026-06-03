@@ -48,6 +48,7 @@ export function Navbar() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setIsAuthenticated(!!user);
       setUserEmail(user?.email ?? null);
+      setUserId(user?.id ?? null);
       if (user) {
         fetchUserProfile(user.id);
         checkAdminRole(user.id);
@@ -57,6 +58,7 @@ export function Navbar() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session?.user);
       setUserEmail(session?.user?.email ?? null);
+      setUserId(session?.user?.id ?? null);
       if (session?.user) {
         setTimeout(() => {
           fetchUserProfile(session.user.id);
