@@ -4,7 +4,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { format, subDays, startOfDay, eachDayOfInterval } from "date-fns";
 import { Loader2, TrendingUp, DollarSign, Users, ShoppingBag } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatSAR } from "@/lib/currency";
+import { formatSAR, formatSARInt } from "@/lib/currency";
 
 interface ChartData {
   date: string;
