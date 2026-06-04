@@ -91,7 +91,7 @@ export function ProfileShareCard({ username }: ProfileShareCardProps) {
           <div className="bg-white p-3 rounded-xl shadow-sm">
             <QRCodeSVG
               id="share-card-qr"
-              value={profileUrl}
+              value={qrUrl}
               size={140}
               level="H"
               includeMargin
