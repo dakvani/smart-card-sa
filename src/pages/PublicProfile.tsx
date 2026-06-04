@@ -271,33 +271,35 @@ export default function PublicProfile() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 sm:py-10 sm:px-4 flex items-start sm:items-center justify-center">
-      {/* Preview-mode toggle (tablet/desktop only) */}
-      <div className="hidden sm:flex fixed top-4 right-4 z-40 items-center gap-1 rounded-full border border-white/10 bg-slate-900/80 backdrop-blur p-1 shadow-lg">
-        <button
-          onClick={() => setPreviewMode("phone")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
-            previewMode === "phone"
-              ? "bg-white text-slate-900"
-              : "text-white/70 hover:text-white"
-          }`}
-          aria-pressed={previewMode === "phone"}
-        >
-          <Smartphone className="w-3.5 h-3.5" />
-          Phone
-        </button>
-        <button
-          onClick={() => setPreviewMode("compact")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
-            previewMode === "compact"
-              ? "bg-white text-slate-900"
-              : "text-white/70 hover:text-white"
-          }`}
-          aria-pressed={previewMode === "compact"}
-        >
-          <Maximize2 className="w-3.5 h-3.5" />
-          Compact
-        </button>
-      </div>
+      {/* Preview-mode toggle (tablet/desktop only — hidden when ?mobile=1 forces mobile layout) */}
+      {!forceMobile && (
+        <div className="hidden sm:flex fixed top-4 right-4 z-40 items-center gap-1 rounded-full border border-white/10 bg-slate-900/80 backdrop-blur p-1 shadow-lg">
+          <button
+            onClick={() => setPreviewMode("phone")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
+              previewMode === "phone"
+                ? "bg-white text-slate-900"
+                : "text-white/70 hover:text-white"
+            }`}
+            aria-pressed={previewMode === "phone"}
+          >
+            <Smartphone className="w-3.5 h-3.5" />
+            Phone
+          </button>
+          <button
+            onClick={() => setPreviewMode("compact")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
+              previewMode === "compact"
+                ? "bg-white text-slate-900"
+                : "text-white/70 hover:text-white"
+            }`}
+            aria-pressed={previewMode === "compact"}
+          >
+            <Maximize2 className="w-3.5 h-3.5" />
+            Compact
+          </button>
+        </div>
+      )}
 
       <div className="w-full sm:w-auto">
         <div
