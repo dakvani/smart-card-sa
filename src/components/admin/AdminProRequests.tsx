@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, Check, X, Sparkles, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { AdminPromoSettings } from "./AdminPromoSettings";
 
 interface ProRequest {
   id: string;
@@ -173,6 +174,7 @@ export function AdminProRequests() {
 
   return (
     <div className="space-y-6">
+      <AdminPromoSettings />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
           <CardTitle className="text-base flex items-center gap-2">

@@ -269,7 +269,7 @@ export function Navbar() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/settings" className="cursor-pointer">
+                    <Link to="/dashboard?tab=settings" className="cursor-pointer">
                       <Settings className="mr-2 h-4 w-4" />
                       Settings
                     </Link>
@@ -385,7 +385,7 @@ export function Navbar() {
                       Order History
                     </Button>
                   </Link>
-                  <Link to="/settings" onClick={() => setMobileOpen(false)}>
+                  <Link to="/dashboard?tab=settings" onClick={() => setMobileOpen(false)}>
                     <Button variant="outline" className="w-full border-border/50" aria-label="Go to settings">
                       <Settings className="w-4 h-4 mr-2" />
                       Settings
