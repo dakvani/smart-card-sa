@@ -108,6 +108,8 @@ export default function PublicProfile() {
   const [groups, setGroups] = useState<LinkGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [searchParams] = useSearchParams();
+  const forceMobile = searchParams.get("mobile") === "1" || searchParams.get("m") === "1";
   const [previewMode, setPreviewMode] = useState<PreviewMode>("phone");
   const [claimOpen, setClaimOpen] = useState(false);
 
