@@ -39,7 +39,15 @@ interface UserWithRoles {
   avatar_url: string | null;
   created_at: string;
   roles: AppRole[];
+  plan: string;
 }
+
+const PLAN_OPTIONS = ["free", "starter", "pro"] as const;
+const planColors: Record<string, string> = {
+  free: "bg-gray-500/10 text-gray-400 border-gray-500/20",
+  starter: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  pro: "bg-primary/15 text-primary border-primary/30",
+};
 
 const roleIcons: Record<AppRole, React.ElementType> = {
   admin: Crown,
@@ -81,10 +89,10 @@ export function AdminUserManager() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      // Get paginated profiles
+      // Get paginated profiles (now also fetches plan)
       const { data: profiles, error: profilesError, count } = await supabase
         .from("profiles")
-        .select("id, user_id, username, title, avatar_url, created_at", { count: "exact" })
+        .select("id, user_id, username, title, avatar_url, created_at, plan", { count: "exact" })
         .order("created_at", { ascending: false })
         .range((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE - 1);
 
@@ -100,8 +108,9 @@ export function AdminUserManager() {
       if (rolesError) throw rolesError;
 
       // Combine profiles with roles
-      const usersWithRoles: UserWithRoles[] = (profiles || []).map(profile => ({
+      const usersWithRoles: UserWithRoles[] = (profiles || []).map((profile: any) => ({
         ...profile,
+        plan: profile.plan || "free",
         roles: (roles || [])
           .filter(r => r.user_id === profile.user_id)
           .map(r => r.role as AppRole),
@@ -197,6 +206,26 @@ export function AdminUserManager() {
       toast({ title: "Error", description: "Failed to remove role.", variant: "destructive" });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handlePlanChange = async (userId: string, newPlan: string) => {
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ plan: newPlan } as any)
+        .eq("user_id", userId);
+      if (error) throw error;
+      await logAdminAction({
+        action: "UPDATE",
+        tableName: "profiles",
+        recordId: userId,
+        newValues: { plan: newPlan },
+      });
+      setUsers(users.map(u => u.user_id === userId ? { ...u, plan: newPlan } : u));
+      toast({ title: "Plan updated", description: `Set to ${newPlan}` });
+    } catch (e: any) {
+      toast({ title: "Error", description: e.message || "Failed", variant: "destructive" });
     }
   };
 
@@ -338,7 +367,17 @@ export function AdminUserManager() {
                       <p className="text-sm text-muted-foreground truncate">{user.title}</p>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-1 mb-3">
+                  <div className="flex flex-wrap gap-1 items-center mb-3">
+                    <Select value={user.plan} onValueChange={(v) => handlePlanChange(user.user_id, v)}>
+                      <SelectTrigger className={`h-7 w-[100px] text-xs ${planColors[user.plan] || ""}`}>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PLAN_OPTIONS.map(p => (
+                          <SelectItem key={p} value={p} className="capitalize">{p}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     {user.roles.length === 0 ? (
                       <Badge variant="outline" className="text-muted-foreground">No roles</Badge>
                     ) : (
@@ -388,6 +427,7 @@ export function AdminUserManager() {
                     </TableHead>
                     <TableHead>User</TableHead>
                     <TableHead>Username</TableHead>
+                    <TableHead>Plan</TableHead>
                     <TableHead>Roles</TableHead>
                     <TableHead>Joined</TableHead>
                     <TableHead>Actions</TableHead>
@@ -422,6 +462,18 @@ export function AdminUserManager() {
                           </div>
                         </TableCell>
                         <TableCell className="font-medium">{user.username}</TableCell>
+                        <TableCell>
+                          <Select value={user.plan} onValueChange={(v) => handlePlanChange(user.user_id, v)}>
+                            <SelectTrigger className={`h-7 w-[100px] text-xs ${planColors[user.plan] || ""}`}>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {PLAN_OPTIONS.map(p => (
+                                <SelectItem key={p} value={p} className="capitalize">{p}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
                             {user.roles.length === 0 ? (

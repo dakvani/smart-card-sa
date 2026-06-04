@@ -128,8 +128,18 @@ export function useAdminNotifications(isAdmin: boolean) {
     refresh();
   }, [refresh]);
 
+  // Helper: fire a browser/web notification if permission granted
+  const webNotify = (title: string, body: string) => {
+    try {
+      if (typeof window === "undefined" || !("Notification" in window)) return;
+      if (Notification.permission === "granted") {
+        new Notification(title, { body, icon: "/favicon.ico", tag: title });
+      }
+    } catch {}
+  };
+
   // Realtime: any change to source tables or dismissals triggers a refresh.
-  // Toast on truly new pending items (not seen before).
+  // Toast + browser notification on truly new pending items (not seen before).
   useEffect(() => {
     if (!isAdmin || !adminId) return;
 
@@ -149,6 +159,7 @@ export function useAdminNotifications(isAdmin: boolean) {
               title: "✨ New Pro upgrade request",
               description: "Open the bell to review.",
             });
+            webNotify("✨ New Pro upgrade request", `Plan: ${row.requested_plan}`);
           }
           refresh();
         },
@@ -167,6 +178,7 @@ export function useAdminNotifications(isAdmin: boolean) {
               title: "🛒 New order",
               description: `Order #${row.order_number} · ${formatSAR(Number(row.total))}`,
             });
+            webNotify("🛒 New order", `#${row.order_number} · ${formatSAR(Number(row.total))}`);
           }
           refresh();
         },

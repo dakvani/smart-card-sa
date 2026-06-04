@@ -25,6 +25,18 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
   const [open, setOpen] = useState(false);
   const { items, loading, total, proCount, orderCount, dismiss, dismissAll } =
     useAdminNotifications(isAdmin);
+  const [perm, setPerm] = useState<NotificationPermission | "unsupported">(
+    typeof window !== "undefined" && "Notification" in window ? Notification.permission : "unsupported",
+  );
+
+  const requestPermission = async () => {
+    if (typeof window === "undefined" || !("Notification" in window)) return;
+    const result = await Notification.requestPermission();
+    setPerm(result);
+    if (result === "granted") {
+      new Notification("Notifications enabled", { body: "You'll get pop-up alerts for new requests and orders." });
+    }
+  };
 
   const handleAction = (n: AdminNotification) => {
     onOpenTab(n.kind === "pro_request" ? "pro" : "orders");
@@ -81,6 +93,15 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
             </Button>
           )}
         </div>
+
+        {perm === "default" && (
+          <div className="px-3 py-2 bg-primary/5 border-b border-border/60 flex items-center justify-between gap-2">
+            <p className="text-[11px] text-muted-foreground">Enable desktop pop-ups for new alerts</p>
+            <Button size="sm" variant="default" className="h-6 px-2 text-[10px]" onClick={requestPermission}>
+              Enable
+            </Button>
+          </div>
+        )}
 
         {hasItems && (
           <div className="flex gap-2 px-3 py-1.5 text-[11px] text-muted-foreground border-b border-border/60">

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -38,6 +38,7 @@ import { FavoritePresets } from "@/components/dashboard/FavoritePresets";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePlan } from "@/hooks/use-plan";
 import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
+import { AccountSecuritySection } from "@/components/dashboard/AccountSecuritySection";
 
 interface Profile {
   id: string;
@@ -90,12 +91,26 @@ const presetThemes = [
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [activeTab, setActiveTab] = useState("links");
+  const initialTab = searchParams.get("tab") || "links";
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // Sync URL when tab changes (so deep links to ?tab=settings work)
+  useEffect(() => {
+    const current = searchParams.get("tab");
+    if (current !== activeTab) {
+      const next = new URLSearchParams(searchParams);
+      if (activeTab === "links") next.delete("tab");
+      else next.set("tab", activeTab);
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
   
   const [profile, setProfile] = useState<Profile | null>(null);
   const [links, setLinks] = useState<LinkItem[]>([]);
@@ -878,14 +893,12 @@ export default function Dashboard() {
                     }}
                   />
 
-                  {/* Account Settings Link */}
+                  {/* Account Settings (email + password) - moved from /settings */}
                   <div className="border-t border-border pt-6">
-                    <Link to="/settings">
-                      <Button variant="outline" className="w-full">
-                        <SettingsIcon className="w-4 h-4 mr-2" />
-                        Account Settings (Email & Password)
-                      </Button>
-                    </Link>
+                    <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
+                      Account & Security
+                    </h3>
+                    <AccountSecuritySection />
                   </div>
                 </div>
               )}
