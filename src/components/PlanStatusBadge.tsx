@@ -16,7 +16,7 @@ export function PlanStatusBadge({ userId, className }: PlanStatusBadgeProps) {
   return (
     <button
       type="button"
-      onClick={() => navigate("/pricing")}
+      onClick={() => navigate("/smartlink-bio#pricing")}
       className={cn(
         "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider transition-transform hover:scale-105 cursor-pointer",
         plan === "free" && "bg-muted text-muted-foreground hover:bg-muted/80",
