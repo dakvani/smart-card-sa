@@ -301,10 +301,12 @@ export default function PublicProfile() {
         </div>
       )}
 
-      <div className="w-full sm:w-auto">
+      <div className={forceMobile ? "w-full" : "w-full sm:w-auto"}>
         <div
           className={
-            isCompact
+            forceMobile
+              ? "relative w-full min-h-screen overflow-hidden"
+              : isCompact
               ? "relative w-full sm:w-[480px] min-h-screen sm:min-h-0 overflow-hidden sm:rounded-3xl sm:border sm:border-white/10 sm:shadow-2xl"
               : "relative w-full min-h-screen overflow-hidden sm:min-h-0 sm:w-[390px] sm:h-[820px] sm:rounded-[3rem] sm:border-[10px] sm:border-slate-800 sm:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6),0_0_0_2px_rgba(255,255,255,0.04)_inset] sm:ring-1 sm:ring-white/5"
           }
