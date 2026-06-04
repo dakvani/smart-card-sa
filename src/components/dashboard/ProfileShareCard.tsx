@@ -22,6 +22,13 @@ function getProfileUrl(username: string, customDomain?: string): string {
   return `${cleanBase}/${username}`;
 }
 
+function getQrUrl(username: string, customDomain?: string): string {
+  const base = customDomain?.trim() || window.location.origin;
+  const cleanBase = base.replace(/\/+$/, "");
+  // Route via /qr/ so mobile devices get forced mobile layout (?mobile=1)
+  return `${cleanBase}/qr/${username}`;
+}
+
 export function ProfileShareCard({ username }: ProfileShareCardProps) {
   const [copied, setCopied] = useState(false);
   const [customDomain, setCustomDomain] = useState(getStoredDomain);
