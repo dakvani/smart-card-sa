@@ -37,6 +37,7 @@ export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: U
   const [submitting, setSubmitting] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<RequestablePlan>("pro");
   const { status, requestPro, refresh } = useProRequest(userId);
+  const { settings: promo } = usePromoSettings();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id));
@@ -56,7 +57,10 @@ export function UnlockProDialog({ open, onOpenChange, featureName, returnTo }: U
     setSubmitting(true);
     try {
       await requestPro(featureName, selectedPlan);
-      toast.success(`${selectedPlan === "starter" ? "Starter" : "Pro"} request sent! An admin will review shortly.`);
+      toast.success(
+        formatPromoMessage(promo.popup_message, promo.current_count),
+        { duration: 7000 },
+      );
     } catch (e: any) {
       toast.error(e.message || "Could not send request");
     } finally {
