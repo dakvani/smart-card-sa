@@ -39,7 +39,15 @@ interface UserWithRoles {
   avatar_url: string | null;
   created_at: string;
   roles: AppRole[];
+  plan: string;
 }
+
+const PLAN_OPTIONS = ["free", "starter", "pro"] as const;
+const planColors: Record<string, string> = {
+  free: "bg-gray-500/10 text-gray-400 border-gray-500/20",
+  starter: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  pro: "bg-primary/15 text-primary border-primary/30",
+};
 
 const roleIcons: Record<AppRole, React.ElementType> = {
   admin: Crown,
@@ -81,10 +89,10 @@ export function AdminUserManager() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      // Get paginated profiles
+      // Get paginated profiles (now also fetches plan)
       const { data: profiles, error: profilesError, count } = await supabase
         .from("profiles")
-        .select("id, user_id, username, title, avatar_url, created_at", { count: "exact" })
+        .select("id, user_id, username, title, avatar_url, created_at, plan", { count: "exact" })
         .order("created_at", { ascending: false })
         .range((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE - 1);
 
@@ -100,8 +108,9 @@ export function AdminUserManager() {
       if (rolesError) throw rolesError;
 
       // Combine profiles with roles
-      const usersWithRoles: UserWithRoles[] = (profiles || []).map(profile => ({
+      const usersWithRoles: UserWithRoles[] = (profiles || []).map((profile: any) => ({
         ...profile,
+        plan: profile.plan || "free",
         roles: (roles || [])
           .filter(r => r.user_id === profile.user_id)
           .map(r => r.role as AppRole),
