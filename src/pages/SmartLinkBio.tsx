@@ -1,10 +1,11 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BarChart3, CreditCard, Layers, Lock, Palette, Smartphone, Check, Sparkles } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 const categories = ["All", "Fashion", "Music", "Business", "Creative", "Personal"];
 
@@ -49,6 +50,46 @@ const plans = [
 export default function SmartLinkBio() {
   const [activeCategory, setActiveCategory] = useState("All");
   const filteredTemplates = activeCategory === "All" ? templates : templates.filter(t => t.category === activeCategory);
+  const location = useLocation();
+  const pricingRef = useRef<HTMLElement | null>(null);
+
+  // Reliable hash-scroll on mobile (Android/iOS sometimes miss native #hash on SPA nav).
+  useEffect(() => {
+    if (location.hash !== "#pricing") return;
+    let tries = 0;
+    const tick = () => {
+      const el = pricingRef.current ?? document.getElementById("pricing");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        trackEvent("pricing_section_landed", { source: "hash", path: location.pathname });
+      } else if (tries++ < 20) {
+        setTimeout(tick, 100);
+      }
+    };
+    // Defer past paint/layout (mobile Safari needs this).
+    setTimeout(tick, 50);
+  }, [location.hash, location.pathname]);
+
+  // Track when the pricing section becomes visible (any source).
+  useEffect(() => {
+    const el = pricingRef.current ?? document.getElementById("pricing");
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    let fired = false;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting && !fired) {
+            fired = true;
+            trackEvent("pricing_section_viewed", { path: location.pathname });
+          }
+        }
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [location.pathname]);
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -171,7 +212,7 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="py-20">
+        <section id="pricing" ref={pricingRef} className="py-20 scroll-mt-24">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-3">Simple, transparent <span className="gradient-text">pricing</span></h2>
