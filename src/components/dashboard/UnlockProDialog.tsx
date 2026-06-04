@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useProRequest, type RequestablePlan } from "@/hooks/use-pro-request";
+import { usePromoSettings, formatPromoMessage } from "@/hooks/use-promo-settings";
 import { toast } from "sonner";
 
 interface UnlockProDialogProps {
