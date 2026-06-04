@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { Loader2, Star, Smartphone, Maximize2 } from "lucide-react";
@@ -108,6 +108,8 @@ export default function PublicProfile() {
   const [groups, setGroups] = useState<LinkGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [searchParams] = useSearchParams();
+  const forceMobile = searchParams.get("mobile") === "1" || searchParams.get("m") === "1";
   const [previewMode, setPreviewMode] = useState<PreviewMode>("phone");
   const [claimOpen, setClaimOpen] = useState(false);
 
@@ -269,38 +271,42 @@ export default function PublicProfile() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 sm:py-10 sm:px-4 flex items-start sm:items-center justify-center">
-      {/* Preview-mode toggle (tablet/desktop only) */}
-      <div className="hidden sm:flex fixed top-4 right-4 z-40 items-center gap-1 rounded-full border border-white/10 bg-slate-900/80 backdrop-blur p-1 shadow-lg">
-        <button
-          onClick={() => setPreviewMode("phone")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
-            previewMode === "phone"
-              ? "bg-white text-slate-900"
-              : "text-white/70 hover:text-white"
-          }`}
-          aria-pressed={previewMode === "phone"}
-        >
-          <Smartphone className="w-3.5 h-3.5" />
-          Phone
-        </button>
-        <button
-          onClick={() => setPreviewMode("compact")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
-            previewMode === "compact"
-              ? "bg-white text-slate-900"
-              : "text-white/70 hover:text-white"
-          }`}
-          aria-pressed={previewMode === "compact"}
-        >
-          <Maximize2 className="w-3.5 h-3.5" />
-          Compact
-        </button>
-      </div>
+      {/* Preview-mode toggle (tablet/desktop only — hidden when ?mobile=1 forces mobile layout) */}
+      {!forceMobile && (
+        <div className="hidden sm:flex fixed top-4 right-4 z-40 items-center gap-1 rounded-full border border-white/10 bg-slate-900/80 backdrop-blur p-1 shadow-lg">
+          <button
+            onClick={() => setPreviewMode("phone")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
+              previewMode === "phone"
+                ? "bg-white text-slate-900"
+                : "text-white/70 hover:text-white"
+            }`}
+            aria-pressed={previewMode === "phone"}
+          >
+            <Smartphone className="w-3.5 h-3.5" />
+            Phone
+          </button>
+          <button
+            onClick={() => setPreviewMode("compact")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
+              previewMode === "compact"
+                ? "bg-white text-slate-900"
+                : "text-white/70 hover:text-white"
+            }`}
+            aria-pressed={previewMode === "compact"}
+          >
+            <Maximize2 className="w-3.5 h-3.5" />
+            Compact
+          </button>
+        </div>
+      )}
 
-      <div className="w-full sm:w-auto">
+      <div className={forceMobile ? "w-full" : "w-full sm:w-auto"}>
         <div
           className={
-            isCompact
+            forceMobile
+              ? "relative w-full min-h-screen overflow-hidden"
+              : isCompact
               ? "relative w-full sm:w-[480px] min-h-screen sm:min-h-0 overflow-hidden sm:rounded-3xl sm:border sm:border-white/10 sm:shadow-2xl"
               : "relative w-full min-h-screen overflow-hidden sm:min-h-0 sm:w-[390px] sm:h-[820px] sm:rounded-[3rem] sm:border-[10px] sm:border-slate-800 sm:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6),0_0_0_2px_rgba(255,255,255,0.04)_inset] sm:ring-1 sm:ring-white/5"
           }

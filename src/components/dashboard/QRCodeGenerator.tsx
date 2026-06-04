@@ -16,7 +16,7 @@ interface QRCodeGeneratorProps {
 
 export function QRCodeGenerator({ username }: QRCodeGeneratorProps) {
   const [open, setOpen] = useState(false);
-  const profileUrl = `${window.location.origin}/${username}`;
+  const profileUrl = `${window.location.origin}/qr/${username}`;
 
   const downloadQRCode = () => {
     const svg = document.getElementById("qr-code-svg");

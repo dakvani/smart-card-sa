@@ -22,6 +22,13 @@ function getProfileUrl(username: string, customDomain?: string): string {
   return `${cleanBase}/${username}`;
 }
 
+function getQrUrl(username: string, customDomain?: string): string {
+  const base = customDomain?.trim() || window.location.origin;
+  const cleanBase = base.replace(/\/+$/, "");
+  // Route via /qr/ so mobile devices get forced mobile layout (?mobile=1)
+  return `${cleanBase}/qr/${username}`;
+}
+
 export function ProfileShareCard({ username }: ProfileShareCardProps) {
   const [copied, setCopied] = useState(false);
   const [customDomain, setCustomDomain] = useState(getStoredDomain);
@@ -29,6 +36,7 @@ export function ProfileShareCard({ username }: ProfileShareCardProps) {
   const [domainInput, setDomainInput] = useState(customDomain);
 
   const profileUrl = getProfileUrl(username, customDomain);
+  const qrUrl = getQrUrl(username, customDomain);
 
   const copyUrl = () => {
     navigator.clipboard.writeText(profileUrl);
@@ -83,7 +91,7 @@ export function ProfileShareCard({ username }: ProfileShareCardProps) {
           <div className="bg-white p-3 rounded-xl shadow-sm">
             <QRCodeSVG
               id="share-card-qr"
-              value={profileUrl}
+              value={qrUrl}
               size={140}
               level="H"
               includeMargin
