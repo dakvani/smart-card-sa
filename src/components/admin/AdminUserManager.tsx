@@ -209,6 +209,26 @@ export function AdminUserManager() {
     }
   };
 
+  const handlePlanChange = async (userId: string, newPlan: string) => {
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ plan: newPlan } as any)
+        .eq("user_id", userId);
+      if (error) throw error;
+      await logAdminAction({
+        action: "UPDATE",
+        tableName: "profiles",
+        recordId: userId,
+        newValues: { plan: newPlan },
+      });
+      setUsers(users.map(u => u.user_id === userId ? { ...u, plan: newPlan } : u));
+      toast({ title: "Plan updated", description: `Set to ${newPlan}` });
+    } catch (e: any) {
+      toast({ title: "Error", description: e.message || "Failed", variant: "destructive" });
+    }
+  };
+
   const handleBulkAddRole = async () => {
     if (selectedIds.size === 0) return;
 
@@ -347,7 +367,17 @@ export function AdminUserManager() {
                       <p className="text-sm text-muted-foreground truncate">{user.title}</p>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-1 mb-3">
+                  <div className="flex flex-wrap gap-1 items-center mb-3">
+                    <Select value={user.plan} onValueChange={(v) => handlePlanChange(user.user_id, v)}>
+                      <SelectTrigger className={`h-7 w-[100px] text-xs ${planColors[user.plan] || ""}`}>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PLAN_OPTIONS.map(p => (
+                          <SelectItem key={p} value={p} className="capitalize">{p}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     {user.roles.length === 0 ? (
                       <Badge variant="outline" className="text-muted-foreground">No roles</Badge>
                     ) : (
@@ -397,6 +427,7 @@ export function AdminUserManager() {
                     </TableHead>
                     <TableHead>User</TableHead>
                     <TableHead>Username</TableHead>
+                    <TableHead>Plan</TableHead>
                     <TableHead>Roles</TableHead>
                     <TableHead>Joined</TableHead>
                     <TableHead>Actions</TableHead>
@@ -431,6 +462,18 @@ export function AdminUserManager() {
                           </div>
                         </TableCell>
                         <TableCell className="font-medium">{user.username}</TableCell>
+                        <TableCell>
+                          <Select value={user.plan} onValueChange={(v) => handlePlanChange(user.user_id, v)}>
+                            <SelectTrigger className={`h-7 w-[100px] text-xs ${planColors[user.plan] || ""}`}>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {PLAN_OPTIONS.map(p => (
+                                <SelectItem key={p} value={p} className="capitalize">{p}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
                             {user.roles.length === 0 ? (
