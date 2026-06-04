@@ -761,6 +761,39 @@ export type Database = {
         }
         Relationships: []
       }
+      promo_settings: {
+        Row: {
+          current_count: number
+          enabled: boolean
+          id: number
+          max_count: number
+          popup_message: string
+          popup_title: string
+          start_count: number
+          updated_at: string
+        }
+        Insert: {
+          current_count?: number
+          enabled?: boolean
+          id?: number
+          max_count?: number
+          popup_message?: string
+          popup_title?: string
+          start_count?: number
+          updated_at?: string
+        }
+        Update: {
+          current_count?: number
+          enabled?: boolean
+          id?: number
+          max_count?: number
+          popup_message?: string
+          popup_title?: string
+          start_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
