@@ -36,6 +36,7 @@ export function ProfileShareCard({ username }: ProfileShareCardProps) {
   const [domainInput, setDomainInput] = useState(customDomain);
 
   const profileUrl = getProfileUrl(username, customDomain);
+  const qrUrl = getQrUrl(username, customDomain);
 
   const copyUrl = () => {
     navigator.clipboard.writeText(profileUrl);
