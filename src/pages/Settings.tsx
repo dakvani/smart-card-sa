@@ -42,6 +42,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { EcommerceSettings } from "@/components/settings/EcommerceSettings";
+import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
 import { cn } from "@/lib/utils";
 
 type SectionId =
