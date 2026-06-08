@@ -951,6 +951,7 @@ export default function Dashboard() {
                   <div className="border-t border-border pt-6">
                     <ProfileTemplates
                       isPro={isPro}
+                      plan={plan}
                       currentThemeName={profile.theme_name}
                       onApply={(updates) => {
                         setProfile({ ...profile, ...updates } as Profile);
