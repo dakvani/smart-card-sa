@@ -1,9 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { ProductHero } from "@/components/home/ProductHero";
-import { ProductShowcase } from "@/components/home/ProductShowcase";
+import { ScrollStory } from "@/components/home/ScrollStory";
 import { ProductBenefits } from "@/components/home/ProductBenefits";
-import { ProductTechnology } from "@/components/home/ProductTechnology";
 import { ProductDesigns } from "@/components/home/ProductDesigns";
 import { CTA } from "@/components/home/CTA";
 import { Testimonials } from "@/components/home/Testimonials";
@@ -13,10 +11,8 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main id="main-content" className="flex-1">
-        <ProductHero />
-        <ProductShowcase />
+        <ScrollStory />
         <ProductBenefits />
-        <ProductTechnology />
         <ProductDesigns />
         <Testimonials />
         <CTA />
