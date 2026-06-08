@@ -39,7 +39,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { usePlan } from "@/hooks/use-plan";
 import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
 import { AccountSecuritySection } from "@/components/dashboard/AccountSecuritySection";
-import { AccessibilitySettings } from "@/components/settings/AccessibilitySettings";
+
 import { OnboardingConfirmDialog } from "@/components/dashboard/OnboardingConfirmDialog";
 import { computeOnboardingPrefill, trackOnboarding, type OnboardingPrefill } from "@/lib/onboarding";
 
@@ -1008,17 +1008,7 @@ export default function Dashboard() {
                     <AccountSecuritySection />
                   </div>
 
-                  {/* Accessibility — moved here from /settings. Style controls
-                      affect the builder's public bio link only. */}
-                  <div className="border-t border-border pt-6">
-                    <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
-                      Accessibility & Profile Style
-                    </h3>
-                    <p className="text-xs text-muted-foreground mb-4">
-                      These preferences apply to your public bio profile, not the main site.
-                    </p>
-                    <AccessibilitySettings />
-                  </div>
+                  {/* Accessibility & Profile Style section removed permanently per user request. */}
                 </div>
               )}
               </div>
