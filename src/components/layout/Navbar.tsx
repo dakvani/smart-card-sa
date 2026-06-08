@@ -264,7 +264,8 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="gap-2 px-2">
                     <Avatar className="h-7 w-7">
-                      <AvatarImage src={avatarUrl || undefined} alt="Profile" />
+                      <AvatarImage src={avatarUrl || undefined} alt="Your account profile picture" />
+
                       <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                         {getUserInitials()}
                       </AvatarFallback>
@@ -378,7 +379,7 @@ export function Navbar() {
                   {/* User info */}
                   <div className="flex items-center gap-3 px-4 py-3 bg-accent/30 rounded-lg mb-2">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src={avatarUrl || undefined} alt="Profile" />
+                      <AvatarImage src={avatarUrl || undefined} alt="Your account profile picture" />
                       <AvatarFallback className="bg-primary text-primary-foreground">
                         {getUserInitials()}
                       </AvatarFallback>
