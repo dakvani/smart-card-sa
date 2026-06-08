@@ -104,6 +104,36 @@ export function AdminProRequests() {
     }
   };
 
+  // Change the subscription on an already-decided request (downgrade, upgrade,
+  // or revoke). Updates the profile plan and annotates the request.
+  const changePlan = async (req: ProRequest, newPlan: string) => {
+    setBusy(req.id);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error: pErr } = await supabase
+        .from("profiles")
+        .update({ plan: newPlan } as any)
+        .eq("user_id", req.user_id);
+      if (pErr) throw pErr;
+
+      await supabase
+        .from("pro_upgrade_requests")
+        .update({
+          admin_note: `Plan changed to ${newPlan}`,
+          reviewed_by: user?.id ?? null,
+          reviewed_at: new Date().toISOString(),
+        } as any)
+        .eq("id", req.id);
+
+      toast.success(`Subscription updated to ${newPlan}`);
+      load();
+    } catch (e: any) {
+      toast.error(e.message || "Failed to update subscription");
+    } finally {
+      setBusy(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-10">
