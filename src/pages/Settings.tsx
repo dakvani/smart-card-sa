@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { EcommerceSettings } from "@/components/settings/EcommerceSettings";
 
 export default function Settings() {
   const navigate = useNavigate();
