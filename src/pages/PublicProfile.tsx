@@ -118,27 +118,18 @@ export default function PublicProfile() {
   const [previewMode, setPreviewMode] = useState<PreviewMode>("phone");
   const [claimOpen, setClaimOpen] = useState(false);
   const accessibilityScopeRef = useRef<HTMLDivElement | null>(null);
-  const [isOwnerViewing, setIsOwnerViewing] = useState(false);
 
-  // Apply the visitor's accessibility preferences (saved on the dashboard)
-  // ONLY within this public bio profile scope, and ONLY when the viewer is
-  // NOT the profile owner. Owners previewing their own page should see it
-  // exactly as visitors without their personal a11y prefs would.
+  // Apply the saved accessibility preferences within the public bio profile
+  // scope. This applies for every viewer (including the owner previewing
+  // their own page), so the live public view always reflects the settings
+  // chosen on the dashboard. Styles stay scoped to this container and do
+  // NOT leak into the dashboard or any other internal page.
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      if (!profile?.user_id) return;
-      const { data } = await supabase.auth.getUser();
-      const ownerViewing = !!data.user && data.user.id === profile.user_id;
-      if (cancelled) return;
-      setIsOwnerViewing(ownerViewing);
-      if (ownerViewing) return; // public-share-view only
-      applyAccessibilityPreferencesToScope(
-        accessibilityScopeRef.current,
-        loadAccessibilityPreferences(),
-      );
-    })();
-    return () => { cancelled = true; };
+    if (!profile?.user_id) return;
+    applyAccessibilityPreferencesToScope(
+      accessibilityScopeRef.current,
+      loadAccessibilityPreferences(),
+    );
   }, [profile?.id, profile?.user_id]);
 
   useEffect(() => {
