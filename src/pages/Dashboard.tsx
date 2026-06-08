@@ -1007,8 +1007,6 @@ export default function Dashboard() {
                     </h3>
                     <AccountSecuritySection />
                   </div>
-
-                  {/* Accessibility & Profile Style section removed permanently per user request. */}
                 </div>
               )}
               </div>
