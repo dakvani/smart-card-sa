@@ -27,6 +27,31 @@ interface Template {
   is_premium: boolean;
   required_plan?: "free" | "starter" | "pro" | null;
   animation_type: string | null;
+  apply_count?: number | null;
+  view_count?: number | null;
+}
+
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const ACCEPTED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;   // 5 MB
+const MAX_VIDEO_BYTES = 25 * 1024 * 1024;  // 25 MB
+const MAX_VIDEO_DURATION = 15;              // seconds
+
+function getVideoDuration(file: File): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const v = document.createElement("video");
+    v.preload = "metadata";
+    v.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      resolve(v.duration || 0);
+    };
+    v.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Unable to read video metadata"));
+    };
+    v.src = url;
+  });
 }
 
 interface ProfileTemplatesProps {
