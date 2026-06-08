@@ -56,7 +56,11 @@ export function useAdminNotifications(isAdmin: boolean) {
     if (!isAdmin || !adminId) return;
     setLoading(true);
 
-    const [proRes, orderRes, dismissRes] = await Promise.all([
+    // Look-back window for new-account / contact notifications so the bell
+    // doesn't fill up with historical rows.
+    const sinceIso = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+
+    const [proRes, orderRes, accountRes, contactRes, dismissRes] = await Promise.all([
       supabase
         .from("pro_upgrade_requests")
         .select("id,user_id,requested_plan,feature_context,created_at,status")
@@ -67,6 +71,18 @@ export function useAdminNotifications(isAdmin: boolean) {
         .select("id,order_number,total,status,created_at,shipping_info")
         .eq("status", "pending")
         .order("created_at", { ascending: false }),
+      supabase
+        .from("profiles")
+        .select("id,user_id,username,title,created_at")
+        .gte("created_at", sinceIso)
+        .order("created_at", { ascending: false })
+        .limit(50),
+      supabase
+        .from("contact_submissions")
+        .select("id,name,email,inquiry_type,status,created_at")
+        .eq("status", "new")
+        .order("created_at", { ascending: false })
+        .limit(50),
       supabase
         .from("admin_notification_dismissals")
         .select("entity_type,entity_id")
@@ -119,7 +135,29 @@ export function useAdminNotifications(isAdmin: boolean) {
         };
       });
 
-    const all = [...proNotifs, ...orderNotifs].sort(
+    const accountNotifs: AdminNotification[] = ((accountRes.data as any[]) || [])
+      .filter((p) => !dismissed.has(`new_account:${p.id}`))
+      .map((p) => ({
+        id: p.id,
+        kind: "new_account" as const,
+        title: `New account @${p.username}`,
+        description: p.title || "Just signed up",
+        created_at: p.created_at,
+        meta: { user_id: p.user_id, username: p.username },
+      }));
+
+    const contactNotifs: AdminNotification[] = ((contactRes.data as any[]) || [])
+      .filter((c) => !dismissed.has(`contact:${c.id}`))
+      .map((c) => ({
+        id: c.id,
+        kind: "contact" as const,
+        title: `New contact: ${c.name}`,
+        description: `${c.inquiry_type || "general"} · ${c.email}`,
+        created_at: c.created_at,
+        meta: { email: c.email, inquiry_type: c.inquiry_type },
+      }));
+
+    const all = [...proNotifs, ...orderNotifs, ...accountNotifs, ...contactNotifs].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
 
