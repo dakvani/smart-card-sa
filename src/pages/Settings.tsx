@@ -152,6 +152,67 @@ export default function Settings() {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  // Load profile holder details once user is available
+  useEffect(() => {
+    if (!user) return;
+    const meta = (user.user_metadata || {}) as Record<string, any>;
+    const metaPhone = (user.phone as string) || meta.phone || "";
+    setPhone(metaPhone);
+    setPhoneDraft(metaPhone);
+    supabase
+      .from("profiles")
+      .select("id, title, username, avatar_url")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!data) return;
+        setProfileId(data.id);
+        setAvatarUrl(data.avatar_url ?? null);
+        const name = (data.title || meta.full_name || meta.name || data.username || "").replace(/^@/, "");
+        setDisplayName(name);
+        setNameDraft(name);
+      });
+  }, [user]);
+
+  const saveName = async () => {
+    if (!user || !nameDraft.trim()) return toast.error("Name cannot be empty");
+    setSavingName(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ title: nameDraft.trim() })
+        .eq("user_id", user.id);
+      if (error) throw error;
+      setDisplayName(nameDraft.trim());
+      setEditingName(false);
+      toast.success("Name updated");
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setSavingName(false);
+    }
+  };
+
+  const savePhone = async () => {
+    const trimmed = phoneDraft.trim();
+    if (trimmed && !/^\+?[\d\s()-]{6,20}$/.test(trimmed)) {
+      return toast.error("Enter a valid mobile number");
+    }
+    setSavingPhone(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: { phone: trimmed },
+      });
+      if (error) throw error;
+      setPhone(trimmed);
+      toast.success(trimmed ? "Mobile number saved" : "Mobile number removed");
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setSavingPhone(false);
+    }
+  };
+
   const isEmailVerified = user?.email_confirmed_at != null;
 
   const handleResendVerification = async () => {
