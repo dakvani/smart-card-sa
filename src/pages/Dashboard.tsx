@@ -40,7 +40,7 @@ import { FavoritePresets } from "@/components/dashboard/FavoritePresets";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePlan } from "@/hooks/use-plan";
 import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
-import { AccountSecuritySection } from "@/components/dashboard/AccountSecuritySection";
+// AccountSecuritySection removed — managed in /settings
 
 import { OnboardingConfirmDialog } from "@/components/dashboard/OnboardingConfirmDialog";
 import { computeOnboardingPrefill, trackOnboarding, type OnboardingPrefill } from "@/lib/onboarding";
@@ -1004,13 +1004,7 @@ export default function Dashboard() {
                     }}
                   />
 
-                  {/* Account Settings (email + password) - moved from /settings */}
-                  <div className="border-t border-border pt-6">
-                    <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
-                      Account & Security
-                    </h3>
-                    <AccountSecuritySection />
-                  </div>
+                  {/* Account & Security moved to /settings */}
                 </div>
               )}
               </div>
