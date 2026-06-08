@@ -123,18 +123,11 @@ function StageProfile({ progress }: { progress: MotionValue<number> }) {
 
       {/* Data packets */}
       <div className="relative h-16 w-full">
-        {[0, 1, 2, 3].map((i) => {
-          const y = useTransform(packetT, [0, 1], [0, -90]);
-          const o = useTransform(packetT, [0, 0.2 + i * 0.1, 0.9], [0, 1, 0]);
-          return (
-            <motion.div
-              key={i}
-              style={{ y, opacity: o, left: `${20 + i * 20}%` }}
-              className="absolute top-4 w-2 h-2 rounded-sm bg-primary shadow-[0_0_10px_hsl(var(--primary))]"
-            />
-          );
-        })}
+        {[0, 1, 2, 3].map((i) => (
+          <Packet key={i} packetT={packetT} index={i} />
+        ))}
       </div>
+
 
       {/* Phone */}
       <motion.div style={{ y: phoneY }} className="relative w-[200px] aspect-[9/19] rounded-[28px] border border-border bg-card/70 backdrop-blur-xl shadow-2xl p-3">
