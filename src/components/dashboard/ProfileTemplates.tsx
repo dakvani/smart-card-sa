@@ -394,7 +394,7 @@ export function ProfileTemplates({
             <div className="min-w-0">
               <p className="text-xs font-medium">Custom background</p>
               <p className="text-[10px] text-muted-foreground truncate">
-                {customMedia ? `${customMedia.type === "video" ? "Video" : "Image"} saved — visible on your live profile` : "Upload an image or short video (≤10MB)"}
+                {customMedia ? `${customMedia.type === "video" ? "Video" : "Image"} saved — visible on your live profile` : "Image ≤5MB (JPG/PNG/WEBP/GIF) or video ≤25MB & 15s (MP4/WEBM/MOV)"}
               </p>
             </div>
             <div className="flex items-center gap-1.5">
