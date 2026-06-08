@@ -134,7 +134,7 @@ const paymentSchema = z.object({
     .trim()
     .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Use MM/YY format"),
 });
-type PaymentForm = z.infer<typeof paymentSchema>;
+type PaymentForm = { holder: string; number: string; expiry: string };
 
 const topupSchema = z
   .object({
