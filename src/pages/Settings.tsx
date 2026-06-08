@@ -25,7 +25,6 @@ import {
   ShieldAlert,
   ChevronRight,
   Phone,
-  Camera,
   Pencil,
   Check,
   X as XIcon,
