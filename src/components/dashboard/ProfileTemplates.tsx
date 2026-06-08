@@ -541,7 +541,7 @@ export function ProfileTemplates({
               key={template.id}
               className={`relative rounded-xl border overflow-hidden transition-all ${
                 isActive ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50"
-              }`}
+              } ${hidden ? "opacity-60" : ""}`}
             >
               <div className="relative">
                 <TemplatePreview
