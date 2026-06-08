@@ -80,7 +80,7 @@ describe("Navbar — scroll-aware background & shadow", () => {
   ];
 
   for (const { label, width } of viewports) {
-    it(`switches to the elevated shadow + accent border on scroll @ ${label}`, () => {
+    it(`switches to the elevated shadow + accent border on scroll @ ${label}`, async () => {
       setViewport(width);
       renderNavbar();
 
