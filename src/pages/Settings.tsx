@@ -61,8 +61,8 @@ const NAV: {
   icon: React.ComponentType<{ className?: string }>;
   description: string;
 }[] = [
-  { id: "account", label: "Account", group: "Profile", icon: UserIcon, description: "Profile info & verification" },
-  { id: "email", label: "Email", group: "Profile", icon: Mail, description: "Update your email address" },
+  { id: "account", label: "Account", group: "Profile", icon: UserIcon, description: "Your personal details & avatar" },
+  { id: "email", label: "Contact", group: "Profile", icon: Phone, description: "Email address & mobile number" },
   { id: "password", label: "Password", group: "Profile", icon: Lock, description: "Change your password" },
   { id: "orders", label: "Orders", group: "Shop", icon: ShoppingBag, description: "Recent purchases" },
   { id: "wallet", label: "Wallet", group: "Shop", icon: Wallet, description: "Credit & promos" },
