@@ -1004,13 +1004,7 @@ export default function Dashboard() {
                     }}
                   />
 
-                  {/* Account Settings (email + password) - moved from /settings */}
-                  <div className="border-t border-border pt-6">
-                    <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
-                      Account & Security
-                    </h3>
-                    <AccountSecuritySection />
-                  </div>
+                  {/* Account & Security moved to /settings */}
                 </div>
               )}
               </div>
