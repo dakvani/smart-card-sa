@@ -207,24 +207,78 @@ export function ProfileTemplates({
     if (!isProTier) {
       setUnlockFeature("Custom template backgrounds");
       setUnlockOpen(true);
+      e.target.value = "";
       return;
     }
     if (!userId) {
       toast.error("Please sign in first");
+      e.target.value = "";
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File too large. Max 10MB.");
-      return;
-    }
+
     const isVideo = file.type.startsWith("video/");
     const isImage = file.type.startsWith("image/");
+
     if (!isVideo && !isImage) {
-      toast.error("Please upload an image or video.");
+      toast.error("Unsupported file. Please upload an image or video.");
+      e.target.value = "";
       return;
     }
+    if (isImage && !ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      toast.error("Unsupported image format. Use JPG, PNG, WEBP or GIF.");
+      e.target.value = "";
+      return;
+    }
+    if (isVideo && !ACCEPTED_VIDEO_TYPES.includes(file.type)) {
+      toast.error("Unsupported video format. Use MP4, WEBM or MOV.");
+      e.target.value = "";
+      return;
+    }
+    const maxBytes = isVideo ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
+    if (file.size > maxBytes) {
+      toast.error(
+        isVideo
+          ? `Video too large. Max ${MAX_VIDEO_BYTES / (1024 * 1024)}MB.`
+          : `Image too large. Max ${MAX_IMAGE_BYTES / (1024 * 1024)}MB.`
+      );
+      e.target.value = "";
+      return;
+    }
+    if (isVideo) {
+      try {
+        const duration = await getVideoDuration(file);
+        if (duration > MAX_VIDEO_DURATION + 0.25) {
+          toast.error(`Video too long (${Math.round(duration)}s). Max ${MAX_VIDEO_DURATION}s — trim it first.`);
+          e.target.value = "";
+          return;
+        }
+      } catch {
+        toast.error("Could not read this video. Try a different file.");
+        e.target.value = "";
+        return;
+      }
+    }
+
     setUploading(true);
     try {
+      const ext = file.name.split(".").pop() || (isVideo ? "mp4" : "jpg");
+      const path = `${userId}/template-bg/${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+      const type: "image" | "video" = isVideo ? "video" : "image";
+      setCustomMedia({ url: pub.publicUrl, type });
+      await persist({ custom_background_url: pub.publicUrl, custom_background_type: type });
+      toast.success("Custom background saved");
+    } catch (err: any) {
+      toast.error(err.message || "Upload failed");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  };
       const ext = file.name.split(".").pop() || (isVideo ? "mp4" : "jpg");
       const path = `${userId}/template-bg/${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage
