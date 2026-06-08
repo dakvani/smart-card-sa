@@ -111,7 +111,7 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
         )}
 
         {hasItems && (
-          <div className="flex gap-2 px-3 py-1.5 text-[11px] text-muted-foreground border-b border-border/60">
+          <div className="flex gap-2 flex-wrap px-3 py-1.5 text-[11px] text-muted-foreground border-b border-border/60">
             <span className="flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-primary" />
               {proCount} Pro
@@ -119,6 +119,14 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
             <span className="flex items-center gap-1">
               <ShoppingBag className="w-3 h-3 text-green-500" />
               {orderCount} Orders
+            </span>
+            <span className="flex items-center gap-1">
+              <UserPlus className="w-3 h-3 text-blue-500" />
+              {accountCount} New
+            </span>
+            <span className="flex items-center gap-1">
+              <Mail className="w-3 h-3 text-amber-500" />
+              {contactCount} Contact
             </span>
           </div>
         )}
