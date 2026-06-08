@@ -478,25 +478,38 @@ export function ProfileTemplates({
         );
       })()}
 
-      {/* Category Filter */}
-      <div className="flex gap-2 flex-wrap">
-        {categories.map(cat => {
-          const Icon = categoryIcons[cat] || Palette;
-          return (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                selectedCategory === cat
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary hover:bg-secondary/80"
-              }`}
-            >
-              {cat !== "all" && <Icon className="w-4 h-4" />}
-              {cat === "all" ? "All" : categoryLabels[cat] || cat}
-            </button>
-          );
-        })}
+      {/* Category Filter + hidden toggle */}
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
+          {categories.map(cat => {
+            const Icon = categoryIcons[cat] || Palette;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  selectedCategory === cat
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary hover:bg-secondary/80"
+                }`}
+              >
+                {cat !== "all" && <Icon className="w-4 h-4" />}
+                {cat === "all" ? "All" : categoryLabels[cat] || cat}
+              </button>
+            );
+          })}
+        </div>
+        {hiddenCount > 0 && (
+          <Button
+            size="sm"
+            variant={showHidden ? "default" : "outline"}
+            className="h-8 text-[11px]"
+            onClick={() => setShowHidden(!showHidden)}
+          >
+            {showHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+            {showHidden ? `Hide hidden (${hiddenCount})` : `Show hidden (${hiddenCount})`}
+          </Button>
+        )}
       </div>
 
       {/* Hidden file input */}
