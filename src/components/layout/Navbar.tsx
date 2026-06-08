@@ -127,6 +127,31 @@ export function Navbar() {
     setMobileOpen(false);
   }, [location.pathname]);
 
+  // Outside-click + Esc to close the mobile menu
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const handlePointer = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node | null;
+      if (!target) return;
+      if (mobileMenuRef.current?.contains(target)) return;
+      if (mobileToggleRef.current?.contains(target)) return;
+      setMobileOpen(false);
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+
+    document.addEventListener("mousedown", handlePointer);
+    document.addEventListener("touchstart", handlePointer, { passive: true });
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handlePointer);
+      document.removeEventListener("touchstart", handlePointer);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [mobileOpen]);
+
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
