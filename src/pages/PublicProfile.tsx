@@ -11,6 +11,11 @@ import { EmailSignup } from "@/components/profile/EmailSignup";
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
 import { ClaimSmartCardDialog } from "@/components/profile/ClaimSmartCardDialog";
 import { parseUserAgent } from "@/lib/userAgentParser";
+import {
+  ACCESSIBILITY_SCOPE_ATTR,
+  applyAccessibilityPreferencesToScope,
+  loadAccessibilityPreferences,
+} from "@/lib/accessibility";
 
 interface SocialLinks {
   instagram?: string;
