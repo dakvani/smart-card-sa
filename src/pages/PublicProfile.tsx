@@ -161,7 +161,7 @@ export default function PublicProfile() {
         setProfile({
           ...profileData,
           social_links: (profileData.social_links as SocialLinks) || {},
-        });
+        } as Profile);
 
         await supabase.from("profile_views").insert({
           profile_id: profileData.id,
