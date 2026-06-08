@@ -221,6 +221,46 @@ export function useAdminNotifications(isAdmin: boolean) {
               description: `Order #${row.order_number} · ${formatSAR(Number(row.total))}`,
             });
             webNotify("🛒 New order", `#${row.order_number} · ${formatSAR(Number(row.total))}`);
+          } else if (
+            payload.eventType === "UPDATE" &&
+            (payload.new as any)?.status !== (payload.old as any)?.status
+          ) {
+            const ord = payload.new as any;
+            toast({
+              title: `📦 Order #${ord.order_number} → ${ord.status}`,
+              description: `${formatSAR(Number(ord.total))}`,
+            });
+            webNotify(`Order #${ord.order_number} updated`, `Now ${ord.status}`);
+          }
+          refresh();
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "profiles" },
+        (payload) => {
+          const row: any = payload.new;
+          if (row && !knownIdsRef.current.has(`new_account:${row.id}`)) {
+            toast({
+              title: "👤 New account",
+              description: `@${row.username} just signed up`,
+            });
+            webNotify("👤 New account", `@${row.username}`);
+          }
+          refresh();
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "contact_submissions" },
+        (payload) => {
+          const row: any = payload.new;
+          if (row && !knownIdsRef.current.has(`contact:${row.id}`)) {
+            toast({
+              title: "✉️ New contact submission",
+              description: `${row.name} · ${row.inquiry_type || "general"}`,
+            });
+            webNotify("✉️ New contact submission", `${row.name} — ${row.email}`);
           }
           refresh();
         },
