@@ -346,43 +346,49 @@ export function ScrollStory() {
     offset: ["start start", "end end"],
   });
 
-  // Progress bar across stages
-  const barScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  // Spring-smoothed scroll progress — keeps scrub responsive but stable at any speed.
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 140,
+    damping: 28,
+    mass: 0.35,
+    restDelta: 0.0005,
+  });
 
-  // Hero overlay fades out as user starts scrolling (first ~8% of section)
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.04, 0.08], [1, 1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.08], [0, -60]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.08], [1, 0.92]);
-  const heroBlur = useTransform(scrollYProgress, [0, 0.08], [0, 8]);
-  const heroFilter = useTransform(heroBlur, (b) => `blur(${b}px)`);
+  // Top scroll progress bar
+  const barScale = useTransform(smoothProgress, [0, 1], [0, 1]);
 
-  // Parallax ambient orbs
-  const orbAY = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const orbBY = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const orbRotate = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  // Parallax ambient orbs — opposite directions, slow, no rotation (less distracting)
+  const orbAY = useTransform(smoothProgress, [0, 1], [0, -160]);
+  const orbAX = useTransform(smoothProgress, [0, 1], [0, 40]);
+  const orbBY = useTransform(smoothProgress, [0, 1], [0, 140]);
+  const orbBX = useTransform(smoothProgress, [0, 1], [0, -40]);
+  const orbAOpacity = useTransform(smoothProgress, [0, 0.5, 1], [0.55, 0.7, 0.4]);
+  const orbBOpacity = useTransform(smoothProgress, [0, 0.5, 1], [0.4, 0.7, 0.55]);
 
-  // Story progress remaps the post-hero scroll (8% → 100%) to [0,1] for stages
-  const storyProgress = useTransform(scrollYProgress, [0.08, 1], [0, 1], { clamp: true });
-
-  // Stage container subtle scale pulse during transitions
+  // Subtle stage breathing
   const stageScale = useTransform(
-    scrollYProgress,
-    [0.08, 0.2, 0.45, 0.7, 0.95],
-    [0.96, 1, 1, 1, 0.98],
+    smoothProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    [0.98, 1, 1, 1, 0.99],
   );
 
   if (prefersReduced) {
-    // Static fallback — no scroll scrubbing.
+    // Reduced-motion: no scroll scrubbing, no ambient parallax.
+    // Show the 4 stages as a simple, static grid summary.
     return (
-      <section className="relative py-24 bg-background">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-foreground">
-            One tap. <span className="gradient-text">Endless connections.</span>
+      <section className="relative py-24 bg-background" aria-label="How a SmartLink card works">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium mb-6">
+            <Sparkles className="w-4 h-4 text-primary" />
+            How a SmartLink card actually works
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-foreground">
+            From silicon to <span className="gradient-text">one tap.</span>
           </h1>
-          <p className="text-lg text-muted-foreground mb-10">
+          <p className="text-lg text-muted-foreground mb-12 max-w-2xl">
             Premium NFC cards programmed with your live SmartLink profile. Tap any phone to share everything you are.
           </p>
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2">
             {STAGE_TITLES.map((t, i) => (
               <div key={i} className="p-6 rounded-2xl border border-border bg-card/50">
                 <div className="text-xs font-mono text-primary mb-2">{STAGE_LABELS[i]}</div>
@@ -391,67 +397,7 @@ export function ScrollStory() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-    );
-  }
-
-
-  return (
-    <section
-      ref={ref}
-      className="relative"
-      style={{ height: `${(STAGES + 1) * 100}vh` }}
-      aria-label="How a SmartLink card works"
-    >
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-background">
-        {/* Parallax ambient background */}
-        <motion.div
-          style={{ y: orbAY, rotate: orbRotate }}
-          className="absolute top-[10%] left-[5%] w-[600px] h-[600px] rounded-full bg-primary/15 blur-[140px] -z-10"
-        />
-        <motion.div
-          style={{ y: orbBY, rotate: orbRotate }}
-          className="absolute bottom-[5%] right-[5%] w-[600px] h-[600px] rounded-full bg-accent/15 blur-[140px] -z-10"
-        />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-primary/5 to-background" />
-
-        {/* Top scroll progress bar */}
-        <motion.div
-          style={{ scaleX: barScale }}
-          className="absolute top-0 left-0 right-0 h-[3px] origin-left bg-gradient-to-r from-primary via-accent to-primary z-30 shadow-[0_0_20px_hsl(var(--primary))]"
-        />
-
-        {/* HERO overlay — visible at scroll 0, fades out as you scroll */}
-        <motion.div
-          style={{ opacity: heroOpacity, y: heroY, scale: heroScale, filter: heroFilter }}
-          className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4 pointer-events-none"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium mb-8 pointer-events-auto"
-          >
-            <Sparkles className="w-4 h-4 text-primary" />
-            How a SmartLink card actually works
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-5xl sm:text-6xl md:text-8xl font-bold tracking-tight mb-6 text-foreground max-w-4xl"
-          >
-            From silicon to <span className="gradient-text">one tap.</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl"
-          >
-            Scroll to follow your data from a blank NFC chip to a finished tap-to-share profile.
-          </motion.p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pointer-events-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-3 mt-12">
             <Button asChild size="lg" className="gradient-primary shadow-glow">
               <Link to="/nfc-products">
                 Shop SmartCards <ArrowRight className="ml-2 w-4 h-4" />
@@ -461,39 +407,65 @@ export function ScrollStory() {
               <Link to="/signup">Create your profile</Link>
             </Button>
           </div>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-            className="mt-14 text-xs uppercase tracking-[0.3em] text-muted-foreground/70"
-          >
-            ↓ Scroll to begin
-          </motion.div>
-        </motion.div>
+        </div>
+      </section>
+    );
+  }
 
-        {/* Stage canvas */}
+  return (
+    <section
+      ref={ref}
+      className="relative"
+      style={{ height: `${STAGES * 100}vh` }}
+      aria-label="How a SmartLink card works"
+    >
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-background">
+        {/* Parallax ambient background — opposite axes, soft, behind everything */}
+        <motion.div
+          aria-hidden
+          style={{ y: orbAY, x: orbAX, opacity: orbAOpacity }}
+          className="absolute top-[8%] left-[-8%] w-[520px] h-[520px] rounded-full bg-primary/20 blur-[140px] -z-10 will-change-transform"
+        />
+        <motion.div
+          aria-hidden
+          style={{ y: orbBY, x: orbBX, opacity: orbBOpacity }}
+          className="absolute bottom-[6%] right-[-8%] w-[520px] h-[520px] rounded-full bg-accent/20 blur-[140px] -z-10 will-change-transform"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-primary/[0.03] to-background"
+        />
+
+        {/* Top scroll progress bar */}
+        <motion.div
+          style={{ scaleX: barScale }}
+          className="absolute top-0 left-0 right-0 h-[3px] origin-left bg-gradient-to-r from-primary via-accent to-primary z-30 shadow-[0_0_20px_hsl(var(--primary))]"
+        />
+
+        {/* Stage canvas — no hero overlay; motion starts immediately */}
         <motion.div
           style={{ scale: stageScale }}
-          className="relative h-full container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center"
+          className="relative h-full container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center will-change-transform"
         >
           {/* Left column: copy */}
           <div className="relative h-[60vh] md:h-[50vh]">
             {[0, 1, 2, 3].map((i) => (
-              <StageCopy key={i} index={i} globalProgress={storyProgress} />
+              <StageCopy key={i} index={i} globalProgress={smoothProgress} />
             ))}
           </div>
 
           {/* Right column: graphics */}
           <div className="relative h-[60vh] md:h-[60vh] flex items-center justify-center">
-            <StageSlot index={0} globalProgress={storyProgress}>
+            <StageSlot index={0} globalProgress={smoothProgress}>
               {(p) => <StageCard progress={p} />}
             </StageSlot>
-            <StageSlot index={1} globalProgress={storyProgress}>
+            <StageSlot index={1} globalProgress={smoothProgress}>
               {(p) => <StageProfile progress={p} />}
             </StageSlot>
-            <StageSlot index={2} globalProgress={storyProgress}>
+            <StageSlot index={2} globalProgress={smoothProgress}>
               {(p) => <StageProgram progress={p} />}
             </StageSlot>
-            <StageSlot index={3} globalProgress={storyProgress}>
+            <StageSlot index={3} globalProgress={smoothProgress}>
               {(p) => <StageTap progress={p} />}
             </StageSlot>
           </div>
@@ -502,10 +474,26 @@ export function ScrollStory() {
         {/* Stage dots */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
           {[0, 1, 2, 3].map((i) => (
-            <StageDot key={i} index={i} globalProgress={storyProgress} />
+            <StageDot key={i} index={i} globalProgress={smoothProgress} />
           ))}
         </div>
+
+        {/* Scroll hint — only visible at the very top */}
+        <ScrollHint progress={smoothProgress} />
       </div>
     </section>
   );
 }
+
+function ScrollHint({ progress }: { progress: MotionValue<number> }) {
+  const opacity = useTransform(progress, [0, 0.04, 0.08], [1, 1, 0]);
+  return (
+    <motion.div
+      style={{ opacity }}
+      className="absolute bottom-20 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.3em] text-muted-foreground/70 z-20 pointer-events-none"
+    >
+      ↓ Scroll
+    </motion.div>
+  );
+}
+
