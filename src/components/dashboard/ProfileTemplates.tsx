@@ -279,24 +279,6 @@ export function ProfileTemplates({
       e.target.value = "";
     }
   };
-      const ext = file.name.split(".").pop() || (isVideo ? "mp4" : "jpg");
-      const path = `${userId}/template-bg/${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage
-        .from("avatars")
-        .upload(path, file, { upsert: true, contentType: file.type });
-      if (upErr) throw upErr;
-      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
-      const type: "image" | "video" = isVideo ? "video" : "image";
-      setCustomMedia({ url: pub.publicUrl, type });
-      await persist({ custom_background_url: pub.publicUrl, custom_background_type: type });
-      toast.success("Custom background saved");
-    } catch (err: any) {
-      toast.error(err.message || "Upload failed");
-    } finally {
-      setUploading(false);
-      e.target.value = "";
-    }
-  };
 
   const clearCustomMedia = async () => {
     setCustomMedia(null);
