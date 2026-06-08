@@ -610,6 +610,7 @@ export type Database = {
           animation_intensity: number | null
           animation_speed: number | null
           animation_type: string | null
+          apply_count: number
           category: string
           created_at: string
           description: string | null
@@ -621,11 +622,13 @@ export type Database = {
           required_plan: string
           theme_gradient: string
           theme_name: string
+          view_count: number
         }
         Insert: {
           animation_intensity?: number | null
           animation_speed?: number | null
           animation_type?: string | null
+          apply_count?: number
           category: string
           created_at?: string
           description?: string | null
@@ -637,11 +640,13 @@ export type Database = {
           required_plan?: string
           theme_gradient: string
           theme_name: string
+          view_count?: number
         }
         Update: {
           animation_intensity?: number | null
           animation_speed?: number | null
           animation_type?: string | null
+          apply_count?: number
           category?: string
           created_at?: string
           description?: string | null
@@ -653,6 +658,7 @@ export type Database = {
           required_plan?: string
           theme_gradient?: string
           theme_name?: string
+          view_count?: number
         }
         Relationships: []
       }
@@ -1024,6 +1030,14 @@ export type Database = {
         Returns: boolean
       }
       increment_link_click: { Args: { link_uuid: string }; Returns: undefined }
+      increment_template_apply: {
+        Args: { template_uuid: string }
+        Returns: undefined
+      }
+      increment_template_view: {
+        Args: { template_uuid: string }
+        Returns: undefined
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string

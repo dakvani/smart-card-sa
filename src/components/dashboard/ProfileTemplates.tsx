@@ -27,6 +27,31 @@ interface Template {
   is_premium: boolean;
   required_plan?: "free" | "starter" | "pro" | null;
   animation_type: string | null;
+  apply_count?: number | null;
+  view_count?: number | null;
+}
+
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const ACCEPTED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;   // 5 MB
+const MAX_VIDEO_BYTES = 25 * 1024 * 1024;  // 25 MB
+const MAX_VIDEO_DURATION = 15;              // seconds
+
+function getVideoDuration(file: File): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const v = document.createElement("video");
+    v.preload = "metadata";
+    v.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      resolve(v.duration || 0);
+    };
+    v.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Unable to read video metadata"));
+    };
+    v.src = url;
+  });
 }
 
 interface ProfileTemplatesProps {
@@ -116,6 +141,20 @@ export function ProfileTemplates({
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { loadTemplates(); }, []);
+  // Record one view per template per session (rough impression metric)
+  useEffect(() => {
+    if (loading || templates.length === 0) return;
+    try {
+      const key = "tpl_view_session";
+      const seen = new Set<string>(JSON.parse(sessionStorage.getItem(key) || "[]"));
+      const fresh = templates.filter((t) => !seen.has(t.id));
+      fresh.forEach((t) => {
+        seen.add(t.id);
+        supabase.rpc("increment_template_view" as any, { template_uuid: t.id });
+      });
+      if (fresh.length) sessionStorage.setItem(key, JSON.stringify([...seen]));
+    } catch { /* noop */ }
+  }, [loading, templates]);
   useEffect(() => { setCustomMedia(initialCustomBackground); }, [initialCustomBackground?.url]); // eslint-disable-line
   useEffect(() => { setSpeed(initialAnimationSpeed); }, [initialAnimationSpeed]);
   useEffect(() => { setMotionEnabled(initialMotionEnabled); }, [initialMotionEnabled]);
@@ -156,6 +195,13 @@ export function ProfileTemplates({
         custom_accent_color: null,
         animation_type: template.animation_type,
       });
+      // Optimistic local bump + persist count
+      setTemplates((prev) =>
+        prev.map((t) =>
+          t.id === template.id ? { ...t, apply_count: (t.apply_count || 0) + 1 } : t
+        )
+      );
+      supabase.rpc("increment_template_apply" as any, { template_uuid: template.id });
       toast.success(`Applied "${template.name}" template!`);
     } finally {
       setTimeout(() => setApplying(null), 500);
@@ -175,22 +221,58 @@ export function ProfileTemplates({
     if (!isProTier) {
       setUnlockFeature("Custom template backgrounds");
       setUnlockOpen(true);
+      e.target.value = "";
       return;
     }
     if (!userId) {
       toast.error("Please sign in first");
+      e.target.value = "";
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File too large. Max 10MB.");
-      return;
-    }
+
     const isVideo = file.type.startsWith("video/");
     const isImage = file.type.startsWith("image/");
+
     if (!isVideo && !isImage) {
-      toast.error("Please upload an image or video.");
+      toast.error("Unsupported file. Please upload an image or video.");
+      e.target.value = "";
       return;
     }
+    if (isImage && !ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      toast.error("Unsupported image format. Use JPG, PNG, WEBP or GIF.");
+      e.target.value = "";
+      return;
+    }
+    if (isVideo && !ACCEPTED_VIDEO_TYPES.includes(file.type)) {
+      toast.error("Unsupported video format. Use MP4, WEBM or MOV.");
+      e.target.value = "";
+      return;
+    }
+    const maxBytes = isVideo ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
+    if (file.size > maxBytes) {
+      toast.error(
+        isVideo
+          ? `Video too large. Max ${MAX_VIDEO_BYTES / (1024 * 1024)}MB.`
+          : `Image too large. Max ${MAX_IMAGE_BYTES / (1024 * 1024)}MB.`
+      );
+      e.target.value = "";
+      return;
+    }
+    if (isVideo) {
+      try {
+        const duration = await getVideoDuration(file);
+        if (duration > MAX_VIDEO_DURATION + 0.25) {
+          toast.error(`Video too long (${Math.round(duration)}s). Max ${MAX_VIDEO_DURATION}s — trim it first.`);
+          e.target.value = "";
+          return;
+        }
+      } catch {
+        toast.error("Could not read this video. Try a different file.");
+        e.target.value = "";
+        return;
+      }
+    }
+
     setUploading(true);
     try {
       const ext = file.name.split(".").pop() || (isVideo ? "mp4" : "jpg");
@@ -312,7 +394,7 @@ export function ProfileTemplates({
             <div className="min-w-0">
               <p className="text-xs font-medium">Custom background</p>
               <p className="text-[10px] text-muted-foreground truncate">
-                {customMedia ? `${customMedia.type === "video" ? "Video" : "Image"} saved — visible on your live profile` : "Upload an image or short video (≤10MB)"}
+                {customMedia ? `${customMedia.type === "video" ? "Video" : "Image"} saved — visible on your live profile` : "Image ≤5MB (JPG/PNG/WEBP/GIF) or video ≤25MB & 15s (MP4/WEBM/MOV)"}
               </p>
             </div>
             <div className="flex items-center gap-1.5">
@@ -329,6 +411,43 @@ export function ProfileTemplates({
           </div>
         </div>
       )}
+
+      {/* Top templates leaderboard */}
+      {(() => {
+        const top = [...templates]
+          .filter((t) => (t.apply_count || 0) + (t.view_count || 0) > 0)
+          .sort((a, b) =>
+            ((b.apply_count || 0) * 3 + (b.view_count || 0)) -
+            ((a.apply_count || 0) * 3 + (a.view_count || 0))
+          )
+          .slice(0, 3);
+        if (top.length === 0) return null;
+        return (
+          <div className="rounded-lg border border-border bg-card/50 p-3">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold flex items-center gap-1.5">
+                <Trophy className="w-3.5 h-3.5 text-amber-500" /> Top templates
+              </p>
+              <span className="text-[10px] text-muted-foreground">By applies × views</span>
+            </div>
+            <ol className="space-y-1.5">
+              {top.map((t, i) => (
+                <li key={t.id} className="flex items-center gap-2 text-xs">
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    i === 0 ? "bg-amber-500/20 text-amber-600 dark:text-amber-300"
+                    : i === 1 ? "bg-zinc-400/20 text-zinc-600 dark:text-zinc-300"
+                    : "bg-orange-600/20 text-orange-700 dark:text-orange-300"
+                  }`}>{i + 1}</span>
+                  <span className="font-medium truncate flex-1">{t.name}</span>
+                  <span className="text-muted-foreground tabular-nums">
+                    {t.apply_count || 0} applies · {t.view_count || 0} views
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        );
+      })()}
 
       {/* Category Filter */}
       <div className="flex gap-2 flex-wrap">
@@ -392,6 +511,14 @@ export function ProfileTemplates({
                   motionEnabled={motionEnabled}
                   customMedia={isProTier ? customMedia : null}
                 />
+                {/* usage badge */}
+                <div className="absolute bottom-2 left-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-background/70 backdrop-blur text-[10px] text-foreground/90 border border-border/60">
+                  <Eye className="w-2.5 h-2.5" />
+                  <span className="tabular-nums">{template.view_count || 0}</span>
+                  <span className="opacity-50">·</span>
+                  <Check className="w-2.5 h-2.5" />
+                  <span className="tabular-nums">{template.apply_count || 0}</span>
+                </div>
                 {locked && (
                   <button
                     type="button"

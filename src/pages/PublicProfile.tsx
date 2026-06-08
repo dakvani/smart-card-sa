@@ -359,12 +359,20 @@ export default function PublicProfile() {
                     playsInline
                     className="w-full h-full object-cover"
                     ref={(el) => { if (el) el.playbackRate = profile.animation_speed || 1; }}
+                    onError={(e) => {
+                      // Hide broken video — theme gradient stays visible underneath
+                      (e.currentTarget as HTMLVideoElement).style.display = "none";
+                    }}
                   />
                 ) : (
                   <img
                     src={profile.custom_background_url}
                     alt=""
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Hide broken image — fall back to theme gradient
+                      (e.currentTarget as HTMLImageElement).style.display = "none";
+                    }}
                   />
                 )}
                 <div className="absolute inset-0 bg-black/35" />
