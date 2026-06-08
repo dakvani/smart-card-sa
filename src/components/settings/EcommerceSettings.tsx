@@ -75,7 +75,16 @@ const statusColor: Record<string, string> = {
   cancelled: "bg-red-500/10 text-red-600 border-red-500/20",
 };
 
-export function EcommerceSettings({ userId }: { userId: string }) {
+type EcommerceSection = "orders" | "wallet" | "addresses" | "payments";
+
+export function EcommerceSettings({
+  userId,
+  section,
+}: {
+  userId: string;
+  section?: EcommerceSection;
+}) {
+  const show = (s: EcommerceSection) => !section || section === s;
   const [addresses, setAddresses] = useState<ShippingAddress[]>([]);
   const [payments, setPayments] = useState<PaymentMethod[]>([]);
   const [wallet, setWallet] = useState<{ balance: number; currency: string }>({
@@ -224,6 +233,7 @@ export function EcommerceSettings({ userId }: { userId: string }) {
   return (
     <div className="space-y-8">
       {/* Order History */}
+      {show("orders") && (
       <section className="bg-background rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -273,8 +283,10 @@ export function EcommerceSettings({ userId }: { userId: string }) {
           </ul>
         )}
       </section>
+      )}
 
       {/* Wallet Credit */}
+      {show("wallet") && (
       <section className="bg-background rounded-2xl border border-border p-6">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Wallet className="w-5 h-5" />
@@ -301,8 +313,10 @@ export function EcommerceSettings({ userId }: { userId: string }) {
           Credit can be applied at checkout on your next SmartCard order.
         </p>
       </section>
+      )}
 
       {/* Shipping Addresses */}
+      {show("addresses") && (
       <section className="bg-background rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -408,8 +422,10 @@ export function EcommerceSettings({ userId }: { userId: string }) {
           </ul>
         )}
       </section>
+      )}
 
       {/* Payment Methods */}
+      {show("payments") && (
       <section className="bg-background rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -504,6 +520,7 @@ export function EcommerceSettings({ userId }: { userId: string }) {
           </ul>
         )}
       </section>
+      )}
     </div>
   );
 }
