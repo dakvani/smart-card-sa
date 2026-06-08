@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import {
   Loader2, Check, Palette, Briefcase, Camera, Sparkles, Lock,
   Stethoscope, Home, Trophy, Music, UtensilsCrossed, Dumbbell,
-  Code, Star, GraduationCap, Gauge, Eye, Upload, X, Crown,
+  Code, Star, GraduationCap, Gauge, Eye, EyeOff, Upload, X, Crown, Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { UnlockProDialog } from "./UnlockProDialog";
@@ -139,6 +139,29 @@ export function ProfileTemplates({
   const [customMedia, setCustomMedia] = useState<CustomBackground>(initialCustomBackground);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Per-user hidden templates (UI-only) — persisted to localStorage
+  const hiddenKey = `tpl_hidden:${userId || "anon"}`;
+  const [hiddenIds, setHiddenIds] = useState<Set<string>>(() => {
+    try { return new Set(JSON.parse(localStorage.getItem(hiddenKey) || "[]")); }
+    catch { return new Set(); }
+  });
+  const [showHidden, setShowHidden] = useState(false);
+  const persistHidden = (next: Set<string>) => {
+    setHiddenIds(new Set(next));
+    try { localStorage.setItem(hiddenKey, JSON.stringify([...next])); } catch { /* noop */ }
+  };
+  const toggleHide = (id: string, name: string) => {
+    const next = new Set(hiddenIds);
+    if (next.has(id)) {
+      next.delete(id);
+      toast.success(`"${name}" restored to gallery`);
+    } else {
+      next.add(id);
+      toast.success(`"${name}" hidden from gallery`);
+    }
+    persistHidden(next);
+  };
 
   useEffect(() => { loadTemplates(); }, []);
   // Record one view per template per session (rough impression metric)
@@ -295,9 +318,13 @@ export function ProfileTemplates({
   };
 
   const clearCustomMedia = async () => {
+    const ok = typeof window === "undefined"
+      ? true
+      : window.confirm("Remove your custom template background? Your profile will instantly revert to its default theme.");
+    if (!ok) return;
     setCustomMedia(null);
     await persist({ custom_background_url: null, custom_background_type: null });
-    toast.success("Custom background removed");
+    toast.success("Custom background removed — reverted to default theme");
   };
 
   const commitSpeed = (v: number) => {
@@ -310,9 +337,11 @@ export function ProfileTemplates({
   };
 
   const categories = ["all", ...Array.from(new Set(templates.map(t => t.category)))];
+  const visibleBase = showHidden ? templates : templates.filter(t => !hiddenIds.has(t.id));
   const filteredTemplates = selectedCategory === "all"
-    ? templates
-    : templates.filter(t => t.category === selectedCategory);
+    ? visibleBase
+    : visibleBase.filter(t => t.category === selectedCategory);
+  const hiddenCount = hiddenIds.size;
 
   if (loading) {
     return (
@@ -399,8 +428,8 @@ export function ProfileTemplates({
             </div>
             <div className="flex items-center gap-1.5">
               {customMedia && (
-                <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={clearCustomMedia}>
-                  <X className="w-3 h-3" /> Remove
+                <Button size="sm" variant="ghost" className="h-7 text-[11px] text-destructive hover:text-destructive" onClick={clearCustomMedia}>
+                  <Trash2 className="w-3 h-3" /> Delete
                 </Button>
               )}
               <Button size="sm" variant="outline" className="h-7 text-[11px]" disabled={uploading} onClick={() => fileRef.current?.click()}>
@@ -449,25 +478,38 @@ export function ProfileTemplates({
         );
       })()}
 
-      {/* Category Filter */}
-      <div className="flex gap-2 flex-wrap">
-        {categories.map(cat => {
-          const Icon = categoryIcons[cat] || Palette;
-          return (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                selectedCategory === cat
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary hover:bg-secondary/80"
-              }`}
-            >
-              {cat !== "all" && <Icon className="w-4 h-4" />}
-              {cat === "all" ? "All" : categoryLabels[cat] || cat}
-            </button>
-          );
-        })}
+      {/* Category Filter + hidden toggle */}
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
+          {categories.map(cat => {
+            const Icon = categoryIcons[cat] || Palette;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  selectedCategory === cat
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary hover:bg-secondary/80"
+                }`}
+              >
+                {cat !== "all" && <Icon className="w-4 h-4" />}
+                {cat === "all" ? "All" : categoryLabels[cat] || cat}
+              </button>
+            );
+          })}
+        </div>
+        {hiddenCount > 0 && (
+          <Button
+            size="sm"
+            variant={showHidden ? "default" : "outline"}
+            className="h-8 text-[11px]"
+            onClick={() => setShowHidden(!showHidden)}
+          >
+            {showHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+            {showHidden ? `Hide hidden (${hiddenCount})` : `Show hidden (${hiddenCount})`}
+          </Button>
+        )}
       </div>
 
       {/* Hidden file input */}
@@ -485,6 +527,7 @@ export function ProfileTemplates({
           const isActive = template.theme_name === currentThemeName;
           const Icon = categoryIcons[template.category] || Palette;
           const locked = isLocked(template);
+          const hidden = hiddenIds.has(template.id);
           const rank = requiredRank(template.required_plan, template.is_premium);
           const tierLabel = rank === 2 ? "Pro" : rank === 1 ? "Starter" : "Free";
           const tierClass = rank === 2
@@ -498,7 +541,7 @@ export function ProfileTemplates({
               key={template.id}
               className={`relative rounded-xl border overflow-hidden transition-all ${
                 isActive ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50"
-              }`}
+              } ${hidden ? "opacity-60" : ""}`}
             >
               <div className="relative">
                 <TemplatePreview
@@ -519,6 +562,11 @@ export function ProfileTemplates({
                   <Check className="w-2.5 h-2.5" />
                   <span className="tabular-nums">{template.apply_count || 0}</span>
                 </div>
+                {hidden && (
+                  <div className="absolute top-2 left-2 z-30 flex items-center gap-1 px-2 py-0.5 rounded-full bg-background/80 backdrop-blur text-[10px] font-semibold text-muted-foreground border border-border">
+                    <EyeOff className="w-2.5 h-2.5" /> Hidden
+                  </div>
+                )}
                 {locked && (
                   <button
                     type="button"
@@ -554,28 +602,39 @@ export function ProfileTemplates({
                     </div>
                     <p className="text-xs text-muted-foreground">{template.description}</p>
                   </div>
-                  {locked ? (
-                    <Button
-                      size="sm" variant="gradient" className="shrink-0"
-                      onClick={() => { setUnlockFeature(template.name); setUnlockOpen(true); }}
-                    >
-                      <Lock className="w-3.5 h-3.5" /> Unlock
-                    </Button>
-                  ) : (
+                  <div className="flex items-center gap-1 shrink-0">
                     <Button
                       size="sm"
-                      variant={isActive ? "outline" : "gradient"}
-                      onClick={() => applyTemplate(template)}
-                      disabled={applying === template.id}
-                      className="shrink-0"
+                      variant="ghost"
+                      className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                      onClick={() => toggleHide(template.id, template.name)}
+                      title={hidden ? "Show in gallery & previews" : "Hide from gallery & previews"}
+                      aria-label={hidden ? "Unhide template" : "Hide template"}
                     >
-                      {applying === template.id ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : isActive ? (
-                        <><Check className="w-4 h-4" />Applied</>
-                      ) : ("Apply")}
+                      {hidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                     </Button>
-                  )}
+                    {locked ? (
+                      <Button
+                        size="sm" variant="gradient"
+                        onClick={() => { setUnlockFeature(template.name); setUnlockOpen(true); }}
+                      >
+                        <Lock className="w-3.5 h-3.5" /> Unlock
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant={isActive ? "outline" : "gradient"}
+                        onClick={() => applyTemplate(template)}
+                        disabled={applying === template.id}
+                      >
+                        {applying === template.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : isActive ? (
+                          <><Check className="w-4 h-4" />Applied</>
+                        ) : ("Apply")}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
 
