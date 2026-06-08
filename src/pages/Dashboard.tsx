@@ -1067,13 +1067,40 @@ export default function Dashboard() {
                     {/* Dynamic Island / Notch */}
                     <div className="absolute top-2 left-1/2 -translate-x-1/2 z-40 w-24 h-6 rounded-full bg-black" />
 
-                    {/* Animated bg */}
-                    <div className="absolute inset-0 overflow-hidden">
-                      <AnimatedBackground
-                        animationType={profile.animation_type}
-                        config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
-                      />
-                    </div>
+                    {/* Custom background media — instant preview of uploads */}
+                    {profile.custom_background_url && (
+                      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                        {profile.custom_background_type === "video" ? (
+                          <video
+                            key={profile.custom_background_url}
+                            src={profile.custom_background_url}
+                            autoPlay muted loop playsInline
+                            className="w-full h-full object-cover"
+                            ref={(el) => { if (el) el.playbackRate = profile.animation_speed || 1; }}
+                            onError={(e) => { (e.currentTarget as HTMLVideoElement).style.display = "none"; }}
+                          />
+                        ) : (
+                          <img
+                            key={profile.custom_background_url}
+                            src={profile.custom_background_url}
+                            alt=""
+                            className="w-full h-full object-cover"
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-black/35" />
+                      </div>
+                    )}
+
+                    {/* Animated bg — respects motion toggle */}
+                    {profile.motion_enabled !== false && (
+                      <div className="absolute inset-0 overflow-hidden">
+                        <AnimatedBackground
+                          animationType={profile.animation_type}
+                          config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
+                        />
+                      </div>
+                    )}
 
                     {/* Content - scrollable */}
                     <div className="absolute inset-0 pt-10 pb-4 px-4 overflow-y-auto scrollbar-hide">
