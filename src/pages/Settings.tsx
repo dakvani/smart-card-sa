@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,12 +66,43 @@ const NAV: {
   { id: "danger", label: "Danger Zone", group: "Account", icon: ShieldAlert, description: "Delete your account" },
 ];
 
+const VALID_SECTIONS: SectionId[] = [
+  "account",
+  "email",
+  "password",
+  "orders",
+  "wallet",
+  "addresses",
+  "payments",
+  "danger",
+];
+
+function sectionFromHash(hash: string): SectionId {
+  const id = hash.replace(/^#/, "") as SectionId;
+  return VALID_SECTIONS.includes(id) ? id : "account";
+}
+
 export default function Settings() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [active, setActive] = useState<SectionId>("account");
+  const [active, setActiveState] = useState<SectionId>(() => sectionFromHash(location.hash));
+
+  const setActive = (id: SectionId) => {
+    setActiveState(id);
+    if (location.hash !== `#${id}`) {
+      navigate(`${location.pathname}#${id}`, { replace: false });
+    }
+  };
+
+  // keep state in sync with hash (back/forward navigation, direct refresh)
+  useEffect(() => {
+    const next = sectionFromHash(location.hash);
+    setActiveState((prev) => (prev === next ? prev : next));
+  }, [location.hash]);
+
 
   const [newEmail, setNewEmail] = useState("");
   const [updatingEmail, setUpdatingEmail] = useState(false);
