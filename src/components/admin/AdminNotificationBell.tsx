@@ -149,7 +149,13 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
           ) : (
             <ul className="divide-y divide-border/50">
               {items.map((n) => {
-                const Icon = n.kind === "pro_request" ? Sparkles : ShoppingBag;
+                const visual: Record<AdminNotification["kind"], { Icon: any; cls: string }> = {
+                  pro_request: { Icon: Sparkles, cls: "bg-primary/10 text-primary" },
+                  order: { Icon: ShoppingBag, cls: "bg-green-500/10 text-green-500" },
+                  new_account: { Icon: UserPlus, cls: "bg-blue-500/10 text-blue-500" },
+                  contact: { Icon: Mail, cls: "bg-amber-500/10 text-amber-500" },
+                };
+                const { Icon, cls } = visual[n.kind];
                 return (
                   <li
                     key={`${n.kind}-${n.id}`}
@@ -159,9 +165,7 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
                       <div
                         className={cn(
                           "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                          n.kind === "pro_request"
-                            ? "bg-primary/10 text-primary"
-                            : "bg-green-500/10 text-green-500",
+                          cls,
                         )}
                       >
                         <Icon className="w-4 h-4" />
