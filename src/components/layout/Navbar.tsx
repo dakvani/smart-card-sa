@@ -329,6 +329,7 @@ export function Navbar() {
         <div className="lg:hidden flex items-center gap-2">
           <ThemeToggle />
           <button
+            ref={mobileToggleRef}
             className="p-2 text-muted-foreground hover:text-foreground transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-expanded={mobileOpen}
