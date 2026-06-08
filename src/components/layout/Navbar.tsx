@@ -403,13 +403,7 @@ export function Navbar() {
                       Dashboard
                     </Button>
                   </Link>
-                  <Link to="/order-history" onClick={() => setMobileOpen(false)}>
-                    <Button variant="outline" className="w-full border-border/50" aria-label="View order history">
-                      <Package className="w-4 h-4 mr-2" />
-                      Order History
-                    </Button>
-                  </Link>
-                  <Link to="/dashboard?tab=settings" onClick={() => setMobileOpen(false)}>
+                  <Link to="/settings" onClick={() => setMobileOpen(false)}>
                     <Button variant="outline" className="w-full border-border/50" aria-label="Go to settings">
                       <Settings className="w-4 h-4 mr-2" />
                       Settings
