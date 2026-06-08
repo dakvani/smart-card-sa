@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -295,15 +295,48 @@ export default function Dashboard() {
     }
   };
 
+  // Debounced save: keeps the builder snappy by writing to the DB at most
+  // once per idle window (600ms) instead of on every keystroke / toggle.
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingProfileRef = useRef<Profile | null>(null);
 
-  const updateProfile = async (updates: Partial<Profile>) => {
+  const flushPendingProfile = useCallback(async () => {
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = null;
+    }
+    const pending = pendingProfileRef.current;
+    pendingProfileRef.current = null;
+    if (pending) await persistProfile(pending, { silent: true });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const queueProfileSave = useCallback((next: Profile) => {
+    pendingProfileRef.current = next;
+    setSaveStatus("saving");
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => { void flushPendingProfile(); }, 600);
+  }, [flushPendingProfile]);
+
+  // Flush on unmount / tab hide so nothing is lost.
+  useEffect(() => {
+    const onHide = () => { void flushPendingProfile(); };
+    window.addEventListener("beforeunload", onHide);
+    document.addEventListener("visibilitychange", onHide);
+    return () => {
+      window.removeEventListener("beforeunload", onHide);
+      document.removeEventListener("visibilitychange", onHide);
+      void flushPendingProfile();
+    };
+  }, [flushPendingProfile]);
+
+  const updateProfile = (updates: Partial<Profile>) => {
     if (!profile || !user) return;
-    // push current snapshot to history
     setPast((p) => [...p.slice(-29), profile]);
     setFuture([]);
     const next = { ...profile, ...updates } as Profile;
-    setProfile(next);
-    await persistProfile(next, { silent: true });
+    setProfile(next); // optimistic UI
+    queueProfileSave(next); // debounced DB write
   };
 
   const handleUndo = async () => {
@@ -312,7 +345,7 @@ export default function Dashboard() {
     setPast((p) => p.slice(0, -1));
     setFuture((f) => [profile, ...f].slice(0, 30));
     setProfile(prev);
-    await persistProfile(prev, { silent: true });
+    queueProfileSave(prev);
     toast.success("Undid last change");
   };
 
@@ -322,12 +355,13 @@ export default function Dashboard() {
     setFuture((f) => f.slice(1));
     setPast((p) => [...p.slice(-29), profile]);
     setProfile(nxt);
-    await persistProfile(nxt, { silent: true });
+    queueProfileSave(nxt);
     toast.success("Redid change");
   };
 
   const handleSaveNow = async () => {
     if (!profile) return;
+    await flushPendingProfile();
     await persistProfile(profile);
   };
 
