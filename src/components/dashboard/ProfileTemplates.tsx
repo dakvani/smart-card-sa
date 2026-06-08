@@ -181,6 +181,13 @@ export function ProfileTemplates({
         custom_accent_color: null,
         animation_type: template.animation_type,
       });
+      // Optimistic local bump + persist count
+      setTemplates((prev) =>
+        prev.map((t) =>
+          t.id === template.id ? { ...t, apply_count: (t.apply_count || 0) + 1 } : t
+        )
+      );
+      supabase.rpc("increment_template_apply" as any, { template_uuid: template.id });
       toast.success(`Applied "${template.name}" template!`);
     } finally {
       setTimeout(() => setApplying(null), 500);
