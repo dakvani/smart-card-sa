@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { GripVertical, Eye, EyeOff, Trash2, BarChart3, Star, CheckCircle2, AlertCircle } from "lucide-react";
 import { LinkThumbnailUpload } from "./LinkThumbnailUpload";
 import { LinkScheduler } from "./LinkScheduler";
+import { LinkOgPreview } from "./LinkOgPreview";
+
 import { validateUrl } from "@/lib/link-validation";
 import { toast } from "@/hooks/use-toast";
 
