@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import {
   Loader2, Check, Palette, Briefcase, Camera, Sparkles, Lock,
   Stethoscope, Home, Trophy, Music, UtensilsCrossed, Dumbbell,
-  Code, Star, GraduationCap, Gauge, Eye, Upload, X, Crown,
+  Code, Star, GraduationCap, Gauge, Eye, EyeOff, Upload, X, Crown, Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { UnlockProDialog } from "./UnlockProDialog";
