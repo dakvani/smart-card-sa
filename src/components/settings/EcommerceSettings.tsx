@@ -97,7 +97,16 @@ const statusColor: Record<string, string> = {
   cancelled: "bg-red-500/10 text-red-600 border-red-500/20",
 };
 
-const addressSchema = z.object({
+type AddressForm = {
+  label: string;
+  name: string;
+  phone: string;
+  address: string;
+  city: string;
+  country: string;
+};
+
+const addressSchema: z.ZodType<AddressForm> = z.object({
   label: z.string().trim().min(1, "Label is required").max(40),
   name: z.string().trim().min(2, "Full name is required").max(100),
   phone: z
@@ -109,7 +118,6 @@ const addressSchema = z.object({
   city: z.string().trim().min(2, "City is required").max(80),
   country: z.string().trim().min(2, "Country is required").max(80),
 });
-type AddressForm = z.infer<typeof addressSchema>;
 
 const paymentSchema = z.object({
   holder: z.string().trim().min(2, "Cardholder name is required").max(80),
