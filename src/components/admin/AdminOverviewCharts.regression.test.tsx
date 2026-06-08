@@ -22,6 +22,11 @@ vi.mock("@/integrations/supabase/client", () => {
 beforeEach(() => {
   Object.defineProperty(HTMLElement.prototype, "offsetWidth", { configurable: true, value: 600 });
   Object.defineProperty(HTMLElement.prototype, "offsetHeight", { configurable: true, value: 300 });
+  (globalThis as any).ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
 });
 
 import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";

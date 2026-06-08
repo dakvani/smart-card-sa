@@ -19,10 +19,15 @@ vi.mock("@/integrations/supabase/client", () => {
   return { supabase: { from: () => chain } };
 });
 
-// recharts ResponsiveContainer needs a measurable parent in jsdom.
+// recharts ResponsiveContainer needs a measurable parent + ResizeObserver in jsdom.
 beforeEach(() => {
   Object.defineProperty(HTMLElement.prototype, "offsetWidth", { configurable: true, value: 600 });
   Object.defineProperty(HTMLElement.prototype, "offsetHeight", { configurable: true, value: 300 });
+  (globalThis as any).ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
 });
 
 import { AnalyticsCharts } from "@/components/dashboard/AnalyticsCharts";
