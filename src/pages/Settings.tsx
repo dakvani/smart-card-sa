@@ -6,8 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { ArrowLeft, Mail, Lock, AlertCircle, CheckCircle2, Loader2, Eye, EyeOff, RefreshCw, Trash2, AlertTriangle, Settings as SettingsIcon, Accessibility } from "lucide-react";
-import { AccessibilitySettings } from "@/components/settings/AccessibilitySettings";
+import { ArrowLeft, Mail, Lock, AlertCircle, CheckCircle2, Loader2, Eye, EyeOff, RefreshCw, Trash2, AlertTriangle } from "lucide-react";
 import type { User, Session } from "@supabase/supabase-js";
 import {
   AlertDialog,
