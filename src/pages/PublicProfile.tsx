@@ -117,6 +117,16 @@ export default function PublicProfile() {
   const forceMobile = searchParams.get("mobile") === "1" || searchParams.get("m") === "1";
   const [previewMode, setPreviewMode] = useState<PreviewMode>("phone");
   const [claimOpen, setClaimOpen] = useState(false);
+  const accessibilityScopeRef = useRef<HTMLDivElement | null>(null);
+
+  // Apply the visitor's accessibility preferences (saved on the dashboard)
+  // ONLY within this public bio profile scope. Never touch documentElement.
+  useEffect(() => {
+    applyAccessibilityPreferencesToScope(
+      accessibilityScopeRef.current,
+      loadAccessibilityPreferences(),
+    );
+  }, [profile?.id]);
 
   useEffect(() => {
     const loadProfile = async () => {
