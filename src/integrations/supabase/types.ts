@@ -618,6 +618,7 @@ export type Database = {
           is_premium: boolean | null
           name: string
           preview_image_url: string | null
+          required_plan: string
           theme_gradient: string
           theme_name: string
         }
@@ -633,6 +634,7 @@ export type Database = {
           is_premium?: boolean | null
           name: string
           preview_image_url?: string | null
+          required_plan?: string
           theme_gradient: string
           theme_name: string
         }
@@ -648,6 +650,7 @@ export type Database = {
           is_premium?: boolean | null
           name?: string
           preview_image_url?: string | null
+          required_plan?: string
           theme_gradient?: string
           theme_name?: string
         }
@@ -701,10 +704,13 @@ export type Database = {
           bio: string | null
           created_at: string | null
           custom_accent_color: string | null
+          custom_background_type: string | null
+          custom_background_url: string | null
           custom_bg_color: string | null
           email_collection_enabled: boolean | null
           gradient_direction: string | null
           id: string
+          motion_enabled: boolean
           plan: string
           social_links: Json | null
           theme_gradient: string | null
@@ -723,10 +729,13 @@ export type Database = {
           bio?: string | null
           created_at?: string | null
           custom_accent_color?: string | null
+          custom_background_type?: string | null
+          custom_background_url?: string | null
           custom_bg_color?: string | null
           email_collection_enabled?: boolean | null
           gradient_direction?: string | null
           id?: string
+          motion_enabled?: boolean
           plan?: string
           social_links?: Json | null
           theme_gradient?: string | null
@@ -745,10 +754,13 @@ export type Database = {
           bio?: string | null
           created_at?: string | null
           custom_accent_color?: string | null
+          custom_background_type?: string | null
+          custom_background_url?: string | null
           custom_bg_color?: string | null
           email_collection_enabled?: boolean | null
           gradient_direction?: string | null
           id?: string
+          motion_enabled?: boolean
           plan?: string
           social_links?: Json | null
           theme_gradient?: string | null
