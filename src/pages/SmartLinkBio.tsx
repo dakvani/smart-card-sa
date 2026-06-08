@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { BarChart3, CreditCard, Layers, Lock, Palette, Smartphone, Check, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { SEO } from "@/components/SEO";
+
 
 const categories = ["All", "Fashion", "Music", "Business", "Creative", "Personal"];
 

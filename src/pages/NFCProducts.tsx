@@ -247,7 +247,21 @@ export default function NFCProducts() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="SmartCard NFC Products — Programmable Cards, Tags & Stickers"
+        description="Shop premium NFC business cards, tags, and stickers. Customize the design, link to your SmartLink profile, and ship worldwide. One tap shares everything."
+        path="/nfc-products"
+        type="product"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "SmartCard NFC Products",
+          url: "https://smartcardsa.shop/nfc-products",
+          description: "Programmable NFC cards, tags, and stickers paired with SmartLink profiles.",
+        }}
+      />
       <Navbar />
+
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-7xl">
           {/* Header */}

@@ -2,6 +2,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { ExternalLink, Music, Video, MessageCircle, Mail, Phone, ShoppingBag } from "lucide-react";
+import { SEO } from "@/components/SEO";
+
 
 const categories = [
   {
