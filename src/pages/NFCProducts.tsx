@@ -15,6 +15,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Json } from "@/integrations/supabase/types";
+import { SEO } from "@/components/SEO";
+
 
 type Step = 'select' | 'customize' | 'checkout';
 
