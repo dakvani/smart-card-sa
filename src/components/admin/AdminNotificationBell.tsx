@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Sparkles, ShoppingBag, X, CheckCheck, Loader2 } from "lucide-react";
+import { Bell, Sparkles, ShoppingBag, X, CheckCheck, Loader2, UserPlus, Mail } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
