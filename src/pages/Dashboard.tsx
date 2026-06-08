@@ -40,6 +40,8 @@ import { usePlan } from "@/hooks/use-plan";
 import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
 import { AccountSecuritySection } from "@/components/dashboard/AccountSecuritySection";
 import { AccessibilitySettings } from "@/components/settings/AccessibilitySettings";
+import { OnboardingConfirmDialog } from "@/components/dashboard/OnboardingConfirmDialog";
+import { computeOnboardingPrefill, trackOnboarding, type OnboardingPrefill } from "@/lib/onboarding";
 
 interface Profile {
   id: string;
@@ -100,6 +102,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [onboarding, setOnboarding] = useState<{ open: boolean; prefill: OnboardingPrefill | null; saving: boolean }>({ open: false, prefill: null, saving: false });
+  const [onboardingEmail, setOnboardingEmail] = useState<string | undefined>();
 
   // Sync URL when tab changes (so deep links to ?tab=settings work)
   useEffect(() => {
@@ -145,48 +149,37 @@ export default function Dashboard() {
 
       if (profileError) throw profileError;
 
-      // Derive a friendly username from email if needed
-      const emailUsername = userEmail?.split('@')[0]?.replace(/[^a-z0-9-_]/gi, '').toLowerCase() || `user_${userId.slice(0, 8)}`;
-      const oauthName: string | undefined = userMetadata?.full_name || userMetadata?.name;
-      const oauthAvatar: string | undefined = userMetadata?.avatar_url || userMetadata?.picture;
+      const provider = (userMetadata?.provider as string) || (userMetadata?.iss?.includes("google") ? "google" : "unknown");
+      const isOAuth = !!(userMetadata && (userMetadata.full_name || userMetadata.name || userMetadata.avatar_url || userMetadata.picture));
 
-      // If no profile exists, create one
+      // Compute the prefill suggestion using the pure helper (testable).
+      const prefill = computeOnboardingPrefill({
+        userId,
+        email: userEmail,
+        metadata: userMetadata as any,
+        existing: profileData
+          ? { username: profileData.username, title: profileData.title, avatar_url: profileData.avatar_url }
+          : null,
+      });
+
+      const isNewUser = !profileData;
+
+      // For a brand-new user, create the row immediately with the prefill so they
+      // have a valid profile; then offer the confirm step on top.
       if (!profileData) {
         const { data: newProfile, error: createError } = await supabase
           .from("profiles")
           .insert({
             user_id: userId,
-            username: emailUsername,
-            title: oauthName ? oauthName : `@${emailUsername}`,
-            avatar_url: oauthAvatar ?? null,
+            username: prefill.fields.username ?? `user_${userId.slice(0, 8)}`,
+            title: prefill.fields.title ?? `@${prefill.fields.username ?? "creator"}`,
+            avatar_url: prefill.fields.avatar_url ?? null,
           })
           .select()
           .single();
-
         if (createError) throw createError;
         profileData = newProfile;
-      } else if (userMetadata) {
-        // Auto-complete OAuth onboarding: replace auto-generated user_xxxxxxxx username
-        // and fill in name/avatar pulled from Google when missing.
-        const patch: { username?: string; title?: string; avatar_url?: string } = {};
-        if (/^user_[a-f0-9]{8}$/i.test(profileData.username) && emailUsername && !emailUsername.startsWith("user_")) {
-          patch.username = emailUsername;
-        }
-        if (oauthName && (!profileData.title || profileData.title === "@creator" || profileData.title === `@${profileData.username}`)) {
-          patch.title = oauthName;
-        }
-        if (oauthAvatar && !profileData.avatar_url) {
-          patch.avatar_url = oauthAvatar;
-        }
-        if (Object.keys(patch).length > 0) {
-          const { data: updated, error: updateError } = await supabase
-            .from("profiles")
-            .update(patch)
-            .eq("user_id", userId)
-            .select()
-            .single();
-          if (!updateError && updated) profileData = updated;
-        }
+        trackOnboarding("onboarding_started", { isNewUser: true, provider, prefill });
       }
 
       if (profileData) {
@@ -194,6 +187,19 @@ export default function Dashboard() {
           ...profileData,
           social_links: (profileData.social_links as SocialLinks) || {},
         });
+      }
+
+      // Decide whether to open the confirm dialog (only when there's something to
+      // confirm and the source is OAuth metadata — never for plain email signups
+      // returning to the dashboard).
+      const hasFieldsToConfirm = Object.keys(prefill.fields).length > 0;
+      if (isOAuth && hasFieldsToConfirm) {
+        setOnboardingEmail(userEmail);
+        setOnboarding({ open: true, prefill, saving: false });
+        trackOnboarding("onboarding_prefilled", { isNewUser, provider, prefill });
+      } else if (isOAuth && isNewUser) {
+        // OAuth user with nothing to prefill (rare) — still record completion.
+        trackOnboarding("onboarding_started", { isNewUser: true, provider, prefill });
       }
 
       // Load links
@@ -502,6 +508,45 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
       <PlanWelcomeDialog userId={user?.id} plan={plan} loading={planLoading} />
+      <OnboardingConfirmDialog
+        open={onboarding.open}
+        prefill={onboarding.prefill}
+        email={onboardingEmail}
+        saving={onboarding.saving}
+        onSkip={() => {
+          trackOnboarding("onboarding_skipped", { isNewUser: false, provider: "google", prefill: onboarding.prefill ?? undefined });
+          setOnboarding({ open: false, prefill: null, saving: false });
+        }}
+        onConfirm={async (values, edited) => {
+          if (!user) return;
+          setOnboarding((s) => ({ ...s, saving: true }));
+          const { data: updated, error } = await supabase
+            .from("profiles")
+            .update({
+              username: values.username,
+              title: values.title,
+              avatar_url: values.avatar_url,
+            })
+            .eq("user_id", user.id)
+            .select()
+            .single();
+          if (error) {
+            toast.error(error.message || "Could not save your profile");
+            setOnboarding((s) => ({ ...s, saving: false }));
+            return;
+          }
+          if (updated) {
+            setProfile({ ...(updated as any), social_links: (updated.social_links as SocialLinks) || {} });
+          }
+          trackOnboarding(edited ? "onboarding_edited" : "onboarding_confirmed", {
+            isNewUser: false,
+            provider: "google",
+            prefill: onboarding.prefill ?? undefined,
+          });
+          setOnboarding({ open: false, prefill: null, saving: false });
+          toast.success("Profile saved");
+        }}
+      />
       {/* Header */}
       <header className="bg-background/70 backdrop-blur-xl border-b border-border/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
