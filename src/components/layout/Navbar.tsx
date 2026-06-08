@@ -344,6 +344,7 @@ export function Navbar() {
       {/* Mobile Menu */}
       {mobileOpen && (
         <motion.div
+          ref={mobileMenuRef}
           id="mobile-menu"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
