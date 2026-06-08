@@ -123,6 +123,18 @@ export default function Settings() {
   const [resendingVerification, setResendingVerification] = useState(false);
   const [lastResent, setLastResent] = useState<Date | null>(null);
 
+  // Profile holder details
+  const [profileId, setProfileId] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState("");
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+  const [savingName, setSavingName] = useState(false);
+
+  const [phone, setPhone] = useState("");
+  const [phoneDraft, setPhoneDraft] = useState("");
+  const [savingPhone, setSavingPhone] = useState(false);
+
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
