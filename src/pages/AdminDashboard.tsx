@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -412,7 +412,9 @@ export default function AdminDashboard() {
                 </TooltipProvider>
 
                 {/* Analytics Charts */}
-                <AdminOverviewCharts />
+                <Suspense fallback={<div className="py-8 text-center text-sm text-muted-foreground">Loading charts…</div>}>
+                  <AdminOverviewCharts />
+                </Suspense>
 
                 {/* Recent Activity Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">

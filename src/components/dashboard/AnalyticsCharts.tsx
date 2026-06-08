@@ -219,10 +219,12 @@ export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
         </div>
       )}
 
-      {/* Detailed Click Analytics */}
+      {/* Detailed Click Analytics — lazy */}
       <div className="border-t border-border pt-6">
         <h3 className="font-semibold mb-4">Click Analytics</h3>
-        <DetailedAnalytics profileId={profileId} period={period} />
+        <Suspense fallback={<div className="py-6 text-center text-xs text-muted-foreground">Loading details…</div>}>
+          <DetailedAnalytics profileId={profileId} period={period} />
+        </Suspense>
       </div>
     </div>
   );
