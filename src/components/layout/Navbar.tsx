@@ -117,10 +117,17 @@ export function Navbar() {
 
   const { plan, loading: planLoading } = usePlan(userId ?? undefined);
 
-  // Track scroll position for styling only — header stays visible
-  useMotionValueEvent(scrollY, "change", (currentScrollY) => {
-    setHasScrolled(currentScrollY > 20);
-  });
+  // Track scroll position for styling only — header stays visible.
+  // A plain scroll listener is more reliable across environments (and
+  // testable) than framer-motion's useMotionValueEvent.
+  useEffect(() => {
+    const update = () => {
+      setHasScrolled((window.scrollY ?? window.pageYOffset ?? 0) > 20);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
