@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion, MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useReducedMotion, MotionValue } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
