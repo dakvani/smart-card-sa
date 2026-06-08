@@ -26,7 +26,9 @@ import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
 import { SocialLinksEditor, SocialLinks } from "@/components/dashboard/SocialLinksEditor";
 import { SortableLinkItem } from "@/components/dashboard/SortableLinkItem";
 import { SocialIcons } from "@/components/profile/SocialIcons";
-import { AnalyticsCharts } from "@/components/dashboard/AnalyticsCharts";
+const AnalyticsCharts = lazy(() =>
+  import("@/components/dashboard/AnalyticsCharts").then((m) => ({ default: m.AnalyticsCharts }))
+);
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
 import { ThemeCustomizer } from "@/components/dashboard/ThemeCustomizer";
 import { QRCodeGenerator } from "@/components/dashboard/QRCodeGenerator";

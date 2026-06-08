@@ -22,7 +22,9 @@ import { AdminProductManager } from "@/components/admin/AdminProductManager";
 import { AdminProRequests } from "@/components/admin/AdminProRequests";
 import { AdminNotificationBell } from "@/components/admin/AdminNotificationBell";
 import { useAdminNotifications } from "@/hooks/use-admin-notifications";
-import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
+const AdminOverviewCharts = lazy(() =>
+  import("@/components/admin/AdminOverviewCharts").then((m) => ({ default: m.AdminOverviewCharts }))
+);
 import { format } from "date-fns";
 import { formatSAR } from "@/lib/currency";
 
