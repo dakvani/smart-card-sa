@@ -374,27 +374,68 @@ export function ScrollStory() {
     );
   }
 
+  // Hero overlay fades out as user starts scrolling (first ~8% of section)
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.04, 0.08], [1, 1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.08], [0, -60]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.08], [1, 0.92]);
+  const heroBlur = useTransform(scrollYProgress, [0, 0.08], [0, 8]);
+  const heroFilter = useTransform(heroBlur, (b) => `blur(${b}px)`);
+
+  // Parallax ambient orbs
+  const orbAY = useTransform(scrollYProgress, [0, 1], [0, -300]);
+  const orbBY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const orbRotate = useTransform(scrollYProgress, [0, 1], [0, 90]);
+
+  // Stage container subtle scale pulse during transitions
+  const stageScale = useTransform(
+    scrollYProgress,
+    [0.08, 0.2, 0.45, 0.7, 0.95],
+    [0.96, 1, 1, 1, 0.98],
+  );
+
   return (
-    <>
-      {/* Intro */}
-      <section className="relative pt-32 pb-12 overflow-hidden">
+    <section
+      ref={ref}
+      className="relative"
+      style={{ height: `${(STAGES + 1) * 100}vh` }}
+      aria-label="How a SmartLink card works"
+    >
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-background">
+        {/* Parallax ambient background */}
+        <motion.div
+          style={{ y: orbAY, rotate: orbRotate }}
+          className="absolute top-[10%] left-[5%] w-[600px] h-[600px] rounded-full bg-primary/15 blur-[140px] -z-10"
+        />
+        <motion.div
+          style={{ y: orbBY, rotate: orbRotate }}
+          className="absolute bottom-[5%] right-[5%] w-[600px] h-[600px] rounded-full bg-accent/15 blur-[140px] -z-10"
+        />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-primary/5 to-background" />
-        <div className="absolute top-1/3 left-[10%] w-96 h-96 rounded-full bg-primary/10 blur-[120px] -z-10" />
-        <div className="absolute bottom-0 right-[5%] w-[500px] h-[500px] rounded-full bg-accent/10 blur-[140px] -z-10" />
-        <div className="container mx-auto px-4 text-center max-w-3xl">
+
+        {/* Top scroll progress bar */}
+        <motion.div
+          style={{ scaleX: barScale }}
+          className="absolute top-0 left-0 right-0 h-[3px] origin-left bg-gradient-to-r from-primary via-accent to-primary z-30 shadow-[0_0_20px_hsl(var(--primary))]"
+        />
+
+        {/* HERO overlay — visible at scroll 0, fades out as you scroll */}
+        <motion.div
+          style={{ opacity: heroOpacity, y: heroY, scale: heroScale, filter: heroFilter }}
+          className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4 pointer-events-none"
+        >
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium mb-8 pointer-events-auto"
           >
             <Sparkles className="w-4 h-4 text-primary" />
             How a SmartLink card actually works
           </motion.div>
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6 text-foreground"
+            className="text-5xl sm:text-6xl md:text-8xl font-bold tracking-tight mb-6 text-foreground max-w-4xl"
           >
             From silicon to <span className="gradient-text">one tap.</span>
           </motion.h1>
@@ -402,11 +443,11 @@ export function ScrollStory() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-muted-foreground mb-8"
+            className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl"
           >
             Scroll to follow your data from a blank NFC chip to a finished tap-to-share profile.
           </motion.p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pointer-events-auto">
             <Button asChild size="lg" className="gradient-primary shadow-glow">
               <Link to="/nfc-products">
                 Shop SmartCards <ArrowRight className="ml-2 w-4 h-4" />
@@ -416,61 +457,51 @@ export function ScrollStory() {
               <Link to="/signup">Create your profile</Link>
             </Button>
           </div>
-          <div className="mt-12 text-xs uppercase tracking-[0.3em] text-muted-foreground/70 animate-pulse">
-            ↓ Scroll
-          </div>
-        </div>
-      </section>
-
-      {/* Scroll-scrubbed story — 4 stages × 100vh each */}
-      <section ref={ref} className="relative" style={{ height: `${STAGES * 100}vh` }}>
-        <div className="sticky top-0 h-screen w-full overflow-hidden bg-background">
-          {/* Ambient background */}
-          <div className="absolute inset-0 -z-10">
-            <div className="absolute top-1/4 left-[10%] w-[500px] h-[500px] rounded-full bg-primary/10 blur-[140px]" />
-            <div className="absolute bottom-1/4 right-[10%] w-[500px] h-[500px] rounded-full bg-accent/10 blur-[140px]" />
-          </div>
-
-          {/* Top progress bar */}
           <motion.div
-            style={{ scaleX: barScale }}
-            className="absolute top-0 left-0 right-0 h-[2px] origin-left bg-gradient-to-r from-primary via-accent to-primary z-30 shadow-[0_0_12px_hsl(var(--primary))]"
-          />
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            className="mt-14 text-xs uppercase tracking-[0.3em] text-muted-foreground/70"
+          >
+            ↓ Scroll to begin
+          </motion.div>
+        </motion.div>
 
-          <div className="relative h-full container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            {/* Left column: copy */}
-            <div className="relative h-[60vh] md:h-[50vh]">
-              {[0, 1, 2, 3].map((i) => (
-                <StageCopy key={i} index={i} globalProgress={scrollYProgress} />
-              ))}
-            </div>
-
-            {/* Right column: graphics */}
-            <div className="relative h-[60vh] md:h-[60vh] flex items-center justify-center">
-              <StageSlot index={0} globalProgress={scrollYProgress}>
-                {(p) => <StageCard progress={p} />}
-              </StageSlot>
-              <StageSlot index={1} globalProgress={scrollYProgress}>
-                {(p) => <StageProfile progress={p} />}
-              </StageSlot>
-              <StageSlot index={2} globalProgress={scrollYProgress}>
-                {(p) => <StageProgram progress={p} />}
-              </StageSlot>
-              <StageSlot index={3} globalProgress={scrollYProgress}>
-                {(p) => <StageTap progress={p} />}
-              </StageSlot>
-            </div>
-          </div>
-
-          {/* Stage dots */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        {/* Stage canvas */}
+        <motion.div
+          style={{ scale: stageScale }}
+          className="relative h-full container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center"
+        >
+          {/* Left column: copy */}
+          <div className="relative h-[60vh] md:h-[50vh]">
             {[0, 1, 2, 3].map((i) => (
-              <StageDot key={i} index={i} globalProgress={scrollYProgress} />
+              <StageCopy key={i} index={i} globalProgress={storyProgress} />
             ))}
           </div>
 
+          {/* Right column: graphics */}
+          <div className="relative h-[60vh] md:h-[60vh] flex items-center justify-center">
+            <StageSlot index={0} globalProgress={storyProgress}>
+              {(p) => <StageCard progress={p} />}
+            </StageSlot>
+            <StageSlot index={1} globalProgress={storyProgress}>
+              {(p) => <StageProfile progress={p} />}
+            </StageSlot>
+            <StageSlot index={2} globalProgress={storyProgress}>
+              {(p) => <StageProgram progress={p} />}
+            </StageSlot>
+            <StageSlot index={3} globalProgress={storyProgress}>
+              {(p) => <StageTap progress={p} />}
+            </StageSlot>
+          </div>
+        </motion.div>
+
+        {/* Stage dots */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {[0, 1, 2, 3].map((i) => (
+            <StageDot key={i} index={i} globalProgress={storyProgress} />
+          ))}
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
