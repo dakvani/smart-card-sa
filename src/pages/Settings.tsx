@@ -325,11 +325,17 @@ export default function Settings() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
           {/* Profile hero */}
           <div className="bg-background rounded-2xl border border-border p-6 flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center text-primary-foreground text-2xl font-bold shrink-0">
-              {(user.email?.[0] || "U").toUpperCase()}
+            <div className="w-16 h-16 rounded-full overflow-hidden bg-secondary shrink-0 ring-2 ring-border">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={displayName || "Profile"} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full gradient-primary flex items-center justify-center text-primary-foreground text-2xl font-bold">
+                  {(displayName?.[0] || user.email?.[0] || "U").toUpperCase()}
+                </div>
+              )}
             </div>
             <div className="min-w-0 flex-1">
-              <h1 className="text-2xl font-bold truncate">Settings</h1>
+              <h1 className="text-2xl font-bold truncate">{displayName || "Your account"}</h1>
               <p className="text-sm text-muted-foreground truncate">{user.email}</p>
             </div>
             <div className="hidden sm:flex items-center gap-2 text-xs">
