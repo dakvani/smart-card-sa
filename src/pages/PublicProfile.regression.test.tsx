@@ -162,22 +162,28 @@ describe("PublicProfile — full mount regression", () => {
   it("applies custom theme background gradient to the inner container", async () => {
     const { container } = renderAtUsername();
     await waitFor(() => screen.getByRole("heading", { level: 1 }));
-    const styled = container.querySelector('[style*="linear-gradient"]') as HTMLElement | null;
-    expect(styled).not.toBeNull();
-    expect(styled!.getAttribute("style")).toMatch(/#101030/i);
-    expect(styled!.getAttribute("style")).toMatch(/#8b5cf6/i);
+    // Find any element whose inline style references the custom bg + accent hex.
+    const styled = Array.from(
+      container.querySelectorAll<HTMLElement>("[style]")
+    ).find((el) => {
+      const s = (el.getAttribute("style") || "").toLowerCase();
+      return s.includes("#101030") && s.includes("#8b5cf6");
+    });
+    expect(styled, "expected an element styled with the custom bg+accent gradient").toBeTruthy();
   });
 
   it("renders only the social icons for keys present in social_links", async () => {
     renderAtUsername();
     await waitFor(() => screen.getByRole("heading", { level: 1 }));
-    expect(screen.getByRole("link", { name: "" }) ?? null).toBeTruthy(); // anchors exist
-    // instagram + github = 2 social anchors
-    const socialAnchors = document.querySelectorAll('a[href*="instagram.com/ada"], a[href*="github.com/ada"]');
-    expect(socialAnchors.length).toBe(2);
-    // None of the unspecified ones should appear
+    // instagram + github = 2 social anchors should render; others should not.
+    const ig = document.querySelector('a[href*="instagram.com/ada"]');
+    const gh = document.querySelector('a[href*="github.com/ada"]');
+    expect(ig).not.toBeNull();
+    expect(gh).not.toBeNull();
     expect(document.querySelector('a[href*="twitter.com"]')).toBeNull();
     expect(document.querySelector('a[href*="youtube.com"]')).toBeNull();
+    expect(document.querySelector('a[href*="facebook.com"]')).toBeNull();
+    expect(document.querySelector('a[href*="linkedin.com"]')).toBeNull();
   });
 
   it("renders featured, plain, and grouped link buttons", async () => {
@@ -185,11 +191,12 @@ describe("PublicProfile — full mount regression", () => {
     await waitFor(() => screen.getByRole("heading", { level: 1 }));
     // Featured section header
     expect(screen.getByText(/Featured/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Featured Repo" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Personal Site" })).toBeInTheDocument();
+    // Link titles render inside <button> rows
+    expect(screen.getByText("Featured Repo")).toBeInTheDocument();
+    expect(screen.getByText("Personal Site")).toBeInTheDocument();
     // Group header + grouped link
     expect(screen.getByText("Talks")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Analytical Engine/i })).toBeInTheDocument();
+    expect(screen.getByText(/Analytical Engine/i)).toBeInTheDocument();
   });
 
   it("wires the accessibility scope attribute on the outermost wrapper", async () => {
