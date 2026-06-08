@@ -39,6 +39,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { usePlan } from "@/hooks/use-plan";
 import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
 import { AccountSecuritySection } from "@/components/dashboard/AccountSecuritySection";
+import { AccessibilitySettings } from "@/components/settings/AccessibilitySettings";
 
 interface Profile {
   id: string;
