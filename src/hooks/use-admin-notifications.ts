@@ -319,6 +319,8 @@ export function useAdminNotifications(isAdmin: boolean) {
 
   const proCount = items.filter((i) => i.kind === "pro_request").length;
   const orderCount = items.filter((i) => i.kind === "order").length;
+  const accountCount = items.filter((i) => i.kind === "new_account").length;
+  const contactCount = items.filter((i) => i.kind === "contact").length;
 
   return {
     items,
@@ -326,6 +328,8 @@ export function useAdminNotifications(isAdmin: boolean) {
     total: items.length,
     proCount,
     orderCount,
+    accountCount,
+    contactCount,
     dismiss,
     dismissAll,
     refresh,
