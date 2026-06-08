@@ -3,7 +3,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { formatSAR } from "@/lib/currency";
 
-export type AdminNotificationKind = "pro_request" | "order";
+export type AdminNotificationKind =
+  | "pro_request"
+  | "order"
+  | "new_account"
+  | "contact";
 
 export interface AdminNotification {
   id: string; // entity id
