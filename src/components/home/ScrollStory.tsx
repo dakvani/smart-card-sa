@@ -349,6 +349,28 @@ export function ScrollStory() {
   // Progress bar across stages
   const barScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
+  // Hero overlay fades out as user starts scrolling (first ~8% of section)
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.04, 0.08], [1, 1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.08], [0, -60]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.08], [1, 0.92]);
+  const heroBlur = useTransform(scrollYProgress, [0, 0.08], [0, 8]);
+  const heroFilter = useTransform(heroBlur, (b) => `blur(${b}px)`);
+
+  // Parallax ambient orbs
+  const orbAY = useTransform(scrollYProgress, [0, 1], [0, -300]);
+  const orbBY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const orbRotate = useTransform(scrollYProgress, [0, 1], [0, 90]);
+
+  // Story progress remaps the post-hero scroll (8% → 100%) to [0,1] for stages
+  const storyProgress = useTransform(scrollYProgress, [0.08, 1], [0, 1], { clamp: true });
+
+  // Stage container subtle scale pulse during transitions
+  const stageScale = useTransform(
+    scrollYProgress,
+    [0.08, 0.2, 0.45, 0.7, 0.95],
+    [0.96, 1, 1, 1, 0.98],
+  );
+
   if (prefersReduced) {
     // Static fallback — no scroll scrubbing.
     return (
@@ -374,27 +396,6 @@ export function ScrollStory() {
     );
   }
 
-  // Hero overlay fades out as user starts scrolling (first ~8% of section)
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.04, 0.08], [1, 1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.08], [0, -60]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.08], [1, 0.92]);
-  const heroBlur = useTransform(scrollYProgress, [0, 0.08], [0, 8]);
-  const heroFilter = useTransform(heroBlur, (b) => `blur(${b}px)`);
-
-  // Parallax ambient orbs
-  const orbAY = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const orbBY = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const orbRotate = useTransform(scrollYProgress, [0, 1], [0, 90]);
-
-  // Story progress remaps the post-hero scroll (8% → 100%) to [0,1] for stages
-  const storyProgress = useTransform(scrollYProgress, [0.08, 1], [0, 1], { clamp: true });
-
-  // Stage container subtle scale pulse during transitions
-  const stageScale = useTransform(
-    scrollYProgress,
-    [0.08, 0.2, 0.45, 0.7, 0.95],
-    [0.96, 1, 1, 1, 0.98],
-  );
 
   return (
     <section
