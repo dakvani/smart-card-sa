@@ -227,6 +227,49 @@ function StageTap({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
+// --- Stable child components (avoid useTransform inside .map) ---------------
+function Packet({ packetT, index }: { packetT: MotionValue<number>; index: number }) {
+  const y = useTransform(packetT, [0, 1], [0, -90]);
+  const o = useTransform(packetT, [0, 0.2 + index * 0.1, 0.9], [0, 1, 0]);
+  return (
+    <motion.div
+      style={{ y, opacity: o, left: `${20 + index * 20}%` }}
+      className="absolute top-4 w-2 h-2 rounded-sm bg-primary shadow-[0_0_10px_hsl(var(--primary))]"
+    />
+  );
+}
+
+function Ring({
+  ringScale,
+  ringOpacity,
+  index,
+}: {
+  ringScale: MotionValue<number>;
+  ringOpacity: MotionValue<number>;
+  index: number;
+}) {
+  const scale = useTransform(ringScale, (v) => v + index * 0.3);
+  return (
+    <motion.div
+      style={{ scale, opacity: ringOpacity }}
+      className="absolute w-32 h-32 rounded-full border border-primary/50"
+    />
+  );
+}
+
+function StageDot({ index, globalProgress }: { index: number; globalProgress: MotionValue<number> }) {
+  const start = index / STAGES;
+  const end = (index + 1) / STAGES;
+  const w = useTransform(globalProgress, [start, Math.min(end - 0.01, 1)], [8, 32]);
+  const o = useTransform(
+    globalProgress,
+    [Math.max(start - 0.05, 0), start, end, Math.min(end + 0.05, 1)],
+    [0.3, 1, 1, 0.3],
+  );
+  return <motion.div style={{ width: w, opacity: o }} className="h-1.5 rounded-full bg-primary" />;
+}
+
+
 function StageSlot({
   index,
   globalProgress,
@@ -415,20 +458,11 @@ export function ScrollStory() {
 
           {/* Stage dots */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-            {[0, 1, 2, 3].map((i) => {
-              const start = i / STAGES;
-              const end = (i + 1) / STAGES;
-              const w = useTransform(scrollYProgress, [start, end - 0.01], [8, 32]);
-              const o = useTransform(scrollYProgress, [start - 0.05, start, end, end + 0.05], [0.3, 1, 1, 0.3]);
-              return (
-                <motion.div
-                  key={i}
-                  style={{ width: w, opacity: o }}
-                  className="h-1.5 rounded-full bg-primary"
-                />
-              );
-            })}
+            {[0, 1, 2, 3].map((i) => (
+              <StageDot key={i} index={i} globalProgress={scrollYProgress} />
+            ))}
           </div>
+
         </div>
       </section>
     </>
