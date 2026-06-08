@@ -191,7 +191,7 @@ export default function Dashboard() {
         setProfile({
           ...profileData,
           social_links: (profileData.social_links as SocialLinks) || {},
-        });
+        } as Profile);
       }
 
       // Decide whether to open the confirm dialog (only when there's something to
