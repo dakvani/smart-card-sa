@@ -318,9 +318,13 @@ export function ProfileTemplates({
   };
 
   const clearCustomMedia = async () => {
+    const ok = typeof window === "undefined"
+      ? true
+      : window.confirm("Remove your custom template background? Your profile will instantly revert to its default theme.");
+    if (!ok) return;
     setCustomMedia(null);
     await persist({ custom_background_url: null, custom_background_type: null });
-    toast.success("Custom background removed");
+    toast.success("Custom background removed — reverted to default theme");
   };
 
   const commitSpeed = (v: number) => {
@@ -333,9 +337,11 @@ export function ProfileTemplates({
   };
 
   const categories = ["all", ...Array.from(new Set(templates.map(t => t.category)))];
+  const visibleBase = showHidden ? templates : templates.filter(t => !hiddenIds.has(t.id));
   const filteredTemplates = selectedCategory === "all"
-    ? templates
-    : templates.filter(t => t.category === selectedCategory);
+    ? visibleBase
+    : visibleBase.filter(t => t.category === selectedCategory);
+  const hiddenCount = hiddenIds.size;
 
   if (loading) {
     return (
