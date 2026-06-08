@@ -75,7 +75,16 @@ const statusColor: Record<string, string> = {
   cancelled: "bg-red-500/10 text-red-600 border-red-500/20",
 };
 
-export function EcommerceSettings({ userId }: { userId: string }) {
+type EcommerceSection = "orders" | "wallet" | "addresses" | "payments";
+
+export function EcommerceSettings({
+  userId,
+  section,
+}: {
+  userId: string;
+  section?: EcommerceSection;
+}) {
+  const show = (s: EcommerceSection) => !section || section === s;
   const [addresses, setAddresses] = useState<ShippingAddress[]>([]);
   const [payments, setPayments] = useState<PaymentMethod[]>([]);
   const [wallet, setWallet] = useState<{ balance: number; currency: string }>({
