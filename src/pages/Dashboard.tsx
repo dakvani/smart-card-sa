@@ -241,7 +241,7 @@ export default function Dashboard() {
       if (!session) {
         navigate("/auth");
       } else if (session.user) {
-        setTimeout(() => loadData(session.user.id, session.user.email), 0);
+        setTimeout(() => loadData(session.user.id, session.user.email, session.user.user_metadata as Record<string, any>), 0);
       }
     });
 
@@ -252,7 +252,7 @@ export default function Dashboard() {
       if (!session) {
         navigate("/auth");
       } else if (session.user) {
-        loadData(session.user.id, session.user.email);
+        loadData(session.user.id, session.user.email, session.user.user_metadata as Record<string, any>);
       }
     });
 
