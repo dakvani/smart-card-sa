@@ -562,6 +562,11 @@ export function ProfileTemplates({
                   <Check className="w-2.5 h-2.5" />
                   <span className="tabular-nums">{template.apply_count || 0}</span>
                 </div>
+                {hidden && (
+                  <div className="absolute top-2 left-2 z-30 flex items-center gap-1 px-2 py-0.5 rounded-full bg-background/80 backdrop-blur text-[10px] font-semibold text-muted-foreground border border-border">
+                    <EyeOff className="w-2.5 h-2.5" /> Hidden
+                  </div>
+                )}
                 {locked && (
                   <button
                     type="button"
