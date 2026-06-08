@@ -887,7 +887,7 @@ function PaymentDialog({
       setErrors(next);
       return;
     }
-    onSubmit(result.data, editing?.id ?? null);
+    onSubmit(result.data as PaymentForm, editing?.id ?? null);
   };
 
   return (
