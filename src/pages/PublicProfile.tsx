@@ -285,7 +285,11 @@ export default function PublicProfile() {
   );
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 sm:py-10 sm:px-4 flex items-start sm:items-center justify-center">
+    <div
+      ref={accessibilityScopeRef}
+      {...{ [ACCESSIBILITY_SCOPE_ATTR]: "" }}
+      className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 sm:py-10 sm:px-4 flex items-start sm:items-center justify-center"
+    >
       {/* Preview-mode toggle (tablet/desktop only — hidden when ?mobile=1 forces mobile layout) */}
       {!forceMobile && (
         <div className="hidden sm:flex fixed top-4 right-4 z-40 items-center gap-1 rounded-full border border-white/10 bg-slate-900/80 backdrop-blur p-1 shadow-lg">
