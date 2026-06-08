@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,9 @@ import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
 import { SocialLinksEditor, SocialLinks } from "@/components/dashboard/SocialLinksEditor";
 import { SortableLinkItem } from "@/components/dashboard/SortableLinkItem";
 import { SocialIcons } from "@/components/profile/SocialIcons";
-import { AnalyticsCharts } from "@/components/dashboard/AnalyticsCharts";
+const AnalyticsCharts = lazy(() =>
+  import("@/components/dashboard/AnalyticsCharts").then((m) => ({ default: m.AnalyticsCharts }))
+);
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
 import { ThemeCustomizer } from "@/components/dashboard/ThemeCustomizer";
 import { QRCodeGenerator } from "@/components/dashboard/QRCodeGenerator";
@@ -960,7 +962,9 @@ export default function Dashboard() {
               )}
 
               {activeTab === "analytics" && (
-                <AnalyticsCharts profileId={profile.id} links={links} />
+                <Suspense fallback={<div className="py-12 text-center text-sm text-muted-foreground">Loading analytics…</div>}>
+                  <AnalyticsCharts profileId={profile.id} links={links} />
+                </Suspense>
               )}
 
               {activeTab === "settings" && (
@@ -1007,8 +1011,6 @@ export default function Dashboard() {
                     </h3>
                     <AccountSecuritySection />
                   </div>
-
-                  {/* Accessibility & Profile Style section removed permanently per user request. */}
                 </div>
               )}
               </div>

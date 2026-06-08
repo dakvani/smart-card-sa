@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,7 +22,9 @@ import { AdminProductManager } from "@/components/admin/AdminProductManager";
 import { AdminProRequests } from "@/components/admin/AdminProRequests";
 import { AdminNotificationBell } from "@/components/admin/AdminNotificationBell";
 import { useAdminNotifications } from "@/hooks/use-admin-notifications";
-import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
+const AdminOverviewCharts = lazy(() =>
+  import("@/components/admin/AdminOverviewCharts").then((m) => ({ default: m.AdminOverviewCharts }))
+);
 import { format } from "date-fns";
 import { formatSAR } from "@/lib/currency";
 
@@ -410,7 +412,9 @@ export default function AdminDashboard() {
                 </TooltipProvider>
 
                 {/* Analytics Charts */}
-                <AdminOverviewCharts />
+                <Suspense fallback={<div className="py-8 text-center text-sm text-muted-foreground">Loading charts…</div>}>
+                  <AdminOverviewCharts />
+                </Suspense>
 
                 {/* Recent Activity Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">

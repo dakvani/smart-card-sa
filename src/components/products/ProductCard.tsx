@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Box, Images } from "lucide-react";
 import { NFCProduct } from "./types";
 import { productAnimations } from "./ProductAnimations";
-import { Product3DViewer } from "./Product3DViewer";
+const Product3DViewer = lazy(() =>
+  import("./Product3DViewer").then((m) => ({ default: m.Product3DViewer }))
+);
 import { ProductGallery } from "./ProductGallery";
 import { ProductReviews } from "./ProductReviews";
 import { ProductRatingBadge } from "./ProductRatingBadge";
@@ -166,12 +168,16 @@ export function ProductCard({ product, isSelected, onSelect }: ProductCardProps)
         />
       </motion.div>
 
-      {/* 3D Viewer Modal */}
-      <Product3DViewer
-        product={product}
-        isOpen={is3DViewerOpen}
-        onClose={() => setIs3DViewerOpen(false)}
-      />
+      {/* 3D Viewer Modal — lazy-loaded (heavy three.js/drei deps) */}
+      {is3DViewerOpen && (
+        <Suspense fallback={null}>
+          <Product3DViewer
+            product={product}
+            isOpen={is3DViewerOpen}
+            onClose={() => setIs3DViewerOpen(false)}
+          />
+        </Suspense>
+      )}
 
       {/* Gallery Modal */}
       <ProductGallery

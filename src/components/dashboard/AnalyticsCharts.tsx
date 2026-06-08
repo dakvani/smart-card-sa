@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { format, subDays, startOfDay, eachDayOfInterval } from "date-fns";
 import { Loader2, TrendingUp, Eye, MousePointer } from "lucide-react";
-import { DetailedAnalytics } from "./DetailedAnalytics";
+const DetailedAnalytics = lazy(() =>
+  import("./DetailedAnalytics").then((m) => ({ default: m.DetailedAnalytics }))
+);
 
 interface AnalyticsChartsProps {
   profileId: string;
@@ -217,10 +219,12 @@ export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
         </div>
       )}
 
-      {/* Detailed Click Analytics */}
+      {/* Detailed Click Analytics — lazy */}
       <div className="border-t border-border pt-6">
         <h3 className="font-semibold mb-4">Click Analytics</h3>
-        <DetailedAnalytics profileId={profileId} period={period} />
+        <Suspense fallback={<div className="py-6 text-center text-xs text-muted-foreground">Loading details…</div>}>
+          <DetailedAnalytics profileId={profileId} period={period} />
+        </Suspense>
       </div>
     </div>
   );
