@@ -520,6 +520,7 @@ export function EcommerceSettings({
           </ul>
         )}
       </section>
+      )}
     </div>
   );
 }
