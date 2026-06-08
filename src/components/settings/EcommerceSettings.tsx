@@ -233,6 +233,7 @@ export function EcommerceSettings({
   return (
     <div className="space-y-8">
       {/* Order History */}
+      {show("orders") && (
       <section className="bg-background rounded-2xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold flex items-center gap-2">
