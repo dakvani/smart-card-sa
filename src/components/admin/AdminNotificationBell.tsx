@@ -38,8 +38,15 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
     }
   };
 
+  const tabForKind: Record<AdminNotification["kind"], string> = {
+    pro_request: "pro",
+    order: "orders",
+    new_account: "users",
+    contact: "contact",
+  };
+
   const handleAction = (n: AdminNotification) => {
-    onOpenTab(n.kind === "pro_request" ? "pro" : "orders");
+    onOpenTab(tabForKind[n.kind] ?? "overview");
     setOpen(false);
   };
 
