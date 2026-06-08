@@ -141,6 +141,20 @@ export function ProfileTemplates({
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { loadTemplates(); }, []);
+  // Record one view per template per session (rough impression metric)
+  useEffect(() => {
+    if (loading || templates.length === 0) return;
+    try {
+      const key = "tpl_view_session";
+      const seen = new Set<string>(JSON.parse(sessionStorage.getItem(key) || "[]"));
+      const fresh = templates.filter((t) => !seen.has(t.id));
+      fresh.forEach((t) => {
+        seen.add(t.id);
+        supabase.rpc("increment_template_view" as any, { template_uuid: t.id });
+      });
+      if (fresh.length) sessionStorage.setItem(key, JSON.stringify([...seen]));
+    } catch { /* noop */ }
+  }, [loading, templates]);
   useEffect(() => { setCustomMedia(initialCustomBackground); }, [initialCustomBackground?.url]); // eslint-disable-line
   useEffect(() => { setSpeed(initialAnimationSpeed); }, [initialAnimationSpeed]);
   useEffect(() => { setMotionEnabled(initialMotionEnabled); }, [initialMotionEnabled]);
