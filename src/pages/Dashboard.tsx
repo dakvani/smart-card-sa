@@ -508,6 +508,45 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
       <PlanWelcomeDialog userId={user?.id} plan={plan} loading={planLoading} />
+      <OnboardingConfirmDialog
+        open={onboarding.open}
+        prefill={onboarding.prefill}
+        email={onboardingEmail}
+        saving={onboarding.saving}
+        onSkip={() => {
+          trackOnboarding("onboarding_skipped", { isNewUser: false, provider: "google", prefill: onboarding.prefill ?? undefined });
+          setOnboarding({ open: false, prefill: null, saving: false });
+        }}
+        onConfirm={async (values, edited) => {
+          if (!user) return;
+          setOnboarding((s) => ({ ...s, saving: true }));
+          const { data: updated, error } = await supabase
+            .from("profiles")
+            .update({
+              username: values.username,
+              title: values.title,
+              avatar_url: values.avatar_url,
+            })
+            .eq("user_id", user.id)
+            .select()
+            .single();
+          if (error) {
+            toast.error(error.message || "Could not save your profile");
+            setOnboarding((s) => ({ ...s, saving: false }));
+            return;
+          }
+          if (updated) {
+            setProfile({ ...(updated as any), social_links: (updated.social_links as SocialLinks) || {} });
+          }
+          trackOnboarding(edited ? "onboarding_edited" : "onboarding_confirmed", {
+            isNewUser: false,
+            provider: "google",
+            prefill: onboarding.prefill ?? undefined,
+          });
+          setOnboarding({ open: false, prefill: null, saving: false });
+          toast.success("Profile saved");
+        }}
+      />
       {/* Header */}
       <header className="bg-background/70 backdrop-blur-xl border-b border-border/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
