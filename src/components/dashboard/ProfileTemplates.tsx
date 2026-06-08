@@ -412,6 +412,43 @@ export function ProfileTemplates({
         </div>
       )}
 
+      {/* Top templates leaderboard */}
+      {(() => {
+        const top = [...templates]
+          .filter((t) => (t.apply_count || 0) + (t.view_count || 0) > 0)
+          .sort((a, b) =>
+            ((b.apply_count || 0) * 3 + (b.view_count || 0)) -
+            ((a.apply_count || 0) * 3 + (a.view_count || 0))
+          )
+          .slice(0, 3);
+        if (top.length === 0) return null;
+        return (
+          <div className="rounded-lg border border-border bg-card/50 p-3">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold flex items-center gap-1.5">
+                <Trophy className="w-3.5 h-3.5 text-amber-500" /> Top templates
+              </p>
+              <span className="text-[10px] text-muted-foreground">By applies × views</span>
+            </div>
+            <ol className="space-y-1.5">
+              {top.map((t, i) => (
+                <li key={t.id} className="flex items-center gap-2 text-xs">
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    i === 0 ? "bg-amber-500/20 text-amber-600 dark:text-amber-300"
+                    : i === 1 ? "bg-zinc-400/20 text-zinc-600 dark:text-zinc-300"
+                    : "bg-orange-600/20 text-orange-700 dark:text-orange-300"
+                  }`}>{i + 1}</span>
+                  <span className="font-medium truncate flex-1">{t.name}</span>
+                  <span className="text-muted-foreground tabular-nums">
+                    {t.apply_count || 0} applies · {t.view_count || 0} views
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        );
+      })()}
+
       {/* Category Filter */}
       <div className="flex gap-2 flex-wrap">
         {categories.map(cat => {
