@@ -257,10 +257,12 @@ function PlanPicker({
   defaultValue,
   onApprove,
   disabled,
+  approveLabel = "Approve",
 }: {
   defaultValue: string;
   onApprove: (plan: string) => void;
   disabled: boolean;
+  approveLabel?: string;
 }) {
   const [plan, setPlan] = useState(defaultValue || "pro");
   return (
@@ -282,7 +284,7 @@ function PlanPicker({
         disabled={disabled}
         className="h-8"
       >
-        <Check className="w-3.5 h-3.5" /> Approve
+        <Check className="w-3.5 h-3.5" /> {approveLabel}
       </Button>
     </div>
   );
