@@ -89,13 +89,48 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
             placeholder="Link Title"
             className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm font-medium"
           />
-          <input
-            value={link.url}
-            onChange={(e) => onUpdate(link.id, { url: e.target.value })}
-            onBlur={(e) => onUpdate(link.id, { url: e.target.value })}
-            placeholder="https://..."
-            className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm"
-          />
+          {(() => {
+            const urlResult = validateUrl(link.url || "");
+            const hasUrl = (link.url || "").trim().length > 0;
+            const invalid = hasUrl && !urlResult.valid;
+            return (
+              <div>
+                <div className="relative">
+                  <input
+                    value={link.url}
+                    onChange={(e) => onUpdate(link.id, { url: e.target.value })}
+                    onBlur={(e) => {
+                      const v = e.target.value;
+                      const res = validateUrl(v);
+                      if (v.trim() && !res.valid) {
+                        toast({ title: "Invalid link URL", description: res.message, variant: "destructive" });
+                        return;
+                      }
+                      onUpdate(link.id, { url: v });
+                    }}
+                    placeholder="https://..."
+                    aria-invalid={invalid}
+                    className={`w-full pr-9 px-3 py-2 rounded-lg border bg-background text-sm ${
+                      invalid ? "border-destructive focus-visible:ring-destructive" : "border-input"
+                    }`}
+                  />
+                  {hasUrl && (
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                      {urlResult.valid ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      ) : (
+                        <AlertCircle className="w-4 h-4 text-destructive" />
+                      )}
+                    </span>
+                  )}
+                </div>
+                {invalid && urlResult.message && (
+                  <p className="text-xs text-destructive mt-1">{urlResult.message}</p>
+                )}
+              </div>
+            );
+          })()}
+
           <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <BarChart3 className="w-3 h-3" />
