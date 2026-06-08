@@ -24,6 +24,11 @@ import {
   CreditCard,
   ShieldAlert,
   ChevronRight,
+  Phone,
+  Camera,
+  Pencil,
+  Check,
+  X as XIcon,
 } from "lucide-react";
 import type { User, Session } from "@supabase/supabase-js";
 import {
