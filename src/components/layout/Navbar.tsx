@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { Menu, X, LayoutDashboard, Home, Settings, Package, LogOut, ChevronDown, Shield } from "lucide-react";
+import { Menu, X, LayoutDashboard, Home, Settings, LogOut, ChevronDown, Shield } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
