@@ -106,7 +106,7 @@ type AddressForm = {
   country: string;
 };
 
-const addressSchema: z.ZodType<AddressForm> = z.object({
+const addressSchema = z.object({
   label: z.string().trim().min(1, "Label is required").max(40),
   name: z.string().trim().min(2, "Full name is required").max(100),
   phone: z
