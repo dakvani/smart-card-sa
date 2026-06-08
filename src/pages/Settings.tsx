@@ -409,43 +409,116 @@ export default function Settings() {
 
                   {active === "account" && (
                     <div className="bg-background rounded-2xl border border-border p-6 space-y-6">
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-secondary/50">
-                        <div className="flex items-center gap-3 min-w-0">
-                          {isEmailVerified ? (
-                            <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                          ) : (
-                            <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
-                          )}
-                          <div className="min-w-0">
-                            <p className="font-medium truncate">{user.email}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {isEmailVerified
-                                ? `Verified on ${new Date(user.email_confirmed_at!).toLocaleDateString()}`
-                                : "Email not verified"}
-                            </p>
-                          </div>
-                        </div>
-                        {!isEmailVerified && (
-                          <Button variant="outline" size="sm" onClick={handleResendVerification} disabled={resendingVerification}>
-                            {resendingVerification ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-                            <span className="ml-2">Resend</span>
-                          </Button>
+                      {/* Avatar */}
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-secondary/40">
+                        {profileId && user ? (
+                          <AvatarUpload
+                            userId={user.id}
+                            currentAvatarUrl={avatarUrl}
+                            username={displayName || user.email || "U"}
+                            onUpload={async (url) => {
+                              setAvatarUrl(url);
+                              await supabase
+                                .from("profiles")
+                                .update({ avatar_url: url })
+                                .eq("user_id", user.id);
+                            }}
+                          />
+                        ) : (
+                          <div className="w-24 h-24 rounded-full bg-secondary animate-pulse" />
                         )}
+                        <div className="text-sm text-muted-foreground">
+                          <p className="font-medium text-foreground mb-1">Profile picture</p>
+                          <p>Click the avatar to upload or change your photo. PNG or JPG up to 2MB.</p>
+                        </div>
                       </div>
 
+                      {/* Account holder details */}
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-                        <div className="p-4 rounded-xl bg-secondary/40">
-                          <p className="text-xs text-muted-foreground mb-1">Account ID</p>
-                          <p className="font-mono text-xs truncate">{user.id.slice(0, 8)}…</p>
+                        {/* Name */}
+                        <div className="p-4 rounded-xl bg-secondary/40 sm:col-span-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-xs text-muted-foreground">Name</p>
+                            {!editingName && (
+                              <button
+                                type="button"
+                                onClick={() => { setNameDraft(displayName); setEditingName(true); }}
+                                className="text-muted-foreground hover:text-foreground"
+                                aria-label="Edit name"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                          {editingName ? (
+                            <div className="flex items-center gap-1">
+                              <Input
+                                value={nameDraft}
+                                onChange={(e) => setNameDraft(e.target.value)}
+                                className="h-8 text-sm"
+                                placeholder="Your name"
+                                autoFocus
+                              />
+                              <button
+                                type="button"
+                                onClick={saveName}
+                                disabled={savingName}
+                                className="text-green-600 hover:text-green-700 p-1"
+                                aria-label="Save"
+                              >
+                                {savingName ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => { setEditingName(false); setNameDraft(displayName); }}
+                                className="text-muted-foreground hover:text-foreground p-1"
+                                aria-label="Cancel"
+                              >
+                                <XIcon className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ) : (
+                            <p className="font-medium truncate">{displayName || "—"}</p>
+                          )}
                         </div>
+
+                        {/* Contact / Phone */}
                         <div className="p-4 rounded-xl bg-secondary/40">
-                          <p className="text-xs text-muted-foreground mb-1">Created</p>
-                          <p>{new Date(user.created_at).toLocaleDateString()}</p>
+                          <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                            <Phone className="w-3 h-3" /> Contact
+                          </p>
+                          <p className="text-sm truncate">{phone || <span className="text-muted-foreground">Not set</span>}</p>
+                          <button
+                            type="button"
+                            onClick={() => setActive("email")}
+                            className="text-xs text-primary hover:underline mt-1"
+                          >
+                            {phone ? "Edit" : "Add mobile number"}
+                          </button>
                         </div>
+
+                        {/* Email */}
                         <div className="p-4 rounded-xl bg-secondary/40">
-                          <p className="text-xs text-muted-foreground mb-1">Last Sign In</p>
-                          <p className="text-xs">
-                            {user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleString() : "N/A"}
+                          <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                            <Mail className="w-3 h-3" /> Email
+                          </p>
+                          <p className="text-sm truncate">{user.email}</p>
+                          <p className="text-[11px] mt-1 inline-flex items-center gap-1">
+                            {isEmailVerified ? (
+                              <span className="text-green-600 inline-flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" /> Verified
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={handleResendVerification}
+                                disabled={resendingVerification}
+                                className="text-amber-600 hover:underline inline-flex items-center gap-1"
+                              >
+                                {resendingVerification ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                                Resend verification
+                              </button>
+                            )}
                           </p>
                         </div>
                       </div>
@@ -453,10 +526,42 @@ export default function Settings() {
                   )}
 
                   {active === "email" && (
-                    <div className="bg-background rounded-2xl border border-border p-6">
-                      <form onSubmit={handleUpdateEmail} className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium mb-2">New Email Address</label>
+                    <div className="bg-background rounded-2xl border border-border p-6 space-y-6">
+                      {/* Mobile number */}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-muted-foreground" />
+                          <label className="text-sm font-medium">Mobile number</label>
+                        </div>
+                        <div className="flex gap-2">
+                          <Input
+                            type="tel"
+                            value={phoneDraft}
+                            onChange={(e) => setPhoneDraft(e.target.value)}
+                            placeholder="+966 5X XXX XXXX"
+                            className="h-12"
+                          />
+                          <Button
+                            type="button"
+                            variant="gradient"
+                            onClick={savePhone}
+                            disabled={savingPhone || phoneDraft === phone}
+                          >
+                            {savingPhone ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Used for order updates and account recovery. Format: digits, spaces, +, (, -).
+                        </p>
+                      </div>
+
+                      <div className="border-t border-border pt-6">
+                        <form onSubmit={handleUpdateEmail} className="space-y-4">
+                          <div className="flex items-center gap-2">
+                            <Mail className="w-4 h-4 text-muted-foreground" />
+                            <label className="text-sm font-medium">Email address</label>
+                          </div>
+                          <p className="text-xs text-muted-foreground -mt-2">Current: {user.email}</p>
                           <Input
                             type="email"
                             value={newEmail}
@@ -464,21 +569,21 @@ export default function Settings() {
                             placeholder="newemail@example.com"
                             className="h-12"
                           />
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          A confirmation email will be sent to both your current and new addresses.
-                        </p>
-                        <Button type="submit" variant="gradient" disabled={updatingEmail || !newEmail}>
-                          {updatingEmail ? (
-                            <>
-                              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                              Sending…
-                            </>
-                          ) : (
-                            "Update Email"
-                          )}
-                        </Button>
-                      </form>
+                          <p className="text-xs text-muted-foreground">
+                            A confirmation email will be sent to both your current and new addresses.
+                          </p>
+                          <Button type="submit" variant="gradient" disabled={updatingEmail || !newEmail}>
+                            {updatingEmail ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                Sending…
+                              </>
+                            ) : (
+                              "Update Email"
+                            )}
+                          </Button>
+                        </form>
+                      </div>
                     </div>
                   )}
 
