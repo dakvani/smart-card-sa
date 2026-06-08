@@ -386,6 +386,9 @@ export function ScrollStory() {
   const orbBY = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const orbRotate = useTransform(scrollYProgress, [0, 1], [0, 90]);
 
+  // Story progress remaps the post-hero scroll (8% → 100%) to [0,1] for stages
+  const storyProgress = useTransform(scrollYProgress, [0.08, 1], [0, 1], { clamp: true });
+
   // Stage container subtle scale pulse during transitions
   const stageScale = useTransform(
     scrollYProgress,
