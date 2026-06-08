@@ -403,6 +403,9 @@ export default function Settings() {
             </div>
           </div>
 
+          {/* E-commerce: Orders, Wallet, Addresses, Payment Methods */}
+          <EcommerceSettings userId={user.id} />
+
           {/* Delete Account */}
           <DeleteAccountSection userId={user.id} navigate={navigate} />
           </div>
