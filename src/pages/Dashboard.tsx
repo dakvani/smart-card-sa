@@ -40,7 +40,7 @@ import { FavoritePresets } from "@/components/dashboard/FavoritePresets";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePlan } from "@/hooks/use-plan";
 import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
-import { AccountSecuritySection } from "@/components/dashboard/AccountSecuritySection";
+// AccountSecuritySection removed — managed in /settings
 
 import { OnboardingConfirmDialog } from "@/components/dashboard/OnboardingConfirmDialog";
 import { computeOnboardingPrefill, trackOnboarding, type OnboardingPrefill } from "@/lib/onboarding";
