@@ -190,19 +190,14 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
               }`}
             >
               {/* Preview */}
-              <div 
-                className={`h-24 bg-gradient-${template.gradient_direction} ${template.theme_gradient} relative overflow-hidden`}
-              >
-                {template.animation_type && (
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                    animate={{ x: ["-100%", "100%"] }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                  />
-                )}
-                <div className="h-full w-full flex items-center justify-center relative z-10">
-                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur" />
-                </div>
+              <div className="relative">
+                <TemplatePreview
+                  category={template.category}
+                  gradientClass={template.theme_gradient}
+                  direction={template.gradient_direction || "to-b"}
+                  animationType={template.animation_type}
+                  name={template.name}
+                />
                 {locked && (
                   <button
                     type="button"
@@ -213,12 +208,11 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false }: P
                     className="absolute inset-0 bg-background/50 backdrop-blur-[2px] flex items-center justify-center z-20 cursor-pointer hover:bg-background/40 transition"
                     aria-label={`Unlock ${template.name}`}
                   >
-                    <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shadow-glow">
-                      <Lock className="w-3.5 h-3.5 text-primary-foreground" />
+                    <div className="w-9 h-9 rounded-full gradient-primary flex items-center justify-center shadow-glow">
+                      <Lock className="w-4 h-4 text-primary-foreground" />
                     </div>
                   </button>
                 )}
-
               </div>
 
               {/* Info */}
