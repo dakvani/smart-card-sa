@@ -14,6 +14,8 @@ import { UnlockProDialog } from "./UnlockProDialog";
 import { TemplatePreview } from "./TemplatePreview";
 import type { UserPlan } from "@/hooks/use-plan";
 
+export type CustomBackground = { url: string; type: "image" | "video" } | null;
+
 interface Template {
   id: string;
   name: string;
@@ -23,6 +25,7 @@ interface Template {
   theme_gradient: string;
   gradient_direction: string;
   is_premium: boolean;
+  required_plan?: "free" | "starter" | "pro" | null;
   animation_type: string | null;
 }
 
@@ -38,6 +41,16 @@ interface ProfileTemplatesProps {
   currentThemeName: string;
   isPro?: boolean;
   plan?: UserPlan;
+  userId?: string;
+  initialCustomBackground?: CustomBackground;
+  initialAnimationSpeed?: number;
+  initialMotionEnabled?: boolean;
+  onPersist?: (updates: {
+    custom_background_url?: string | null;
+    custom_background_type?: "image" | "video" | null;
+    animation_speed?: number;
+    motion_enabled?: boolean;
+  }) => void;
 }
 
 const categoryIcons: Record<string, React.ElementType> = {
@@ -60,12 +73,33 @@ const animationLabels: Record<string, string> = {
   shimmer: "✦ Shimmer", neon: "💡 Neon",
 };
 
-type CustomMedia = { url: string; type: "image" | "video" } | null;
+const PRO_TIERS: UserPlan[] = ["pro", "pro_plus", "business", "enterprise", "lifetime"];
 
-export function ProfileTemplates({ onApply, currentThemeName, isPro = false, plan }: ProfileTemplatesProps) {
+const planRank = (p: UserPlan): number => {
+  if (PRO_TIERS.includes(p)) return 2;
+  if (p === "starter") return 1;
+  return 0;
+};
+const requiredRank = (r: Template["required_plan"], isPremium: boolean): number => {
+  const v = r ?? (isPremium ? "pro" : "free");
+  return v === "pro" ? 2 : v === "starter" ? 1 : 0;
+};
+
+export function ProfileTemplates({
+  onApply,
+  currentThemeName,
+  isPro = false,
+  plan,
+  userId,
+  initialCustomBackground = null,
+  initialAnimationSpeed = 1,
+  initialMotionEnabled = true,
+  onPersist,
+}: ProfileTemplatesProps) {
   const effectivePlan: UserPlan = plan ?? (isPro ? "pro" : "free");
-  const isProTier = isPro || ["pro", "pro_plus", "business", "enterprise", "lifetime"].includes(effectivePlan);
+  const isProTier = isPro || PRO_TIERS.includes(effectivePlan);
   const isStarter = effectivePlan === "starter";
+  const isFree = effectivePlan === "free";
 
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,34 +108,40 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [unlockFeature, setUnlockFeature] = useState<string | undefined>();
 
-  // Pro motion controls
-  const [speed, setSpeed] = useState(1);
-  const [motionEnabled, setMotionEnabled] = useState(true);
-
-  // Pro custom media (per template)
-  const [customMediaByTpl, setCustomMediaByTpl] = useState<Record<string, CustomMedia>>({});
-  const [activeUploadFor, setActiveUploadFor] = useState<string | null>(null);
+  // Persistent Pro motion controls + custom background (single, profile-wide)
+  const [speed, setSpeed] = useState(initialAnimationSpeed);
+  const [motionEnabled, setMotionEnabled] = useState(initialMotionEnabled);
+  const [customMedia, setCustomMedia] = useState<CustomBackground>(initialCustomBackground);
+  const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { loadTemplates(); }, []);
-  useEffect(() => () => {
-    // revoke object URLs on unmount
-    Object.values(customMediaByTpl).forEach((m) => m && URL.revokeObjectURL(m.url));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { setCustomMedia(initialCustomBackground); }, [initialCustomBackground?.url]); // eslint-disable-line
+  useEffect(() => { setSpeed(initialAnimationSpeed); }, [initialAnimationSpeed]);
+  useEffect(() => { setMotionEnabled(initialMotionEnabled); }, [initialMotionEnabled]);
 
   const loadTemplates = async () => {
     try {
       const { data, error } = await supabase
         .from("profile_templates").select("*").order("category", { ascending: true });
       if (error) throw error;
-      setTemplates(data || []);
+      setTemplates((data as any) || []);
     } catch (error: any) {
       console.error("Failed to load templates:", error.message);
     } finally { setLoading(false); }
   };
 
+  const isLocked = (t: Template) => requiredRank(t.required_plan, t.is_premium) > planRank(effectivePlan);
+
+  const lockReason = (t: Template) => {
+    const rank = requiredRank(t.required_plan, t.is_premium);
+    if (rank === 2) return "Pro plan required";
+    if (rank === 1) return "Starter plan required";
+    return "";
+  };
+
   const applyTemplate = async (template: Template) => {
-    if (template.is_premium && !isProTier) {
+    if (isLocked(template)) {
       setUnlockFeature(template.name);
       setUnlockOpen(true);
       return;
@@ -122,11 +162,25 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
     }
   };
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    const tplId = activeUploadFor;
-    if (!file || !tplId) return;
+  const persist = async (updates: Parameters<NonNullable<ProfileTemplatesProps["onPersist"]>>[0]) => {
+    if (!userId) return;
+    onPersist?.(updates);
+    const { error } = await supabase.from("profiles").update(updates as any).eq("user_id", userId);
+    if (error) toast.error(error.message);
+  };
 
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!isProTier) {
+      setUnlockFeature("Custom template backgrounds");
+      setUnlockOpen(true);
+      return;
+    }
+    if (!userId) {
+      toast.error("Please sign in first");
+      return;
+    }
     if (file.size > 10 * 1024 * 1024) {
       toast.error("File too large. Max 10MB.");
       return;
@@ -137,23 +191,40 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
       toast.error("Please upload an image or video.");
       return;
     }
-    // revoke prior url for this template
-    const prior = customMediaByTpl[tplId];
-    if (prior) URL.revokeObjectURL(prior.url);
-
-    const url = URL.createObjectURL(file);
-    setCustomMediaByTpl((prev) => ({ ...prev, [tplId]: { url, type: isVideo ? "video" : "image" } }));
-    toast.success("Custom background applied to preview");
-    e.target.value = "";
-    setActiveUploadFor(null);
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop() || (isVideo ? "mp4" : "jpg");
+      const path = `${userId}/template-bg/${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+      const type: "image" | "video" = isVideo ? "video" : "image";
+      setCustomMedia({ url: pub.publicUrl, type });
+      await persist({ custom_background_url: pub.publicUrl, custom_background_type: type });
+      toast.success("Custom background saved");
+    } catch (err: any) {
+      toast.error(err.message || "Upload failed");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
   };
 
-  const clearCustomMedia = (tplId: string) => {
-    const prior = customMediaByTpl[tplId];
-    if (prior) URL.revokeObjectURL(prior.url);
-    setCustomMediaByTpl((prev) => {
-      const next = { ...prev }; delete next[tplId]; return next;
-    });
+  const clearCustomMedia = async () => {
+    setCustomMedia(null);
+    await persist({ custom_background_url: null, custom_background_type: null });
+    toast.success("Custom background removed");
+  };
+
+  const commitSpeed = (v: number) => {
+    setSpeed(v);
+    persist({ animation_speed: v });
+  };
+  const toggleMotion = (enabled: boolean) => {
+    setMotionEnabled(enabled);
+    persist({ motion_enabled: enabled });
   };
 
   const categories = ["all", ...Array.from(new Set(templates.map(t => t.category)))];
@@ -196,12 +267,12 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
           ) : isStarter ? (
             <>
               <span className="font-semibold text-amber-600 dark:text-amber-400">Starter plan</span>
-              <span className="text-muted-foreground"> — you can apply Free templates. Premium templates with video loops and custom backgrounds require Pro.</span>
+              <span className="text-muted-foreground"> — Free + Starter templates available. Pro templates with video loops and custom backgrounds require an upgrade.</span>
             </>
           ) : (
             <>
               <span className="font-semibold">Free plan</span>
-              <span className="text-muted-foreground"> — basic templates only. Upgrade for category video loops, motion controls and custom uploads.</span>
+              <span className="text-muted-foreground"> — only Free templates. Starter and Pro templates are locked until you upgrade.</span>
             </>
           )}
         </div>
@@ -212,14 +283,14 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
         )}
       </div>
 
-      {/* Pro motion controls */}
+      {/* Pro motion controls + global custom background */}
       {isProTier && (
         <div className="rounded-lg border border-border bg-card/50 p-3 space-y-3">
           <div className="flex items-center justify-between">
             <Label className="text-xs flex items-center gap-2">
               <Eye className="w-3.5 h-3.5" /> Reduce motion (accessibility)
             </Label>
-            <Switch checked={!motionEnabled} onCheckedChange={(v) => setMotionEnabled(!v)} />
+            <Switch checked={!motionEnabled} onCheckedChange={(v) => toggleMotion(!v)} />
           </div>
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
@@ -233,7 +304,28 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
               min={0.25} max={2} step={0.05}
               disabled={!motionEnabled}
               onValueChange={(v) => setSpeed(v[0])}
+              onValueCommit={(v) => commitSpeed(v[0])}
             />
+          </div>
+
+          <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/60">
+            <div className="min-w-0">
+              <p className="text-xs font-medium">Custom background</p>
+              <p className="text-[10px] text-muted-foreground truncate">
+                {customMedia ? `${customMedia.type === "video" ? "Video" : "Image"} saved — visible on your live profile` : "Upload an image or short video (≤10MB)"}
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {customMedia && (
+                <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={clearCustomMedia}>
+                  <X className="w-3 h-3" /> Remove
+                </Button>
+              )}
+              <Button size="sm" variant="outline" className="h-7 text-[11px]" disabled={uploading} onClick={() => fileRef.current?.click()}>
+                {uploading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
+                {customMedia ? "Replace" : "Upload"}
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -259,7 +351,7 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
         })}
       </div>
 
-      {/* Hidden file input for Pro custom media */}
+      {/* Hidden file input */}
       <input
         ref={fileRef}
         type="file"
@@ -273,8 +365,14 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
         {filteredTemplates.map(template => {
           const isActive = template.theme_name === currentThemeName;
           const Icon = categoryIcons[template.category] || Palette;
-          const locked = template.is_premium && !isProTier;
-          const customMedia = customMediaByTpl[template.id] || null;
+          const locked = isLocked(template);
+          const rank = requiredRank(template.required_plan, template.is_premium);
+          const tierLabel = rank === 2 ? "Pro" : rank === 1 ? "Starter" : "Free";
+          const tierClass = rank === 2
+            ? "bg-gradient-to-r from-yellow-400/20 to-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/40"
+            : rank === 1
+            ? "bg-sky-500/15 text-sky-600 dark:text-sky-300 border border-sky-500/40"
+            : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30";
 
           return (
             <div
@@ -305,19 +403,8 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
                       <Lock className="w-4 h-4 text-primary-foreground" />
                     </div>
                     <span className="text-[10px] font-semibold text-foreground/90 bg-background/70 px-2 py-0.5 rounded">
-                      {isStarter ? "Upgrade Starter → Pro" : "Pro required"}
+                      {lockReason(template)}
                     </span>
-                  </button>
-                )}
-                {customMedia && isProTier && (
-                  <button
-                    type="button"
-                    onClick={() => clearCustomMedia(template.id)}
-                    className="absolute top-2 left-2 z-30 w-6 h-6 rounded-full bg-background/80 hover:bg-background flex items-center justify-center"
-                    aria-label="Remove custom background"
-                    title="Remove custom background"
-                  >
-                    <X className="w-3.5 h-3.5" />
                   </button>
                 )}
               </div>
@@ -328,12 +415,8 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <Icon className="w-4 h-4 text-muted-foreground" />
                       <h4 className="font-medium text-sm">{template.name}</h4>
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide ${
-                        template.is_premium
-                          ? "bg-gradient-to-r from-yellow-400/20 to-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/40"
-                          : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
-                      }`}>
-                        {template.is_premium ? "Pro" : "Free · Starter"}
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide ${tierClass}`}>
+                        {tierLabel}
                       </span>
                       {template.animation_type && (
                         <span className="text-xs px-1.5 py-0.5 rounded-full bg-primary/10 text-primary flex items-center gap-1">
@@ -367,28 +450,16 @@ export function ProfileTemplates({ onApply, currentThemeName, isPro = false, pla
                     </Button>
                   )}
                 </div>
-
-                {/* Pro custom media uploader */}
-                {isProTier && !locked && (
-                  <button
-                    type="button"
-                    onClick={() => { setActiveUploadFor(template.id); fileRef.current?.click(); }}
-                    className="mt-3 w-full flex items-center justify-center gap-1.5 text-[11px] py-1.5 rounded-md border border-dashed border-border hover:border-primary/60 hover:bg-primary/5 transition text-muted-foreground hover:text-foreground"
-                  >
-                    <Upload className="w-3 h-3" />
-                    {customMedia ? "Replace background image / video" : "Upload custom background (image/video)"}
-                  </button>
-                )}
               </div>
 
-              {template.is_premium && !isProTier && (
+              {rank === 2 && (
                 <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-yellow-950 text-[10px] font-bold uppercase shadow-sm z-30">
                   Pro
                 </div>
               )}
-              {template.is_premium && isProTier && (
-                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] font-semibold uppercase shadow-sm z-30 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" /> Pro
+              {rank === 1 && (
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-sky-500 text-white text-[10px] font-bold uppercase shadow-sm z-30">
+                  Starter
                 </div>
               )}
             </div>
