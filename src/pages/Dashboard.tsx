@@ -102,6 +102,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [onboarding, setOnboarding] = useState<{ open: boolean; prefill: OnboardingPrefill | null; saving: boolean }>({ open: false, prefill: null, saving: false });
+  const [onboardingEmail, setOnboardingEmail] = useState<string | undefined>();
 
   // Sync URL when tab changes (so deep links to ?tab=settings work)
   useEffect(() => {
