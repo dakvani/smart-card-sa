@@ -10,22 +10,54 @@ export function SocialAuthButtons() {
   const [appleLoading, setAppleLoading] = useState(false);
   const anyLoading = googleLoading || appleLoading;
 
+  const describeOAuthError = (err: unknown, provider: string): string => {
+    const raw =
+      (err as any)?.message ||
+      (err as any)?.error_description ||
+      (typeof err === "string" ? err : "");
+    const msg = String(raw).toLowerCase();
+
+    if (!navigator.onLine || msg.includes("failed to fetch") || msg.includes("network") || msg.includes("networkerror")) {
+      return "Network issue — please check your connection and try again.";
+    }
+    if (msg.includes("popup") && (msg.includes("block") || msg.includes("closed"))) {
+      return `${provider} sign-in popup was blocked. Please allow popups for this site and try again.`;
+    }
+    if (msg.includes("popup_closed") || msg.includes("window closed") || msg.includes("user closed")) {
+      return `${provider} sign-in was canceled before completing.`;
+    }
+    if (msg.includes("access_denied") || msg.includes("consent") || msg.includes("denied") || msg.includes("cancel")) {
+      return `${provider} sign-in was canceled. You need to grant access to continue.`;
+    }
+    if (msg.includes("missing oauth secret") || msg.includes("provider is not enabled")) {
+      return `${provider} sign-in isn't configured yet. Please contact support.`;
+    }
+    if (msg.includes("redirect") && msg.includes("uri")) {
+      return `${provider} sign-in misconfiguration (invalid redirect). Please contact support.`;
+    }
+    return raw || `Couldn't sign in with ${provider}. Please try again.`;
+  };
+
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
     try {
+      if (!navigator.onLine) {
+        toast.error("You appear to be offline. Please check your connection.");
+        return;
+      }
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: `${window.location.origin}/dashboard`,
       });
 
       if (result.error) {
-        toast.error(result.error.message || "Failed to sign in with Google");
+        toast.error(describeOAuthError(result.error, "Google"));
         return;
       }
       if (result.redirected) return;
       window.location.href = "/dashboard";
     } catch (error) {
       console.error("Google sign-in failed:", error);
-      toast.error("Failed to sign in with Google");
+      toast.error(describeOAuthError(error, "Google"));
     } finally {
       setGoogleLoading(false);
     }
@@ -34,22 +66,22 @@ export function SocialAuthButtons() {
   const handleAppleLogin = async () => {
     setAppleLoading(true);
     try {
+      if (!navigator.onLine) {
+        toast.error("You appear to be offline. Please check your connection.");
+        return;
+      }
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "apple",
         options: { redirectTo: `${window.location.origin}/dashboard` },
       });
       if (error) {
-        if (error.message.toLowerCase().includes("missing oauth secret")) {
-          toast.error("Apple sign-in is not configured in backend auth settings yet.");
-          return;
-        }
-        toast.error(error.message);
+        toast.error(describeOAuthError(error, "Apple"));
         return;
       }
       if (data?.url) window.location.href = data.url;
     } catch (error) {
       console.error("Apple sign-in failed:", error);
-      toast.error("Failed to sign in with Apple");
+      toast.error(describeOAuthError(error, "Apple"));
     } finally {
       setAppleLoading(false);
     }
