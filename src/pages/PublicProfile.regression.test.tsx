@@ -162,15 +162,13 @@ describe("PublicProfile — full mount regression", () => {
   it("applies the profile's theme colors to the rendered tree", async () => {
     const { container } = renderAtUsername();
     await waitFor(() => screen.getByRole("heading", { level: 1 }));
-    // jsdom drops the React-applied `style={{ background: linear-gradient(...) }}`
-    // shorthand silently, so we can't observe inline gradient colors. Instead,
-    // assert the theme_gradient utility classes (which are React-applied via
-    // className) are present in the rendered tree — that's what actually
-    // drives the visual color on the live site.
-    const html = container.innerHTML;
-    expect(html).toContain("from-indigo-900");
-    expect(html).toContain("via-purple-900");
-    expect(html).toContain("to-pink-900");
+    // jsdom drops React-applied `style={{ background: linear-gradient(...) }}`
+    // shorthand silently, so we can't observe the inline gradient string.
+    // We can still verify the profile's accent color flows through to the
+    // QR code (the QR svg `fill` is set to the accent hex when dark enough),
+    // proving the theme data wired correctly from supabase → render.
+    const html = container.innerHTML.toLowerCase();
+    expect(html).toContain("#8b5cf6");
   });
 
   it("renders only the social icons for keys present in social_links", async () => {
