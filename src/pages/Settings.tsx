@@ -402,14 +402,9 @@ export default function Settings() {
             </div>
           </div>
 
-              {/* Delete Account */}
-              <DeleteAccountSection userId={user.id} navigate={navigate} />
-            </TabsContent>
-
-            <TabsContent value="accessibility">
-              <AccessibilitySettings />
-            </TabsContent>
-          </Tabs>
+          {/* Delete Account */}
+          <DeleteAccountSection userId={user.id} navigate={navigate} />
+          </div>
         </motion.div>
       </div>
     </div>
