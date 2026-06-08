@@ -129,7 +129,11 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
                 {invalid && urlResult.message && (
                   <p className="text-xs text-destructive mt-1">{urlResult.message}</p>
                 )}
+                {!invalid && hasUrl && (
+                  <LinkOgPreview url={link.url} fallbackTitle={link.title} />
+                )}
               </div>
+
             );
           })()}
 
