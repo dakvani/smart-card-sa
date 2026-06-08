@@ -6,25 +6,19 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { useTheme, Theme } from "@/components/ThemeToggle";
-
-interface AccessibilityPreferences {
-  fontSize: "small" | "medium" | "large" | "extra-large";
-  fontFamily: "default" | "dyslexia";
-  reducedMotion: boolean;
-  screenReaderOptimized: boolean;
-  highContrastText: boolean;
-  focusIndicators: boolean;
-  lineHeight: number;
-}
+import {
+  AccessibilityPreferences,
+  ACCESSIBILITY_STORAGE_KEY,
+  applyAccessibilityPreferencesToScope,
+  defaultAccessibilityPreferences,
+  loadAccessibilityPreferences,
+} from "@/lib/accessibility";
 
 const fontSizeConfig = {
-  small: { label: "Small", value: "14px", scale: 0.875 },
-  medium: { label: "Medium", value: "16px", scale: 1 },
-  large: { label: "Large", value: "18px", scale: 1.125 },
-  "extra-large": { label: "Extra Large", value: "20px", scale: 1.25 },
+  small: { label: "Small", value: "14px" },
+  medium: { label: "Medium", value: "16px" },
+  large: { label: "Large", value: "18px" },
+  "extra-large": { label: "Extra Large", value: "20px" },
 };
 
 const fontFamilyConfig = {
@@ -32,15 +26,7 @@ const fontFamilyConfig = {
   dyslexia: { label: "OpenDyslexic", description: "Dyslexia-friendly font" },
 };
 
-const defaultPreferences: AccessibilityPreferences = {
-  fontSize: "medium",
-  fontFamily: "default",
-  reducedMotion: false,
-  screenReaderOptimized: false,
-  highContrastText: false,
-  focusIndicators: true,
-  lineHeight: 1.5,
-};
+const defaultPreferences = defaultAccessibilityPreferences;
 
 export function AccessibilitySettings() {
   const { theme, setTheme } = useTheme();
@@ -48,46 +34,32 @@ export function AccessibilitySettings() {
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Load preferences from localStorage on mount
+  // Load preferences from localStorage on mount. We intentionally do NOT
+  // apply them anywhere here — these settings live on the dashboard but
+  // only affect the public bio profile (see src/lib/accessibility.ts).
   useEffect(() => {
-    const saved = localStorage.getItem("accessibility-preferences");
+    const saved = localStorage.getItem(ACCESSIBILITY_STORAGE_KEY);
     if (saved) {
-      const parsed = JSON.parse(saved);
-      setPreferences(parsed);
-      applyPreferences(parsed);
+      try {
+        setPreferences({ ...defaultPreferences, ...JSON.parse(saved) });
+        return;
+      } catch {
+        /* fall through to system pref */
+      }
     }
-
-    // Check for system reduced motion preference
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion && !saved) {
+    if (prefersReducedMotion) {
       setPreferences(prev => ({ ...prev, reducedMotion: true }));
     }
   }, []);
 
   const applyPreferences = (prefs: AccessibilityPreferences) => {
-    const root = document.documentElement;
-    
-    // Apply font size
-    root.style.setProperty("--accessibility-font-scale", String(fontSizeConfig[prefs.fontSize].scale));
-    root.classList.toggle("accessibility-large-text", prefs.fontSize === "large" || prefs.fontSize === "extra-large");
-    
-    // Apply font family
-    root.classList.toggle("dyslexia-font", prefs.fontFamily === "dyslexia");
-    
-    // Apply reduced motion
-    root.classList.toggle("reduce-motion", prefs.reducedMotion);
-    
-    // Apply screen reader optimizations
-    root.classList.toggle("screen-reader-optimized", prefs.screenReaderOptimized);
-    
-    // Apply high contrast text
-    root.classList.toggle("high-contrast-text", prefs.highContrastText);
-    
-    // Apply enhanced focus indicators
-    root.classList.toggle("enhanced-focus", prefs.focusIndicators);
-    
-    // Apply line height
-    root.style.setProperty("--accessibility-line-height", String(prefs.lineHeight));
+    // Only the public bio profile renders a scope element. On internal
+    // pages this is a no-op by design — accessibility styling must never
+    // leak into the dashboard or other internal UI.
+    if (typeof document === "undefined") return;
+    const scope = document.querySelector<HTMLElement>("[data-accessibility-scope]");
+    if (scope) applyAccessibilityPreferencesToScope(scope, prefs);
   };
 
   const updatePreference = <K extends keyof AccessibilityPreferences>(
@@ -103,15 +75,7 @@ export function AccessibilitySettings() {
   const savePreferences = async () => {
     setSaving(true);
     try {
-      localStorage.setItem("accessibility-preferences", JSON.stringify(preferences));
-      
-      // Also save to database if user is logged in
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        // We'd need to add an accessibility_preferences column to profiles
-        // For now, we just save to localStorage
-      }
-      
+      localStorage.setItem(ACCESSIBILITY_STORAGE_KEY, JSON.stringify(preferences));
       setHasChanges(false);
       toast.success("Accessibility preferences saved");
     } catch (error) {
@@ -124,7 +88,7 @@ export function AccessibilitySettings() {
   const resetToDefaults = () => {
     setPreferences(defaultPreferences);
     applyPreferences(defaultPreferences);
-    localStorage.removeItem("accessibility-preferences");
+    localStorage.removeItem(ACCESSIBILITY_STORAGE_KEY);
     setHasChanges(false);
     toast.success("Preferences reset to defaults");
   };
