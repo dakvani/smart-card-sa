@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Sparkles, ShoppingBag, X, CheckCheck, Loader2 } from "lucide-react";
+import { Bell, Sparkles, ShoppingBag, X, CheckCheck, Loader2, UserPlus, Mail } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +23,7 @@ interface Props {
 
 export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
   const [open, setOpen] = useState(false);
-  const { items, loading, total, proCount, orderCount, dismiss, dismissAll } =
+  const { items, loading, total, proCount, orderCount, accountCount, contactCount, dismiss, dismissAll } =
     useAdminNotifications(isAdmin);
   const [perm, setPerm] = useState<NotificationPermission | "unsupported">(
     typeof window !== "undefined" && "Notification" in window ? Notification.permission : "unsupported",
@@ -38,8 +38,15 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
     }
   };
 
+  const tabForKind: Record<AdminNotification["kind"], string> = {
+    pro_request: "pro",
+    order: "orders",
+    new_account: "users",
+    contact: "contact",
+  };
+
   const handleAction = (n: AdminNotification) => {
-    onOpenTab(n.kind === "pro_request" ? "pro" : "orders");
+    onOpenTab(tabForKind[n.kind] ?? "overview");
     setOpen(false);
   };
 
@@ -104,7 +111,7 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
         )}
 
         {hasItems && (
-          <div className="flex gap-2 px-3 py-1.5 text-[11px] text-muted-foreground border-b border-border/60">
+          <div className="flex gap-2 flex-wrap px-3 py-1.5 text-[11px] text-muted-foreground border-b border-border/60">
             <span className="flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-primary" />
               {proCount} Pro
@@ -112,6 +119,14 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
             <span className="flex items-center gap-1">
               <ShoppingBag className="w-3 h-3 text-green-500" />
               {orderCount} Orders
+            </span>
+            <span className="flex items-center gap-1">
+              <UserPlus className="w-3 h-3 text-blue-500" />
+              {accountCount} New
+            </span>
+            <span className="flex items-center gap-1">
+              <Mail className="w-3 h-3 text-amber-500" />
+              {contactCount} Contact
             </span>
           </div>
         )}
@@ -134,7 +149,13 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
           ) : (
             <ul className="divide-y divide-border/50">
               {items.map((n) => {
-                const Icon = n.kind === "pro_request" ? Sparkles : ShoppingBag;
+                const visual: Record<AdminNotification["kind"], { Icon: any; cls: string }> = {
+                  pro_request: { Icon: Sparkles, cls: "bg-primary/10 text-primary" },
+                  order: { Icon: ShoppingBag, cls: "bg-green-500/10 text-green-500" },
+                  new_account: { Icon: UserPlus, cls: "bg-blue-500/10 text-blue-500" },
+                  contact: { Icon: Mail, cls: "bg-amber-500/10 text-amber-500" },
+                };
+                const { Icon, cls } = visual[n.kind];
                 return (
                   <li
                     key={`${n.kind}-${n.id}`}
@@ -144,9 +165,7 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
                       <div
                         className={cn(
                           "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                          n.kind === "pro_request"
-                            ? "bg-primary/10 text-primary"
-                            : "bg-green-500/10 text-green-500",
+                          cls,
                         )}
                       >
                         <Icon className="w-4 h-4" />

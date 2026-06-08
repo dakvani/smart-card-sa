@@ -3,7 +3,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { formatSAR } from "@/lib/currency";
 
-export type AdminNotificationKind = "pro_request" | "order";
+export type AdminNotificationKind =
+  | "pro_request"
+  | "order"
+  | "new_account"
+  | "contact";
 
 export interface AdminNotification {
   id: string; // entity id
@@ -52,7 +56,11 @@ export function useAdminNotifications(isAdmin: boolean) {
     if (!isAdmin || !adminId) return;
     setLoading(true);
 
-    const [proRes, orderRes, dismissRes] = await Promise.all([
+    // Look-back window for new-account / contact notifications so the bell
+    // doesn't fill up with historical rows.
+    const sinceIso = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+
+    const [proRes, orderRes, accountRes, contactRes, dismissRes] = await Promise.all([
       supabase
         .from("pro_upgrade_requests")
         .select("id,user_id,requested_plan,feature_context,created_at,status")
@@ -63,6 +71,18 @@ export function useAdminNotifications(isAdmin: boolean) {
         .select("id,order_number,total,status,created_at,shipping_info")
         .eq("status", "pending")
         .order("created_at", { ascending: false }),
+      supabase
+        .from("profiles")
+        .select("id,user_id,username,title,created_at")
+        .gte("created_at", sinceIso)
+        .order("created_at", { ascending: false })
+        .limit(50),
+      supabase
+        .from("contact_submissions")
+        .select("id,name,email,inquiry_type,status,created_at")
+        .eq("status", "new")
+        .order("created_at", { ascending: false })
+        .limit(50),
       supabase
         .from("admin_notification_dismissals")
         .select("entity_type,entity_id")
@@ -115,7 +135,29 @@ export function useAdminNotifications(isAdmin: boolean) {
         };
       });
 
-    const all = [...proNotifs, ...orderNotifs].sort(
+    const accountNotifs: AdminNotification[] = ((accountRes.data as any[]) || [])
+      .filter((p) => !dismissed.has(`new_account:${p.id}`))
+      .map((p) => ({
+        id: p.id,
+        kind: "new_account" as const,
+        title: `New account @${p.username}`,
+        description: p.title || "Just signed up",
+        created_at: p.created_at,
+        meta: { user_id: p.user_id, username: p.username },
+      }));
+
+    const contactNotifs: AdminNotification[] = ((contactRes.data as any[]) || [])
+      .filter((c) => !dismissed.has(`contact:${c.id}`))
+      .map((c) => ({
+        id: c.id,
+        kind: "contact" as const,
+        title: `New contact: ${c.name}`,
+        description: `${c.inquiry_type || "general"} · ${c.email}`,
+        created_at: c.created_at,
+        meta: { email: c.email, inquiry_type: c.inquiry_type },
+      }));
+
+    const all = [...proNotifs, ...orderNotifs, ...accountNotifs, ...contactNotifs].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
 
@@ -179,6 +221,46 @@ export function useAdminNotifications(isAdmin: boolean) {
               description: `Order #${row.order_number} · ${formatSAR(Number(row.total))}`,
             });
             webNotify("🛒 New order", `#${row.order_number} · ${formatSAR(Number(row.total))}`);
+          } else if (
+            payload.eventType === "UPDATE" &&
+            (payload.new as any)?.status !== (payload.old as any)?.status
+          ) {
+            const ord = payload.new as any;
+            toast({
+              title: `📦 Order #${ord.order_number} → ${ord.status}`,
+              description: `${formatSAR(Number(ord.total))}`,
+            });
+            webNotify(`Order #${ord.order_number} updated`, `Now ${ord.status}`);
+          }
+          refresh();
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "profiles" },
+        (payload) => {
+          const row: any = payload.new;
+          if (row && !knownIdsRef.current.has(`new_account:${row.id}`)) {
+            toast({
+              title: "👤 New account",
+              description: `@${row.username} just signed up`,
+            });
+            webNotify("👤 New account", `@${row.username}`);
+          }
+          refresh();
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "contact_submissions" },
+        (payload) => {
+          const row: any = payload.new;
+          if (row && !knownIdsRef.current.has(`contact:${row.id}`)) {
+            toast({
+              title: "✉️ New contact submission",
+              description: `${row.name} · ${row.inquiry_type || "general"}`,
+            });
+            webNotify("✉️ New contact submission", `${row.name} — ${row.email}`);
           }
           refresh();
         },
@@ -237,6 +319,8 @@ export function useAdminNotifications(isAdmin: boolean) {
 
   const proCount = items.filter((i) => i.kind === "pro_request").length;
   const orderCount = items.filter((i) => i.kind === "order").length;
+  const accountCount = items.filter((i) => i.kind === "new_account").length;
+  const contactCount = items.filter((i) => i.kind === "contact").length;
 
   return {
     items,
@@ -244,6 +328,8 @@ export function useAdminNotifications(isAdmin: boolean) {
     total: items.length,
     proCount,
     orderCount,
+    accountCount,
+    contactCount,
     dismiss,
     dismissAll,
     refresh,

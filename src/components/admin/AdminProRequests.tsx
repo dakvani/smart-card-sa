@@ -104,6 +104,36 @@ export function AdminProRequests() {
     }
   };
 
+  // Change the subscription on an already-decided request (downgrade, upgrade,
+  // or revoke). Updates the profile plan and annotates the request.
+  const changePlan = async (req: ProRequest, newPlan: string) => {
+    setBusy(req.id);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error: pErr } = await supabase
+        .from("profiles")
+        .update({ plan: newPlan } as any)
+        .eq("user_id", req.user_id);
+      if (pErr) throw pErr;
+
+      await supabase
+        .from("pro_upgrade_requests")
+        .update({
+          admin_note: `Plan changed to ${newPlan}`,
+          reviewed_by: user?.id ?? null,
+          reviewed_at: new Date().toISOString(),
+        } as any)
+        .eq("id", req.id);
+
+      toast.success(`Subscription updated to ${newPlan}`);
+      load();
+    } catch (e: any) {
+      toast.error(e.message || "Failed to update subscription");
+    } finally {
+      setBusy(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-10">
@@ -148,12 +178,13 @@ export function AdminProRequests() {
               )}
             </div>
 
-            {allowActions && (
+            {allowActions ? (
               <div className="flex items-center gap-2 flex-wrap">
                 <PlanPicker
                   defaultValue={r.requested_plan}
                   onApprove={(plan) => decide(r, "approved", plan)}
                   disabled={busy === r.id}
+                  approveLabel="Approve"
                 />
                 <Button
                   size="sm"
@@ -164,6 +195,17 @@ export function AdminProRequests() {
                 >
                   <X className="w-3.5 h-3.5" /> Reject
                 </Button>
+              </div>
+            ) : (
+              // Allow admins to keep managing the subscription after a decision
+              // (upgrade, downgrade, or revoke to free).
+              <div className="flex items-center gap-2 flex-wrap">
+                <PlanPicker
+                  defaultValue={p?.plan || r.requested_plan}
+                  onApprove={(plan) => changePlan(r, plan)}
+                  disabled={busy === r.id}
+                  approveLabel="Update"
+                />
               </div>
             )}
           </div>
@@ -215,10 +257,12 @@ function PlanPicker({
   defaultValue,
   onApprove,
   disabled,
+  approveLabel = "Approve",
 }: {
   defaultValue: string;
   onApprove: (plan: string) => void;
   disabled: boolean;
+  approveLabel?: string;
 }) {
   const [plan, setPlan] = useState(defaultValue || "pro");
   return (
@@ -240,7 +284,7 @@ function PlanPicker({
         disabled={disabled}
         className="h-8"
       >
-        <Check className="w-3.5 h-3.5" /> Approve
+        <Check className="w-3.5 h-3.5" /> {approveLabel}
       </Button>
     </div>
   );

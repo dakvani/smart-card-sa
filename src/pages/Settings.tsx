@@ -3,11 +3,10 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { ArrowLeft, Mail, Lock, AlertCircle, CheckCircle2, Loader2, Eye, EyeOff, RefreshCw, Trash2, AlertTriangle, Settings as SettingsIcon, Accessibility } from "lucide-react";
-import { AccessibilitySettings } from "@/components/settings/AccessibilitySettings";
+import { ArrowLeft, Mail, Lock, AlertCircle, CheckCircle2, Loader2, Eye, EyeOff, RefreshCw, Trash2, AlertTriangle } from "lucide-react";
 import type { User, Session } from "@supabase/supabase-js";
 import {
   AlertDialog,
@@ -208,22 +207,10 @@ export default function Settings() {
         >
           <div>
             <h1 className="text-3xl font-bold mb-2">Settings</h1>
-            <p className="text-muted-foreground">Manage your account, security, and accessibility preferences.</p>
+            <p className="text-muted-foreground">Manage your account and security. Profile style controls live in your dashboard.</p>
           </div>
 
-          <Tabs defaultValue="account" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="account" className="flex items-center gap-2">
-                <SettingsIcon className="w-4 h-4" />
-                Account
-              </TabsTrigger>
-              <TabsTrigger value="accessibility" className="flex items-center gap-2">
-                <Accessibility className="w-4 h-4" />
-                Accessibility
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="account" className="space-y-8">
+          <div className="space-y-8">
               {/* Email Verification Status */}
           <div className="bg-background rounded-2xl border border-border p-6">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
@@ -415,14 +402,9 @@ export default function Settings() {
             </div>
           </div>
 
-              {/* Delete Account */}
-              <DeleteAccountSection userId={user.id} navigate={navigate} />
-            </TabsContent>
-
-            <TabsContent value="accessibility">
-              <AccessibilitySettings />
-            </TabsContent>
-          </Tabs>
+          {/* Delete Account */}
+          <DeleteAccountSection userId={user.id} navigate={navigate} />
+          </div>
         </motion.div>
       </div>
     </div>
