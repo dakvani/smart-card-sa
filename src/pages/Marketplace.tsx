@@ -51,7 +51,13 @@ const categories = [
 export default function Marketplace() {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="App Marketplace — Integrations for SmartLink Profiles"
+        description="Browse integrations and embeds for your SmartLink profile — video, music, social, messaging, payments, and more."
+        path="/marketplace"
+      />
       <Navbar />
+
       <main className="flex-1 pt-24">
         {/* Header */}
         <section className="py-16 text-center">

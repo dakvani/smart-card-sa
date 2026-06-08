@@ -95,7 +95,13 @@ export default function SmartLinkBio() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="SmartLink Bio — Digital Profile Builder, Themes & Analytics"
+        description="Build a customizable bio-link profile in minutes. Unlimited links, drag-and-drop, deep theming, scheduling, and real-time click analytics."
+        path="/smartlink-bio"
+      />
       <Navbar />
+
       <main className="flex-1 pt-24">
         {/* Hero */}
         <section className="relative py-20 overflow-hidden">

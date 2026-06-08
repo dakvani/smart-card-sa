@@ -56,7 +56,13 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="Contact SmartCard — Bulk NFC Orders & Enterprise"
+        description="Get in touch about bulk NFC orders, enterprise rollouts, team accounts, or general questions. We respond within one business day."
+        path="/contact"
+      />
       <Navbar />
+
       <main className="flex-1 pt-24">
         <section className="py-16">
           <div className="container mx-auto px-4 text-center max-w-3xl">
