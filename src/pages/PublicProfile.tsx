@@ -43,6 +43,9 @@ interface Profile {
   animation_type: string | null;
   animation_speed: number;
   animation_intensity: number;
+  motion_enabled?: boolean | null;
+  custom_background_url?: string | null;
+  custom_background_type?: "image" | "video" | null;
   plan?: string;
 }
 
