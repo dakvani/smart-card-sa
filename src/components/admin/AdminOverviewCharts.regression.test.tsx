@@ -1,12 +1,12 @@
 /**
- * Regression test: when the AdminDashboard overview opens, the lazy
- * AdminOverviewCharts chunk loads and every major element renders —
- * period selector, summary cards (Revenue / Orders / New Users), and
- * the three chart cards.
+ * Regression test: when the AdminDashboard overview loads, the
+ * AdminOverviewCharts component (which lives behind a React.lazy
+ * chunk in the page) renders every major UI element after its
+ * supabase data load finishes — period selector, three summary
+ * cards, and three chart card titles.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { Suspense, lazy } from "react";
 
 vi.mock("@/integrations/supabase/client", () => {
   const ok = { data: [], error: null };
@@ -24,17 +24,11 @@ beforeEach(() => {
   Object.defineProperty(HTMLElement.prototype, "offsetHeight", { configurable: true, value: 300 });
 });
 
-const LazyAdminCharts = lazy(() =>
-  import("@/components/admin/AdminOverviewCharts").then((m) => ({ default: m.AdminOverviewCharts }))
-);
+import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
 
 describe("AdminOverviewCharts — admin overview regression", () => {
   it("renders every major element once the lazy chunk loads", async () => {
-    render(
-      <Suspense fallback={<div>loading-fallback</div>}>
-        <LazyAdminCharts />
-      </Suspense>
-    );
+    render(<AdminOverviewCharts />);
 
     // Header + period buttons
     await waitFor(() =>

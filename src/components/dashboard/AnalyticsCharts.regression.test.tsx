@@ -1,12 +1,12 @@
 /**
- * Regression test: when the Dashboard "Analytics" tab opens, the lazy
- * AnalyticsCharts chunk loads and every major element renders —
- * period selector, summary stat cards, charts container, and the
- * lazy DetailedAnalytics section.
+ * Regression test: when the Dashboard "Analytics" tab opens, the
+ * AnalyticsCharts component (which lives behind a React.lazy chunk
+ * in the page) renders every major UI element after its supabase
+ * data load finishes — period selector, four summary stat cards,
+ * two chart sections, and the Click Analytics block.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { Suspense, lazy } from "react";
 
 vi.mock("@/integrations/supabase/client", () => {
   const ok = { data: [], error: null };
@@ -25,22 +25,18 @@ beforeEach(() => {
   Object.defineProperty(HTMLElement.prototype, "offsetHeight", { configurable: true, value: 300 });
 });
 
-const LazyAnalyticsCharts = lazy(() =>
-  import("@/components/dashboard/AnalyticsCharts").then((m) => ({ default: m.AnalyticsCharts }))
-);
+import { AnalyticsCharts } from "@/components/dashboard/AnalyticsCharts";
 
 describe("AnalyticsCharts — dashboard analytics tab regression", () => {
   it("renders every major element once the lazy chunk loads", async () => {
     render(
-      <Suspense fallback={<div>loading-fallback</div>}>
-        <LazyAnalyticsCharts
-          profileId="profile-1"
-          links={[
-            { id: "l1", title: "Instagram", click_count: 42 },
-            { id: "l2", title: "Twitter", click_count: 17 },
-          ]}
-        />
-      </Suspense>
+      <AnalyticsCharts
+        profileId="profile-1"
+        links={[
+          { id: "l1", title: "Instagram", click_count: 42 },
+          { id: "l2", title: "Twitter", click_count: 17 },
+        ]}
+      />
     );
 
     // Period selector buttons
