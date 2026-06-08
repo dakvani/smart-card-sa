@@ -92,22 +92,26 @@ describe("Navbar — scroll-aware background & shadow", () => {
       expect(pill.className).not.toContain("border-primary/30");
 
       // Scrolling past the 20px threshold should swap styles for readability.
-      act(() => {
+      await act(async () => {
         scrollTo(120);
       });
 
-      expect(pill.className).toContain(
-        "shadow-[0_24px_80px_-16px_rgba(0,0,0,0.6),0_0_0_1px_hsl(var(--primary)/0.25),0_0_60px_-12px_hsl(var(--primary)/0.3)]"
-      );
+      await waitFor(() => {
+        expect(pill.className).toContain(
+          "shadow-[0_24px_80px_-16px_rgba(0,0,0,0.6),0_0_0_1px_hsl(var(--primary)/0.25),0_0_60px_-12px_hsl(var(--primary)/0.3)]"
+        );
+      });
       expect(pill.className).toContain("border-primary/30");
       expect(pill.className).not.toContain("shadow-[0_12px_40px_-10px_rgba(0,0,0,0.45)]");
 
       // Scrolling back to the top reverts the styles.
-      act(() => {
+      await act(async () => {
         scrollTo(0);
       });
 
-      expect(pill.className).toContain("shadow-[0_12px_40px_-10px_rgba(0,0,0,0.45)]");
+      await waitFor(() => {
+        expect(pill.className).toContain("shadow-[0_12px_40px_-10px_rgba(0,0,0,0.45)]");
+      });
       expect(pill.className).not.toContain("border-primary/30");
     });
   }
