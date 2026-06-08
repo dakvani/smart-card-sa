@@ -178,12 +178,13 @@ export function AdminProRequests() {
               )}
             </div>
 
-            {allowActions && (
+            {allowActions ? (
               <div className="flex items-center gap-2 flex-wrap">
                 <PlanPicker
                   defaultValue={r.requested_plan}
                   onApprove={(plan) => decide(r, "approved", plan)}
                   disabled={busy === r.id}
+                  approveLabel="Approve"
                 />
                 <Button
                   size="sm"
@@ -194,6 +195,17 @@ export function AdminProRequests() {
                 >
                   <X className="w-3.5 h-3.5" /> Reject
                 </Button>
+              </div>
+            ) : (
+              // Allow admins to keep managing the subscription after a decision
+              // (upgrade, downgrade, or revoke to free).
+              <div className="flex items-center gap-2 flex-wrap">
+                <PlanPicker
+                  defaultValue={p?.plan || r.requested_plan}
+                  onApprove={(plan) => changePlan(r, plan)}
+                  disabled={busy === r.id}
+                  approveLabel="Update"
+                />
               </div>
             )}
           </div>
