@@ -41,7 +41,12 @@ export function TemplatePreview({
       {customMedia && (
         <div className="absolute inset-0 z-0">
           {customMedia.type === "image" ? (
-            <img src={customMedia.url} alt="Custom preview" className="w-full h-full object-cover" />
+            <img
+              src={customMedia.url}
+              alt="Custom preview"
+              className="w-full h-full object-cover"
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+            />
           ) : (
             <video
               src={customMedia.url}
@@ -52,6 +57,7 @@ export function TemplatePreview({
               className="w-full h-full object-cover"
               style={{ playbackRate: s } as React.CSSProperties}
               ref={(el) => { if (el) el.playbackRate = s; }}
+              onError={(e) => { (e.currentTarget as HTMLVideoElement).style.display = "none"; }}
             />
           )}
           <div className="absolute inset-0 bg-black/30" />
