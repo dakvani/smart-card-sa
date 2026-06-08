@@ -4,70 +4,74 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Accessibility: Reduced Motion */
-.reduce-motion,
-.reduce-motion * {
+/*
+ * Accessibility styles — SCOPED to the public bio profile only.
+ *
+ * Every rule below is namespaced under `[data-accessibility-scope]` so the
+ * dashboard, settings, and other internal pages are never affected by a
+ * user's bio-profile accessibility preferences. Do NOT add unscoped variants
+ * of these classes (e.g. `.reduce-motion *`) — that would re-leak styles
+ * globally. See `src/lib/accessibility.ts`.
+ */
+
+[data-accessibility-scope] {
+  --accessibility-font-scale: 1;
+  --accessibility-line-height: 1.5;
+}
+
+[data-accessibility-scope].reduce-motion,
+[data-accessibility-scope].reduce-motion * {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.001ms !important;
 }
 
-/* Accessibility: Font Scaling */
-:root {
-  --accessibility-font-scale: 1;
-  --accessibility-line-height: 1.5;
-}
-
-.accessibility-large-text {
+[data-accessibility-scope].accessibility-large-text {
   font-size: calc(1rem * var(--accessibility-font-scale));
   line-height: var(--accessibility-line-height);
 }
 
-.accessibility-large-text p,
-.accessibility-large-text span,
-.accessibility-large-text li,
-.accessibility-large-text label {
+[data-accessibility-scope].accessibility-large-text p,
+[data-accessibility-scope].accessibility-large-text span,
+[data-accessibility-scope].accessibility-large-text li,
+[data-accessibility-scope].accessibility-large-text label {
   font-size: calc(1em * var(--accessibility-font-scale));
   line-height: var(--accessibility-line-height);
 }
 
-/* Accessibility: High Contrast Text */
-.high-contrast-text {
+[data-accessibility-scope].high-contrast-text {
   --foreground: 0 0% 100%;
   --muted-foreground: 0 0% 90%;
 }
 
-.light.high-contrast-text {
+.light [data-accessibility-scope].high-contrast-text {
   --foreground: 0 0% 0%;
   --muted-foreground: 0 0% 15%;
 }
 
-/* Accessibility: Enhanced Focus Indicators */
-.enhanced-focus *:focus-visible {
+[data-accessibility-scope].enhanced-focus *:focus-visible {
   outline: 3px solid hsl(var(--primary)) !important;
   outline-offset: 3px !important;
   box-shadow: 0 0 0 6px hsl(var(--primary) / 0.25) !important;
 }
 
-/* Accessibility: Dyslexia-Friendly Font */
-.dyslexia-font,
-.dyslexia-font * {
+[data-accessibility-scope].dyslexia-font,
+[data-accessibility-scope].dyslexia-font * {
   font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
   letter-spacing: 0.05em;
   word-spacing: 0.1em;
 }
 
-.dyslexia-font h1,
-.dyslexia-font h2,
-.dyslexia-font h3,
-.dyslexia-font h4,
-.dyslexia-font h5,
-.dyslexia-font h6 {
+[data-accessibility-scope].dyslexia-font h1,
+[data-accessibility-scope].dyslexia-font h2,
+[data-accessibility-scope].dyslexia-font h3,
+[data-accessibility-scope].dyslexia-font h4,
+[data-accessibility-scope].dyslexia-font h5,
+[data-accessibility-scope].dyslexia-font h6 {
   font-weight: 700 !important;
 }
 
-/* Accessibility: Screen Reader Optimizations */
-.screen-reader-optimized .sr-only-enhanced {
+[data-accessibility-scope].screen-reader-optimized .sr-only-enhanced {
   position: static !important;
   width: auto !important;
   height: auto !important;
