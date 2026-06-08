@@ -597,28 +597,39 @@ export function ProfileTemplates({
                     </div>
                     <p className="text-xs text-muted-foreground">{template.description}</p>
                   </div>
-                  {locked ? (
-                    <Button
-                      size="sm" variant="gradient" className="shrink-0"
-                      onClick={() => { setUnlockFeature(template.name); setUnlockOpen(true); }}
-                    >
-                      <Lock className="w-3.5 h-3.5" /> Unlock
-                    </Button>
-                  ) : (
+                  <div className="flex items-center gap-1 shrink-0">
                     <Button
                       size="sm"
-                      variant={isActive ? "outline" : "gradient"}
-                      onClick={() => applyTemplate(template)}
-                      disabled={applying === template.id}
-                      className="shrink-0"
+                      variant="ghost"
+                      className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                      onClick={() => toggleHide(template.id, template.name)}
+                      title={hidden ? "Show in gallery & previews" : "Hide from gallery & previews"}
+                      aria-label={hidden ? "Unhide template" : "Hide template"}
                     >
-                      {applying === template.id ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : isActive ? (
-                        <><Check className="w-4 h-4" />Applied</>
-                      ) : ("Apply")}
+                      {hidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                     </Button>
-                  )}
+                    {locked ? (
+                      <Button
+                        size="sm" variant="gradient"
+                        onClick={() => { setUnlockFeature(template.name); setUnlockOpen(true); }}
+                      >
+                        <Lock className="w-3.5 h-3.5" /> Unlock
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant={isActive ? "outline" : "gradient"}
+                        onClick={() => applyTemplate(template)}
+                        disabled={applying === template.id}
+                      >
+                        {applying === template.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : isActive ? (
+                          <><Check className="w-4 h-4" />Applied</>
+                        ) : ("Apply")}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
 
