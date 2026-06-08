@@ -511,6 +511,14 @@ export function ProfileTemplates({
                   motionEnabled={motionEnabled}
                   customMedia={isProTier ? customMedia : null}
                 />
+                {/* usage badge */}
+                <div className="absolute bottom-2 left-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-background/70 backdrop-blur text-[10px] text-foreground/90 border border-border/60">
+                  <Eye className="w-2.5 h-2.5" />
+                  <span className="tabular-nums">{template.view_count || 0}</span>
+                  <span className="opacity-50">·</span>
+                  <Check className="w-2.5 h-2.5" />
+                  <span className="tabular-nums">{template.apply_count || 0}</span>
+                </div>
                 {locked && (
                   <button
                     type="button"
