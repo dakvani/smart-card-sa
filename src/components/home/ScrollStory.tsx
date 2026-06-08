@@ -169,14 +169,7 @@ function StageProgram({ progress }: { progress: MotionValue<number> }) {
       {/* Pulses */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         {[0, 1, 2].map((i) => (
-          <motion.div
-            key={i}
-            style={{
-              scale: useTransform(ringScale, (v) => v + i * 0.3),
-              opacity: ringOpacity,
-            }}
-            className="absolute w-32 h-32 rounded-full border border-primary/50"
-          />
+          <Ring key={i} ringScale={ringScale} ringOpacity={ringOpacity} index={i} />
         ))}
         {/* Binary stream */}
         <motion.div
@@ -186,6 +179,7 @@ function StageProgram({ progress }: { progress: MotionValue<number> }) {
           01101000 01110100 01110100 01110000 01110011
         </motion.div>
       </div>
+
 
       {/* Card */}
       <motion.div style={{ x: cardX }} className="relative w-[180px] aspect-[1.6/1] rounded-2xl border border-primary/40 bg-card/60 backdrop-blur-xl shadow-2xl overflow-hidden">
