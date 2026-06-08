@@ -168,7 +168,7 @@ export default function Dashboard() {
       } else if (userMetadata) {
         // Auto-complete OAuth onboarding: replace auto-generated user_xxxxxxxx username
         // and fill in name/avatar pulled from Google when missing.
-        const patch: Record<string, any> = {};
+        const patch: Partial<Profile> = {};
         if (/^user_[a-f0-9]{8}$/i.test(profileData.username) && emailUsername && !emailUsername.startsWith("user_")) {
           patch.username = emailUsername;
         }
