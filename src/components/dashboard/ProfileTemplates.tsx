@@ -140,6 +140,29 @@ export function ProfileTemplates({
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // Per-user hidden templates (UI-only) — persisted to localStorage
+  const hiddenKey = `tpl_hidden:${userId || "anon"}`;
+  const [hiddenIds, setHiddenIds] = useState<Set<string>>(() => {
+    try { return new Set(JSON.parse(localStorage.getItem(hiddenKey) || "[]")); }
+    catch { return new Set(); }
+  });
+  const [showHidden, setShowHidden] = useState(false);
+  const persistHidden = (next: Set<string>) => {
+    setHiddenIds(new Set(next));
+    try { localStorage.setItem(hiddenKey, JSON.stringify([...next])); } catch { /* noop */ }
+  };
+  const toggleHide = (id: string, name: string) => {
+    const next = new Set(hiddenIds);
+    if (next.has(id)) {
+      next.delete(id);
+      toast.success(`"${name}" restored to gallery`);
+    } else {
+      next.add(id);
+      toast.success(`"${name}" hidden from gallery`);
+    }
+    persistHidden(next);
+  };
+
   useEffect(() => { loadTemplates(); }, []);
   // Record one view per template per session (rough impression metric)
   useEffect(() => {
