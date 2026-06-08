@@ -134,7 +134,7 @@ export default function Dashboard() {
   );
 
   // Load user data
-  const loadData = useCallback(async (userId: string, userEmail?: string) => {
+  const loadData = useCallback(async (userId: string, userEmail?: string, userMetadata?: Record<string, any>) => {
     try {
       // Load profile
       let { data: profileData, error: profileError } = await supabase
@@ -144,24 +144,51 @@ export default function Dashboard() {
         .maybeSingle();
 
       if (profileError) throw profileError;
-      
+
+      // Derive a friendly username from email if needed
+      const emailUsername = userEmail?.split('@')[0]?.replace(/[^a-z0-9-_]/gi, '').toLowerCase() || `user_${userId.slice(0, 8)}`;
+      const oauthName: string | undefined = userMetadata?.full_name || userMetadata?.name;
+      const oauthAvatar: string | undefined = userMetadata?.avatar_url || userMetadata?.picture;
+
       // If no profile exists, create one
       if (!profileData) {
-        const username = userEmail?.split('@')[0]?.replace(/[^a-z0-9-_]/gi, '') || `user_${userId.slice(0, 8)}`;
         const { data: newProfile, error: createError } = await supabase
           .from("profiles")
           .insert({
             user_id: userId,
-            username,
-            title: `@${username}`,
+            username: emailUsername,
+            title: oauthName ? oauthName : `@${emailUsername}`,
+            avatar_url: oauthAvatar ?? null,
           })
           .select()
           .single();
-        
+
         if (createError) throw createError;
         profileData = newProfile;
+      } else if (userMetadata) {
+        // Auto-complete OAuth onboarding: replace auto-generated user_xxxxxxxx username
+        // and fill in name/avatar pulled from Google when missing.
+        const patch: { username?: string; title?: string; avatar_url?: string } = {};
+        if (/^user_[a-f0-9]{8}$/i.test(profileData.username) && emailUsername && !emailUsername.startsWith("user_")) {
+          patch.username = emailUsername;
+        }
+        if (oauthName && (!profileData.title || profileData.title === "@creator" || profileData.title === `@${profileData.username}`)) {
+          patch.title = oauthName;
+        }
+        if (oauthAvatar && !profileData.avatar_url) {
+          patch.avatar_url = oauthAvatar;
+        }
+        if (Object.keys(patch).length > 0) {
+          const { data: updated, error: updateError } = await supabase
+            .from("profiles")
+            .update(patch)
+            .eq("user_id", userId)
+            .select()
+            .single();
+          if (!updateError && updated) profileData = updated;
+        }
       }
-      
+
       if (profileData) {
         setProfile({
           ...profileData,
@@ -214,7 +241,7 @@ export default function Dashboard() {
       if (!session) {
         navigate("/auth");
       } else if (session.user) {
-        setTimeout(() => loadData(session.user.id, session.user.email), 0);
+        setTimeout(() => loadData(session.user.id, session.user.email, session.user.user_metadata as Record<string, any>), 0);
       }
     });
 
@@ -225,7 +252,7 @@ export default function Dashboard() {
       if (!session) {
         navigate("/auth");
       } else if (session.user) {
-        loadData(session.user.id, session.user.email);
+        loadData(session.user.id, session.user.email, session.user.user_metadata as Record<string, any>);
       }
     });
 
