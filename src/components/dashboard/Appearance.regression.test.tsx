@@ -120,8 +120,10 @@ describe("Appearance tab — ThemeCustomizer", () => {
       <ThemeCustomizer {...baseProps} animationType="pulse" onUpdate={onUpdate} />
     );
     expect(screen.getByText(/Quick Presets/i)).toBeInTheDocument();
-    expect(screen.getByText(/^Speed:/)).toBeInTheDocument();
-    expect(screen.getByText(/^Intensity:/)).toBeInTheDocument();
+    // "Speed:" appears in both the slider label and the preview overlay,
+    // so use getAllByText and assert at least one.
+    expect(screen.getAllByText(/Speed:\s*1\.0/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Intensity:\s*1\.0/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/Animation Preview/i)).toBeInTheDocument();
   });
 
