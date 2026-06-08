@@ -23,7 +23,7 @@ interface Props {
 
 export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
   const [open, setOpen] = useState(false);
-  const { items, loading, total, proCount, orderCount, dismiss, dismissAll } =
+  const { items, loading, total, proCount, orderCount, accountCount, contactCount, dismiss, dismissAll } =
     useAdminNotifications(isAdmin);
   const [perm, setPerm] = useState<NotificationPermission | "unsupported">(
     typeof window !== "undefined" && "Notification" in window ? Notification.permission : "unsupported",
