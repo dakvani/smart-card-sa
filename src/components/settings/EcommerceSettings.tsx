@@ -283,8 +283,10 @@ export function EcommerceSettings({
           </ul>
         )}
       </section>
+      )}
 
       {/* Wallet Credit */}
+      {show("wallet") && (
       <section className="bg-background rounded-2xl border border-border p-6">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Wallet className="w-5 h-5" />
