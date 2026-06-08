@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { Menu, X, LayoutDashboard, Home, Settings, Package, LogOut, ChevronDown, Shield } from "lucide-react";
+import { Menu, X, LayoutDashboard, Home, Settings, LogOut, ChevronDown, Shield } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
@@ -291,19 +291,7 @@ export function Navbar() {
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/order-history" className="cursor-pointer">
-                      <Package className="mr-2 h-4 w-4" />
-                      Order History
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard?tab=settings" className="cursor-pointer">
+                    <Link to="/settings" className="cursor-pointer">
                       <Settings className="mr-2 h-4 w-4" />
                       Settings
                     </Link>
@@ -415,13 +403,7 @@ export function Navbar() {
                       Dashboard
                     </Button>
                   </Link>
-                  <Link to="/order-history" onClick={() => setMobileOpen(false)}>
-                    <Button variant="outline" className="w-full border-border/50" aria-label="View order history">
-                      <Package className="w-4 h-4 mr-2" />
-                      Order History
-                    </Button>
-                  </Link>
-                  <Link to="/dashboard?tab=settings" onClick={() => setMobileOpen(false)}>
+                  <Link to="/settings" onClick={() => setMobileOpen(false)}>
                     <Button variant="outline" className="w-full border-border/50" aria-label="Go to settings">
                       <Settings className="w-4 h-4 mr-2" />
                       Settings

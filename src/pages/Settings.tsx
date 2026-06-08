@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { EcommerceSettings } from "@/components/settings/EcommerceSettings";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -199,7 +200,7 @@ export default function Settings() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
+      <div className="container mx-auto px-4 py-8 max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -207,7 +208,7 @@ export default function Settings() {
         >
           <div>
             <h1 className="text-3xl font-bold mb-2">Settings</h1>
-            <p className="text-muted-foreground">Manage your account and security. Profile style controls live in your dashboard.</p>
+            <p className="text-muted-foreground">Account, orders, wallet, addresses, and payment methods all in one place.</p>
           </div>
 
           <div className="space-y-8">
@@ -401,6 +402,9 @@ export default function Settings() {
               </div>
             </div>
           </div>
+
+          {/* E-commerce: Orders, Wallet, Addresses, Payment Methods */}
+          <EcommerceSettings userId={user.id} />
 
           {/* Delete Account */}
           <DeleteAccountSection userId={user.id} navigate={navigate} />
