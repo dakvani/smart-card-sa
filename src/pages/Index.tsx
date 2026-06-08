@@ -5,10 +5,16 @@ import { ProductBenefits } from "@/components/home/ProductBenefits";
 import { ProductDesigns } from "@/components/home/ProductDesigns";
 import { CTA } from "@/components/home/CTA";
 import { Testimonials } from "@/components/home/Testimonials";
+import { SEO } from "@/components/SEO";
 
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="SmartCard — NFC Business Cards & Digital Bio-Link Profiles"
+        description="Programmable NFC cards paired with a hosted bio-link profile. One tap shares your links, contact, and portfolio — no app required."
+        path="/"
+      />
       <Navbar />
       <main id="main-content" className="flex-1">
         <ScrollStory />
@@ -23,3 +29,4 @@ const Index = () => {
 };
 
 export default Index;
+
