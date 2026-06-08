@@ -118,7 +118,7 @@ export function Testimonials() {
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-12 w-12 border-2 border-primary/20">
-                    <AvatarImage src={t.avatar} />
+                    <AvatarImage src={t.avatar} alt={`${t.name}, ${t.role} — SmartCard customer testimonial portrait`} />
                     <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                       {t.name.split(" ").map((n) => n[0]).join("")}
                     </AvatarFallback>

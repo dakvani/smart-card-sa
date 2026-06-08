@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { BarChart3, CreditCard, Layers, Lock, Palette, Smartphone, Check, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { SEO } from "@/components/SEO";
+
 
 const categories = ["All", "Fashion", "Music", "Business", "Creative", "Personal"];
 
@@ -93,7 +95,13 @@ export default function SmartLinkBio() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="SmartLink Bio — Digital Profile Builder, Themes & Analytics"
+        description="Build a customizable bio-link profile in minutes. Unlimited links, drag-and-drop, deep theming, scheduling, and real-time click analytics."
+        path="/smartlink-bio"
+      />
       <Navbar />
+
       <main className="flex-1 pt-24">
         {/* Hero */}
         <section className="relative py-20 overflow-hidden">

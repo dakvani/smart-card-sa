@@ -10,6 +10,8 @@ import { Mail, Phone, MapPin, Building2, Users, Package, Loader2 } from "lucide-
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { SEO } from "@/components/SEO";
+
 
 const inquiryTypes = [
   { value: "bulk_order", label: "Bulk NFC Order", icon: Package },
@@ -54,7 +56,13 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="Contact SmartCard — Bulk NFC Orders & Enterprise"
+        description="Get in touch about bulk NFC orders, enterprise rollouts, team accounts, or general questions. We respond within one business day."
+        path="/contact"
+      />
       <Navbar />
+
       <main className="flex-1 pt-24">
         <section className="py-16">
           <div className="container mx-auto px-4 text-center max-w-3xl">

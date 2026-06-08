@@ -12,3 +12,12 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin-login
+Disallow: /admin/orders
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /order-history
+Disallow: /reset-password
+
+Sitemap: https://smartcardsa.shop/sitemap.xml

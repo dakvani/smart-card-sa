@@ -3,6 +3,8 @@ import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { Search, BookOpen, Video, HelpCircle } from "lucide-react";
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
+
 
 const articles = [
   {
@@ -41,10 +43,27 @@ const faqs = [
 export default function Learn() {
   const [searchQuery, setSearchQuery] = useState("");
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="Learn — SmartCard Help Center & Tutorials"
+        description="Guides, video tutorials, and answers to common SmartCard questions — setup, customization, analytics, and Instagram bio integration."
+        path="/learn"
+        jsonLd={faqJsonLd}
+      />
       <Navbar />
       <main className="flex-1 pt-24">
+
         {/* Header */}
         <section className="py-16 bg-secondary/30">
           <div className="container mx-auto px-4 text-center">

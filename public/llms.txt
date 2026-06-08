@@ -1,0 +1,19 @@
+# SmartCard
+
+> NFC-powered digital business cards and bio-link profiles. One tap shares your contact, socials, portfolio, and links.
+
+SmartCard combines premium programmable NFC hardware (cards, tags, stickers) with a hosted profile builder (SmartLink Bio) so creators and professionals can share everything they are with a single tap.
+
+## Pages
+
+- [Home](/): Overview of SmartCard — how the NFC tap-to-share flow works.
+- [SmartLink Bio](/smartlink-bio): Digital profile builder, templates, analytics, and plans.
+- [NFC Products](/nfc-products): Shop programmable NFC cards, tags, and stickers; customize designs.
+- [Marketplace](/marketplace): Browse pre-designed templates and profiles from the community.
+- [Learn](/learn): Help center, tutorials, and frequently asked questions.
+- [Contact](/contact): Get in touch with the SmartCard team.
+
+## Optional
+
+- [Log in](/login)
+- [Sign up](/signup)
