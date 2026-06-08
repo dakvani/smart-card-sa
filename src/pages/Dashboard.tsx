@@ -149,48 +149,37 @@ export default function Dashboard() {
 
       if (profileError) throw profileError;
 
-      // Derive a friendly username from email if needed
-      const emailUsername = userEmail?.split('@')[0]?.replace(/[^a-z0-9-_]/gi, '').toLowerCase() || `user_${userId.slice(0, 8)}`;
-      const oauthName: string | undefined = userMetadata?.full_name || userMetadata?.name;
-      const oauthAvatar: string | undefined = userMetadata?.avatar_url || userMetadata?.picture;
+      const provider = (userMetadata?.provider as string) || (userMetadata?.iss?.includes("google") ? "google" : "unknown");
+      const isOAuth = !!(userMetadata && (userMetadata.full_name || userMetadata.name || userMetadata.avatar_url || userMetadata.picture));
 
-      // If no profile exists, create one
+      // Compute the prefill suggestion using the pure helper (testable).
+      const prefill = computeOnboardingPrefill({
+        userId,
+        email: userEmail,
+        metadata: userMetadata as any,
+        existing: profileData
+          ? { username: profileData.username, title: profileData.title, avatar_url: profileData.avatar_url }
+          : null,
+      });
+
+      const isNewUser = !profileData;
+
+      // For a brand-new user, create the row immediately with the prefill so they
+      // have a valid profile; then offer the confirm step on top.
       if (!profileData) {
         const { data: newProfile, error: createError } = await supabase
           .from("profiles")
           .insert({
             user_id: userId,
-            username: emailUsername,
-            title: oauthName ? oauthName : `@${emailUsername}`,
-            avatar_url: oauthAvatar ?? null,
+            username: prefill.fields.username ?? `user_${userId.slice(0, 8)}`,
+            title: prefill.fields.title ?? `@${prefill.fields.username ?? "creator"}`,
+            avatar_url: prefill.fields.avatar_url ?? null,
           })
           .select()
           .single();
-
         if (createError) throw createError;
         profileData = newProfile;
-      } else if (userMetadata) {
-        // Auto-complete OAuth onboarding: replace auto-generated user_xxxxxxxx username
-        // and fill in name/avatar pulled from Google when missing.
-        const patch: { username?: string; title?: string; avatar_url?: string } = {};
-        if (/^user_[a-f0-9]{8}$/i.test(profileData.username) && emailUsername && !emailUsername.startsWith("user_")) {
-          patch.username = emailUsername;
-        }
-        if (oauthName && (!profileData.title || profileData.title === "@creator" || profileData.title === `@${profileData.username}`)) {
-          patch.title = oauthName;
-        }
-        if (oauthAvatar && !profileData.avatar_url) {
-          patch.avatar_url = oauthAvatar;
-        }
-        if (Object.keys(patch).length > 0) {
-          const { data: updated, error: updateError } = await supabase
-            .from("profiles")
-            .update(patch)
-            .eq("user_id", userId)
-            .select()
-            .single();
-          if (!updateError && updated) profileData = updated;
-        }
+        trackOnboarding("onboarding_started", { isNewUser: true, provider, prefill });
       }
 
       if (profileData) {
@@ -198,6 +187,19 @@ export default function Dashboard() {
           ...profileData,
           social_links: (profileData.social_links as SocialLinks) || {},
         });
+      }
+
+      // Decide whether to open the confirm dialog (only when there's something to
+      // confirm and the source is OAuth metadata — never for plain email signups
+      // returning to the dashboard).
+      const hasFieldsToConfirm = Object.keys(prefill.fields).length > 0;
+      if (isOAuth && hasFieldsToConfirm) {
+        setOnboardingEmail(userEmail);
+        setOnboarding({ open: true, prefill, saving: false });
+        trackOnboarding("onboarding_prefilled", { isNewUser, provider, prefill });
+      } else if (isOAuth && isNewUser) {
+        // OAuth user with nothing to prefill (rare) — still record completion.
+        trackOnboarding("onboarding_started", { isNewUser: true, provider, prefill });
       }
 
       // Load links
