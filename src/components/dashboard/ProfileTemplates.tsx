@@ -9,6 +9,7 @@ import {
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { UnlockProDialog } from "./UnlockProDialog";
+import { TemplatePreview } from "./TemplatePreview";
 
 
 interface Template {
