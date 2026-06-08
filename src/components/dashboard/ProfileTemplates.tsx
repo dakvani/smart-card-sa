@@ -527,6 +527,7 @@ export function ProfileTemplates({
           const isActive = template.theme_name === currentThemeName;
           const Icon = categoryIcons[template.category] || Palette;
           const locked = isLocked(template);
+          const hidden = hiddenIds.has(template.id);
           const rank = requiredRank(template.required_plan, template.is_premium);
           const tierLabel = rank === 2 ? "Pro" : rank === 1 ? "Starter" : "Free";
           const tierClass = rank === 2
