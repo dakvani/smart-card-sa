@@ -61,7 +61,7 @@ export function SocialAuthButtons() {
         type="button"
         variant="outline"
         className="w-full h-12 text-sm font-medium rounded-xl border-border/50 bg-card/50 backdrop-blur-sm hover:bg-accent/60 hover:border-primary/30 transition-all duration-300"
-        onClick={() => handleOAuthLogin("google")}
+        onClick={handleGoogleLogin}
         disabled={anyLoading}
       >
         {googleLoading ? (
