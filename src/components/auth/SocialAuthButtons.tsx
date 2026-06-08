@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -9,36 +10,48 @@ export function SocialAuthButtons() {
   const [appleLoading, setAppleLoading] = useState(false);
   const anyLoading = googleLoading || appleLoading;
 
-  const handleOAuthLogin = async (provider: "google" | "apple") => {
-    const setLoading = provider === "google" ? setGoogleLoading : setAppleLoading;
-    const providerLabel = provider === "google" ? "Google" : "Apple";
-    setLoading(true);
-
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/dashboard`,
-        },
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: `${window.location.origin}/dashboard`,
       });
 
+      if (result.error) {
+        toast.error(result.error.message || "Failed to sign in with Google");
+        return;
+      }
+      if (result.redirected) return;
+      window.location.href = "/dashboard";
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+      toast.error("Failed to sign in with Google");
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
+  const handleAppleLogin = async () => {
+    setAppleLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "apple",
+        options: { redirectTo: `${window.location.origin}/dashboard` },
+      });
       if (error) {
         if (error.message.toLowerCase().includes("missing oauth secret")) {
-          toast.error(`${providerLabel} sign-in is not configured in backend auth settings yet.`);
+          toast.error("Apple sign-in is not configured in backend auth settings yet.");
           return;
         }
         toast.error(error.message);
         return;
       }
-
-      if (data?.url) {
-        window.location.href = data.url;
-      }
+      if (data?.url) window.location.href = data.url;
     } catch (error) {
-      console.error(`${providerLabel} sign-in failed:`, error);
-      toast.error(`Failed to sign in with ${providerLabel}`);
+      console.error("Apple sign-in failed:", error);
+      toast.error("Failed to sign in with Apple");
     } finally {
-      setLoading(false);
+      setAppleLoading(false);
     }
   };
 
