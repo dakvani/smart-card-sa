@@ -296,7 +296,7 @@ function StageSlot({
   const end = (index + 1) / STAGES;
   const opacity = useTransform(
     globalProgress,
-    clampStops([start - 0.08, start + 0.04, end - 0.04, end + 0.08]),
+    clampStops([start - 0.04, start + 0.02, end - 0.02, end + 0.04]),
     [0, 1, 1, 0],
   );
   const stageProgress = useTransform(globalProgress, [start, end], [0, 1], { clamp: true });
@@ -319,9 +319,9 @@ function StageCopy({
 }) {
   const start = index / STAGES;
   const end = (index + 1) / STAGES;
-  const stops = clampStops([start - 0.06, start + 0.05, end - 0.05, end + 0.06]);
+  const stops = clampStops([start - 0.04, start + 0.02, end - 0.02, end + 0.04]);
   const opacity = useTransform(globalProgress, stops, [0, 1, 1, 0]);
-  const y = useTransform(globalProgress, stops, [20, 0, 0, -20]);
+  const y = useTransform(globalProgress, stops, [24, 0, 0, -24]);
   return (
     <motion.div style={{ opacity, y }} className="absolute inset-0 flex flex-col justify-center">
       <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-primary mb-4">
