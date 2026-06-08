@@ -62,6 +62,9 @@ interface Profile {
   animation_type: string | null;
   animation_speed: number;
   animation_intensity: number;
+  custom_background_url?: string | null;
+  custom_background_type?: "image" | "video" | null;
+  motion_enabled?: boolean;
 }
 
 interface LinkItem {
@@ -188,7 +191,7 @@ export default function Dashboard() {
         setProfile({
           ...profileData,
           social_links: (profileData.social_links as SocialLinks) || {},
-        });
+        } as Profile);
       }
 
       // Decide whether to open the confirm dialog (only when there's something to
@@ -952,7 +955,16 @@ export default function Dashboard() {
                     <ProfileTemplates
                       isPro={isPro}
                       plan={plan}
+                      userId={profile.user_id}
                       currentThemeName={profile.theme_name}
+                      initialAnimationSpeed={profile.animation_speed ?? 1}
+                      initialMotionEnabled={profile.motion_enabled ?? true}
+                      initialCustomBackground={
+                        profile.custom_background_url
+                          ? { url: profile.custom_background_url, type: (profile.custom_background_type as "image" | "video") || "image" }
+                          : null
+                      }
+                      onPersist={(u) => setProfile({ ...profile, ...u } as Profile)}
                       onApply={(updates) => {
                         setProfile({ ...profile, ...updates } as Profile);
                         updateProfile(updates as Partial<Profile>);

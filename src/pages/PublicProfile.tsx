@@ -43,6 +43,9 @@ interface Profile {
   animation_type: string | null;
   animation_speed: number;
   animation_intensity: number;
+  motion_enabled?: boolean | null;
+  custom_background_url?: string | null;
+  custom_background_type?: "image" | "video" | null;
   plan?: string;
 }
 
@@ -143,7 +146,7 @@ export default function PublicProfile() {
       try {
         const { data: profileData, error: profileError } = await supabase
           .from("profiles")
-          .select("id,user_id,username,title,bio,avatar_url,theme_name,theme_gradient,gradient_direction,social_links,custom_bg_color,custom_accent_color,animation_type,animation_speed,animation_intensity,email_collection_enabled,plan,created_at,updated_at")
+          .select("id,user_id,username,title,bio,avatar_url,theme_name,theme_gradient,gradient_direction,social_links,custom_bg_color,custom_accent_color,animation_type,animation_speed,animation_intensity,motion_enabled,custom_background_url,custom_background_type,email_collection_enabled,plan,created_at,updated_at")
           .eq("username", username.toLowerCase())
           .maybeSingle();
 
@@ -158,7 +161,7 @@ export default function PublicProfile() {
         setProfile({
           ...profileData,
           social_links: (profileData.social_links as SocialLinks) || {},
-        });
+        } as Profile);
 
         await supabase.from("profile_views").insert({
           profile_id: profileData.id,
@@ -345,10 +348,34 @@ export default function PublicProfile() {
             } ${bgClass}`}
             style={bgStyle}
           >
-            <AnimatedBackground
-              animationType={profile.animation_type}
-              config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
-            />
+            {profile.custom_background_url && (
+              <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                {profile.custom_background_type === "video" ? (
+                  <video
+                    src={profile.custom_background_url}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-cover"
+                    ref={(el) => { if (el) el.playbackRate = profile.animation_speed || 1; }}
+                  />
+                ) : (
+                  <img
+                    src={profile.custom_background_url}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                )}
+                <div className="absolute inset-0 bg-black/35" />
+              </div>
+            )}
+            {profile.motion_enabled !== false && (
+              <AnimatedBackground
+                animationType={profile.animation_type}
+                config={{ speed: profile.animation_speed || 1, intensity: profile.animation_intensity || 1 }}
+              />
+            )}
 
             <div className="max-w-md mx-auto relative z-10">
               <motion.div
