@@ -428,8 +428,8 @@ export function ProfileTemplates({
             </div>
             <div className="flex items-center gap-1.5">
               {customMedia && (
-                <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={clearCustomMedia}>
-                  <X className="w-3 h-3" /> Remove
+                <Button size="sm" variant="ghost" className="h-7 text-[11px] text-destructive hover:text-destructive" onClick={clearCustomMedia}>
+                  <Trash2 className="w-3 h-3" /> Delete
                 </Button>
               )}
               <Button size="sm" variant="outline" className="h-7 text-[11px]" disabled={uploading} onClick={() => fileRef.current?.click()}>
