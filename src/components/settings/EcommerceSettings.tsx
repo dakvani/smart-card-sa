@@ -751,7 +751,7 @@ function AddressDialog({
       setErrors(next);
       return;
     }
-    onSubmit(result.data, editing?.id ?? null);
+    onSubmit(result.data as AddressForm, editing?.id ?? null);
   };
 
   return (
