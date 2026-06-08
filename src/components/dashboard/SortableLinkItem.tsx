@@ -1,9 +1,12 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
-import { GripVertical, Eye, EyeOff, Trash2, BarChart3, Star } from "lucide-react";
+import { GripVertical, Eye, EyeOff, Trash2, BarChart3, Star, CheckCircle2, AlertCircle } from "lucide-react";
 import { LinkThumbnailUpload } from "./LinkThumbnailUpload";
 import { LinkScheduler } from "./LinkScheduler";
+import { validateUrl } from "@/lib/link-validation";
+import { toast } from "@/hooks/use-toast";
+
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
