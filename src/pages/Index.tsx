@@ -1,11 +1,18 @@
+import { lazy, Suspense } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { ScrollStory } from "@/components/home/ScrollStory";
+import { ScrollStoryFallback } from "@/components/home/ScrollStoryFallback";
 import { ProductBenefits } from "@/components/home/ProductBenefits";
 import { ProductDesigns } from "@/components/home/ProductDesigns";
 import { CTA } from "@/components/home/CTA";
 import { Testimonials } from "@/components/home/Testimonials";
 import { SEO } from "@/components/SEO";
+
+// Lazy so the motion code doesn't block first paint; the fallback mirrors
+// the initial stage so there's no blank flash or layout shift on mount.
+const ScrollStory = lazy(() =>
+  import("@/components/home/ScrollStory").then((m) => ({ default: m.ScrollStory }))
+);
 
 const Index = () => {
   return (
@@ -17,7 +24,9 @@ const Index = () => {
       />
       <Navbar />
       <main id="main-content" className="flex-1">
-        <ScrollStory />
+        <Suspense fallback={<ScrollStoryFallback />}>
+          <ScrollStory />
+        </Suspense>
         <ProductBenefits />
         <ProductDesigns />
         <Testimonials />
@@ -29,4 +38,3 @@ const Index = () => {
 };
 
 export default Index;
-
