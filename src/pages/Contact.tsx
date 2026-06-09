@@ -92,36 +92,46 @@ export default function Contact() {
                   ))}
                 </div>
 
-                <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
-                  <h3 className="font-semibold text-lg">Reach us directly</h3>
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium">Sales & Partnerships</p>
-                      <a href="mailto:info@smartcardsa.shop" className="text-sm text-muted-foreground hover:text-primary">info@smartcardsa.shop</a>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium">Help & Support</p>
-                      <a href="mailto:info@smartcardsa.shop" className="text-sm text-muted-foreground hover:text-primary">info@smartcardsa.shop</a>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Phone className="w-5 h-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium">Phone</p>
-                      <a href="tel:+966 50 2900193" className="text-sm text-muted-foreground hover:text-primary">+966 50 2900193</a>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium">SmartCard HQ</p>
-                      <p className="text-sm text-muted-foreground">King Fahad St, Al Faisaliya, Jeddah 23435, KSA</p>
-                    </div>
-                  </div>
+                <div className="p-5 sm:p-6 rounded-2xl bg-card border border-border">
+                  <h3 className="font-semibold text-lg mb-4">Reach us directly</h3>
+                  <ul className="divide-y divide-border/60">
+                    <li className="flex items-start gap-3 py-3 first:pt-0">
+                      <span className="shrink-0 w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <Mail className="w-4 h-4" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">Sales & Partnerships</p>
+                        <a href="mailto:info@smartcardsa.shop" className="block text-sm font-medium hover:text-primary break-all">info@smartcardsa.shop</a>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="shrink-0 w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <Mail className="w-4 h-4" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">Help & Support</p>
+                        <a href="mailto:info@smartcardsa.shop" className="block text-sm font-medium hover:text-primary break-all">info@smartcardsa.shop</a>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="shrink-0 w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <Phone className="w-4 h-4" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">Phone</p>
+                        <a href="tel:+966502900193" className="block text-sm font-medium hover:text-primary" dir="ltr">+966 50 290 0193</a>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3 py-3 last:pb-0">
+                      <span className="shrink-0 w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <MapPin className="w-4 h-4" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">SmartCard HQ</p>
+                        <p className="text-sm font-medium leading-snug">King Fahad St, Al Faisaliya<br />Jeddah 23435, KSA</p>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
               </div>
 
