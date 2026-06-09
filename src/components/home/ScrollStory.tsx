@@ -511,10 +511,27 @@ function ScrollHint({ progress }: { progress: MotionValue<number> }) {
       type="button"
       onClick={() => smoothScrollTo("story-next")}
       style={{ opacity }}
-      className="absolute bottom-20 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.3em] text-muted-foreground/70 hover:text-primary transition-colors z-20"
+      className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.35em] text-muted-foreground/70 hover:text-primary transition-colors z-20"
       aria-label="Scroll to next section"
     >
-      ↓ Scroll
+      <span>Scroll to begin</span>
+      <motion.div
+        animate={{ y: [0, 8, 0], opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        className="relative w-[22px] h-[36px] rounded-full border border-primary/50 flex items-start justify-center pt-1.5"
+      >
+        <motion.span
+          animate={{ y: [0, 10, 0], opacity: [1, 0.2, 1] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          className="block w-1 h-1.5 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary))]"
+        />
+      </motion.div>
+      <motion.div
+        animate={{ y: [0, 4, 0], opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+      >
+        <ChevronDown className="w-4 h-4 text-primary/70" />
+      </motion.div>
     </motion.button>
   );
 }
