@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring, useReducedMotion, MotionValue } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { SCROLL_STORY_CONFIG, stageFadeStops, smoothScrollTo } from "./scrollStoryConfig";
 
 /**
  * ScrollStory — scroll-scrubbed hero that walks the visitor through the
