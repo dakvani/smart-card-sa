@@ -210,7 +210,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main id="main-content" className="flex-1 pt-20 pb-10">
-        <div className="container px-3 mx-auto max-w-7xl">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -246,7 +246,7 @@ export default function AdminDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-4"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4"
           >
             <TooltipProvider delayDuration={200}>
               <Tooltip>
@@ -379,13 +379,14 @@ export default function AdminDashboard() {
               <TabsContent value="overview" className="space-y-4">
                 {/* Stats Grid */}
                 <TooltipProvider delayDuration={200}>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5">
+                  <div className="flex flex-wrap gap-3">
                     {stats.map((stat, index) => (
                       <motion.div
                         key={stat.name}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.05 + index * 0.03 }}
+                        className="flex-[1_1_150px] sm:flex-[1_1_210px]"
                       >
                         <Tooltip>
                           <TooltipTrigger asChild>
