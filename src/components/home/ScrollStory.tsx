@@ -304,9 +304,7 @@ function StageCopy({
   index: number;
   globalProgress: MotionValue<number>;
 }) {
-  const start = index / STAGES;
-  const end = (index + 1) / STAGES;
-  const stops = clampStops([start - 0.04, start + 0.02, end - 0.02, end + 0.04]);
+  const stops = stageFadeStops(index);
   const opacity = useTransform(globalProgress, stops, [0, 1, 1, 0]);
   const y = useTransform(globalProgress, stops, [24, 0, 0, -24]);
   return (
