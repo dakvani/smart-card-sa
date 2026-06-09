@@ -36,7 +36,7 @@ const benefits = [
 
 export function ProductBenefits() {
   return (
-    <section className="py-24 relative overflow-hidden bg-secondary/10">
+    <section id="story-next" className="py-24 relative overflow-hidden bg-secondary/10">
       
 
       <div className="container mx-auto px-4 relative z-10">
