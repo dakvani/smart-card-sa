@@ -271,18 +271,7 @@ function StageDot({ index, globalProgress }: { index: number; globalProgress: Mo
 }
 
 
-// Clamp offsets to [0,1] and ensure strict monotonic increase
-function clampStops(stops: number[]): number[] {
-  const out: number[] = [];
-  let prev = -Infinity;
-  for (let i = 0; i < stops.length; i++) {
-    let v = Math.max(0, Math.min(1, stops[i]));
-    if (v <= prev) v = Math.min(1, prev + 0.0001);
-    out.push(v);
-    prev = v;
-  }
-  return out;
-}
+// (clampStops moved into scrollStoryConfig as stageFadeStops)
 
 function StageSlot({
   index,
