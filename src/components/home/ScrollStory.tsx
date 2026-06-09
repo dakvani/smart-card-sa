@@ -389,6 +389,13 @@ export function ScrollStory() {
             <Button asChild size="lg" variant="outline" className="glass">
               <Link to="/signup">Create your profile</Link>
             </Button>
+            <Button
+              size="lg"
+              variant="ghost"
+              onClick={() => smoothScrollTo("story-next")}
+            >
+              Keep exploring <ChevronDown className="ml-2 w-4 h-4" />
+            </Button>
           </div>
         </div>
       </section>
