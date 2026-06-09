@@ -210,7 +210,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main id="main-content" className="flex-1 pt-20 pb-10">
-        <div className="container px-3 mx-auto max-w-7xl">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -246,7 +246,7 @@ export default function AdminDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-4"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4"
           >
             <TooltipProvider delayDuration={200}>
               <Tooltip>
@@ -333,17 +333,17 @@ export default function AdminDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:inline-grid h-9">
-                <TabsTrigger value="overview" className="gap-1.5 text-xs h-7">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-3">
+              <TabsList className="grid w-full grid-cols-7 h-10 gap-1">
+                <TabsTrigger value="overview" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <BarChart3 className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Overview</span>
                 </TabsTrigger>
-                <TabsTrigger value="products" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="products" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <ShoppingBag className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Products</span>
                 </TabsTrigger>
-                <TabsTrigger value="orders" className="gap-1.5 text-xs h-7 relative">
+                <TabsTrigger value="orders" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8 relative">
                   <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
                   {pendingOrderNotifCount > 0 && (
@@ -352,7 +352,7 @@ export default function AdminDashboard() {
                     </span>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="pro" className="gap-1.5 text-xs h-7 relative">
+                <TabsTrigger value="pro" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8 relative">
                   <Star className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Pro</span>
                   {pendingProCount > 0 && (
@@ -361,15 +361,15 @@ export default function AdminDashboard() {
                     </span>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="tables" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="tables" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <Database className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Database</span>
                 </TabsTrigger>
-                <TabsTrigger value="users" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="users" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <Users className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Users</span>
                 </TabsTrigger>
-                <TabsTrigger value="audit" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="audit" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <Clock className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Audit</span>
                 </TabsTrigger>
@@ -379,13 +379,14 @@ export default function AdminDashboard() {
               <TabsContent value="overview" className="space-y-4">
                 {/* Stats Grid */}
                 <TooltipProvider delayDuration={200}>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5">
+                  <div className="flex flex-wrap gap-3">
                     {stats.map((stat, index) => (
                       <motion.div
                         key={stat.name}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.05 + index * 0.03 }}
+                        className="flex-[1_1_150px] sm:flex-[1_1_210px]"
                       >
                         <Tooltip>
                           <TooltipTrigger asChild>
