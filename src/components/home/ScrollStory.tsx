@@ -308,8 +308,12 @@ function StageCopy({
   globalProgress: MotionValue<number>;
 }) {
   const stops = stageFadeStops(index);
-  const opacity = useTransform(globalProgress, stops, [0, 1, 1, 0]);
-  const y = useTransform(globalProgress, stops, [24, 0, 0, -24]);
+  const fadeOutputs: [number, number, number, number] =
+    index === 0 ? [1, 1, 1, 0] : [0, 1, 1, 0];
+  const yOutputs: [number, number, number, number] =
+    index === 0 ? [0, 0, 0, -24] : [24, 0, 0, -24];
+  const opacity = useTransform(globalProgress, stops, fadeOutputs);
+  const y = useTransform(globalProgress, stops, yOutputs);
   return (
     <motion.div style={{ opacity, y }} className="absolute inset-0 flex flex-col justify-center">
       <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-primary mb-4">
