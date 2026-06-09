@@ -468,6 +468,28 @@ export function ScrollStory() {
           ))}
         </div>
 
+        {/* CTA overlay — reveals during the final stage */}
+        <motion.div
+          style={{ opacity: ctaOpacity, y: ctaY }}
+          className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col sm:flex-row items-center gap-3 px-4"
+        >
+          <Button asChild size="lg" className="gradient-primary shadow-glow">
+            <Link to="/nfc-products">
+              Shop SmartCards <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="glass">
+            <Link to="/signup">Create your profile</Link>
+          </Button>
+          <Button
+            size="lg"
+            variant="ghost"
+            onClick={() => smoothScrollTo("story-next")}
+          >
+            Keep exploring <ChevronDown className="ml-2 w-4 h-4" />
+          </Button>
+        </motion.div>
+
         {/* Scroll hint — only visible at the very top */}
         <ScrollHint progress={smoothProgress} />
       </div>
@@ -478,12 +500,15 @@ export function ScrollStory() {
 function ScrollHint({ progress }: { progress: MotionValue<number> }) {
   const opacity = useTransform(progress, [0, 0.04, 0.08], [1, 1, 0]);
   return (
-    <motion.div
+    <motion.button
+      type="button"
+      onClick={() => smoothScrollTo("story-next")}
       style={{ opacity }}
-      className="absolute bottom-20 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.3em] text-muted-foreground/70 z-20 pointer-events-none"
+      className="absolute bottom-20 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.3em] text-muted-foreground/70 hover:text-primary transition-colors z-20"
+      aria-label="Scroll to next section"
     >
       ↓ Scroll
-    </motion.div>
+    </motion.button>
   );
 }
 
