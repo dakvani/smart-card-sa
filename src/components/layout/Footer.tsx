@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
 
 const footerLinks = {
@@ -18,7 +19,7 @@ const footerLinks = {
     { name: "About", href: "#" },
     { name: "Careers", href: "#" },
     { name: "Press", href: "#" },
-    { name: "Contact", href: "#" },
+    { name: "Contact", href: "/contact" },
   ],
   Legal: [
     { name: "Terms", href: "#" },
@@ -31,18 +32,38 @@ export function Footer() {
   return (
     <footer className="bg-secondary/50 border-t border-border" role="contentinfo">
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2.5 mb-4 group" aria-label="SmartCard - Go to homepage">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
+          {/* Brand + Contact */}
+          <div className="col-span-2 md:col-span-2 space-y-5">
+            <Link to="/" className="flex items-center gap-2.5 group" aria-label="SmartCard - Go to homepage">
               <SmartCardLogo className="w-7 h-7 text-primary transition-transform group-hover:scale-110 group-hover:-rotate-3" />
               <span className="font-bold text-xl tracking-tight">
                 Smart<span className="text-primary">Card</span>
               </span>
             </Link>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground max-w-xs">
               Everything you are. In one simple link.
             </p>
+            <ul className="space-y-2.5 text-sm">
+              <li className="flex items-start gap-2.5">
+                <Mail className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                <a href="mailto:info@smartcardsa.shop" className="text-muted-foreground hover:text-foreground break-all">
+                  info@smartcardsa.shop
+                </a>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Phone className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                <a href="tel:+966502900193" className="text-muted-foreground hover:text-foreground" dir="ltr">
+                  +966 50 290 0193
+                </a>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                <span className="text-muted-foreground leading-snug">
+                  King Fahad St, Al Faisaliya<br />Jeddah 23435, KSA
+                </span>
+              </li>
+            </ul>
           </div>
 
           {/* Links */}
