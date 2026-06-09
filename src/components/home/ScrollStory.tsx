@@ -44,6 +44,10 @@ function StageCard({ progress }: { progress: MotionValue<number> }) {
   const chipScale = useTransform(progress, [0.4, 1], [0.6, 1]);
   const chipOpacity = useTransform(progress, [0.3, 0.7], [0, 1]);
   const glow = useTransform(progress, [0, 1], [0.1, 0.45]);
+  // Idle animations gracefully decay as the user advances through stage 1,
+  // so the handoff to stage 2 feels continuous rather than abruptly stopping.
+  const idleOpacity = useTransform(progress, [0, 0.55, 0.9], [1, 0.6, 0]);
+  const idleScale = useTransform(progress, [0, 1], [1, 0.94]);
 
   return (
     <div className="relative w-full max-w-[460px] aspect-[1.6/1]">
@@ -52,11 +56,11 @@ function StageCard({ progress }: { progress: MotionValue<number> }) {
         style={{ opacity: glow }}
       />
       <div className="relative w-full h-full rounded-[28px] border border-primary/30 bg-card/40 backdrop-blur-xl overflow-hidden shadow-2xl">
-        {/* Idle ping — subtle sonar behind the chip until user scrolls past stage 1 */}
+        {/* Idle ping — subtle sonar behind the chip; fades out as stage 1 advances */}
         <motion.div
           aria-hidden
           className="absolute left-1/2 top-[46%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/40"
-          style={{ width: 120, height: 120 }}
+          style={{ width: 120, height: 120, opacity: idleOpacity, scale: idleScale }}
           animate={{ scale: [1, 1.6, 1.6], opacity: [0.35, 0, 0] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
         />
@@ -98,8 +102,16 @@ function StageCard({ progress }: { progress: MotionValue<number> }) {
             <motion.rect
               x="200" y="128" width="60" height="32" rx="3"
               fill="hsl(var(--primary))"
+              style={{ opacity: idleOpacity }}
               animate={{ fillOpacity: [0.35, 0.55, 0.35] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Static chip body — visible once idle fades, prevents pop */}
+            <motion.rect
+              x="200" y="128" width="60" height="32" rx="3"
+              fill="hsl(var(--primary))"
+              fillOpacity="0.42"
+              style={{ opacity: useTransform(progress, [0.55, 0.95], [0, 1]) }}
             />
             {[0, 1, 2, 3].map((i) => (
               <g key={i}>
