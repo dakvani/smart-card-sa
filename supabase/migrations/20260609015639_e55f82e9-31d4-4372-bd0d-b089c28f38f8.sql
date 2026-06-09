@@ -1,0 +1,2 @@
+REVOKE SELECT ON public.profiles FROM anon;
+GRANT SELECT (id, user_id, username, title, bio, avatar_url, theme_name, theme_gradient, social_links, custom_bg_color, custom_accent_color, gradient_direction, animation_type, animation_speed, animation_intensity, theme_preference, custom_background_url, custom_background_type, motion_enabled, created_at, updated_at) ON public.profiles TO anon;
