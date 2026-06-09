@@ -87,7 +87,12 @@ function StageCard({ progress }: { progress: MotionValue<number> }) {
           {/* Chip */}
           <motion.g style={{ scale: chipScale, opacity: chipOpacity, transformOrigin: "230px 144px" }}>
             <rect x="180" y="110" width="100" height="68" rx="6" fill="hsl(var(--primary))" fillOpacity="0.15" stroke="hsl(var(--primary))" strokeWidth="1" />
-            <rect x="200" y="128" width="60" height="32" rx="3" fill="hsl(var(--primary))" fillOpacity="0.4" />
+            <motion.rect
+              x="200" y="128" width="60" height="32" rx="3"
+              fill="hsl(var(--primary))"
+              animate={{ fillOpacity: [0.35, 0.55, 0.35] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+            />
             {[0, 1, 2, 3].map((i) => (
               <g key={i}>
                 <line x1={180} y1={120 + i * 14} x2={170} y2={120 + i * 14} stroke="hsl(var(--accent))" strokeWidth="1" />
