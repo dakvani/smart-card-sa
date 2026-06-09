@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring, useReducedMotion, MotionValue } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { SCROLL_STORY_CONFIG, stageFadeStops, smoothScrollTo } from "./scrollStoryConfig";
 
 /**
  * ScrollStory — scroll-scrubbed hero that walks the visitor through the
@@ -16,7 +17,7 @@ import { Button } from "@/components/ui/button";
  * Reverses cleanly on scroll-up. Reduced-motion users get a static summary.
  */
 
-const STAGES = 4;
+const STAGES = SCROLL_STORY_CONFIG.stages;
 const STAGE_LABELS = [
   "01 · Manufactured",
   "02 · Profile created",
@@ -270,18 +271,7 @@ function StageDot({ index, globalProgress }: { index: number; globalProgress: Mo
 }
 
 
-// Clamp offsets to [0,1] and ensure strict monotonic increase
-function clampStops(stops: number[]): number[] {
-  const out: number[] = [];
-  let prev = -Infinity;
-  for (let i = 0; i < stops.length; i++) {
-    let v = Math.max(0, Math.min(1, stops[i]));
-    if (v <= prev) v = Math.min(1, prev + 0.0001);
-    out.push(v);
-    prev = v;
-  }
-  return out;
-}
+// (clampStops moved into scrollStoryConfig as stageFadeStops)
 
 function StageSlot({
   index,
@@ -292,13 +282,10 @@ function StageSlot({
   globalProgress: MotionValue<number>;
   children: (stageProgress: MotionValue<number>) => React.ReactNode;
 }) {
+  const stops = stageFadeStops(index);
   const start = index / STAGES;
   const end = (index + 1) / STAGES;
-  const opacity = useTransform(
-    globalProgress,
-    clampStops([start - 0.04, start + 0.02, end - 0.02, end + 0.04]),
-    [0, 1, 1, 0],
-  );
+  const opacity = useTransform(globalProgress, stops, [0, 1, 1, 0]);
   const stageProgress = useTransform(globalProgress, [start, end], [0, 1], { clamp: true });
   return (
     <motion.div
@@ -317,9 +304,7 @@ function StageCopy({
   index: number;
   globalProgress: MotionValue<number>;
 }) {
-  const start = index / STAGES;
-  const end = (index + 1) / STAGES;
-  const stops = clampStops([start - 0.04, start + 0.02, end - 0.02, end + 0.04]);
+  const stops = stageFadeStops(index);
   const opacity = useTransform(globalProgress, stops, [0, 1, 1, 0]);
   const y = useTransform(globalProgress, stops, [24, 0, 0, -24]);
   return (
@@ -347,30 +332,28 @@ export function ScrollStory() {
   });
 
   // Spring-smoothed scroll progress — keeps scrub responsive but stable at any speed.
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 140,
-    damping: 28,
-    mass: 0.35,
-    restDelta: 0.0005,
-  });
+  const smoothProgress = useSpring(scrollYProgress, SCROLL_STORY_CONFIG.spring);
 
   // Top scroll progress bar
   const barScale = useTransform(smoothProgress, [0, 1], [0, 1]);
 
-  // Parallax ambient orbs — opposite directions, slow, no rotation (less distracting)
-  const orbAY = useTransform(smoothProgress, [0, 1], [0, -160]);
-  const orbAX = useTransform(smoothProgress, [0, 1], [0, 40]);
-  const orbBY = useTransform(smoothProgress, [0, 1], [0, 140]);
-  const orbBX = useTransform(smoothProgress, [0, 1], [0, -40]);
-  const orbAOpacity = useTransform(smoothProgress, [0, 0.5, 1], [0.55, 0.7, 0.4]);
-  const orbBOpacity = useTransform(smoothProgress, [0, 0.5, 1], [0.4, 0.7, 0.55]);
+  // Parallax ambient orbs — opposite axes, soft, behind everything
+  const { a: orbA, b: orbB } = SCROLL_STORY_CONFIG.orbs;
+  const orbAY = useTransform(smoothProgress, [0, 1], [0, orbA.travelY]);
+  const orbAX = useTransform(smoothProgress, [0, 1], [0, orbA.travelX]);
+  const orbBY = useTransform(smoothProgress, [0, 1], [0, orbB.travelY]);
+  const orbBX = useTransform(smoothProgress, [0, 1], [0, orbB.travelX]);
+  const orbAOpacity = useTransform(smoothProgress, [0, 0.5, 1], orbA.opacity);
+  const orbBOpacity = useTransform(smoothProgress, [0, 0.5, 1], orbB.opacity);
 
   // Subtle stage breathing
-  const stageScale = useTransform(
-    smoothProgress,
-    [0, 0.25, 0.5, 0.75, 1],
-    [0.98, 1, 1, 1, 0.99],
-  );
+  const breathStops = SCROLL_STORY_CONFIG.stageScale;
+  const breathOffsets = breathStops.map((_, i) => i / (breathStops.length - 1));
+  const stageScale = useTransform(smoothProgress, breathOffsets, breathStops);
+
+  // CTA overlay reveals in the final stage
+  const ctaOpacity = useTransform(smoothProgress, [0.78, 0.9, 1], [0, 1, 1]);
+  const ctaY = useTransform(smoothProgress, [0.78, 0.95], [16, 0]);
 
   if (prefersReduced) {
     // Reduced-motion: no scroll scrubbing, no ambient parallax.
@@ -406,6 +389,13 @@ export function ScrollStory() {
             <Button asChild size="lg" variant="outline" className="glass">
               <Link to="/signup">Create your profile</Link>
             </Button>
+            <Button
+              size="lg"
+              variant="ghost"
+              onClick={() => smoothScrollTo("story-next")}
+            >
+              Keep exploring <ChevronDown className="ml-2 w-4 h-4" />
+            </Button>
           </div>
         </div>
       </section>
@@ -416,7 +406,7 @@ export function ScrollStory() {
     <section
       ref={ref}
       className="relative"
-      style={{ height: `${STAGES * 100}vh` }}
+      style={{ height: `${STAGES * SCROLL_STORY_CONFIG.viewportPerStage * 100}vh` }}
       aria-label="How a SmartLink card works"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-background">
@@ -478,6 +468,28 @@ export function ScrollStory() {
           ))}
         </div>
 
+        {/* CTA overlay — reveals during the final stage */}
+        <motion.div
+          style={{ opacity: ctaOpacity, y: ctaY }}
+          className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col sm:flex-row items-center gap-3 px-4"
+        >
+          <Button asChild size="lg" className="gradient-primary shadow-glow">
+            <Link to="/nfc-products">
+              Shop SmartCards <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="glass">
+            <Link to="/signup">Create your profile</Link>
+          </Button>
+          <Button
+            size="lg"
+            variant="ghost"
+            onClick={() => smoothScrollTo("story-next")}
+          >
+            Keep exploring <ChevronDown className="ml-2 w-4 h-4" />
+          </Button>
+        </motion.div>
+
         {/* Scroll hint — only visible at the very top */}
         <ScrollHint progress={smoothProgress} />
       </div>
@@ -488,12 +500,15 @@ export function ScrollStory() {
 function ScrollHint({ progress }: { progress: MotionValue<number> }) {
   const opacity = useTransform(progress, [0, 0.04, 0.08], [1, 1, 0]);
   return (
-    <motion.div
+    <motion.button
+      type="button"
+      onClick={() => smoothScrollTo("story-next")}
       style={{ opacity }}
-      className="absolute bottom-20 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.3em] text-muted-foreground/70 z-20 pointer-events-none"
+      className="absolute bottom-20 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.3em] text-muted-foreground/70 hover:text-primary transition-colors z-20"
+      aria-label="Scroll to next section"
     >
       ↓ Scroll
-    </motion.div>
+    </motion.button>
   );
 }
 
