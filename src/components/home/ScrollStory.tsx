@@ -406,7 +406,7 @@ export function ScrollStory() {
     <section
       ref={ref}
       className="relative"
-      style={{ height: `${STAGES * 100}vh` }}
+      style={{ height: `${STAGES * SCROLL_STORY_CONFIG.viewportPerStage * 100}vh` }}
       aria-label="How a SmartLink card works"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-background">
