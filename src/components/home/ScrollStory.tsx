@@ -282,13 +282,10 @@ function StageSlot({
   globalProgress: MotionValue<number>;
   children: (stageProgress: MotionValue<number>) => React.ReactNode;
 }) {
+  const stops = stageFadeStops(index);
   const start = index / STAGES;
   const end = (index + 1) / STAGES;
-  const opacity = useTransform(
-    globalProgress,
-    clampStops([start - 0.04, start + 0.02, end - 0.02, end + 0.04]),
-    [0, 1, 1, 0],
-  );
+  const opacity = useTransform(globalProgress, stops, [0, 1, 1, 0]);
   const stageProgress = useTransform(globalProgress, [start, end], [0, 1], { clamp: true });
   return (
     <motion.div
