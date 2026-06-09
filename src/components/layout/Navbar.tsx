@@ -35,18 +35,32 @@ export function Navbar() {
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  
+
   const { scrollY } = useScroll();
   const headerOpacity = useTransform(scrollY, [0, 60], [0.75, 0.96]);
   const headerScale = useTransform(scrollY, [0, 120], [1, 0.96]);
-  const headerY = useTransform(scrollY, [0, 120], [0, 4]);
   const headerBlur = useTransform(scrollY, [0, 60], [18, 36]);
   const headerBackdrop = useTransform(headerBlur, (v) => `blur(${v}px) saturate(180%)`);
+
+  // Hide header when scrolling down past a threshold; reveal on scroll up.
+  // Stays visible while the mobile menu is open or near the top.
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    const delta = latest - prev;
+    if (mobileOpen || latest < 80) {
+      setHidden(false);
+      return;
+    }
+    if (delta > 4) setHidden(true);
+    else if (delta < -4) setHidden(false);
+  });
+
 
   // Check auth state and get user info
   useEffect(() => {
@@ -162,9 +176,9 @@ export function Navbar() {
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ type: "spring", stiffness: 120, damping: 18, mass: 0.8 }}
-      style={{ scale: headerScale, y: headerY }}
+      animate={{ y: hidden ? -120 : 0, opacity: hidden ? 0 : 1 }}
+      transition={{ type: "spring", stiffness: 220, damping: 28, mass: 0.6 }}
+      style={{ scale: headerScale }}
       className="fixed top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-6 z-50 origin-top will-change-transform"
       role="banner"
     >
