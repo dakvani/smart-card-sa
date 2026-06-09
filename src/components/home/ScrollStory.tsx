@@ -52,6 +52,14 @@ function StageCard({ progress }: { progress: MotionValue<number> }) {
         style={{ opacity: glow }}
       />
       <div className="relative w-full h-full rounded-[28px] border border-primary/30 bg-card/40 backdrop-blur-xl overflow-hidden shadow-2xl">
+        {/* Idle ping — subtle sonar behind the chip until user scrolls past stage 1 */}
+        <motion.div
+          aria-hidden
+          className="absolute left-1/2 top-[46%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/40"
+          style={{ width: 120, height: 120 }}
+          animate={{ scale: [1, 1.6, 1.6], opacity: [0.35, 0, 0] }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+        />
         <svg viewBox="0 0 460 288" className="absolute inset-0 w-full h-full">
           <defs>
             <linearGradient id="wire" x1="0" x2="1">
