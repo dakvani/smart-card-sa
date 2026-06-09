@@ -17,7 +17,7 @@ import { SCROLL_STORY_CONFIG, stageFadeStops, smoothScrollTo } from "./scrollSto
  * Reverses cleanly on scroll-up. Reduced-motion users get a static summary.
  */
 
-const STAGES = 4;
+const STAGES = SCROLL_STORY_CONFIG.stages;
 const STAGE_LABELS = [
   "01 · Manufactured",
   "02 · Profile created",
