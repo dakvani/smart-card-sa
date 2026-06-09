@@ -285,7 +285,10 @@ function StageSlot({
   const stops = stageFadeStops(index);
   const start = index / STAGES;
   const end = (index + 1) / STAGES;
-  const opacity = useTransform(globalProgress, stops, [0, 1, 1, 0]);
+  // First stage is visible at scroll=0 (no blank flash on load).
+  const fadeOutputs: [number, number, number, number] =
+    index === 0 ? [1, 1, 1, 0] : [0, 1, 1, 0];
+  const opacity = useTransform(globalProgress, stops, fadeOutputs);
   const stageProgress = useTransform(globalProgress, [start, end], [0, 1], { clamp: true });
   return (
     <motion.div
