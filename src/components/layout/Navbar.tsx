@@ -35,18 +35,32 @@ export function Navbar() {
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  
+
   const { scrollY } = useScroll();
   const headerOpacity = useTransform(scrollY, [0, 60], [0.75, 0.96]);
   const headerScale = useTransform(scrollY, [0, 120], [1, 0.96]);
-  const headerY = useTransform(scrollY, [0, 120], [0, 4]);
   const headerBlur = useTransform(scrollY, [0, 60], [18, 36]);
   const headerBackdrop = useTransform(headerBlur, (v) => `blur(${v}px) saturate(180%)`);
+
+  // Hide header when scrolling down past a threshold; reveal on scroll up.
+  // Stays visible while the mobile menu is open or near the top.
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    const delta = latest - prev;
+    if (mobileOpen || latest < 80) {
+      setHidden(false);
+      return;
+    }
+    if (delta > 4) setHidden(true);
+    else if (delta < -4) setHidden(false);
+  });
+
 
   // Check auth state and get user info
   useEffect(() => {
