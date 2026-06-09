@@ -333,17 +333,17 @@ export default function AdminDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:inline-grid h-9">
-                <TabsTrigger value="overview" className="gap-1.5 text-xs h-7">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-3">
+              <TabsList className="grid w-full grid-cols-7 h-10 gap-1">
+                <TabsTrigger value="overview" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <BarChart3 className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Overview</span>
                 </TabsTrigger>
-                <TabsTrigger value="products" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="products" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <ShoppingBag className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Products</span>
                 </TabsTrigger>
-                <TabsTrigger value="orders" className="gap-1.5 text-xs h-7 relative">
+                <TabsTrigger value="orders" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8 relative">
                   <Package className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
                   {pendingOrderNotifCount > 0 && (
@@ -352,7 +352,7 @@ export default function AdminDashboard() {
                     </span>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="pro" className="gap-1.5 text-xs h-7 relative">
+                <TabsTrigger value="pro" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8 relative">
                   <Star className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Pro</span>
                   {pendingProCount > 0 && (
@@ -361,15 +361,15 @@ export default function AdminDashboard() {
                     </span>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="tables" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="tables" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <Database className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Database</span>
                 </TabsTrigger>
-                <TabsTrigger value="users" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="users" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <Users className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Users</span>
                 </TabsTrigger>
-                <TabsTrigger value="audit" className="gap-1.5 text-xs h-7">
+                <TabsTrigger value="audit" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <Clock className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Audit</span>
                 </TabsTrigger>
