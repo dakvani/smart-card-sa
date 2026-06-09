@@ -34,7 +34,7 @@ const plans = [
     price: "SAR 19",
     period: "/mo",
     description: "For growing creators",
-    features: ["Everything in Free, plus:", "Custom Fonts & Backgrounds", "Spotlight/Highlight Links", "6 Months of analytics", "Priority support", "Custom button styles"],
+    features: ["Everything in Free, plus:", "Custom Fonts & Backgrounds", "Spotlight/Highlight Links", "6 Months of analytics", "Priority Help & Support", "Custom button styles"],
     cta: "Request Starter access",
     popular: true,
   },

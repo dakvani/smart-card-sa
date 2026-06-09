@@ -39,7 +39,7 @@ const plans = [
   },
   {
     name: "Starter", price: "SAR 19", period: "/mo", description: "For growing creators",
-    features: ["Everything in Free", "Custom fonts & BGs", "Spotlight links", "6 months analytics", "Priority support"],
+    features: ["Everything in Free", "Custom fonts & BGs", "Spotlight links", "6 months analytics", "Priority Help & Support"],
     cta: "Try Starter", popular: true,
   },
   {
