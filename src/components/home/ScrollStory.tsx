@@ -332,30 +332,28 @@ export function ScrollStory() {
   });
 
   // Spring-smoothed scroll progress — keeps scrub responsive but stable at any speed.
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 140,
-    damping: 28,
-    mass: 0.35,
-    restDelta: 0.0005,
-  });
+  const smoothProgress = useSpring(scrollYProgress, SCROLL_STORY_CONFIG.spring);
 
   // Top scroll progress bar
   const barScale = useTransform(smoothProgress, [0, 1], [0, 1]);
 
-  // Parallax ambient orbs — opposite directions, slow, no rotation (less distracting)
-  const orbAY = useTransform(smoothProgress, [0, 1], [0, -160]);
-  const orbAX = useTransform(smoothProgress, [0, 1], [0, 40]);
-  const orbBY = useTransform(smoothProgress, [0, 1], [0, 140]);
-  const orbBX = useTransform(smoothProgress, [0, 1], [0, -40]);
-  const orbAOpacity = useTransform(smoothProgress, [0, 0.5, 1], [0.55, 0.7, 0.4]);
-  const orbBOpacity = useTransform(smoothProgress, [0, 0.5, 1], [0.4, 0.7, 0.55]);
+  // Parallax ambient orbs — opposite axes, soft, behind everything
+  const { a: orbA, b: orbB } = SCROLL_STORY_CONFIG.orbs;
+  const orbAY = useTransform(smoothProgress, [0, 1], [0, orbA.travelY]);
+  const orbAX = useTransform(smoothProgress, [0, 1], [0, orbA.travelX]);
+  const orbBY = useTransform(smoothProgress, [0, 1], [0, orbB.travelY]);
+  const orbBX = useTransform(smoothProgress, [0, 1], [0, orbB.travelX]);
+  const orbAOpacity = useTransform(smoothProgress, [0, 0.5, 1], orbA.opacity);
+  const orbBOpacity = useTransform(smoothProgress, [0, 0.5, 1], orbB.opacity);
 
   // Subtle stage breathing
-  const stageScale = useTransform(
-    smoothProgress,
-    [0, 0.25, 0.5, 0.75, 1],
-    [0.98, 1, 1, 1, 0.99],
-  );
+  const breathStops = SCROLL_STORY_CONFIG.stageScale;
+  const breathOffsets = breathStops.map((_, i) => i / (breathStops.length - 1));
+  const stageScale = useTransform(smoothProgress, breathOffsets, breathStops);
+
+  // CTA overlay reveals in the final stage
+  const ctaOpacity = useTransform(smoothProgress, [0.78, 0.9, 1], [0, 1, 1]);
+  const ctaY = useTransform(smoothProgress, [0.78, 0.95], [16, 0]);
 
   if (prefersReduced) {
     // Reduced-motion: no scroll scrubbing, no ambient parallax.
