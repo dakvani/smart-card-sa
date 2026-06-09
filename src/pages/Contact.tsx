@@ -98,28 +98,28 @@ export default function Contact() {
                     <Mail className="w-5 h-5 text-primary mt-0.5" />
                     <div>
                       <p className="text-sm font-medium">Sales & Partnerships</p>
-                      <a href="mailto:sales@smartcard.app" className="text-sm text-muted-foreground hover:text-primary">sales@smartcard.app</a>
+                      <a href="mailto:info@smartcardsa.shop" className="text-sm text-muted-foreground hover:text-primary">info@smartcardsa.shop</a>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Mail className="w-5 h-5 text-primary mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium">Support</p>
-                      <a href="mailto:support@smartcard.app" className="text-sm text-muted-foreground hover:text-primary">support@smartcard.app</a>
+                      <p className="text-sm font-medium">Help & Support</p>
+                      <a href="mailto:info@smartcardsa.shop" className="text-sm text-muted-foreground hover:text-primary">info@smartcardsa.shop</a>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Phone className="w-5 h-5 text-primary mt-0.5" />
                     <div>
                       <p className="text-sm font-medium">Phone</p>
-                      <a href="tel:+18005551234" className="text-sm text-muted-foreground hover:text-primary">+1 (800) 555-1234</a>
+                      <a href="tel:+966 50 2900193" className="text-sm text-muted-foreground hover:text-primary">+966 50 2900193</a>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-primary mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium">SmartCard, Inc.</p>
-                      <p className="text-sm text-muted-foreground">548 Market St, Suite 8210<br />San Francisco, CA 94104</p>
+                      <p className="text-sm font-medium">SmartCard HQ</p>
+                      <p className="text-sm text-muted-foreground">King Fahad St, Al Faisaliya, Jeddah 23435, KSA</p>
                     </div>
                   </div>
                 </div>
