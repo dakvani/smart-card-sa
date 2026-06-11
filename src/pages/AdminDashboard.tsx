@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminTableViewer } from "@/components/admin/AdminTableViewer";
 import { AdminUserManager } from "@/components/admin/AdminUserManager";
 import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
+import { AdminWelcomeEmails } from "@/components/admin/AdminWelcomeEmails";
 import { AdminProductManager } from "@/components/admin/AdminProductManager";
 import { AdminProRequests } from "@/components/admin/AdminProRequests";
 import { AdminNotificationBell } from "@/components/admin/AdminNotificationBell";
@@ -334,7 +335,7 @@ export default function AdminDashboard() {
             transition={{ delay: 0.2 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-3">
-              <TabsList className="grid w-full grid-cols-7 h-10 gap-1">
+              <TabsList className="grid w-full grid-cols-8 h-10 gap-1">
                 <TabsTrigger value="overview" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <BarChart3 className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Overview</span>
@@ -360,6 +361,10 @@ export default function AdminDashboard() {
                       {pendingProCount}
                     </span>
                   )}
+                </TabsTrigger>
+                <TabsTrigger value="emails" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
+                  <Mail className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Emails</span>
                 </TabsTrigger>
                 <TabsTrigger value="tables" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
                   <Database className="w-3.5 h-3.5" />
@@ -537,6 +542,9 @@ export default function AdminDashboard() {
               </TabsContent>
 
 
+              <TabsContent value="emails">
+                <AdminWelcomeEmails />
+              </TabsContent>
 
               <TabsContent value="tables">
                 <AdminTableViewer />
