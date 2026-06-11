@@ -726,6 +726,9 @@ export type Database = {
           updated_at: string | null
           user_id: string
           username: string
+          welcome_email_attempts: number
+          welcome_email_last_attempt_at: string | null
+          welcome_email_last_error: string | null
           welcome_email_sent_at: string | null
         }
         Insert: {
@@ -752,6 +755,9 @@ export type Database = {
           updated_at?: string | null
           user_id: string
           username: string
+          welcome_email_attempts?: number
+          welcome_email_last_attempt_at?: string | null
+          welcome_email_last_error?: string | null
           welcome_email_sent_at?: string | null
         }
         Update: {
@@ -778,6 +784,9 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
           username?: string
+          welcome_email_attempts?: number
+          welcome_email_last_attempt_at?: string | null
+          welcome_email_last_error?: string | null
           welcome_email_sent_at?: string | null
         }
         Relationships: []
