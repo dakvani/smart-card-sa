@@ -9,6 +9,7 @@ import { SkipLink } from "./components/accessibility/SkipLink";
 import { KeyboardShortcutsHelp } from "./components/accessibility/KeyboardShortcuts";
 import { FocusVisibilityManager } from "./components/accessibility/FocusRing";
 import { LoadingScreen, shouldShowLoadingScreen } from "./components/LoadingScreen";
+import { WelcomeEmailTrigger } from "./components/WelcomeEmailTrigger";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => {
         <BrowserRouter>
           <SkipLink />
           <KeyboardShortcutsHelp />
+          <WelcomeEmailTrigger />
           <AnimatedRoutes />
         </BrowserRouter>
       </TooltipProvider>

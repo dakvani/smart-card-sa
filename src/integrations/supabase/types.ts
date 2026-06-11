@@ -726,6 +726,7 @@ export type Database = {
           updated_at: string | null
           user_id: string
           username: string
+          welcome_email_sent_at: string | null
         }
         Insert: {
           animation_intensity?: number | null
@@ -751,6 +752,7 @@ export type Database = {
           updated_at?: string | null
           user_id: string
           username: string
+          welcome_email_sent_at?: string | null
         }
         Update: {
           animation_intensity?: number | null
@@ -776,6 +778,7 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
           username?: string
+          welcome_email_sent_at?: string | null
         }
         Relationships: []
       }
