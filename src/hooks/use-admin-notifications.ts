@@ -7,7 +7,8 @@ export type AdminNotificationKind =
   | "pro_request"
   | "order"
   | "new_account"
-  | "contact";
+  | "contact"
+  | "welcome_email_failed";
 
 export interface AdminNotification {
   id: string; // entity id
@@ -60,7 +61,7 @@ export function useAdminNotifications(isAdmin: boolean) {
     // doesn't fill up with historical rows.
     const sinceIso = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
 
-    const [proRes, orderRes, accountRes, contactRes, dismissRes] = await Promise.all([
+    const [proRes, orderRes, accountRes, contactRes, welcomeFailRes, dismissRes] = await Promise.all([
       supabase
         .from("pro_upgrade_requests")
         .select("id,user_id,requested_plan,feature_context,created_at,status")
@@ -82,6 +83,14 @@ export function useAdminNotifications(isAdmin: boolean) {
         .select("id,name,email,inquiry_type,status,created_at")
         .eq("status", "new")
         .order("created_at", { ascending: false })
+        .limit(50),
+      supabase
+        .from("profiles")
+        .select("id,user_id,username,welcome_email_last_error,welcome_email_attempts,welcome_email_last_attempt_at")
+        .is("welcome_email_sent_at", null)
+        .not("welcome_email_last_error", "is", null)
+        .gte("welcome_email_attempts", 3)
+        .order("welcome_email_last_attempt_at", { ascending: false })
         .limit(50),
       supabase
         .from("admin_notification_dismissals")
@@ -157,7 +166,22 @@ export function useAdminNotifications(isAdmin: boolean) {
         meta: { email: c.email, inquiry_type: c.inquiry_type },
       }));
 
-    const all = [...proNotifs, ...orderNotifs, ...accountNotifs, ...contactNotifs].sort(
+    const welcomeFailNotifs: AdminNotification[] = ((welcomeFailRes.data as any[]) || [])
+      .filter((p) => !dismissed.has(`welcome_email_failed:${p.id}`))
+      .map((p) => ({
+        id: p.id,
+        kind: "welcome_email_failed" as const,
+        title: `Welcome email failed · @${p.username || "unknown"}`,
+        description: (p.welcome_email_last_error || "Unknown error").slice(0, 120),
+        created_at: p.welcome_email_last_attempt_at || new Date().toISOString(),
+        meta: {
+          user_id: p.user_id,
+          attempts: p.welcome_email_attempts,
+          error: p.welcome_email_last_error,
+        },
+      }));
+
+    const all = [...proNotifs, ...orderNotifs, ...accountNotifs, ...contactNotifs, ...welcomeFailNotifs].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
 
@@ -321,6 +345,7 @@ export function useAdminNotifications(isAdmin: boolean) {
   const orderCount = items.filter((i) => i.kind === "order").length;
   const accountCount = items.filter((i) => i.kind === "new_account").length;
   const contactCount = items.filter((i) => i.kind === "contact").length;
+  const welcomeFailedCount = items.filter((i) => i.kind === "welcome_email_failed").length;
 
   return {
     items,
@@ -330,6 +355,7 @@ export function useAdminNotifications(isAdmin: boolean) {
     orderCount,
     accountCount,
     contactCount,
+    welcomeFailedCount,
     dismiss,
     dismissAll,
     refresh,

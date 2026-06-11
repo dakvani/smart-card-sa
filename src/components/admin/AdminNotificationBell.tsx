@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Sparkles, ShoppingBag, X, CheckCheck, Loader2, UserPlus, Mail } from "lucide-react";
+import { Bell, Sparkles, ShoppingBag, X, CheckCheck, Loader2, UserPlus, Mail, AlertTriangle } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +43,7 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
     order: "orders",
     new_account: "users",
     contact: "contact",
+    welcome_email_failed: "emails",
   };
 
   const handleAction = (n: AdminNotification) => {
@@ -154,6 +155,7 @@ export function AdminNotificationBell({ isAdmin, onOpenTab }: Props) {
                   order: { Icon: ShoppingBag, cls: "bg-green-500/10 text-green-500" },
                   new_account: { Icon: UserPlus, cls: "bg-blue-500/10 text-blue-500" },
                   contact: { Icon: Mail, cls: "bg-amber-500/10 text-amber-500" },
+                  welcome_email_failed: { Icon: AlertTriangle, cls: "bg-destructive/10 text-destructive" },
                 };
                 const { Icon, cls } = visual[n.kind];
                 return (
