@@ -7,7 +7,8 @@ export type AdminNotificationKind =
   | "pro_request"
   | "order"
   | "new_account"
-  | "contact";
+  | "contact"
+  | "welcome_email_failed";
 
 export interface AdminNotification {
   id: string; // entity id
