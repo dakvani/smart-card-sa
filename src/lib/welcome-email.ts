@@ -80,13 +80,36 @@ export async function sendWelcomeEmailWithRetry(
     }
   }
 
-  // All retries exhausted — record failure.
+  // All retries exhausted — record failure and alert admins.
+  const finalError = lastError?.slice(0, 500) || "Unknown error";
   await supabase
     .from("profiles")
-    .update({
-      welcome_email_last_error: lastError?.slice(0, 500) || "Unknown error",
-    })
+    .update({ welcome_email_last_error: finalError })
     .eq("user_id", userId);
+
+  // Fire-and-forget admin alert email. The template is configured with a
+  // fixed `to` (ADMIN_ALERT_EMAIL) on the server, so recipientEmail here is
+  // a fallback only and the value never leaves the function unless the env
+  // var is missing.
+  try {
+    await supabase.functions.invoke("send-transactional-email", {
+      body: {
+        templateName: "welcome-email-failed",
+        recipientEmail,
+        idempotencyKey: `welcome-failed-${userId}-${Date.now()}`,
+        templateData: {
+          userEmail: recipientEmail,
+          username: username || profile?.username || "",
+          userId,
+          errorMessage: finalError,
+          attempts: baseAttempts + MAX_ATTEMPTS,
+          adminUrl: `${window.location.origin}/admin`,
+        },
+      },
+    });
+  } catch (alertErr) {
+    console.error("Failed to dispatch admin failure alert", alertErr);
+  }
 
   return { ok: false, error: lastError, attempts: baseAttempts + MAX_ATTEMPTS };
 }

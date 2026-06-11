@@ -1,5 +1,6 @@
 import type { ComponentType } from 'npm:react@18.3.1'
 import { template as welcomeTemplate } from './welcome.tsx'
+import { template as welcomeEmailFailedTemplate } from './welcome-email-failed.tsx'
 
 export interface TemplateEntry {
   component: ComponentType<any>
@@ -11,4 +12,5 @@ export interface TemplateEntry {
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   welcome: welcomeTemplate,
+  'welcome-email-failed': welcomeEmailFailedTemplate,
 }
