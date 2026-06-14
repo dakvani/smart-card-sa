@@ -20,6 +20,7 @@ import { AdminUserManager } from "@/components/admin/AdminUserManager";
 import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
 import { AdminWelcomeEmails } from "@/components/admin/AdminWelcomeEmails";
 import { AdminEmailSettings } from "@/components/admin/AdminEmailSettings";
+import { AdminEmailTemplatesEditor } from "@/components/admin/AdminEmailTemplatesEditor";
 import { AdminProductManager } from "@/components/admin/AdminProductManager";
 import { AdminProRequests } from "@/components/admin/AdminProRequests";
 import { AdminNotificationBell } from "@/components/admin/AdminNotificationBell";
@@ -545,6 +546,7 @@ export default function AdminDashboard() {
 
               <TabsContent value="emails" className="space-y-4">
                 <AdminEmailSettings />
+                <AdminEmailTemplatesEditor />
                 <AdminWelcomeEmails />
               </TabsContent>
 

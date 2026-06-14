@@ -218,6 +218,34 @@ async function handleWebhook(req: Request): Promise<Response> {
     )
   }
 
+  // Load admin overrides for this auth template (subject + intro/outro/CTA).
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  )
+
+  let overrideVersion: number | null = null
+  let subjectOverride: string | null = null
+  let bodyIntro: string | undefined
+  let bodyOutro: string | undefined
+  let ctaLabel: string | undefined
+  try {
+    const { data: override } = await supabase
+      .from('email_template_overrides')
+      .select('subject_override, body_intro, body_outro, cta_label, enabled, version')
+      .eq('template_key', emailType)
+      .maybeSingle()
+    if (override && override.enabled) {
+      overrideVersion = override.version ?? null
+      subjectOverride = override.subject_override ?? null
+      bodyIntro = override.body_intro ?? undefined
+      bodyOutro = override.body_outro ?? undefined
+      ctaLabel = override.cta_label ?? undefined
+    }
+  } catch (e) {
+    console.warn('Failed to load auth template overrides', e)
+  }
+
   // Build template props from payload.data (HookData structure)
   const templateProps = {
     siteName: SITE_NAME,
@@ -228,6 +256,9 @@ async function handleWebhook(req: Request): Promise<Response> {
     email: payload.data.email,
     oldEmail: payload.data.old_email,
     newEmail: payload.data.new_email,
+    bodyIntro,
+    bodyOutro,
+    ctaLabel,
   }
 
   // Render React Email to HTML and plain text
@@ -235,12 +266,6 @@ async function handleWebhook(req: Request): Promise<Response> {
   const text = await renderAsync(React.createElement(EmailTemplate, templateProps), {
     plainText: true,
   })
-
-  // Enqueue email for async processing by the dispatcher (process-email-queue).
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-  )
 
   const messageId = crypto.randomUUID()
 
@@ -250,6 +275,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     template_name: emailType,
     recipient_email: payload.data.email,
     status: 'pending',
+    metadata: { template_override_version: overrideVersion },
   })
 
   const { error: enqueueError } = await supabase.rpc('enqueue_email', {
@@ -260,7 +286,7 @@ async function handleWebhook(req: Request): Promise<Response> {
       to: payload.data.email,
       from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
       sender_domain: SENDER_DOMAIN,
-      subject: EMAIL_SUBJECTS[emailType] || 'Notification',
+      subject: subjectOverride || EMAIL_SUBJECTS[emailType] || 'Notification',
       html,
       text,
       purpose: 'transactional',
