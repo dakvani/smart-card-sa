@@ -176,6 +176,33 @@ export type Database = {
         }
         Relationships: []
       }
+      email_settings: {
+        Row: {
+          footer_version: number
+          help_text: string
+          id: number
+          support_email: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          footer_version?: number
+          help_text?: string
+          id?: number
+          support_email?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          footer_version?: number
+          help_text?: string
+          id?: number
+          support_email?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       email_subscribers: {
         Row: {
           email: string
@@ -382,6 +409,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      marketing_email_unsubscribes: {
+        Row: {
+          created_at: string
+          email: string
+          token: string
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          token: string
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          token?: string
+          unsubscribed_at?: string | null
+        }
+        Relationships: []
       }
       nfc_catalog_products: {
         Row: {
@@ -727,6 +775,7 @@ export type Database = {
           user_id: string
           username: string
           welcome_email_attempts: number
+          welcome_email_footer_version: number | null
           welcome_email_last_attempt_at: string | null
           welcome_email_last_error: string | null
           welcome_email_sent_at: string | null
@@ -756,6 +805,7 @@ export type Database = {
           user_id: string
           username: string
           welcome_email_attempts?: number
+          welcome_email_footer_version?: number | null
           welcome_email_last_attempt_at?: string | null
           welcome_email_last_error?: string | null
           welcome_email_sent_at?: string | null
@@ -785,6 +835,7 @@ export type Database = {
           user_id?: string
           username?: string
           welcome_email_attempts?: number
+          welcome_email_footer_version?: number | null
           welcome_email_last_attempt_at?: string | null
           welcome_email_last_error?: string | null
           welcome_email_sent_at?: string | null
@@ -1033,6 +1084,10 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      ensure_marketing_unsubscribe_token: {
+        Args: { p_email: string }
+        Returns: string
       }
       has_role: {
         Args: {
