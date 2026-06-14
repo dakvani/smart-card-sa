@@ -43,6 +43,7 @@ import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
 // AccountSecuritySection removed — managed in /settings
 
 import { OnboardingConfirmDialog } from "@/components/dashboard/OnboardingConfirmDialog";
+import { MobileTabBar } from "@/components/dashboard/MobileTabBar";
 import { computeOnboardingPrefill, trackOnboarding, type OnboardingPrefill } from "@/lib/onboarding";
 
 interface Profile {
