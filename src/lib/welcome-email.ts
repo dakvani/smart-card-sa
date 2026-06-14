@@ -10,8 +10,7 @@ export interface WelcomeSendResult {
 
 /**
  * Attempt to send the welcome email with retry + exponential backoff.
- * Records attempt count, last error, and timestamps on the user's profile so
- * the admin dashboard and the user portal can surface delivery status.
+ * Records attempt count, last error, timestamps, and the footer version used.
  */
 export async function sendWelcomeEmailWithRetry(
   userId: string,
@@ -19,7 +18,6 @@ export async function sendWelcomeEmailWithRetry(
   username?: string | null,
   opts: { force?: boolean } = {}
 ): Promise<WelcomeSendResult> {
-  // Read current state.
   const { data: profile } = await supabase
     .from("profiles")
     .select("welcome_email_sent_at, welcome_email_attempts, username")
@@ -28,6 +26,41 @@ export async function sendWelcomeEmailWithRetry(
 
   if (!opts.force && profile?.welcome_email_sent_at) {
     return { ok: true, attempts: profile.welcome_email_attempts ?? 0 };
+  }
+
+  // Load editable footer settings + mint a marketing unsubscribe token.
+  let helpText: string | undefined;
+  let supportEmail: string | undefined;
+  let footerVersion: number | undefined;
+  let marketingUnsubscribeUrl: string | undefined;
+
+  try {
+    const { data: settings } = await supabase
+      .from("email_settings" as any)
+      .select("help_text, support_email, footer_version")
+      .eq("id", 1)
+      .maybeSingle();
+    if (settings) {
+      const s = settings as any;
+      helpText = s.help_text;
+      supportEmail = s.support_email;
+      footerVersion = s.footer_version;
+    }
+  } catch (e) {
+    console.warn("Could not load email_settings; using defaults", e);
+  }
+
+  try {
+    const { data: token } = await supabase.rpc("ensure_marketing_unsubscribe_token" as any, {
+      p_email: recipientEmail,
+    });
+    if (token) {
+      marketingUnsubscribeUrl = `${window.location.origin}/marketing-unsubscribe?token=${encodeURIComponent(
+        token as string
+      )}`;
+    }
+  } catch (e) {
+    console.warn("Could not mint marketing-unsubscribe token", e);
   }
 
   const baseAttempts = profile?.welcome_email_attempts ?? 0;
@@ -52,6 +85,10 @@ export async function sendWelcomeEmailWithRetry(
           templateData: {
             name: username || profile?.username || "",
             siteUrl: window.location.origin,
+            helpText,
+            supportEmail,
+            footerVersion,
+            marketingUnsubscribeUrl,
           },
         },
       });
@@ -66,7 +103,8 @@ export async function sendWelcomeEmailWithRetry(
         .update({
           welcome_email_sent_at: new Date().toISOString(),
           welcome_email_last_error: null,
-        })
+          welcome_email_footer_version: footerVersion ?? null,
+        } as any)
         .eq("user_id", userId);
 
       return { ok: true, attempts: attemptNumber };
@@ -74,23 +112,17 @@ export async function sendWelcomeEmailWithRetry(
       lastError = err?.message || String(err);
       console.error(`Welcome email attempt ${attemptNumber} failed`, err);
       if (i < MAX_ATTEMPTS - 1) {
-        // exponential backoff: 1s, 2s
         await new Promise((r) => setTimeout(r, 1000 * Math.pow(2, i)));
       }
     }
   }
 
-  // All retries exhausted — record failure and alert admins.
   const finalError = lastError?.slice(0, 500) || "Unknown error";
   await supabase
     .from("profiles")
     .update({ welcome_email_last_error: finalError })
     .eq("user_id", userId);
 
-  // Fire-and-forget admin alert email. The template is configured with a
-  // fixed `to` (ADMIN_ALERT_EMAIL) on the server, so recipientEmail here is
-  // a fallback only and the value never leaves the function unless the env
-  // var is missing.
   try {
     await supabase.functions.invoke("send-transactional-email", {
       body: {

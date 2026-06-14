@@ -25,6 +25,7 @@ import PublicProfile from "@/pages/PublicProfile";
 import QRRedirect from "@/pages/QRRedirect";
 import NotFound from "@/pages/NotFound";
 import Unsubscribe from "@/pages/Unsubscribe";
+import MarketingUnsubscribe from "@/pages/MarketingUnsubscribe";
 
 export function AnimatedRoutes() {
   const location = useLocation();
@@ -59,6 +60,7 @@ export function AnimatedRoutes() {
           <Route path="/settings" element={<PageTransition><Settings /></PageTransition>} />
           <Route path="/~oauth/*" element={<Navigate to="/login" replace />} />
           <Route path="/unsubscribe" element={<PageTransition><Unsubscribe /></PageTransition>} />
+          <Route path="/marketing-unsubscribe" element={<PageTransition><MarketingUnsubscribe /></PageTransition>} />
           <Route path="/qr/:username" element={<QRRedirect />} />
           <Route path="/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
