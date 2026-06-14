@@ -55,7 +55,7 @@ const Welcome = ({ name, siteUrl = DEFAULT_URL }: WelcomeProps) => {
             • Browse NFC cards in our shop
           </Text>
           <Text style={footer}>
-            Need help? Just reply to this email — we read every message.<br />
+            Need help? Reach us at <Link href="mailto:info@smartcardsa.shop" style={link}>info@smartcardsa.shop</Link> — we read every message.<br />
             <Link href={siteUrl} style={link}>{siteUrl.replace(/^https?:\/\//, '')}</Link>
           </Text>
         </Container>
