@@ -13,29 +13,35 @@ Deno.serve(async (req) => {
   try {
     if (req.method === 'GET') {
       const token = url.searchParams.get('token') ?? ''
-      if (!token) return json({ valid: false }, 400)
+      if (!token) return json({ valid: false, reason: 'missing_token' }, 400)
       const { data } = await admin
         .from('marketing_email_unsubscribes')
         .select('email, unsubscribed_at')
         .eq('token', token)
         .maybeSingle()
-      if (!data) return json({ valid: false }, 404)
-      if (data.unsubscribed_at) return json({ alreadyUnsubscribed: true, email: data.email })
-      return json({ valid: true, email: data.email })
+      if (!data) return json({ valid: false, reason: 'invalid_token' }, 404)
+      return json({
+        valid: true,
+        email: data.email,
+        isUnsubscribed: !!data.unsubscribed_at,
+      })
     }
 
     if (req.method === 'POST') {
       const body = await req.json().catch(() => ({}))
       const token = body?.token
+      const action = body?.action === 'resubscribe' ? 'resubscribe' : 'unsubscribe'
       if (!token) return json({ error: 'token required' }, 400)
+
+      const newValue = action === 'resubscribe' ? null : new Date().toISOString()
       const { data, error } = await admin
         .from('marketing_email_unsubscribes')
-        .update({ unsubscribed_at: new Date().toISOString() })
+        .update({ unsubscribed_at: newValue })
         .eq('token', token)
-        .select('email')
+        .select('email, unsubscribed_at')
         .maybeSingle()
       if (error || !data) return json({ error: 'invalid token' }, 404)
-      return json({ ok: true, email: data.email })
+      return json({ ok: true, email: data.email, isUnsubscribed: !!data.unsubscribed_at })
     }
 
     return json({ error: 'method not allowed' }, 405)
