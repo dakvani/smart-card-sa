@@ -21,6 +21,9 @@ interface WelcomeProps {
   supportEmail?: string
   marketingUnsubscribeUrl?: string
   footerVersion?: number
+  bodyIntro?: string
+  bodyOutro?: string
+  ctaLabel?: string
 }
 
 const SITE_NAME = 'SmartCard'
@@ -34,11 +37,13 @@ const Welcome = ({
   helpText = DEFAULT_HELP,
   supportEmail = DEFAULT_SUPPORT,
   marketingUnsubscribeUrl,
+  bodyIntro,
+  bodyOutro,
+  ctaLabel,
 }: WelcomeProps) => {
   const greeting = name && name.trim().length > 0 ? `Hey ${name},` : 'Hey there,'
   const dashboardUrl = `${siteUrl}/dashboard`
 
-  // Render help text with the support email as a linkified mailto.
   const renderHelp = () => {
     if (supportEmail && helpText.includes(supportEmail)) {
       const [before, after] = helpText.split(supportEmail)
@@ -64,22 +69,32 @@ const Welcome = ({
           </Section>
           <Heading style={h1}>Welcome aboard 👋</Heading>
           <Text style={text}>{greeting}</Text>
-          <Text style={text}>
-            Thanks for signing up for <strong>{SITE_NAME}</strong>. Your account is ready —
-            you can now build your digital profile, customize your smart link page, and order
-            your own NFC SmartCard.
-          </Text>
+          {bodyIntro ? (
+            <Text style={text}>{bodyIntro}</Text>
+          ) : (
+            <Text style={text}>
+              Thanks for signing up for <strong>{SITE_NAME}</strong>. Your account is ready —
+              you can now build your digital profile, customize your smart link page, and order
+              your own NFC SmartCard.
+            </Text>
+          )}
           <Section style={ctaWrap}>
             <Button style={button} href={dashboardUrl}>
-              Open your dashboard
+              {ctaLabel || 'Open your dashboard'}
             </Button>
           </Section>
-          <Text style={text}>A few things you can try right away:</Text>
-          <Text style={list}>
-            • Personalize your profile theme & links<br />
-            • Add your social handles and contact info<br />
-            • Browse NFC cards in our shop
-          </Text>
+          {bodyOutro ? (
+            <Text style={text}>{bodyOutro}</Text>
+          ) : (
+            <>
+              <Text style={text}>A few things you can try right away:</Text>
+              <Text style={list}>
+                • Personalize your profile theme & links<br />
+                • Add your social handles and contact info<br />
+                • Browse NFC cards in our shop
+              </Text>
+            </>
+          )}
           <Text style={footer}>
             {renderHelp()}<br />
             <Link href={siteUrl} style={link}>{siteUrl.replace(/^https?:\/\//, '')}</Link>
