@@ -277,20 +277,42 @@ Deno.serve(async (req) => {
     )
   }
 
+  // 3b. Load admin-managed overrides for this template (subject + intro/outro/CTA).
+  let overrideVersion: number | null = null
+  let mergedTemplateData: Record<string, any> = { ...templateData }
+  let subjectOverride: string | null = null
+  try {
+    const { data: override } = await supabase
+      .from('email_template_overrides')
+      .select('subject_override, body_intro, body_outro, cta_label, enabled, version')
+      .eq('template_key', templateName)
+      .maybeSingle()
+    if (override && override.enabled) {
+      overrideVersion = override.version ?? null
+      if (override.subject_override) subjectOverride = override.subject_override
+      if (override.body_intro && mergedTemplateData.bodyIntro == null) mergedTemplateData.bodyIntro = override.body_intro
+      if (override.body_outro && mergedTemplateData.bodyOutro == null) mergedTemplateData.bodyOutro = override.body_outro
+      if (override.cta_label && mergedTemplateData.ctaLabel == null) mergedTemplateData.ctaLabel = override.cta_label
+    }
+  } catch (e) {
+    console.warn('Failed to load template overrides; falling back to defaults', e)
+  }
+
   // 4. Render React Email template to HTML and plain text
   const html = await renderAsync(
-    React.createElement(template.component, templateData)
+    React.createElement(template.component, mergedTemplateData)
   )
   const plainText = await renderAsync(
-    React.createElement(template.component, templateData),
+    React.createElement(template.component, mergedTemplateData),
     { plainText: true }
   )
 
-  // Resolve subject — supports static string or dynamic function
+  // Resolve subject — admin override wins, then static string / dynamic function.
   const resolvedSubject =
-    typeof template.subject === 'function'
-      ? template.subject(templateData)
-      : template.subject
+    subjectOverride ??
+    (typeof template.subject === 'function'
+      ? template.subject(mergedTemplateData)
+      : template.subject)
 
   // 5. Enqueue the pre-rendered email for async processing by the dispatcher.
   // The dispatcher (process-email-queue) handles sending, retries, and rate-limit backoff.
@@ -301,6 +323,7 @@ Deno.serve(async (req) => {
     template_name: templateName,
     recipient_email: effectiveRecipient,
     status: 'pending',
+    metadata: { template_override_version: overrideVersion },
   })
 
   const { error: enqueueError } = await supabase.rpc('enqueue_email', {
