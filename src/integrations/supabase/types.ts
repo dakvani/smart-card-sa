@@ -239,6 +239,51 @@ export type Database = {
           },
         ]
       }
+      email_template_overrides: {
+        Row: {
+          body_intro: string | null
+          body_outro: string | null
+          created_at: string
+          cta_label: string | null
+          display_name: string
+          enabled: boolean
+          kind: string
+          subject_override: string | null
+          template_key: string
+          updated_at: string
+          updated_by: string | null
+          version: number
+        }
+        Insert: {
+          body_intro?: string | null
+          body_outro?: string | null
+          created_at?: string
+          cta_label?: string | null
+          display_name: string
+          enabled?: boolean
+          kind: string
+          subject_override?: string | null
+          template_key: string
+          updated_at?: string
+          updated_by?: string | null
+          version?: number
+        }
+        Update: {
+          body_intro?: string | null
+          body_outro?: string | null
+          created_at?: string
+          cta_label?: string | null
+          display_name?: string
+          enabled?: boolean
+          kind?: string
+          subject_override?: string | null
+          template_key?: string
+          updated_at?: string
+          updated_by?: string | null
+          version?: number
+        }
+        Relationships: []
+      }
       email_unsubscribe_tokens: {
         Row: {
           created_at: string

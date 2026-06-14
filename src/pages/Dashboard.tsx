@@ -43,6 +43,7 @@ import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
 // AccountSecuritySection removed — managed in /settings
 
 import { OnboardingConfirmDialog } from "@/components/dashboard/OnboardingConfirmDialog";
+import { MobileTabBar } from "@/components/dashboard/MobileTabBar";
 import { computeOnboardingPrefill, trackOnboarding, type OnboardingPrefill } from "@/lib/onboarding";
 
 interface Profile {
@@ -653,13 +654,15 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Profile Share Card */}
-        <ProfileShareCard username={profile.username} />
+        {/* Profile Share Card — desktop/tablet only; reduces mobile clutter */}
+        <div className="hidden md:block">
+          <ProfileShareCard username={profile.username} />
+        </div>
 
         {/* Builder Layout: Left Nav | Edit Panel | Live Preview */}
-        <div className="flex flex-col lg:flex-row gap-4 mt-4">
-          {/* Left: Vertical Builder Nav */}
-          <aside className="lg:w-16 flex lg:flex-col gap-1 p-1.5 bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 lg:sticky lg:top-20 lg:h-fit shadow-sm">
+        <div className="flex flex-col lg:flex-row gap-4 mt-4 pb-20 md:pb-0">
+          {/* Left: Vertical Builder Nav — hidden on mobile (replaced by bottom tab bar) */}
+          <aside className="hidden md:flex lg:w-16 lg:flex-col gap-1 p-1.5 bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 lg:sticky lg:top-20 lg:h-fit shadow-sm">
             {tabs.map(tab => {
               const active = activeTab === tab.id;
               return (
@@ -1144,6 +1147,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <MobileTabBar activeTab={activeTab} onChange={setActiveTab} />
     </div>
   );
 }

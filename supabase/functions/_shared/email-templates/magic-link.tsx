@@ -16,11 +16,17 @@ import {
 interface MagicLinkEmailProps {
   siteName: string
   confirmationUrl: string
+  bodyIntro?: string
+  bodyOutro?: string
+  ctaLabel?: string
 }
 
 export const MagicLinkEmail = ({
   siteName,
   confirmationUrl,
+  bodyIntro,
+  bodyOutro,
+  ctaLabel,
 }: MagicLinkEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
@@ -29,14 +35,14 @@ export const MagicLinkEmail = ({
       <Container style={container}>
         <Heading style={h1}>Your login link</Heading>
         <Text style={text}>
-          Click the button below to log in to {siteName}. This link will expire
-          shortly.
+          {bodyIntro ||
+            `Click the button below to log in to ${siteName}. This link will expire shortly.`}
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Log In
+          {ctaLabel || 'Log In'}
         </Button>
         <Text style={footer}>
-          If you didn't request this link, you can safely ignore this email.
+          {bodyOutro || "If you didn't request this link, you can safely ignore this email."}
         </Text>
       </Container>
     </Body>
@@ -47,18 +53,8 @@ export default MagicLinkEmail
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
 const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
-}
-const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
+const h1 = { fontSize: '22px', fontWeight: 'bold' as const, color: '#000000', margin: '0 0 20px' }
+const text = { fontSize: '14px', color: '#55575d', lineHeight: '1.5', margin: '0 0 25px' }
 const button = {
   backgroundColor: '#6366f1',
   backgroundImage: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',

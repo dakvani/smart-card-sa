@@ -16,11 +16,17 @@ import {
 interface RecoveryEmailProps {
   siteName: string
   confirmationUrl: string
+  bodyIntro?: string
+  bodyOutro?: string
+  ctaLabel?: string
 }
 
 export const RecoveryEmail = ({
   siteName,
   confirmationUrl,
+  bodyIntro,
+  bodyOutro,
+  ctaLabel,
 }: RecoveryEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
@@ -29,15 +35,15 @@ export const RecoveryEmail = ({
       <Container style={container}>
         <Heading style={h1}>Reset your password</Heading>
         <Text style={text}>
-          We received a request to reset your password for {siteName}. Click
-          the button below to choose a new password.
+          {bodyIntro ||
+            `We received a request to reset your password for ${siteName}. Click the button below to choose a new password.`}
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Reset Password
+          {ctaLabel || 'Reset Password'}
         </Button>
         <Text style={footer}>
-          If you didn't request a password reset, you can safely ignore this
-          email. Your password will not be changed.
+          {bodyOutro ||
+            "If you didn't request a password reset, you can safely ignore this email. Your password will not be changed."}
         </Text>
       </Container>
     </Body>
@@ -48,18 +54,8 @@ export default RecoveryEmail
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
 const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
-}
-const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
+const h1 = { fontSize: '22px', fontWeight: 'bold' as const, color: '#000000', margin: '0 0 20px' }
+const text = { fontSize: '14px', color: '#55575d', lineHeight: '1.5', margin: '0 0 25px' }
 const button = {
   backgroundColor: '#6366f1',
   backgroundImage: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
