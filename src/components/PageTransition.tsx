@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode } from "react";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface PageTransitionProps {
@@ -76,20 +76,8 @@ function LoadingSkeleton({ reducedMotion }: { reducedMotion: boolean }) {
 }
 
 export function PageTransition({ children }: PageTransitionProps) {
-  const [isLoading, setIsLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
 
-  useEffect(() => {
-    // Brief loading state for smooth transition feel
-    // Skip for reduced motion preference
-    const delay = prefersReducedMotion ? 0 : 150;
-    const timer = setTimeout(() => setIsLoading(false), delay);
-    return () => clearTimeout(timer);
-  }, [prefersReducedMotion]);
-
-  if (isLoading) {
-    return <LoadingSkeleton reducedMotion={prefersReducedMotion} />;
-  }
 
   return (
     <motion.div
