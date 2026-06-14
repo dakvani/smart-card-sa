@@ -1147,6 +1147,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <MobileTabBar activeTab={activeTab} onChange={setActiveTab} />
     </div>
   );
 }
