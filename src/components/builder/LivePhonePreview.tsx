@@ -14,8 +14,9 @@ export function LivePhonePreview({ compact = false }: { compact?: boolean }) {
 
   return (
     <div
-      className={`mx-auto rounded-[2.5rem] border border-border/40 bg-background shadow-elevated overflow-hidden ${
-        compact ? "w-[240px] h-[480px]" : "w-[300px] h-[600px]"
+      style={{ aspectRatio: "9 / 19.5" }}
+      className={`mx-auto rounded-[2.25rem] border border-border/40 bg-background shadow-elevated overflow-hidden w-full ${
+        compact ? "max-w-[220px]" : "max-w-[300px]"
       }`}
     >
       <div className={`h-full w-full overflow-y-auto bg-gradient-to-br ${gradient} p-5`}>
