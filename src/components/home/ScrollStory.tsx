@@ -470,14 +470,15 @@ export function ScrollStory() {
           className="relative h-full container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center will-change-transform"
         >
           {/* Left column: copy */}
-          <div className="relative h-[60vh] md:h-[50vh]">
+          <div className="relative h-[55vh] md:h-[50vh]">
             {[0, 1, 2, 3].map((i) => (
               <StageCopy key={i} index={i} globalProgress={smoothProgress} />
             ))}
           </div>
 
-          {/* Right column: graphics */}
-          <div className="relative h-[60vh] md:h-[60vh] flex items-center justify-center">
+          {/* Right column: graphics — hidden on mobile to avoid an empty
+              animation gap (the SVGs only draw in once scroll progress > 0). */}
+          <div className="hidden md:flex relative h-[60vh] items-center justify-center">
             <StageSlot index={0} globalProgress={smoothProgress}>
               {(p) => <StageCard progress={p} />}
             </StageSlot>
@@ -500,23 +501,26 @@ export function ScrollStory() {
           ))}
         </div>
 
-        {/* CTA overlay — reveals during the final stage */}
+        {/* CTA overlay — reveals during the final stage.
+            Use inset-x-0 + justify-center so the stack is truly centered on
+            mobile regardless of varying button widths. */}
         <motion.div
           style={{ opacity: ctaOpacity, y: ctaY }}
-          className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col sm:flex-row items-center gap-3 px-4"
+          className="absolute bottom-24 inset-x-0 z-20 flex flex-col sm:flex-row items-center justify-center gap-3 px-4"
         >
-          <Button asChild size="lg" className="gradient-primary shadow-glow">
+          <Button asChild size="lg" className="gradient-primary shadow-glow w-full sm:w-auto">
             <Link to="/nfc-products">
               Shop SmartCards <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="glass">
+          <Button asChild size="lg" variant="outline" className="glass w-full sm:w-auto">
             <Link to="/signup">Create your profile</Link>
           </Button>
           <Button
             size="lg"
             variant="ghost"
             onClick={() => smoothScrollTo("story-next")}
+            className="w-full sm:w-auto"
           >
             Keep exploring <ChevronDown className="ml-2 w-4 h-4" />
           </Button>
