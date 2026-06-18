@@ -31,11 +31,11 @@ export function AddBlockModal({ open, onOpenChange }: AddBlockModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden">
-        <DialogHeader className="px-5 pt-5 pb-3">
+      <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden h-[92dvh] sm:h-auto sm:max-h-[80vh] flex flex-col rounded-t-2xl sm:rounded-2xl">
+        <DialogHeader className="px-5 pt-5 pb-3 shrink-0">
           <DialogTitle>Add to your profile</DialogTitle>
         </DialogHeader>
-        <div className="px-5 pb-3">
+        <div className="px-5 pb-3 shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
@@ -46,8 +46,26 @@ export function AddBlockModal({ open, onOpenChange }: AddBlockModalProps) {
             />
           </div>
         </div>
-        <div className="grid grid-cols-[140px_1fr] min-h-[360px] border-t border-border">
-          <aside className="border-r border-border p-2 bg-muted/30">
+
+        {/* Mobile category pills */}
+        <div className="sm:hidden border-t border-border shrink-0">
+          <div className="flex gap-2 px-4 py-2 overflow-x-auto no-scrollbar">
+            {CATEGORY_ORDER.map((c) => (
+              <button
+                key={c}
+                onClick={() => { setCategory(c); setQuery(""); }}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  category === c && !query ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {CATEGORY_LABELS[c]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-[140px_1fr] grid-cols-1 flex-1 min-h-0 border-t border-border">
+          <aside className="hidden sm:block border-r border-border p-2 bg-muted/30 overflow-y-auto">
             {CATEGORY_ORDER.map((c) => (
               <button
                 key={c}
@@ -60,7 +78,7 @@ export function AddBlockModal({ open, onOpenChange }: AddBlockModalProps) {
               </button>
             ))}
           </aside>
-          <div className="p-3 max-h-[60vh] overflow-y-auto">
+          <div className="p-3 overflow-y-auto pb-[max(env(safe-area-inset-bottom),0.75rem)]">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {filtered.map((d) => {
                 const Icon = d.icon;
@@ -68,7 +86,7 @@ export function AddBlockModal({ open, onOpenChange }: AddBlockModalProps) {
                   <button
                     key={d.kind}
                     onClick={() => onPick(d.kind)}
-                    className="flex items-start gap-3 p-3 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/5 text-left transition-colors min-h-[64px]"
+                    className="flex items-start gap-3 p-3 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/5 active:scale-[0.98] text-left transition-all min-h-[64px]"
                   >
                     <div className="w-9 h-9 rounded-md bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
                       <Icon className="w-4 h-4" />
