@@ -46,6 +46,13 @@ export function BuilderShell({ title, children, hidePreview = false }: BuilderSh
     };
   }, [load, navigate]);
 
+  // Redirect first-time users to the onboarding wizard.
+  useEffect(() => {
+    if (profile && profile.onboarded === false) {
+      navigate("/onboarding", { replace: true });
+    }
+  }, [profile, navigate]);
+
   if (!authChecked || loading || !profile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
