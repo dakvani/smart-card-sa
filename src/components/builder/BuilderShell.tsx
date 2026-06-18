@@ -4,8 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useBuilderStore } from "@/store/builder-store";
 import { BuilderSidebar } from "./BuilderSidebar";
 import { LivePhonePreview } from "./LivePhonePreview";
-import { Loader2, Eye, EyeOff } from "lucide-react";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { Loader2, Eye } from "lucide-react";
+import { Drawer, DrawerContent, DrawerTrigger, DrawerTitle } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface BuilderShellProps {
@@ -62,26 +62,37 @@ export function BuilderShell({ title, children, hidePreview = false }: BuilderSh
   }
 
   return (
-    <div className="min-h-screen flex bg-muted/20">
+    <div className="min-h-[100dvh] flex bg-muted/20">
       <BuilderSidebar />
 
       <main className="flex-1 min-w-0 flex">
-        <section className="flex-1 min-w-0 px-4 md:px-6 py-4 md:py-6 pb-24 md:pb-10">
-          <header className="flex items-center justify-between mb-4">
-            <h1 className="text-xl md:text-2xl font-semibold">{title}</h1>
-            <div className="flex items-center gap-2">
+        <section className="flex-1 min-w-0 px-4 md:px-6 pt-[max(env(safe-area-inset-top),0.75rem)] md:pt-6 pb-[calc(env(safe-area-inset-bottom)+72px)] md:pb-10">
+          <header className="flex items-center justify-between mb-4 sticky top-0 z-20 bg-muted/20 backdrop-blur supports-[backdrop-filter]:bg-muted/40 -mx-4 md:mx-0 px-4 md:px-0 py-2 md:py-0 md:static md:bg-transparent md:backdrop-blur-0">
+            <h1 className="text-lg md:text-2xl font-semibold truncate">{title}</h1>
+            <div className="flex items-center gap-2 shrink-0">
               <SaveStatus status={saveStatus} />
               {isMobile && !hidePreview && (
                 <Drawer open={previewOpen} onOpenChange={setPreviewOpen}>
                   <DrawerTrigger asChild>
-                    <button className="px-3 py-1.5 text-xs font-medium rounded-full border border-border bg-background flex items-center gap-1.5">
+                    <button className="px-3 py-1.5 text-xs font-medium rounded-full border border-border bg-background flex items-center gap-1.5 active:scale-95 transition-transform">
                       <Eye className="w-3.5 h-3.5" /> Preview
                     </button>
                   </DrawerTrigger>
-                  <DrawerContent className="px-4 pb-6 max-h-[90vh]">
-                    <div className="pt-2 pb-4">
+                  <DrawerContent className="h-[88dvh] px-4 pb-[max(env(safe-area-inset-bottom),1rem)] focus:outline-none">
+                    <DrawerTitle className="sr-only">Live profile preview</DrawerTitle>
+                    <div className="pt-3 pb-2 flex-1 min-h-0 overflow-y-auto flex items-start justify-center">
                       <LivePhonePreview />
                     </div>
+                    {profile && (
+                      <a
+                        href={`/${profile.username}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block text-center text-xs text-primary hover:underline pb-1"
+                      >
+                        Open public profile →
+                      </a>
+                    )}
                   </DrawerContent>
                 </Drawer>
               )}
