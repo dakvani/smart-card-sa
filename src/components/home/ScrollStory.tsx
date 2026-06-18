@@ -341,14 +341,14 @@ function StageCopy({
   const y = useTransform(globalProgress, stops, yOutputs);
   return (
     <motion.div style={{ opacity, y }} className="absolute inset-0 flex flex-col justify-center">
-      <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-primary mb-4">
-        <span className="w-8 h-px bg-primary" />
+      <div className="inline-flex items-center gap-2 text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] text-primary mb-3 md:mb-4">
+        <span className="w-6 md:w-8 h-px bg-primary" />
         {STAGE_LABELS[index]}
       </div>
-      <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
+      <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-3 md:mb-4">
         {STAGE_TITLES[index]}
       </h2>
-      <p className="text-base md:text-lg text-muted-foreground max-w-md leading-relaxed">
+      <p className="text-sm md:text-lg text-muted-foreground max-w-md leading-relaxed line-clamp-4 md:line-clamp-none">
         {STAGE_COPY[index]}
       </p>
     </motion.div>
