@@ -31,8 +31,12 @@ export function AddBlockModal({ open, onOpenChange }: AddBlockModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden h-[92dvh] sm:h-auto sm:max-h-[80vh] flex flex-col rounded-t-2xl sm:rounded-2xl">
-        <DialogHeader className="px-5 pt-5 pb-3 shrink-0">
+      <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden h-[92dvh] sm:h-auto sm:max-h-[80vh] flex flex-col rounded-t-2xl sm:rounded-2xl data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom-4 sm:data-[state=open]:zoom-in-95 sm:data-[state=open]:slide-in-from-bottom-0">
+        {/* Mobile grab handle */}
+        <div className="sm:hidden flex justify-center pt-2 pb-1 shrink-0" aria-hidden>
+          <div className="w-10 h-1 rounded-full bg-muted-foreground/30" />
+        </div>
+        <DialogHeader className="px-5 pt-3 sm:pt-5 pb-3 shrink-0">
           <DialogTitle>Add to your profile</DialogTitle>
         </DialogHeader>
         <div className="px-5 pb-3 shrink-0">

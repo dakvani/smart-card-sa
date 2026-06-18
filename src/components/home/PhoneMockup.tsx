@@ -78,7 +78,7 @@ export function PhoneMockup() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex justify-center lg:justify-end"
+      className="relative flex justify-center lg:justify-end pt-6 lg:pt-0"
       style={{ perspective: 800 }}
     >
       <motion.div
@@ -93,7 +93,7 @@ export function PhoneMockup() {
               animate={{ opacity: 1, y: -20, x: 0, rotate: -5 }}
               exit={{ opacity: 0, y: 20, scale: 0.8 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="absolute -top-8 left-1/2 -translate-x-1/2 z-20"
+              className="absolute -top-6 sm:-top-8 left-1/2 -translate-x-1/2 z-20"
             >
               <div className="w-[180px] sm:w-[200px] h-[110px] sm:h-[125px] rounded-2xl bg-gradient-to-br from-card via-muted to-card border border-border/50 shadow-elevated p-4 flex flex-col justify-between backdrop-blur-xl">
                 <div className="flex items-center justify-between">

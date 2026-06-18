@@ -341,14 +341,14 @@ function StageCopy({
   const y = useTransform(globalProgress, stops, yOutputs);
   return (
     <motion.div style={{ opacity, y }} className="absolute inset-0 flex flex-col justify-center">
-      <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-primary mb-4">
-        <span className="w-8 h-px bg-primary" />
+      <div className="inline-flex items-center gap-2 text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] text-primary mb-3 md:mb-4">
+        <span className="w-6 md:w-8 h-px bg-primary" />
         {STAGE_LABELS[index]}
       </div>
-      <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
+      <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-3 md:mb-4">
         {STAGE_TITLES[index]}
       </h2>
-      <p className="text-base md:text-lg text-muted-foreground max-w-md leading-relaxed">
+      <p className="text-sm md:text-lg text-muted-foreground max-w-md leading-relaxed line-clamp-4 md:line-clamp-none">
         {STAGE_COPY[index]}
       </p>
     </motion.div>
@@ -467,18 +467,10 @@ export function ScrollStory() {
         {/* Stage canvas — no hero overlay; motion starts immediately */}
         <motion.div
           style={{ scale: stageScale }}
-          className="relative h-full container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center will-change-transform"
+          className="relative h-full container mx-auto px-4 flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-10 items-center justify-center pt-16 md:pt-0 will-change-transform"
         >
-          {/* Left column: copy */}
-          <div className="relative h-[55vh] md:h-[50vh]">
-            {[0, 1, 2, 3].map((i) => (
-              <StageCopy key={i} index={i} globalProgress={smoothProgress} />
-            ))}
-          </div>
-
-          {/* Right column: graphics — hidden on mobile to avoid an empty
-              animation gap (the SVGs only draw in once scroll progress > 0). */}
-          <div className="hidden md:flex relative h-[60vh] items-center justify-center">
+          {/* Graphic — top on mobile, right on desktop */}
+          <div className="order-1 md:order-2 relative h-[42vh] md:h-[60vh] w-full flex items-center justify-center [&>div]:scale-[0.72] md:[&>div]:scale-100 [&>div]:origin-center">
             <StageSlot index={0} globalProgress={smoothProgress}>
               {(p) => <StageCard progress={p} />}
             </StageSlot>
@@ -491,6 +483,13 @@ export function ScrollStory() {
             <StageSlot index={3} globalProgress={smoothProgress}>
               {(p) => <StageTap progress={p} />}
             </StageSlot>
+          </div>
+
+          {/* Copy — bottom on mobile, left on desktop */}
+          <div className="order-2 md:order-1 relative h-[34vh] md:h-[50vh] w-full">
+            {[0, 1, 2, 3].map((i) => (
+              <StageCopy key={i} index={i} globalProgress={smoothProgress} />
+            ))}
           </div>
         </motion.div>
 
