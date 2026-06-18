@@ -325,7 +325,7 @@ export default function PublicProfile() {
     >
       {/* Mobile floating Share button (always visible on phones) */}
       <div className="sm:hidden fixed top-3 right-3 z-40">
-        <ShareProfileButton username={profile.username} title={profile.title} />
+        <ShareProfileButton username={profile.username} profileId={profile.id} title={profile.title} />
       </div>
 
       {/* Preview-mode toggle + Share (tablet/desktop only — hidden when ?mobile=1 forces mobile layout) */}
