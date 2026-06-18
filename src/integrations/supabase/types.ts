@@ -734,6 +734,48 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_share_events: {
+        Row: {
+          channel: string
+          created_at: string
+          id: string
+          profile_id: string
+          referrer: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          id?: string
+          profile_id: string
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          id?: string
+          profile_id?: string
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_share_events_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_share_events_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profile_templates: {
         Row: {
           animation_intensity: number | null
