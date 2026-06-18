@@ -78,7 +78,7 @@ export function PhoneMockup() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex justify-center lg:justify-end"
+      className="relative flex justify-center lg:justify-end pt-6 lg:pt-0"
       style={{ perspective: 800 }}
     >
       <motion.div
