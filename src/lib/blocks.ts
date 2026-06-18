@@ -55,7 +55,7 @@ export const BLOCK_DEFS: BlockDef[] = [
   { kind: "contact_whatsapp", label: "WhatsApp", description: "Tap-to-chat", category: "contact", icon: MessageCircle, defaultData: { phone: "", message: "" } },
   { kind: "contact_email", label: "Email", description: "Tap-to-email", category: "contact", icon: Mail, defaultData: { email: "", subject: "" } },
   { kind: "contact_phone", label: "Phone", description: "Tap-to-call", category: "contact", icon: Phone, defaultData: { phone: "" } },
-  { kind: "vcard", label: "vCard", description: "Save contact (.vcf)", category: "contact", icon: ContactIcon, defaultData: { name: "", phone: "", email: "", company: "" } },
+  { kind: "vcard", label: "Contact", description: "Save contact (.vcf)", category: "contact", icon: ContactIcon, defaultData: { name: "", phone: "", email: "", company: "" } },
   // Commerce
   { kind: "product_card", label: "NFC Product", description: "Showcase from your catalog", category: "commerce", icon: ShoppingBag, defaultData: { product_id: "", title: "" } },
   { kind: "shop_link", label: "Shop link", description: "External shop URL", category: "commerce", icon: ExternalLink, defaultData: { title: "Shop", url: "" } },
