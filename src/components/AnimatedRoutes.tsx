@@ -31,6 +31,12 @@ const QRRedirect = lazy(() => import("@/pages/QRRedirect"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Unsubscribe = lazy(() => import("@/pages/Unsubscribe"));
 const MarketingUnsubscribe = lazy(() => import("@/pages/MarketingUnsubscribe"));
+const Onboarding = lazy(() => import("@/pages/Onboarding"));
+const AdminLinks = lazy(() => import("@/pages/admin/AdminLinks"));
+const AdminDesign = lazy(() => import("@/pages/admin/AdminDesign"));
+const AdminQR = lazy(() => import("@/pages/admin/AdminQR"));
+const AdminInsights = lazy(() => import("@/pages/admin/AdminInsights"));
+const AdminBuilderSettings = lazy(() => import("@/pages/admin/AdminSettings"));
 
 function RouteFallback() {
   return (
