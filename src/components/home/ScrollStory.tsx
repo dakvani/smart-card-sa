@@ -470,7 +470,7 @@ export function ScrollStory() {
           className="relative h-full container mx-auto px-4 flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-10 items-center justify-center pt-16 md:pt-0 will-change-transform"
         >
           {/* Graphic — top on mobile, right on desktop */}
-          <div className="order-1 md:order-2 relative h-[42vh] md:h-[60vh] w-full flex items-center justify-center">
+          <div className="order-1 md:order-2 relative h-[42vh] md:h-[60vh] w-full flex items-center justify-center [&>div]:scale-[0.72] md:[&>div]:scale-100 [&>div]:origin-center">
             <StageSlot index={0} globalProgress={smoothProgress}>
               {(p) => <StageCard progress={p} />}
             </StageSlot>
