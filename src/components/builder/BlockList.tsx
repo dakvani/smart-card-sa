@@ -99,7 +99,7 @@ function SortableBlockRow({ block }: { block: ProfileBlock }) {
         </button>
       </div>
       {open && (
-        <div className="px-3 pb-3 border-t border-border/60 pt-3">
+        <div ref={editorRef} className="px-3 pb-3 border-t border-border/60 pt-3">
           <BlockEditor block={block} onChange={(data) => update(block.id, { data } as any)} />
         </div>
       )}
