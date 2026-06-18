@@ -51,11 +51,21 @@ export function BlockList() {
 function SortableBlockRow({ block }: { block: ProfileBlock }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: block.id });
   const [open, setOpen] = useState(false);
+  const editorRef = useRef<HTMLDivElement>(null);
   const update = useBuilderStore((s) => s.updateBlock);
   const remove = useBuilderStore((s) => s.deleteBlock);
   const toggle = useBuilderStore((s) => s.toggleVisible);
   const def = getDef(block.kind);
   const Icon = def?.icon ?? GripVertical;
+
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(() => {
+      const el = editorRef.current?.querySelector<HTMLInputElement | HTMLTextAreaElement>("input, textarea");
+      el?.focus();
+    }, 50);
+    return () => clearTimeout(t);
+  }, [open]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
