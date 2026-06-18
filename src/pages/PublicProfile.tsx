@@ -10,6 +10,7 @@ import { SocialIcons } from "@/components/profile/SocialIcons";
 import { EmailSignup } from "@/components/profile/EmailSignup";
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
 import { ClaimSmartCardDialog } from "@/components/profile/ClaimSmartCardDialog";
+import { ShareProfileButton } from "@/components/profile/ShareProfileButton";
 import { parseUserAgent } from "@/lib/userAgentParser";
 import {
   ACCESSIBILITY_SCOPE_ATTR,
