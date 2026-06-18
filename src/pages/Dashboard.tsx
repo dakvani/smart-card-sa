@@ -230,19 +230,13 @@ export default function Dashboard() {
 
       // Load analytics
       if (profileData) {
-        const [{ count: viewCount }, { count: shareCount }] = await Promise.all([
-          supabase
-            .from("profile_views")
-            .select("*", { count: "exact", head: true })
-            .eq("profile_id", profileData.id),
-          supabase
-            .from("profile_share_events")
-            .select("*", { count: "exact", head: true })
-            .eq("profile_id", profileData.id),
-        ]);
+        const { count: viewCount } = await supabase
+          .from("profile_views")
+          .select("*", { count: "exact", head: true })
+          .eq("profile_id", profileData.id);
 
-        const linkClicks = (linksData || []).reduce((sum, link) => sum + (link.click_count || 0), 0);
-        setAnalytics({ views: viewCount || 0, clicks: linkClicks + (shareCount || 0) });
+        const totalClicks = (linksData || []).reduce((sum, link) => sum + (link.click_count || 0), 0);
+        setAnalytics({ views: viewCount || 0, clicks: totalClicks });
       }
     } catch (error: any) {
       toast.error("Failed to load data: " + error.message);

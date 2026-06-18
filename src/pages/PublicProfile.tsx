@@ -10,7 +10,6 @@ import { SocialIcons } from "@/components/profile/SocialIcons";
 import { EmailSignup } from "@/components/profile/EmailSignup";
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
 import { ClaimSmartCardDialog } from "@/components/profile/ClaimSmartCardDialog";
-import { ShareProfileButton } from "@/components/profile/ShareProfileButton";
 import { parseUserAgent } from "@/lib/userAgentParser";
 import {
   ACCESSIBILITY_SCOPE_ATTR,
@@ -170,40 +169,15 @@ export default function PublicProfile() {
           user_agent: navigator.userAgent,
         });
 
-        // Dual-read: prefer profile_blocks (new builder); fall back to legacy links.
-        const { data: blockRows } = await supabase
-          .from("profile_blocks")
-          .select("id, kind, data, visible, click_count, position")
+        const { data: linksData, error: linksError } = await supabase
+          .from("links")
+          .select("*")
           .eq("user_id", profileData.user_id)
           .eq("visible", true)
           .order("position", { ascending: true });
 
-        let activeLinks: LinkItem[] = [];
-        if (blockRows && blockRows.length > 0) {
-          activeLinks = (blockRows as any[])
-            .filter((b) => b.kind === "link" || b.kind === "shop_link")
-            .map((b) => ({
-              id: b.id,
-              title: (b.data?.title as string) || "Link",
-              url: (b.data?.url as string) || "",
-              visible: b.visible,
-              thumbnail_url: (b.data?.thumbnail_url as string) || null,
-              scheduled_start: (b.data?.scheduled_start as string) || null,
-              scheduled_end: (b.data?.scheduled_end as string) || null,
-              group_id: (b.data?.group_id as string) || null,
-              is_featured: !!b.data?.is_featured,
-            }))
-            .filter(isLinkActive);
-        } else {
-          const { data: linksData, error: linksError } = await supabase
-            .from("links")
-            .select("*")
-            .eq("user_id", profileData.user_id)
-            .eq("visible", true)
-            .order("position", { ascending: true });
-          if (linksError) throw linksError;
-          activeLinks = (linksData || []).filter(isLinkActive);
-        }
+        if (linksError) throw linksError;
+        const activeLinks = (linksData || []).filter(isLinkActive);
         setLinks(activeLinks);
 
         const groupIds = [...new Set(activeLinks.filter((l) => l.group_id).map((l) => l.group_id))];
@@ -323,41 +297,33 @@ export default function PublicProfile() {
       {...{ [ACCESSIBILITY_SCOPE_ATTR]: "" }}
       className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 sm:py-10 sm:px-4 flex items-start sm:items-center justify-center"
     >
-      {/* Mobile floating Share button (always visible on phones) */}
-      <div className="sm:hidden fixed top-3 right-3 z-40">
-        <ShareProfileButton username={profile.username} profileId={profile.id} title={profile.title} />
-      </div>
-
-      {/* Preview-mode toggle + Share (tablet/desktop only — hidden when ?mobile=1 forces mobile layout) */}
+      {/* Preview-mode toggle (tablet/desktop only — hidden when ?mobile=1 forces mobile layout) */}
       {!forceMobile && (
-        <div className="hidden sm:flex fixed top-4 right-4 z-40 items-center gap-2">
-          <div className="flex items-center gap-1 rounded-full border border-white/10 bg-slate-900/80 backdrop-blur p-1 shadow-lg">
-            <button
-              onClick={() => setPreviewMode("phone")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
-                previewMode === "phone"
-                  ? "bg-white text-slate-900"
-                  : "text-white/70 hover:text-white"
-              }`}
-              aria-pressed={previewMode === "phone"}
-            >
-              <Smartphone className="w-3.5 h-3.5" />
-              Phone
-            </button>
-            <button
-              onClick={() => setPreviewMode("compact")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
-                previewMode === "compact"
-                  ? "bg-white text-slate-900"
-                  : "text-white/70 hover:text-white"
-              }`}
-              aria-pressed={previewMode === "compact"}
-            >
-              <Maximize2 className="w-3.5 h-3.5" />
-              Compact
-            </button>
-          </div>
-          <ShareProfileButton username={profile.username} profileId={profile.id} title={profile.title} />
+        <div className="hidden sm:flex fixed top-4 right-4 z-40 items-center gap-1 rounded-full border border-white/10 bg-slate-900/80 backdrop-blur p-1 shadow-lg">
+          <button
+            onClick={() => setPreviewMode("phone")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
+              previewMode === "phone"
+                ? "bg-white text-slate-900"
+                : "text-white/70 hover:text-white"
+            }`}
+            aria-pressed={previewMode === "phone"}
+          >
+            <Smartphone className="w-3.5 h-3.5" />
+            Phone
+          </button>
+          <button
+            onClick={() => setPreviewMode("compact")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${
+              previewMode === "compact"
+                ? "bg-white text-slate-900"
+                : "text-white/70 hover:text-white"
+            }`}
+            aria-pressed={previewMode === "compact"}
+          >
+            <Maximize2 className="w-3.5 h-3.5" />
+            Compact
+          </button>
         </div>
       )}
 

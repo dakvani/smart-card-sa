@@ -584,7 +584,3 @@
   animation: wiggle-bell 1.6s ease-in-out infinite;
   transform-origin: 50% 0%;
 }
-
-/* Hide scrollbar (used by horizontal pill rows) */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
