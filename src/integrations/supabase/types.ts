@@ -698,6 +698,42 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_blocks: {
+        Row: {
+          click_count: number
+          created_at: string
+          data: Json
+          id: string
+          kind: string
+          position: number
+          updated_at: string
+          user_id: string
+          visible: boolean
+        }
+        Insert: {
+          click_count?: number
+          created_at?: string
+          data?: Json
+          id?: string
+          kind: string
+          position?: number
+          updated_at?: string
+          user_id: string
+          visible?: boolean
+        }
+        Update: {
+          click_count?: number
+          created_at?: string
+          data?: Json
+          id?: string
+          kind?: string
+          position?: number
+          updated_at?: string
+          user_id?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
       profile_templates: {
         Row: {
           animation_intensity: number | null
@@ -810,7 +846,9 @@ export type Database = {
           gradient_direction: string | null
           id: string
           motion_enabled: boolean
+          onboarded: boolean
           plan: string
+          qr_settings: Json
           social_links: Json | null
           theme_gradient: string | null
           theme_name: string | null
@@ -819,6 +857,8 @@ export type Database = {
           updated_at: string | null
           user_id: string
           username: string
+          wallpaper_style: string | null
+          wallpaper_value: string | null
           welcome_email_attempts: number
           welcome_email_footer_version: number | null
           welcome_email_last_attempt_at: string | null
@@ -840,7 +880,9 @@ export type Database = {
           gradient_direction?: string | null
           id?: string
           motion_enabled?: boolean
+          onboarded?: boolean
           plan?: string
+          qr_settings?: Json
           social_links?: Json | null
           theme_gradient?: string | null
           theme_name?: string | null
@@ -849,6 +891,8 @@ export type Database = {
           updated_at?: string | null
           user_id: string
           username: string
+          wallpaper_style?: string | null
+          wallpaper_value?: string | null
           welcome_email_attempts?: number
           welcome_email_footer_version?: number | null
           welcome_email_last_attempt_at?: string | null
@@ -870,7 +914,9 @@ export type Database = {
           gradient_direction?: string | null
           id?: string
           motion_enabled?: boolean
+          onboarded?: boolean
           plan?: string
+          qr_settings?: Json
           social_links?: Json | null
           theme_gradient?: string | null
           theme_name?: string | null
@@ -879,6 +925,8 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
           username?: string
+          wallpaper_style?: string | null
+          wallpaper_value?: string | null
           welcome_email_attempts?: number
           welcome_email_footer_version?: number | null
           welcome_email_last_attempt_at?: string | null

@@ -17,7 +17,7 @@ export default function Signup() {
     const checkUser = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (session) navigate("/dashboard");
+        if (session) navigate("/onboarding");
       } catch (error) {
         console.error("Session check failed:", error);
       }
@@ -25,7 +25,7 @@ export default function Signup() {
     checkUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) navigate("/dashboard");
+      if (session) navigate("/onboarding");
     });
     return () => subscription.unsubscribe();
   }, [navigate]);

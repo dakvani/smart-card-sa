@@ -169,15 +169,40 @@ export default function PublicProfile() {
           user_agent: navigator.userAgent,
         });
 
-        const { data: linksData, error: linksError } = await supabase
-          .from("links")
-          .select("*")
+        // Dual-read: prefer profile_blocks (new builder); fall back to legacy links.
+        const { data: blockRows } = await supabase
+          .from("profile_blocks")
+          .select("id, kind, data, visible, click_count, position")
           .eq("user_id", profileData.user_id)
           .eq("visible", true)
           .order("position", { ascending: true });
 
-        if (linksError) throw linksError;
-        const activeLinks = (linksData || []).filter(isLinkActive);
+        let activeLinks: LinkItem[] = [];
+        if (blockRows && blockRows.length > 0) {
+          activeLinks = (blockRows as any[])
+            .filter((b) => b.kind === "link" || b.kind === "shop_link")
+            .map((b) => ({
+              id: b.id,
+              title: (b.data?.title as string) || "Link",
+              url: (b.data?.url as string) || "",
+              visible: b.visible,
+              thumbnail_url: (b.data?.thumbnail_url as string) || null,
+              scheduled_start: (b.data?.scheduled_start as string) || null,
+              scheduled_end: (b.data?.scheduled_end as string) || null,
+              group_id: (b.data?.group_id as string) || null,
+              is_featured: !!b.data?.is_featured,
+            }))
+            .filter(isLinkActive);
+        } else {
+          const { data: linksData, error: linksError } = await supabase
+            .from("links")
+            .select("*")
+            .eq("user_id", profileData.user_id)
+            .eq("visible", true)
+            .order("position", { ascending: true });
+          if (linksError) throw linksError;
+          activeLinks = (linksData || []).filter(isLinkActive);
+        }
         setLinks(activeLinks);
 
         const groupIds = [...new Set(activeLinks.filter((l) => l.group_id).map((l) => l.group_id))];

@@ -31,6 +31,12 @@ const QRRedirect = lazy(() => import("@/pages/QRRedirect"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Unsubscribe = lazy(() => import("@/pages/Unsubscribe"));
 const MarketingUnsubscribe = lazy(() => import("@/pages/MarketingUnsubscribe"));
+const Onboarding = lazy(() => import("@/pages/Onboarding"));
+const AdminLinks = lazy(() => import("@/pages/admin/AdminLinks"));
+const AdminDesign = lazy(() => import("@/pages/admin/AdminDesign"));
+const AdminQR = lazy(() => import("@/pages/admin/AdminQR"));
+const AdminInsights = lazy(() => import("@/pages/admin/AdminInsights"));
+const AdminBuilderSettings = lazy(() => import("@/pages/admin/AdminSettings"));
 
 function RouteFallback() {
   return (
@@ -73,8 +79,15 @@ export function AnimatedRoutes() {
             <Route path="/admin/orders" element={<PageTransition><AdminOrders /></PageTransition>} />
             <Route path="/marketplace" element={<PageTransition><Marketplace /></PageTransition>} />
             <Route path="/learn" element={<PageTransition><Learn /></PageTransition>} />
-            <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
-            <Route path="/settings" element={<PageTransition><Settings /></PageTransition>} />
+            <Route path="/dashboard" element={<Navigate to="/admin/links" replace />} />
+            <Route path="/settings" element={<Navigate to="/admin/settings" replace />} />
+            <Route path="/onboarding" element={<PageTransition><Onboarding /></PageTransition>} />
+            <Route path="/admin/links" element={<PageTransition><AdminLinks /></PageTransition>} />
+            <Route path="/admin/design" element={<PageTransition><AdminDesign /></PageTransition>} />
+            <Route path="/admin/qr" element={<PageTransition><AdminQR /></PageTransition>} />
+            <Route path="/admin/insights" element={<PageTransition><AdminInsights /></PageTransition>} />
+            <Route path="/admin/settings" element={<PageTransition><AdminBuilderSettings /></PageTransition>} />
+            {/* Keep legacy /dashboard route element imports usable for AdminDashboard which already lives at /admin */}
             <Route path="/~oauth/*" element={<Navigate to="/login" replace />} />
             <Route path="/unsubscribe" element={<PageTransition><Unsubscribe /></PageTransition>} />
             <Route path="/marketing-unsubscribe" element={<PageTransition><MarketingUnsubscribe /></PageTransition>} />
