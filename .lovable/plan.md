@@ -1,70 +1,140 @@
-Features-first batch. Performance work will follow in a dedicated turn.
 
-## 1. Marketing unsubscribe — re-subscribe option
+# Linktree-style profile builder rebuild
 
-- Extend `/marketing-unsubscribe` so after a successful unsubscribe (or when the link shows "already unsubscribed"), a "Resubscribe" button appears.
-- Add `POST /marketing-unsubscribe` action `resubscribe` (or a separate `?action=resubscribe` flag) in the edge function that clears `unsubscribed_at` for that token.
-- Show clear states: Success (just unsubscribed) → optional resubscribe; Already unsubscribed → resubscribe; Invalid/expired token → blocking message with no action.
-- Token stays single-use-per-state: each click toggles between subscribed and unsubscribed; expired tokens (none today, but reserved for future TTL) keep the invalid message.
+Replace the current Dashboard/Settings split with a unified `/admin/links` builder modeled on the videos, plus a multi-step onboarding wizard. Keep the existing dark glassmorphism + indigo→pink gradient brand. Migrate all existing data — no destructive changes.
 
-## 2. Admin email content editor — app + auth emails
-
-### Data model
-New table `email_template_overrides` (one row per template):
+## 1. Information architecture
 
 ```text
-template_key       text primary key      e.g. 'welcome', 'signup', 'recovery'
-kind               text  ('app' | 'auth')
-subject_override   text  nullable
-body_intro         text  nullable        rich-text block shown above main content
-body_outro         text  nullable        rich-text block shown below main content
-cta_label          text  nullable
-enabled            boolean default true  when false, fall back to code default
-version            int   default 1       bumped on every save (audit trail)
-updated_by         uuid  nullable
-updated_at         timestamptz
+/onboarding              Wizard (post-signup, only if profile.onboarded = false)
+  step 1  Pick username   (reuse use-username-check)
+  step 2  Verify email    (OTP — already wired)
+  step 3  Pick platforms  (multi-select: IG, X, YT, TikTok, FB, LinkedIn, GitHub, WhatsApp)
+  step 4  Upload avatar   (reuse AvatarUpload)
+  step 5  "Looking good!" preview → Continue building
+
+/admin/links             3-column builder (Links tab)
+/admin/design            Theme + Wallpaper + Footer
+/admin/qr                QR customizer
+/admin/insights          Analytics (existing AnalyticsCharts wrapped)
+/admin/settings          Account, security, plan (existing Settings wrapped)
+
+/u/:username (or current /:username) — public profile, unchanged data shape
 ```
 
-Admin-only RLS (`has_role admin`). `service_role` full access for edge functions. Trigger bumps `version` and stamps `updated_by` via `auth.uid()`.
+Old `/dashboard` redirects to `/admin/links`. Old `/settings` redirects to `/admin/settings`.
 
-### Templates read overrides at render time
-- App templates (`_shared/transactional-email-templates/*.tsx`): `send-transactional-email` loads the override row by `templateName`, passes `subjectOverride`, `bodyIntro`, `bodyOutro`, `ctaLabel` into the React template. Templates render overrides where defined and fall back to defaults otherwise.
-- Auth templates (`_shared/email-templates/*.tsx`): `auth-email-hook` does the same lookup keyed by event type (`signup`, `recovery`, `magiclink`, `invite`, `email_change`, `reauthentication`) and threads the overrides into each template before enqueue.
-- Logged `template_version` (audit field) recorded in `email_send_log.metadata` so we can trace which override version a given email used.
+## 2. Layout — desktop (≥md)
 
-### Admin UI
-New `AdminEmailTemplatesEditor` component on the existing Emails tab:
-- List all known templates with kind badge (App / Auth).
-- Per template: editable Subject, Intro text, Outro text, optional CTA label, "enabled" toggle, version + last-updated indicator, Preview button that calls the existing `preview-transactional-email` function (extended to accept ad-hoc overrides for live preview).
-- Reset-to-default action clears overrides (sets row `enabled=false` or nullifies fields).
+```text
+┌──────────┬─────────────────────────────┬──────────────┐
+│ Sidebar  │  Center column              │ Live preview │
+│          │                             │  (sticky)    │
+│ Links    │  Profile header card        │              │
+│ Design   │  ┌───────────────────────┐  │ ┌──────────┐ │
+│ QR       │  │ + Add                 │  │ │  phone   │ │
+│ Insights │  └───────────────────────┘  │ │  mockup  │ │
+│ Settings │  Block list (DnD)           │ │          │ │
+│          │   • Link block              │ │ realtime │ │
+│ ───────  │   • Social row block        │ │ updates  │ │
+│ Plan     │   • Header/text block       │ │          │ │
+│ Logout   │   • Media block             │ └──────────┘ │
+│          │   • Contact block           │  Share btn   │
+└──────────┴─────────────────────────────┴──────────────┘
+```
 
-Constraint: we do NOT let admins replace the entire HTML body — too easy to break deliverability. Editable surfaces are subject + structured copy blocks, mirroring the welcome footer pattern already in place.
+## 3. Layout — mobile (<md)
 
-## 3. Mobile-first profile builder redesign
+Single column. Live preview becomes a peek strip pinned under the top bar (collapsible). `MobileTabBar` (already exists) navigates between Links / Design / QR / Stats / Settings. Each Add / Edit opens a full-height bottom Drawer with sticky save bar.
 
-Scope: `src/pages/Dashboard.tsx` and the link/appearance editors used inside it.
+## 4. Block model (replaces flat `links`)
 
-Pattern: phone preview becomes the hero on mobile; editing happens in a bottom sheet/drawer that slides up per section, instead of stacked accordions.
+New table `profile_blocks` supersedes per-row `links`. Migration copies every existing `links` row into a `profile_blocks` row of `kind='link'` with `data = { title, url, thumbnail_url, scheduled_start, scheduled_end, is_featured, group_id }`. The `links` table stays for now (read-only fallback) and will be deprecated next turn.
 
-- Sticky bottom nav (mobile only) with 4 tabs: Profile, Links, Theme, Share.
-- Tapping a tab opens a Drawer (already in `ui/drawer.tsx`) containing only that section's fields. Drawer is full-height, scrollable, with a sticky Save bar.
-- Replace dense per-link cards with a compact list row: drag handle, title, switch, edit chevron. Tapping opens an EditLink drawer.
-- Live preview (`ProfileShareCard`/`LivePreview`) stays pinned above the drawer (peek view) so users see changes in real time.
-- Hide desktop side panels on `<md`; keep current desktop layout untouched at `md+`.
-- Bigger tap targets (min 44px), reduced font weight stacking, no horizontal scroll, no nested tab bars.
-- Use `useIsMobile()` to swap layout components rather than CSS-hiding heavy desktop subtrees, so mobile doesn't render desktop-only logic.
+```text
+profile_blocks
+  id, user_id, kind, position, visible, data jsonb, click_count,
+  created_at, updated_at
 
-No changes to data flow / business logic — purely a presentation refactor of Dashboard sub-components.
+kind ∈ {link, header, text, social_row, media_embed, image,
+        contact_whatsapp, contact_email, contact_phone, vcard,
+        product_card, shop_link}
+```
 
-## 4. Out of scope this turn
+Why jsonb: each block kind has different fields; this avoids 10 sparse columns. RLS: owner-only write, public read of `visible=true` blocks via the existing public-profile selector pattern.
 
-- Performance profiling/fixes (#2 of the original list) — separate turn as requested.
-- Marketing email sending (we still don't send marketing — only the resubscribe flow itself).
-- Editing raw HTML of email bodies.
+## 5. Add modal
 
-## Technical notes
+Categories shown as left rail tabs with a search bar at top:
 
-- Migration: add `email_template_overrides` + grants + RLS + version-bump trigger; seed rows for all known templates so admin UI has something to render immediately.
-- Edge functions touched: `marketing-unsubscribe` (resubscribe action), `send-transactional-email` (load overrides), `auth-email-hook` (load overrides), `preview-transactional-email` (accept ad-hoc overrides for live admin preview).
-- Frontend new files: `AdminEmailTemplatesEditor.tsx`, mobile drawer wrappers under `src/components/dashboard/mobile/*`.
-- All edge functions redeployed after edits.
+- **Suggested** — top 4 actions for the user's current state
+- **Social** — IG, X, YouTube, TikTok, FB, LinkedIn, GitHub
+- **Contact** — WhatsApp, Email, Phone, vCard download
+- **Commerce** — Pick from your NFC catalog products, External shop link
+- **Media** — YouTube/Spotify embed, Image
+- **Text** — Header, Paragraph, Divider
+
+Selecting a card opens an inline form, then "Add to profile" appends a `profile_blocks` row at the end.
+
+## 6. Design tab
+
+- **Theme grid** — 18 preset cards (reuse `ProfileTemplates` data, restyled). Custom theme stays as the first card.
+- **Wallpaper** — Fill / Gradient / Blur / Pattern + color picker. Stored in `profiles.wallpaper_style` + `wallpaper_value` (new columns).
+- **Footer toggle** — Hide SmartCard footer (Pro-gated, reuse `use-plan`).
+
+## 7. QR tab
+
+Reuse `QRCodeGenerator` but expose: QR color presets + hex, hide-logo toggle, custom logo upload. Save to `profiles.qr_settings jsonb`.
+
+## 8. Live preview
+
+New `<LivePhonePreview />` subscribes to a Zustand store (`useBuilderStore`) holding draft profile + blocks. Builder edits write to the store immediately (optimistic) and debounce-persist to Supabase at 600ms. The public profile route reads from Supabase as today — no behavior change there.
+
+## 9. Migration plan (data)
+
+1. Add `profile_blocks` + new profile columns (`onboarded bool`, `wallpaper_style`, `wallpaper_value`, `qr_settings jsonb`).
+2. Backfill: for each `links` row, insert a `profile_blocks` row with `kind='link'`, preserving order via existing `position`.
+3. Public profile reads `profile_blocks` first; falls back to `links` if empty (transition safety for one release).
+
+## 10. Files
+
+**New**
+- `src/pages/Onboarding.tsx` + `src/components/onboarding/{UsernameStep,OtpStep,PlatformsStep,AvatarStep,PreviewStep}.tsx`
+- `src/pages/admin/{Links,Design,QR,Insights,AdminSettings}.tsx` (route shells)
+- `src/components/builder/{BuilderShell,Sidebar,LivePhonePreview,AddBlockModal,BlockList}.tsx`
+- `src/components/builder/blocks/{LinkBlock,SocialRowBlock,HeaderBlock,TextBlock,MediaBlock,ContactBlock,ProductBlock}.tsx`
+- `src/store/builder-store.ts` (Zustand)
+- `src/lib/blocks.ts` (kind registry, defaults, migration helper)
+
+**Edited**
+- `src/components/AnimatedRoutes.tsx` — new routes, redirects from `/dashboard` and `/settings`
+- `src/components/dashboard/MobileTabBar.tsx` — point at new admin routes
+- `src/pages/PublicProfile.tsx` — read `profile_blocks`, render via shared block renderers
+
+**Deprecated (kept, not deleted)**
+- `src/pages/Dashboard.tsx`, current `SortableLinkItem`, `SocialLinksEditor` — left in tree, no longer routed.
+
+## 11. Out of scope for this turn
+
+- Linktree-style "Earn" / "Audience" tabs
+- Stripe-style commerce (we use existing NFC catalog only)
+- Drag-from-collection grouping UI (keep current `link_groups` flat)
+- Performance pass beyond what falls out naturally
+- Removing deprecated files (next turn)
+
+## 12. Risks
+
+- Block model migration is the highest-risk piece. Mitigation: dual-read in PublicProfile, no destructive `links` change this turn.
+- Live-preview store + debounced writes can race with autosave on slow networks. Mitigation: per-block version stamp, last-write-wins with toast on conflict.
+
+## 13. Order of execution
+
+1. DB migration (`profile_blocks` + new profile columns + backfill)
+2. Builder shell + store + LivePhonePreview
+3. Block renderers + AddBlockModal
+4. Design tab + QR tab
+5. Onboarding wizard
+6. PublicProfile dual-read
+7. Route swap + redirects + MobileTabBar wiring
+
+This is a multi-message build — I'll start with DB + shell this turn, then block renderers and onboarding next turns.
