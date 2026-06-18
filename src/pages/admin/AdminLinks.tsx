@@ -14,12 +14,13 @@ export default function AdminLinks() {
 
   return (
     <BuilderShell title="Links">
-      <SEO title="Profile builder · Links" description="Edit your SmartCard profile blocks" />
+      <SEO title="Profile builder · Links" description="Edit your SmartCard profile blocks" path="/admin/links" />
       {profile && (
         <section className="rounded-xl border border-border bg-background p-4 mb-4 flex items-center gap-3">
           <AvatarUpload
             currentAvatarUrl={profile.avatar_url}
             userId={profile.user_id}
+            username={profile.username}
             onUpload={(url) => patchProfile({ avatar_url: url })}
           />
           <div className="flex-1 min-w-0 space-y-1">
