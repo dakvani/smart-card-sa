@@ -1,6 +1,6 @@
 import { useBuilderStore } from "@/store/builder-store";
 import { SOCIAL_ICONS } from "@/lib/blocks";
-import { ExternalLink as LinkIcon } from "lucide-react";
+import { ExternalLink as LinkIcon, MessageCircle, Mail, Phone, Contact as ContactIcon } from "lucide-react";
 
 /**
  * Live phone-shaped preview of the current builder state.
