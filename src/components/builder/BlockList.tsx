@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors,
   type DragEndEvent,
@@ -51,11 +51,21 @@ export function BlockList() {
 function SortableBlockRow({ block }: { block: ProfileBlock }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: block.id });
   const [open, setOpen] = useState(false);
+  const editorRef = useRef<HTMLDivElement>(null);
   const update = useBuilderStore((s) => s.updateBlock);
   const remove = useBuilderStore((s) => s.deleteBlock);
   const toggle = useBuilderStore((s) => s.toggleVisible);
   const def = getDef(block.kind);
   const Icon = def?.icon ?? GripVertical;
+
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(() => {
+      const el = editorRef.current?.querySelector<HTMLInputElement | HTMLTextAreaElement>("input, textarea");
+      el?.focus();
+    }, 50);
+    return () => clearTimeout(t);
+  }, [open]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -89,7 +99,7 @@ function SortableBlockRow({ block }: { block: ProfileBlock }) {
         </button>
       </div>
       {open && (
-        <div className="px-3 pb-3 border-t border-border/60 pt-3">
+        <div ref={editorRef} className="px-3 pb-3 border-t border-border/60 pt-3">
           <BlockEditor block={block} onChange={(data) => update(block.id, { data } as any)} />
         </div>
       )}
@@ -100,24 +110,25 @@ function SortableBlockRow({ block }: { block: ProfileBlock }) {
 function describe(b: ProfileBlock): { title: string; subtitle?: string } {
   const d = b.data || {};
   const def = getDef(b.kind);
+  const label = def?.label ?? b.kind;
   switch (b.kind) {
-    case "link": return { title: d.title || "Untitled link", subtitle: d.url };
-    case "header": return { title: d.text || "Header" };
-    case "text": return { title: d.text || "Paragraph", subtitle: undefined };
+    case "link": return { title: "Link", subtitle: d.title || d.url || "Add a link" };
+    case "header": return { title: "Header", subtitle: d.text || "Add heading text" };
+    case "text": return { title: "Paragraph", subtitle: d.text || "Add some text" };
     case "divider": return { title: "Divider" };
     case "social_row": {
       const filled = Object.entries(d).filter(([_, v]) => v).map(([k]) => k);
-      return { title: "Social row", subtitle: filled.length ? filled.join(", ") : "No handles yet" };
+      return { title: "Social", subtitle: filled.length ? filled.join(", ") : "Add your handles" };
     }
-    case "media_embed": return { title: d.title || "Media embed", subtitle: d.url };
-    case "image": return { title: d.caption || "Image", subtitle: d.url };
-    case "contact_whatsapp": return { title: "WhatsApp", subtitle: d.phone };
-    case "contact_email": return { title: "Email", subtitle: d.email };
-    case "contact_phone": return { title: "Phone", subtitle: d.phone };
-    case "vcard": return { title: d.name || "vCard", subtitle: d.phone || d.email };
-    case "product_card": return { title: d.title || "NFC Product", subtitle: d.product_id };
-    case "shop_link": return { title: d.title || "Shop", subtitle: d.url };
-    default: return { title: def?.label ?? b.kind };
+    case "media_embed": return { title: "Embed", subtitle: d.title || d.url || "Paste a URL" };
+    case "image": return { title: "Image", subtitle: d.caption || d.url || "Add an image" };
+    case "contact_whatsapp": return { title: "WhatsApp", subtitle: d.phone || "Add a number" };
+    case "contact_email": return { title: "Email", subtitle: d.email || "Add an email" };
+    case "contact_phone": return { title: "Phone", subtitle: d.phone || "Add a number" };
+    case "vcard": return { title: "Contact", subtitle: d.name || d.phone || d.email || "Add contact details" };
+    case "product_card": return { title: "NFC Product", subtitle: d.title || d.product_id || "Pick a product" };
+    case "shop_link": return { title: "Shop link", subtitle: d.title || d.url || "Paste a URL" };
+    default: return { title: label };
   }
 }
 
