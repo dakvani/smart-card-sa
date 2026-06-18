@@ -357,7 +357,7 @@ export default function PublicProfile() {
               Compact
             </button>
           </div>
-          <ShareProfileButton username={profile.username} title={profile.title} />
+          <ShareProfileButton username={profile.username} profileId={profile.id} title={profile.title} />
         </div>
       )}
 
