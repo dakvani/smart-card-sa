@@ -1,6 +1,6 @@
 import { useBuilderStore } from "@/store/builder-store";
 import { SOCIAL_ICONS } from "@/lib/blocks";
-import { ExternalLink as LinkIcon } from "lucide-react";
+import { ExternalLink as LinkIcon, MessageCircle, Mail, Phone, Contact as ContactIcon } from "lucide-react";
 
 /**
  * Live phone-shaped preview of the current builder state.
@@ -70,17 +70,18 @@ function PreviewBlock({ kind, data }: { kind: string; data: Record<string, any> 
       </button>
     );
   }
-  if (kind === "contact_whatsapp") return <PreviewPill label={data.phone ? `WhatsApp · ${data.phone}` : "WhatsApp"} />;
-  if (kind === "contact_email") return <PreviewPill label={data.email || "Email"} />;
-  if (kind === "contact_phone") return <PreviewPill label={data.phone || "Call"} />;
-  if (kind === "vcard") return <PreviewPill label={data.name ? `Save ${data.name}` : "Save contact"} />;
+  if (kind === "contact_whatsapp") return <PreviewPill icon={MessageCircle} label="WhatsApp" />;
+  if (kind === "contact_email") return <PreviewPill icon={Mail} label="Email" />;
+  if (kind === "contact_phone") return <PreviewPill icon={Phone} label="Phone" />;
+  if (kind === "vcard") return <PreviewPill icon={ContactIcon} label="Save Contact" />;
   return null;
 }
 
-function PreviewPill({ label }: { label: string }) {
+function PreviewPill({ label, icon: Icon }: { label: string; icon?: React.ComponentType<{ className?: string }> }) {
   return (
-    <button className="w-full rounded-xl bg-white/15 text-white py-2.5 px-4 text-sm font-medium border border-white/25">
-      {label}
+    <button className="w-full rounded-xl bg-white/15 text-white py-2.5 px-4 text-sm font-medium border border-white/25 flex items-center justify-center gap-2">
+      {Icon && <Icon className="w-4 h-4" />}
+      <span>{label}</span>
     </button>
   );
 }
