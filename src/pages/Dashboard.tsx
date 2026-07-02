@@ -25,6 +25,8 @@ import type { User, Session } from "@supabase/supabase-js";
 import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
 import { SocialLinksEditor, SocialLinks } from "@/components/dashboard/SocialLinksEditor";
 import { SortableLinkItem } from "@/components/dashboard/SortableLinkItem";
+import { NewLinkDialog } from "@/components/dashboard/NewLinkDialog";
+import { getLinkTypeDef, type LinkType } from "@/lib/link-types";
 import { SocialIcons } from "@/components/profile/SocialIcons";
 const AnalyticsCharts = lazy(() =>
   import("@/components/dashboard/AnalyticsCharts").then((m) => ({ default: m.AnalyticsCharts }))
@@ -374,15 +376,18 @@ export default function Dashboard() {
 
 
   // Link operations
-  const addLink = async () => {
+  const addLink = async (type: LinkType = "custom") => {
     if (!user) return;
-    
+
+    const typeDef = getLinkTypeDef(type);
+    const title =
+      type === "custom" ? "New Link" : typeDef.label.replace(/\s*\(.*\)$/, "");
     const newPosition = links.length;
     const { data, error } = await supabase
       .from("links")
       .insert({
         user_id: user.id,
-        title: "New Link",
+        title,
         url: "",
         position: newPosition,
       })
@@ -395,7 +400,7 @@ export default function Dashboard() {
     }
 
     setLinks([...links, data]);
-    toast.success("Link added!");
+    toast.success(`${title} added!`);
   };
 
   const updateLink = async (id: string, updates: Partial<LinkItem>) => {
@@ -792,9 +797,14 @@ export default function Dashboard() {
                   />
 
                   <div className="border-t border-border pt-4 sm:pt-6">
-                    <Button onClick={addLink} variant="gradient" className="w-full">
-                      <Plus className="w-4 h-4" /> Add New Link
-                    </Button>
+                    <NewLinkDialog
+                      onCreate={(type) => addLink(type)}
+                      trigger={
+                        <Button variant="gradient" className="w-full">
+                          <Plus className="w-4 h-4" /> Add New Link
+                        </Button>
+                      }
+                    />
                   </div>
                   
                   {links.length === 0 ? (
