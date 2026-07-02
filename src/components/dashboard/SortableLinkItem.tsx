@@ -95,7 +95,7 @@ export function SortableLinkItem({
   // Strict min/max height caps keep each card at a Linktree-like density on mobile.
   const containerPad = compact ? "p-2" : "p-2.5 sm:p-4";
   const mobileMinH = "min-h-[64px]";
-  const mobileMaxH = compact ? "max-h-[168px]" : "max-h-[224px]";
+  const mobileMaxH = compact ? "max-h-[210px]" : "max-h-[260px]";
   const inputPadY = compact ? "py-1" : "py-1.5 sm:py-2";
   const inputText = compact ? "text-[12px] sm:text-sm" : "text-[13px] sm:text-sm";
   const gapY = compact ? "space-y-1" : "space-y-1.5 sm:space-y-2";
