@@ -65,7 +65,7 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
 
   if (subscribed) {
     return (
-      <div className="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-primary-foreground/15 border border-primary-foreground/20 text-primary-foreground text-[11px]">
+      <div className="inline-flex items-center gap-1 h-6 px-2.5 rounded-full bg-primary-foreground/15 border border-primary-foreground/20 text-primary-foreground text-[10px]">
         <Check className="w-3 h-3 text-green-400" />
         <span>Subscribed</span>
       </div>
@@ -77,7 +77,7 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
       <button
         type="button"
         onClick={() => setExpanded(true)}
-        className="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-primary-foreground/15 hover:bg-primary-foreground/25 backdrop-blur border border-primary-foreground/20 text-primary-foreground text-[11px] font-medium transition-colors"
+        className="inline-flex items-center gap-1 h-6 px-2.5 rounded-full bg-primary-foreground/15 hover:bg-primary-foreground/25 backdrop-blur border border-primary-foreground/20 text-primary-foreground text-[10px] font-semibold transition-colors"
       >
         <Mail className="w-3 h-3" />
         Subscribe
@@ -88,7 +88,7 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="inline-flex items-center h-7 pl-2.5 pr-0.5 rounded-full bg-primary-foreground/15 backdrop-blur border border-primary-foreground/20"
+      className="inline-flex items-center h-6 pl-2 pr-0.5 rounded-full bg-primary-foreground/15 backdrop-blur border border-primary-foreground/20"
     >
       <Mail className="w-3 h-3 text-primary-foreground/70 shrink-0" />
       <input
@@ -97,7 +97,7 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="you@email.com"
         autoFocus
-        className="w-40 h-full bg-transparent text-primary-foreground placeholder:text-primary-foreground/50 outline-none text-[11px] px-2"
+        className="w-32 h-full bg-transparent text-primary-foreground placeholder:text-primary-foreground/50 outline-none text-[10px] px-1.5"
         required
         maxLength={255}
       />
@@ -105,9 +105,9 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
         type="submit"
         disabled={loading}
         aria-label="Submit email"
-        className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-primary-foreground text-background hover:bg-primary-foreground/90 disabled:opacity-60 transition-colors"
+        className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-primary-foreground text-background hover:bg-primary-foreground/90 disabled:opacity-60 transition-colors"
       >
-        {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <ArrowRight className="w-3 h-3" />}
+        {loading ? <Loader2 className="w-2.5 h-2.5 animate-spin" /> : <ArrowRight className="w-2.5 h-2.5" />}
       </button>
       <button
         type="button"
@@ -116,7 +116,7 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
           setEmail("");
         }}
         aria-label="Cancel"
-        className="ml-0.5 p-1 text-primary-foreground/60 hover:text-primary-foreground"
+        className="ml-0.5 p-0.5 text-primary-foreground/60 hover:text-primary-foreground"
       >
         <X className="w-3 h-3" />
       </button>
