@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { Menu, X, LayoutDashboard, Home, Settings, LogOut, ChevronDown, Shield } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { ThemeToggle } from "@/components/ThemeToggle";
+// ThemeToggle removed from public navigation — site appearance is admin-controlled.
 import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
@@ -255,7 +255,6 @@ export function Navbar() {
 
         {/* Auth Buttons & Theme Toggle */}
         <div className="hidden lg:flex items-center gap-3">
-          <ThemeToggle />
           {isAuthenticated ? (
             <>
               {location.pathname !== "/" && (
@@ -337,7 +336,7 @@ export function Navbar() {
 
         {/* Mobile Menu Button */}
         <div className="lg:hidden flex items-center gap-2">
-          <ThemeToggle />
+          
           <button
             ref={mobileToggleRef}
             className="p-2 text-muted-foreground hover:text-foreground transition-colors"
