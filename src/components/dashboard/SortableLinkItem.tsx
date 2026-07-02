@@ -131,7 +131,7 @@ export function SortableLinkItem({
         {/* Thumbnail — auto-shows platform icon, tap to upload a custom one */}
         <div className="shrink-0">
           {(() => {
-            const t = detectLinkType(link.url || "");
+            const t = detectLinkType(link.url || "", link.title);
             const def = getLinkTypeDef(t);
             const Ico =
               (def.icon &&
@@ -160,7 +160,7 @@ export function SortableLinkItem({
             className={`w-full px-2.5 ${inputPadY} rounded-lg border border-input bg-background ${inputText} font-medium`}
           />
           {(() => {
-            const currentType: LinkType = detectLinkType(link.url || "");
+            const currentType: LinkType = detectLinkType(link.url || "", link.title);
             const typeDef = getLinkTypeDef(currentType);
             const urlResult = validateUrl(link.url || "");
             const hasUrl = (link.url || "").trim().length > 0;

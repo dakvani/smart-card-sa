@@ -298,8 +298,8 @@ export default function PublicProfile() {
 
   // Auto-icon for every link based on the detected type. Custom/website links
   // fall back to a generic icon so every button has a visual anchor.
-  const renderAutoIcon = (url: string, size = "w-5 h-5") => {
-    const t = detectLinkType(url);
+  const renderAutoIcon = (url: string, size = "w-5 h-5", title?: string) => {
+    const t = detectLinkType(url, title);
     const def = getLinkTypeDef(t);
     const iconName = def.icon || (t === "website" ? "Globe" : "Link2");
     const Ico =
@@ -307,6 +307,7 @@ export default function PublicProfile() {
       LucideIcons.Link2;
     return <Ico className={`${size} text-primary-foreground shrink-0`} />;
   };
+
 
 
   return (
@@ -444,10 +445,10 @@ export default function PublicProfile() {
                         {link.thumbnail_url ? (
                           <img src={link.thumbnail_url} alt="" className="w-12 h-12 rounded-xl object-cover flex-shrink-0 ring-2 ring-primary-foreground/30" />
                         ) : (
-                          renderAutoIcon(link.url, "w-6 h-6")
+                          renderAutoIcon(link.url, "w-6 h-6", link.title)
                         )}
                         <span className="flex-1 text-primary-foreground font-bold text-center text-lg">{link.title}</span>
-                        {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-12" />}
+                        {(link.thumbnail_url || renderAutoIcon(link.url, "w-5 h-5", link.title)) && <div className="w-12" />}
                       </motion.button>
                     ))}
                   </div>
@@ -467,10 +468,10 @@ export default function PublicProfile() {
                         {link.thumbnail_url ? (
                           <img src={link.thumbnail_url} alt="" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
                         ) : (
-                          renderAutoIcon(link.url, "w-5 h-5")
+                          renderAutoIcon(link.url, "w-5 h-5", link.title)
                         )}
                         <span className="flex-1 text-primary-foreground font-semibold text-center">{link.title}</span>
-                        {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-10" />}
+                        {(link.thumbnail_url || renderAutoIcon(link.url, "w-5 h-5", link.title)) && <div className="w-10" />}
                       </motion.button>
                     ))}
                   </div>
@@ -500,10 +501,10 @@ export default function PublicProfile() {
                             {link.thumbnail_url ? (
                               <img src={link.thumbnail_url} alt="" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
                             ) : (
-                              renderAutoIcon(link.url, "w-5 h-5")
+                              renderAutoIcon(link.url, "w-5 h-5", link.title)
                             )}
                             <span className="flex-1 text-primary-foreground font-semibold text-center">{link.title}</span>
-                            {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-10" />}
+                            {(link.thumbnail_url || renderAutoIcon(link.url, "w-5 h-5", link.title)) && <div className="w-10" />}
                           </motion.button>
                         ))}
                       </div>

@@ -78,9 +78,11 @@ const SOCIAL_HOSTS: Partial<Record<LinkType, string>> = {
   spotify: "open.spotify.com",
 };
 
-export function detectLinkType(url: string): LinkType {
+export function detectLinkType(url: string, title?: string): LinkType {
   const u = (url || "").trim().toLowerCase();
-  if (!u) return "custom";
+  const t = (title || "").trim().toLowerCase();
+
+  // URL-based detection (most reliable)
   if (u.startsWith("tel:")) return "phone";
   if (u.startsWith("mailto:")) return "email";
   if (u.startsWith("https://wa.me/") || u.startsWith("https://api.whatsapp.com/")) return "whatsapp";
@@ -88,8 +90,42 @@ export function detectLinkType(url: string): LinkType {
     if (!host) continue;
     if (u.includes(`//${host}/`) || u.includes(`//www.${host}/`)) return type as LinkType;
   }
+
+  // Title-based fallback — for links saved as raw handles/numbers without a scheme.
+  if (t) {
+    const titleMap: Array<[RegExp, LinkType]> = [
+      [/whats\s*app|\bwa\b/, "whatsapp"],
+      [/e[-\s]?mail|@/, "email"],
+      [/\bcall\b|\bphone\b|\bmobile\b|\btel\b|dial/, "phone"],
+      [/instagram|\binsta\b|\big\b/, "instagram"],
+      [/facebook|\bfb\b/, "facebook"],
+      [/messenger/, "messenger"],
+      [/snap\s*chat|snap/, "snapchat"],
+      [/twitter|\bx\b/, "twitter"],
+      [/linked\s*in/, "linkedin"],
+      [/youtube|\byt\b/, "youtube"],
+      [/tik\s*tok/, "tiktok"],
+      [/github/, "github"],
+      [/telegram/, "telegram"],
+      [/discord/, "discord"],
+      [/pinterest/, "pinterest"],
+      [/reddit/, "reddit"],
+      [/twitch/, "twitch"],
+      [/spotify/, "spotify"],
+      [/website|portfolio|blog|homepage/, "website"],
+    ];
+    for (const [re, type] of titleMap) {
+      if (re.test(t)) return type;
+    }
+  }
+
+  // URL heuristics: pure digits/+ → phone; contains @ → email.
+  if (/^[+\d][\d\s\-().]{5,}$/.test(u)) return "phone";
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u)) return "email";
+
   return "custom";
 }
+
 
 export function extractHandle(type: LinkType, url: string): string {
   const v = (url || "").trim();

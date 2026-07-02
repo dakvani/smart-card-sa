@@ -1178,7 +1178,7 @@ export default function Dashboard() {
                       </div>
                       <div className="space-y-2 relative z-10">
                         {links.filter(l => l.visible).map(link => {
-                          const t = detectLinkType(link.url || "");
+                          const t = detectLinkType(link.url || "", link.title);
                           const def = getLinkTypeDef(t);
                           const iconName = def.icon || (t === "website" ? "Globe" : "Link2");
                           const Ico = (LucideIcons as Record<string, React.ComponentType<{ className?: string }>>)[iconName] || LucideIcons.Link2;
