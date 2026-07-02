@@ -23,7 +23,7 @@ export function ProductDesigns() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          className="max-w-3xl mx-auto text-center mb-10 sm:mb-16"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs font-medium mb-4 text-foreground/80">
             <Palette className="w-3.5 h-3.5 text-primary" /> Designs that match your brand
