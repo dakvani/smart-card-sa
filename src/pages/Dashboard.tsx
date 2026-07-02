@@ -690,21 +690,22 @@ export default function Dashboard() {
           <div className="flex-1 min-w-0">
             <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 shadow-sm overflow-hidden">
               {/* Panel Header */}
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/60 bg-secondary/30">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 border-b border-border/60 bg-secondary/30 gap-2">
+                <div className="flex items-center gap-2 min-w-0">
                   {(() => {
                     const t = tabs.find(x => x.id === activeTab)!;
-                    return <t.icon className="w-3.5 h-3.5 text-primary" />;
+                    return <t.icon className="w-3.5 h-3.5 text-primary shrink-0" />;
                   })()}
-                  <h2 className="text-xs font-semibold uppercase tracking-wider">
-                    {tabs.find(x => x.id === activeTab)?.label} Builder
+                  <h2 className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider truncate">
+                    {tabs.find(x => x.id === activeTab)?.label}
+                    <span className="hidden sm:inline"> Builder</span>
                   </h2>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  {/* Autosave status pill */}
+                <div className="flex items-center gap-1 sm:gap-1.5">
+                  {/* Autosave status pill — icon only on mobile */}
                   <div
                     data-testid="autosave-status"
-                    className={`flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded-full mr-1 border transition-colors ${
+                    className={`flex items-center gap-1 text-[10px] font-medium px-1.5 sm:px-2 py-1 rounded-full border transition-colors ${
                       saveStatus === "saving"
                         ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
                         : saveStatus === "error"
@@ -716,25 +717,30 @@ export default function Dashboard() {
                   >
                     {saveStatus === "saving" && (
                       <>
-                        <Loader2 className="w-3 h-3 animate-spin" /> Saving…
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        <span className="hidden sm:inline">Saving…</span>
                       </>
                     )}
                     {saveStatus === "saved" && (
                       <>
                         <Check className="w-3 h-3" />
-                        {lastSavedAt
-                          ? `Saved ${lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
-                          : "Saved"}
+                        <span className="hidden sm:inline">
+                          {lastSavedAt
+                            ? `Saved ${lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+                            : "Saved"}
+                        </span>
                       </>
                     )}
                     {saveStatus === "error" && (
                       <>
-                        <span className="w-1.5 h-1.5 rounded-full bg-destructive" /> Save failed
+                        <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
+                        <span className="hidden sm:inline">Save failed</span>
                       </>
                     )}
                     {saveStatus === "idle" && (
                       <>
-                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" /> Not saved yet
+                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" />
+                        <span className="hidden sm:inline">Not saved yet</span>
                       </>
                     )}
                   </div>
@@ -742,7 +748,7 @@ export default function Dashboard() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7"
+                    className="h-7 w-7 hidden sm:inline-flex"
                     onClick={handleUndo}
                     disabled={past.length === 0 || saving}
                     title="Undo (last profile change)"
@@ -752,7 +758,7 @@ export default function Dashboard() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7"
+                    className="h-7 w-7 hidden sm:inline-flex"
                     onClick={handleRedo}
                     disabled={future.length === 0 || saving}
                     title="Redo"
@@ -762,7 +768,7 @@ export default function Dashboard() {
                   <Button
                     variant="gradient"
                     size="sm"
-                    className="h-7 text-[11px] px-2.5"
+                    className="h-7 text-[11px] px-2 sm:px-2.5"
                     onClick={handleSaveNow}
                     disabled={saving}
                     title="Save & publish to your live page"
@@ -772,7 +778,8 @@ export default function Dashboard() {
                 </div>
 
               </div>
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
+
               {activeTab === "links" && (
                 <div className="space-y-6">
                   {/* Group Manager */}
