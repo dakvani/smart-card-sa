@@ -504,24 +504,26 @@ export function ScrollStory() {
         {/* CTA overlay — reveals during the final stage */}
         <motion.div
           style={{ opacity: ctaOpacity, y: ctaY }}
-          className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col sm:flex-row items-center gap-3 px-4"
+          className="absolute bottom-20 md:bottom-24 left-0 right-0 z-20 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 px-6"
         >
-          <Button asChild size="lg" className="gradient-primary shadow-glow">
+          <Button asChild size="lg" className="gradient-primary shadow-glow w-full sm:w-auto">
             <Link to="/nfc-products">
               Shop SmartCards <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="glass">
+          <Button asChild size="lg" variant="outline" className="glass w-full sm:w-auto">
             <Link to="/signup">Create your profile</Link>
           </Button>
           <Button
             size="lg"
             variant="ghost"
             onClick={() => smoothScrollTo("story-next")}
+            className="w-full sm:w-auto"
           >
             Keep exploring <ChevronDown className="ml-2 w-4 h-4" />
           </Button>
         </motion.div>
+
 
         {/* Scroll hint — only visible at the very top */}
         <ScrollHint progress={smoothProgress} />
