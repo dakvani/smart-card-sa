@@ -1,8 +1,12 @@
-import { UserPlus } from "lucide-react";
+import { useState } from "react";
+import { UserPlus, Loader2 } from "lucide-react";
 import { detectLinkType } from "@/lib/link-types";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface SaveContactButtonProps {
   profile: {
+    id: string;
     username: string;
     title?: string | null;
     bio?: string | null;
@@ -13,94 +17,142 @@ interface SaveContactButtonProps {
   publicUrl: string;
 }
 
+// vCard 3.0 requires CRLF line endings per RFC 2426.
+const CRLF = "\r\n";
 
 const escapeVcf = (s: string) =>
-  (s || "").replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+  (s || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/\r?\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
 
-async function fetchAvatarBase64(url: string): Promise<string | null> {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    const blob = await res.blob();
-    return await new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const s = String(reader.result || "");
-        const b64 = s.split(",")[1] || "";
-        resolve(b64 || null);
-      };
-      reader.onerror = () => resolve(null);
-      reader.readAsDataURL(blob);
-    });
-  } catch {
-    return null;
+/** Fold long vCard lines at 75 octets per RFC 2426. */
+const foldLine = (line: string): string => {
+  if (line.length <= 75) return line;
+  const parts: string[] = [];
+  let i = 0;
+  parts.push(line.slice(0, 75));
+  i = 75;
+  while (i < line.length) {
+    parts.push(" " + line.slice(i, i + 74));
+    i += 74;
   }
-}
+  return parts.join(CRLF);
+};
+
+const normalizePhone = (raw: string): string => {
+  const trimmed = raw.trim();
+  const hasPlus = trimmed.startsWith("+");
+  const digits = trimmed.replace(/[^\d]/g, "");
+  return (hasPlus ? "+" : "") + digits;
+};
+
+const extractWhatsAppNumber = (url: string): string => {
+  const m = url.match(/wa\.me\/(\+?[\d]+)/i) || url.match(/phone=(\+?[\d]+)/i);
+  const raw = m ? m[1] : url;
+  const digits = raw.replace(/[^\d]/g, "");
+  return digits ? `+${digits}` : "";
+};
 
 export function SaveContactButton({ profile, links, publicUrl }: SaveContactButtonProps) {
+  const [busy, setBusy] = useState(false);
+
   const handleSave = async () => {
-    const displayName = profile.title || profile.username;
-    const bio = profile.bio || "";
-    const activeLinks = links.filter((l) => l.visible !== false);
+    setBusy(true);
+    try {
+      const displayName = profile.title || profile.username;
+      const bio = profile.bio || "";
+      const activeLinks = links.filter((l) => l.visible !== false);
 
-    const phones = activeLinks
-      .filter((l) => detectLinkType(l.url, l.title) === "phone")
-      .map((l) => l.url.replace(/^tel:/i, ""));
-    const whatsapps = activeLinks
-      .filter((l) => detectLinkType(l.url, l.title) === "whatsapp")
-      .map((l) => l.url.replace(/^https?:\/\/wa\.me\//i, "").replace(/^\+?/, "+"));
-    const emails = activeLinks
-      .filter((l) => detectLinkType(l.url, l.title) === "email")
-      .map((l) => l.url.replace(/^mailto:/i, ""));
-    const websites = activeLinks
-      .filter((l) => {
-        const t = detectLinkType(l.url, l.title);
-        return t === "website" || t === "custom";
-      })
-      .map((l) => l.url);
+      const phones = activeLinks
+        .filter((l) => detectLinkType(l.url, l.title) === "phone")
+        .map((l) => normalizePhone(l.url.replace(/^tel:/i, "")))
+        .filter(Boolean);
 
-    const socials = (profile.social_links as Record<string, string | undefined> | null) || {};
-    const socialUrls = Object.values(socials).filter((v): v is string => typeof v === "string" && v.length > 0);
+      const whatsapps = activeLinks
+        .filter((l) => detectLinkType(l.url, l.title) === "whatsapp")
+        .map((l) => extractWhatsAppNumber(l.url))
+        .filter(Boolean);
 
+      const emails = activeLinks
+        .filter((l) => detectLinkType(l.url, l.title) === "email")
+        .map((l) => l.url.replace(/^mailto:/i, "").trim())
+        .filter(Boolean);
 
-    let photoLine = "";
-    if (profile.avatar_url) {
-      const b64 = await fetchAvatarBase64(profile.avatar_url);
-      if (b64) photoLine = `PHOTO;ENCODING=b;TYPE=JPEG:${b64}\n`;
+      const websites = activeLinks
+        .filter((l) => {
+          const t = detectLinkType(l.url, l.title);
+          return t === "website" || t === "custom";
+        })
+        .map((l) => l.url.trim())
+        .filter(Boolean);
+
+      const socials = (profile.social_links as Record<string, string | undefined> | null) || {};
+      const socialUrls = Object.values(socials).filter(
+        (v): v is string => typeof v === "string" && v.length > 0,
+      );
+
+      const lines: string[] = [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        foldLine(`FN:${escapeVcf(displayName)}`),
+        foldLine(`N:${escapeVcf(displayName)};;;;`),
+      ];
+      if (bio) lines.push(foldLine(`NOTE:${escapeVcf(bio)}`));
+      phones.forEach((p) => lines.push(foldLine(`TEL;TYPE=CELL,VOICE:${p}`)));
+      whatsapps.forEach((p) => lines.push(foldLine(`TEL;TYPE=CELL;X-SERVICE-TYPE=WhatsApp:${p}`)));
+      emails.forEach((e) => lines.push(foldLine(`EMAIL;TYPE=INTERNET:${escapeVcf(e)}`)));
+      websites.forEach((w) => lines.push(foldLine(`URL:${escapeVcf(w)}`)));
+      socialUrls.forEach((s) => lines.push(foldLine(`URL:${escapeVcf(s)}`)));
+      if (publicUrl) lines.push(foldLine(`URL:${escapeVcf(publicUrl)}`));
+      lines.push(`REV:${new Date().toISOString()}`);
+      lines.push("END:VCARD");
+
+      const vcf = lines.join(CRLF) + CRLF;
+
+      // Fire-and-forget analytics event.
+      supabase
+        .from("profile_share_events")
+        .insert({
+          profile_id: profile.id,
+          channel: "save_contact",
+          referrer: typeof document !== "undefined" ? document.referrer || null : null,
+          user_agent: typeof navigator !== "undefined" ? navigator.userAgent : null,
+        })
+        .then(({ error }) => {
+          if (error) console.warn("share event failed:", error.message);
+        });
+
+      const filename = `${(profile.username || "contact").replace(/[^\w-]/g, "_")}.vcf`;
+      const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
+      const objectUrl = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = filename;
+      // iOS Safari sometimes ignores `download` — target=_blank lets it open the vCard viewer.
+      a.rel = "noopener";
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
+    } catch (err) {
+      console.error("save contact failed", err);
+      toast.error("Couldn't save contact. Please try again.");
+    } finally {
+      setBusy(false);
     }
-
-    const vcf =
-      "BEGIN:VCARD\n" +
-      "VERSION:3.0\n" +
-      `FN:${escapeVcf(displayName)}\n` +
-      `N:${escapeVcf(displayName)};;;;\n` +
-      (bio ? `NOTE:${escapeVcf(bio)}\n` : "") +
-      phones.map((p) => `TEL;TYPE=CELL:${escapeVcf(p)}\n`).join("") +
-      whatsapps.map((p) => `TEL;TYPE=OTHER:${escapeVcf(p)}\n`).join("") +
-      emails.map((e) => `EMAIL;TYPE=INTERNET:${escapeVcf(e)}\n`).join("") +
-      websites.map((w) => `URL:${escapeVcf(w)}\n`).join("") +
-      socialUrls.map((s) => `URL:${escapeVcf(s)}\n`).join("") +
-      `URL;TYPE=SmartCard:${escapeVcf(publicUrl)}\n` +
-      photoLine +
-      "END:VCARD\n";
-
-    const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${(profile.username || "contact").replace(/[^\w-]/g, "_")}.vcf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   return (
     <button
       onClick={handleSave}
-      className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-primary-foreground text-background font-semibold hover:bg-primary-foreground/90 active:scale-[0.98] transition-all shadow-lg"
+      disabled={busy}
+      className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-primary-foreground text-background font-semibold hover:bg-primary-foreground/90 active:scale-[0.98] transition-all shadow-lg disabled:opacity-70"
     >
-      <UserPlus className="w-4 h-4" />
+      {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
       Save to contacts
     </button>
   );
