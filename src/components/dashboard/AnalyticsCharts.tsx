@@ -31,15 +31,32 @@ export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
       try {
         const startDate = startOfDay(subDays(new Date(), period - 1));
         
-        // Fetch views for the period
-        const { data: viewsRaw, error } = await supabase
-          .from("profile_views")
-          .select("viewed_at")
-          .eq("profile_id", profileId)
-          .gte("viewed_at", startDate.toISOString())
-          .order("viewed_at", { ascending: true });
+        // Fetch views and share events for the period in parallel.
+        const [{ data: viewsRaw, error }, subRes, saveRes] = await Promise.all([
+          supabase
+            .from("profile_views")
+            .select("viewed_at")
+            .eq("profile_id", profileId)
+            .gte("viewed_at", startDate.toISOString())
+            .order("viewed_at", { ascending: true }),
+          supabase
+            .from("profile_share_events")
+            .select("id", { count: "exact", head: true })
+            .eq("profile_id", profileId)
+            .eq("channel", "subscribe_submit")
+            .gte("created_at", startDate.toISOString()),
+          supabase
+            .from("profile_share_events")
+            .select("id", { count: "exact", head: true })
+            .eq("profile_id", profileId)
+            .eq("channel", "save_contact")
+            .gte("created_at", startDate.toISOString()),
+        ]);
 
         if (error) throw error;
+        setSubscribeCount(subRes.count || 0);
+        setContactSaveCount(saveRes.count || 0);
+
 
         // Create date range
         const dateRange = eachDayOfInterval({
