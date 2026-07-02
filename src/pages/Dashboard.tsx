@@ -790,7 +790,7 @@ export default function Dashboard() {
                     onDeleteGroup={deleteGroup}
                   />
 
-                  <div className="border-t border-border pt-6">
+                  <div className="border-t border-border pt-4 sm:pt-6">
                     <Button onClick={addLink} variant="gradient" className="w-full">
                       <Plus className="w-5 h-5" /> Add New Link
                     </Button>
@@ -820,7 +820,7 @@ export default function Dashboard() {
                               items={links.filter(l => !l.group_id).map(l => l.id)} 
                               strategy={verticalListSortingStrategy}
                             >
-                              <div className="space-y-3">
+                              <div className="space-y-2 sm:space-y-3">
                                 {links.filter(l => !l.group_id).map(link => (
                                   <SortableLinkItem
                                     key={link.id}
@@ -943,7 +943,7 @@ export default function Dashboard() {
                   />
 
                   {/* Favorite Presets */}
-                  <div className="border-t border-border pt-6">
+                  <div className="border-t border-border pt-4 sm:pt-6">
                     <FavoritePresets
                       userId={user.id}
                       currentTheme={{
@@ -964,7 +964,7 @@ export default function Dashboard() {
                   </div>
 
                   {/* Profile Templates */}
-                  <div className="border-t border-border pt-6">
+                  <div className="border-t border-border pt-4 sm:pt-6">
                     <ProfileTemplates
                       isPro={isPro}
                       plan={plan}
