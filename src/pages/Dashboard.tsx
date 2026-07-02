@@ -374,15 +374,18 @@ export default function Dashboard() {
 
 
   // Link operations
-  const addLink = async () => {
+  const addLink = async (type: LinkType = "custom") => {
     if (!user) return;
-    
+
+    const typeDef = getLinkTypeDef(type);
+    const title =
+      type === "custom" ? "New Link" : typeDef.label.replace(/\s*\(.*\)$/, "");
     const newPosition = links.length;
     const { data, error } = await supabase
       .from("links")
       .insert({
         user_id: user.id,
-        title: "New Link",
+        title,
         url: "",
         position: newPosition,
       })
@@ -395,7 +398,7 @@ export default function Dashboard() {
     }
 
     setLinks([...links, data]);
-    toast.success("Link added!");
+    toast.success(`${title} added!`);
   };
 
   const updateLink = async (id: string, updates: Partial<LinkItem>) => {
