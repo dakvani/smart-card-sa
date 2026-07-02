@@ -294,7 +294,10 @@ export default function PublicProfile() {
         Scan to open on your phone
       </p>
     </div>
+  );
+
   // Auto-icon for each link based on the detected type (Instagram, WhatsApp,
+
   // Phone, etc). Custom/website links get no auto-icon so the user can attach
   // their own thumbnail via the dashboard editor ("tap to edit").
   const renderAutoIcon = (url: string, size = "w-5 h-5") => {
