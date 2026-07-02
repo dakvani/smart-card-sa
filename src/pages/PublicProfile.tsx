@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Loader2, Star, Smartphone, Maximize2 } from "lucide-react";
+import { Loader2, Star, Smartphone, Maximize2, icons as LucideIcons } from "lucide-react";
+import { detectLinkType, getLinkTypeDef } from "@/lib/link-types";
 import { SmartCardLogo } from "@/components/brand/SmartCardLogo";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
@@ -295,6 +296,22 @@ export default function PublicProfile() {
     </div>
   );
 
+  // Auto-icon for each link based on the detected type (Instagram, WhatsApp,
+
+  // Phone, etc). Custom/website links get no auto-icon so the user can attach
+  // their own thumbnail via the dashboard editor ("tap to edit").
+  const renderAutoIcon = (url: string, size = "w-5 h-5") => {
+    const t = detectLinkType(url);
+    if (t === "custom" || t === "website") return null;
+    const def = getLinkTypeDef(t);
+    const Ico =
+      (def.icon &&
+        (LucideIcons as Record<string, React.ComponentType<{ className?: string }>>)[def.icon]) ||
+      LucideIcons.Link2;
+    return <Ico className={`${size} text-primary-foreground shrink-0`} />;
+  };
+
+
   return (
     <div
       ref={accessibilityScopeRef}
@@ -427,11 +444,13 @@ export default function PublicProfile() {
                         onClick={() => handleLinkClick(link.id, link.url)}
                         className="w-full flex items-center gap-3 py-3.5 px-5 rounded-2xl bg-primary-foreground/30 backdrop-blur border border-primary-foreground/20 hover:bg-primary-foreground/40 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg"
                       >
-                        {link.thumbnail_url && (
+                        {link.thumbnail_url ? (
                           <img src={link.thumbnail_url} alt="" className="w-12 h-12 rounded-xl object-cover flex-shrink-0 ring-2 ring-primary-foreground/30" />
+                        ) : (
+                          renderAutoIcon(link.url, "w-6 h-6")
                         )}
                         <span className="flex-1 text-primary-foreground font-bold text-center text-lg">{link.title}</span>
-                        {link.thumbnail_url && <div className="w-12" />}
+                        {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-12" />}
                       </motion.button>
                     ))}
                   </div>
@@ -448,11 +467,13 @@ export default function PublicProfile() {
                         onClick={() => handleLinkClick(link.id, link.url)}
                         className="w-full flex items-center gap-3 py-3 px-5 rounded-2xl bg-primary-foreground/20 backdrop-blur hover:bg-primary-foreground/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                       >
-                        {link.thumbnail_url && (
+                        {link.thumbnail_url ? (
                           <img src={link.thumbnail_url} alt="" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
+                        ) : (
+                          renderAutoIcon(link.url, "w-5 h-5")
                         )}
                         <span className="flex-1 text-primary-foreground font-semibold text-center">{link.title}</span>
-                        {link.thumbnail_url && <div className="w-10" />}
+                        {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-10" />}
                       </motion.button>
                     ))}
                   </div>
@@ -479,11 +500,13 @@ export default function PublicProfile() {
                             onClick={() => handleLinkClick(link.id, link.url)}
                             className="w-full flex items-center gap-3 py-3 px-5 rounded-2xl bg-primary-foreground/20 backdrop-blur hover:bg-primary-foreground/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                           >
-                            {link.thumbnail_url && (
+                            {link.thumbnail_url ? (
                               <img src={link.thumbnail_url} alt="" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
+                            ) : (
+                              renderAutoIcon(link.url, "w-5 h-5")
                             )}
                             <span className="flex-1 text-primary-foreground font-semibold text-center">{link.title}</span>
-                            {link.thumbnail_url && <div className="w-10" />}
+                            {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-10" />}
                           </motion.button>
                         ))}
                       </div>
