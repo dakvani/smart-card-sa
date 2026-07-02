@@ -129,6 +129,7 @@ export default function Dashboard() {
   const [groups, setGroups] = useState<LinkGroup[]>([]);
   const [analytics, setAnalytics] = useState({ views: 0, clicks: 0 });
   const { plan, planLabel, isPro, loading: planLoading } = usePlan(user?.id);
+  const { compact, toggle: toggleCompact } = useCompactMode();
 
   // History stack for undo/redo of profile changes
   const [past, setPast] = useState<Profile[]>([]);
@@ -523,8 +524,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center py-8">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     );
   }
@@ -798,9 +799,9 @@ export default function Dashboard() {
                   </div>
                   
                   {links.length === 0 ? (
-                    <div className="text-center py-12 text-muted-foreground">
-                      <Link2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p>No links yet. Add your first link above!</p>
+                    <div className="text-center py-6 sm:py-8 text-muted-foreground">
+                      <Link2 className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-2 opacity-50" />
+                      <p className="text-xs sm:text-sm">No links yet. Add your first link above!</p>
                     </div>
                   ) : (
                     <div className="space-y-4 sm:space-y-6">
