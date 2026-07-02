@@ -298,8 +298,8 @@ export default function PublicProfile() {
 
   // Auto-icon for every link based on the detected type. Custom/website links
   // fall back to a generic icon so every button has a visual anchor.
-  const renderAutoIcon = (url: string, size = "w-5 h-5") => {
-    const t = detectLinkType(url);
+  const renderAutoIcon = (url: string, size = "w-5 h-5", title?: string) => {
+    const t = detectLinkType(url, title);
     const def = getLinkTypeDef(t);
     const iconName = def.icon || (t === "website" ? "Globe" : "Link2");
     const Ico =
@@ -307,6 +307,7 @@ export default function PublicProfile() {
       LucideIcons.Link2;
     return <Ico className={`${size} text-primary-foreground shrink-0`} />;
   };
+
 
 
   return (
