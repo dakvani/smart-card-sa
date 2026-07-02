@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Mail, Loader2, Check, X } from "lucide-react";
+import { Mail, Loader2, Check, X, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -27,12 +27,10 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
 
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from("email_subscribers")
-        .insert({
-          profile_id: profileId,
-          email: email.toLowerCase().trim(),
-        });
+      const { error } = await supabase.from("email_subscribers").insert({
+        profile_id: profileId,
+        email: email.toLowerCase().trim(),
+      });
 
       if (error) {
         if (error.code === "23505") {
@@ -42,6 +40,19 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
         }
         return;
       }
+
+      // Log a share/engagement event for dashboard analytics (fire-and-forget).
+      supabase
+        .from("profile_share_events")
+        .insert({
+          profile_id: profileId,
+          channel: "subscribe_submit",
+          referrer: typeof document !== "undefined" ? document.referrer || null : null,
+          user_agent: typeof navigator !== "undefined" ? navigator.userAgent : null,
+        })
+        .then(({ error: evErr }) => {
+          if (evErr) console.warn("subscribe event failed:", evErr.message);
+        });
 
       setSubscribed(true);
       toast.success("Successfully subscribed!");
@@ -54,7 +65,7 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
 
   if (subscribed) {
     return (
-      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-foreground/15 text-primary-foreground text-[11px]">
+      <div className="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-primary-foreground/15 border border-primary-foreground/20 text-primary-foreground text-[11px]">
         <Check className="w-3 h-3 text-green-400" />
         <span>Subscribed</span>
       </div>
@@ -66,7 +77,7 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
       <button
         type="button"
         onClick={() => setExpanded(true)}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-foreground/15 hover:bg-primary-foreground/25 backdrop-blur border border-primary-foreground/20 text-primary-foreground text-[11px] font-medium transition-colors"
+        className="inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-primary-foreground/15 hover:bg-primary-foreground/25 backdrop-blur border border-primary-foreground/20 text-primary-foreground text-[11px] font-medium transition-colors"
       >
         <Mail className="w-3 h-3" />
         Subscribe
@@ -77,24 +88,26 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="inline-flex items-center gap-1 p-1 rounded-full bg-primary-foreground/15 backdrop-blur border border-primary-foreground/20"
+      className="inline-flex items-center h-7 pl-2.5 pr-0.5 rounded-full bg-primary-foreground/15 backdrop-blur border border-primary-foreground/20"
     >
+      <Mail className="w-3 h-3 text-primary-foreground/70 shrink-0" />
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="your@email.com"
+        placeholder="you@email.com"
         autoFocus
-        className="w-40 bg-transparent text-primary-foreground placeholder:text-primary-foreground/50 outline-none text-[11px] px-2.5"
+        className="w-40 h-full bg-transparent text-primary-foreground placeholder:text-primary-foreground/50 outline-none text-[11px] px-2"
         required
         maxLength={255}
       />
       <button
         type="submit"
         disabled={loading}
-        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-foreground text-background text-[11px] font-semibold hover:bg-primary-foreground/90 disabled:opacity-60"
+        aria-label="Submit email"
+        className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-primary-foreground text-background hover:bg-primary-foreground/90 disabled:opacity-60 transition-colors"
       >
-        {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Send"}
+        {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <ArrowRight className="w-3 h-3" />}
       </button>
       <button
         type="button"
@@ -102,8 +115,8 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
           setExpanded(false);
           setEmail("");
         }}
-        className="p-1 text-primary-foreground/60 hover:text-primary-foreground"
         aria-label="Cancel"
+        className="ml-0.5 p-1 text-primary-foreground/60 hover:text-primary-foreground"
       >
         <X className="w-3 h-3" />
       </button>
