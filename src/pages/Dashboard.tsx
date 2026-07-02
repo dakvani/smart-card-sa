@@ -901,22 +901,23 @@ export default function Dashboard() {
                       value={profile.title} 
                       onChange={(e) => setProfile({ ...profile, title: e.target.value })}
                       onBlur={(e) => updateProfile({ title: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-input bg-background" 
+                      className="w-full px-3 py-2 sm:py-2.5 rounded-lg border border-input bg-background text-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Bio</label>
+                    <label className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Bio</label>
                     <textarea 
                       value={profile.bio || ""} 
                       onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                       onBlur={(e) => updateProfile({ bio: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-input bg-background resize-none" 
+                      className="w-full px-3 py-2 sm:py-2.5 rounded-lg border border-input bg-background text-sm resize-none" 
                       rows={2} 
                       maxLength={80} 
                       placeholder="Tell your audience about yourself..."
                     />
-                    <p className="text-xs text-muted-foreground mt-1">{(profile.bio || "").length}/80 characters</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">{(profile.bio || "").length}/80 characters</p>
                   </div>
+
                   
                   {/* Social Links */}
                   <SocialLinksEditor
