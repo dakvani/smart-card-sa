@@ -26,7 +26,7 @@ import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
 import { SocialLinksEditor, SocialLinks } from "@/components/dashboard/SocialLinksEditor";
 import { SortableLinkItem } from "@/components/dashboard/SortableLinkItem";
 import { NewLinkDialog } from "@/components/dashboard/NewLinkDialog";
-import { getLinkTypeDef, type LinkType } from "@/lib/link-types";
+import { getLinkTypeDef, detectLinkType, type LinkType } from "@/lib/link-types";
 import { SocialIcons } from "@/components/profile/SocialIcons";
 const AnalyticsCharts = lazy(() =>
   import("@/components/dashboard/AnalyticsCharts").then((m) => ({ default: m.AnalyticsCharts }))
