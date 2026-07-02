@@ -19,8 +19,11 @@ interface ViewData {
 
 export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
   const [viewsData, setViewsData] = useState<ViewData[]>([]);
+  const [subscribeCount, setSubscribeCount] = useState(0);
+  const [contactSaveCount, setContactSaveCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<7 | 30>(7);
+
 
   useEffect(() => {
     const loadAnalytics = async () => {
