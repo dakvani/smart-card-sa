@@ -143,50 +143,96 @@ export function SortableLinkItem({
           />
           {(() => {
             const currentType: LinkType = detectLinkType(link.url || "");
-            const typeDef =
-              LINK_TYPES.find((t) => t.value === currentType) ?? LINK_TYPES[0];
-            const handleValue = extractHandle(currentType, link.url || "");
+            const typeDef = getLinkTypeDef(currentType);
             const urlResult = validateUrl(link.url || "");
             const hasUrl = (link.url || "").trim().length > 0;
             const invalid = hasUrl && !urlResult.valid;
-            const isSocialOrContact = currentType !== "custom";
+            const TypeIcon =
+              (typeDef.icon &&
+                (icons as Record<string, React.ComponentType<{ className?: string }>>)[typeDef.icon]) ||
+              icons.Link2;
 
+            // Phone gets a dedicated country-code + local editor.
+            if (currentType === "phone") {
+              const { dial, local } = splitPhone(link.url || "");
+              const commit = (nextDial: string, nextLocal: string) => {
+                const digits = nextLocal.replace(/\D/g, "");
+                if (!digits) {
+                  onUpdate(link.id, { url: "" });
+                  return;
+                }
+                onUpdate(link.id, { url: `tel:${nextDial}${digits}` });
+              };
+              return (
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <div className="shrink-0 flex items-center gap-1 px-2 rounded-lg border border-input bg-background text-[11px] text-muted-foreground">
+                      <TypeIcon className="w-3 h-3 text-primary" />
+                      <span>{typeDef.label.split(" ")[0]}</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <Select
+                      value={dial}
+                      onValueChange={(v) => commit(v, local)}
+                    >
+                      <SelectTrigger
+                        className={`h-8 w-[92px] ${inputText} px-2 shrink-0`}
+                        aria-label="Country code"
+                      >
+                        <SelectValue>{dial}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-72">
+                        {COUNTRY_CODES.map((c) => (
+                          <SelectItem key={c.code + c.dial} value={c.dial}>
+                            <span className="tabular-nums font-medium">{c.dial}</span>{" "}
+                            <span className="text-muted-foreground">{c.name}</span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <input
+                      value={formatLocalPhone(local)}
+                      onChange={(e) => commit(dial, e.target.value)}
+                      placeholder="555 123 4567"
+                      inputMode="tel"
+                      className={`flex-1 min-w-0 px-2.5 ${inputPadY} rounded-lg border border-input bg-background ${inputText} tabular-nums`}
+                    />
+                  </div>
+                  {typeDef.hint && (
+                    <p className="text-[10px] text-muted-foreground">
+                      {typeDef.hint}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
+            // Everything else: single input, prefixed with a small type badge.
+            const isSocialOrContact =
+              currentType !== "custom" && currentType !== "website";
+            const displayValue = isSocialOrContact
+              ? extractHandle(currentType, link.url || "")
+              : link.url || "";
+            const commit = (raw: string) => {
+              const nextUrl = isSocialOrContact
+                ? buildUrl(currentType, raw)
+                : raw;
+              onUpdate(link.id, { url: nextUrl });
+            };
             return (
-              <div className="space-y-1.5">
-                <Select
-                  value={currentType}
-                  onValueChange={(next) => {
-                    const nextType = next as LinkType;
-                    // Convert current handle into the new type's URL shape.
-                    const rebuilt = buildUrl(nextType, handleValue);
-                    onUpdate(link.id, { url: rebuilt });
-                  }}
-                >
-                  <SelectTrigger
-                    className={`h-7 w-full ${inputText} px-2`}
-                    aria-label="Link type"
+              <div className="space-y-1">
+                <div className="relative flex items-stretch">
+                  <span
+                    className={`shrink-0 inline-flex items-center gap-1 px-2 rounded-l-lg border border-r-0 border-input bg-secondary/60 text-[11px] text-muted-foreground`}
+                    aria-hidden="true"
+                    title={typeDef.label}
                   >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-72">
-                    {LINK_TYPES.map((t) => (
-                      <SelectItem key={t.value} value={t.value}>
-                        {t.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <div className="relative">
+                    <TypeIcon className="w-3.5 h-3.5 text-primary" />
+                  </span>
                   <input
-                    value={isSocialOrContact ? handleValue : link.url}
-                    onChange={(e) => {
-                      const raw = e.target.value;
-                      const nextUrl = isSocialOrContact
-                        ? buildUrl(currentType, raw)
-                        : raw;
-                      onUpdate(link.id, { url: nextUrl });
-                    }}
+                    value={displayValue}
+                    onChange={(e) => commit(e.target.value)}
                     onBlur={(e) => {
                       const raw = e.target.value;
                       const nextUrl = isSocialOrContact
@@ -205,14 +251,14 @@ export function SortableLinkItem({
                     }}
                     placeholder={typeDef.placeholder}
                     inputMode={
-                      currentType === "phone" || currentType === "whatsapp"
+                      currentType === "whatsapp"
                         ? "tel"
                         : currentType === "email"
                         ? "email"
                         : "url"
                     }
                     aria-invalid={invalid}
-                    className={`w-full pr-8 px-2.5 ${inputPadY} rounded-lg border bg-background ${inputText} ${
+                    className={`flex-1 min-w-0 pr-8 px-2.5 ${inputPadY} rounded-r-lg border bg-background ${inputText} ${
                       invalid
                         ? "border-destructive focus-visible:ring-destructive"
                         : "border-input"
@@ -233,16 +279,9 @@ export function SortableLinkItem({
                     {urlResult.message}
                   </p>
                 )}
-                {typeDef.hint && !invalid && (
-                  <p className="text-[10px] text-muted-foreground">
-                    {typeDef.hint}
-                  </p>
-                )}
-                {/* OG preview: skipped for tel:/mailto:, hidden on mobile & compact */}
                 {!invalid &&
                   hasUrl &&
                   !compact &&
-                  currentType !== "phone" &&
                   currentType !== "email" && (
                     <div className="hidden sm:block">
                       <LinkOgPreview url={link.url} fallbackTitle={link.title} />
