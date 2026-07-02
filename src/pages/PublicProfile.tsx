@@ -294,7 +294,20 @@ export default function PublicProfile() {
         Scan to open on your phone
       </p>
     </div>
-  );
+  // Auto-icon for each link based on the detected type (Instagram, WhatsApp,
+  // Phone, etc). Custom/website links get no auto-icon so the user can attach
+  // their own thumbnail via the dashboard editor ("tap to edit").
+  const renderAutoIcon = (url: string, size = "w-5 h-5") => {
+    const t = detectLinkType(url);
+    if (t === "custom" || t === "website") return null;
+    const def = getLinkTypeDef(t);
+    const Ico =
+      (def.icon &&
+        (LucideIcons as Record<string, React.ComponentType<{ className?: string }>>)[def.icon]) ||
+      LucideIcons.Link2;
+    return <Ico className={`${size} text-primary-foreground shrink-0`} />;
+  };
+
 
   return (
     <div
