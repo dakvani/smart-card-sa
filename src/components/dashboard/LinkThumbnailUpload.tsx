@@ -8,9 +8,11 @@ interface LinkThumbnailUploadProps {
   linkId: string;
   currentThumbnail: string | null;
   onUpload: (url: string | null) => void;
+  /** Optional auto-icon shown when no thumbnail is set. Tapping still opens the file picker. */
+  fallbackIcon?: React.ReactNode;
 }
 
-export function LinkThumbnailUpload({ userId, linkId, currentThumbnail, onUpload }: LinkThumbnailUploadProps) {
+export function LinkThumbnailUpload({ userId, linkId, currentThumbnail, onUpload, fallbackIcon }: LinkThumbnailUploadProps) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -95,10 +97,18 @@ export function LinkThumbnailUpload({ userId, linkId, currentThumbnail, onUpload
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="w-12 h-12 rounded-lg border-2 border-dashed border-muted-foreground/30 flex items-center justify-center hover:border-primary/50 transition-colors"
+          title="Tap to set a custom icon"
+          className="w-12 h-12 rounded-lg border-2 border-dashed border-muted-foreground/30 flex items-center justify-center hover:border-primary/60 hover:bg-primary/5 transition-colors relative group"
         >
           {uploading ? (
             <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+          ) : fallbackIcon ? (
+            <>
+              <span className="text-primary">{fallbackIcon}</span>
+              <span className="absolute -bottom-0.5 -right-0.5 bg-background border border-border rounded-full p-0.5 opacity-70 group-hover:opacity-100 transition-opacity">
+                <ImagePlus className="w-2.5 h-2.5 text-muted-foreground" />
+              </span>
+            </>
           ) : (
             <ImagePlus className="w-4 h-4 text-muted-foreground" />
           )}
