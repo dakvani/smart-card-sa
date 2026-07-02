@@ -59,8 +59,9 @@ export function SaveContactButton({ profile, links, publicUrl }: SaveContactButt
       })
       .map((l) => l.url);
 
-    const socials = profile.social_links || {};
-    const socialUrls = Object.values(socials).filter(Boolean) as string[];
+    const socials = (profile.social_links as Record<string, string | undefined> | null) || {};
+    const socialUrls = Object.values(socials).filter((v): v is string => typeof v === "string" && v.length > 0);
+
 
     let photoLine = "";
     if (profile.avatar_url) {
