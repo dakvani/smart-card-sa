@@ -14,7 +14,7 @@ const designs = [
 
 export function ProductDesigns() {
   return (
-    <section id="designs" className="py-24 relative overflow-hidden bg-secondary/10">
+    <section id="designs" className="py-14 sm:py-20 lg:py-24 relative overflow-hidden bg-secondary/10">
       
 
       <div className="container mx-auto px-4 relative z-10">
