@@ -210,36 +210,36 @@ export default function Dashboard() {
         trackOnboarding("onboarding_started", { isNewUser: true, provider, prefill });
       }
 
-      // Load links
-      const { data: linksData, error: linksError } = await supabase
-        .from("links")
-        .select("*")
-        .eq("user_id", userId)
-        .order("position", { ascending: true });
+      // Fire remaining queries in parallel to minimise dashboard first-paint delay.
+      const [linksRes, groupsRes, viewsRes] = await Promise.all([
+        supabase
+          .from("links")
+          .select("*")
+          .eq("user_id", userId)
+          .order("position", { ascending: true }),
+        supabase
+          .from("link_groups")
+          .select("*")
+          .eq("user_id", userId)
+          .order("position", { ascending: true }),
+        profileData
+          ? supabase
+              .from("profile_views")
+              .select("*", { count: "exact", head: true })
+              .eq("profile_id", profileData.id)
+          : Promise.resolve({ count: 0, error: null } as any),
+      ]);
 
-      if (linksError) throw linksError;
-      setLinks(linksData || []);
+      if (linksRes.error) throw linksRes.error;
+      if (groupsRes.error) throw groupsRes.error;
+      setLinks(linksRes.data || []);
+      setGroups(groupsRes.data || []);
 
-      // Load groups
-      const { data: groupsData, error: groupsError } = await supabase
-        .from("link_groups")
-        .select("*")
-        .eq("user_id", userId)
-        .order("position", { ascending: true });
-
-      if (groupsError) throw groupsError;
-      setGroups(groupsData || []);
-
-      // Load analytics
-      if (profileData) {
-        const { count: viewCount } = await supabase
-          .from("profile_views")
-          .select("*", { count: "exact", head: true })
-          .eq("profile_id", profileData.id);
-
-        const totalClicks = (linksData || []).reduce((sum, link) => sum + (link.click_count || 0), 0);
-        setAnalytics({ views: viewCount || 0, clicks: totalClicks });
-      }
+      const totalClicks = (linksRes.data || []).reduce(
+        (sum, link) => sum + (link.click_count || 0),
+        0,
+      );
+      setAnalytics({ views: (viewsRes as any).count || 0, clicks: totalClicks });
     } catch (error: any) {
       toast.error("Failed to load data: " + error.message);
     } finally {
