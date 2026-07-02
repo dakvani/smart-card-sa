@@ -515,16 +515,21 @@ export default function PublicProfile() {
                 })}
               </div>
 
-              {profile.email_collection_enabled && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="mt-6"
-                >
-                  <EmailSignup profileId={profile.id} />
-                </motion.div>
-              )}
+              {/* Save contact - prominent button under links */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="mt-4"
+              >
+                <SaveContactButton
+                  profile={profile}
+                  links={links}
+                  publicUrl={typeof window !== "undefined" ? window.location.href : ""}
+                />
+              </motion.div>
+
+
 
               {/* Inline QR — always on mobile, and on sm+ when in Compact mode */}
               <div className={isCompact ? "block" : "block sm:hidden"}>{InlineQR}</div>
