@@ -797,9 +797,14 @@ export default function Dashboard() {
                   />
 
                   <div className="border-t border-border pt-4 sm:pt-6">
-                    <Button onClick={addLink} variant="gradient" className="w-full">
-                      <Plus className="w-4 h-4" /> Add New Link
-                    </Button>
+                    <NewLinkDialog
+                      onCreate={(type) => addLink(type)}
+                      trigger={
+                        <Button variant="gradient" className="w-full">
+                          <Plus className="w-4 h-4" /> Add New Link
+                        </Button>
+                      }
+                    />
                   </div>
                   
                   {links.length === 0 ? (
