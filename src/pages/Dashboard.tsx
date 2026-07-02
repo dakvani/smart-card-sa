@@ -19,7 +19,8 @@ import {
   verticalListSortingStrategy 
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder, Eye, MousePointerClick, Sparkles, Undo2, Redo2, Save } from "lucide-react";
+import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder, Eye, MousePointerClick, Sparkles, Undo2, Redo2, Save, Rows3, Rows2 } from "lucide-react";
+import { useCompactMode } from "@/hooks/use-compact-mode";
 import { toast } from "sonner";
 import type { User, Session } from "@supabase/supabase-js";
 import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
@@ -128,6 +129,7 @@ export default function Dashboard() {
   const [groups, setGroups] = useState<LinkGroup[]>([]);
   const [analytics, setAnalytics] = useState({ views: 0, clicks: 0 });
   const { plan, planLabel, isPro, loading: planLoading } = usePlan(user?.id);
+  const { compact, toggle: toggleCompact } = useCompactMode();
 
   // History stack for undo/redo of profile changes
   const [past, setPast] = useState<Profile[]>([]);
@@ -522,8 +524,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center py-8">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
       </div>
     );
   }
@@ -620,6 +622,17 @@ export default function Dashboard() {
                 <span className="hidden sm:inline">View</span>
               </Button>
             </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleCompact}
+              className="h-8 w-8"
+              title={compact ? "Switch to comfortable density" : "Switch to compact density"}
+              aria-pressed={compact}
+              aria-label="Toggle compact dashboard mode"
+            >
+              {compact ? <Rows3 className="w-3.5 h-3.5" /> : <Rows2 className="w-3.5 h-3.5" />}
+            </Button>
             <Button variant="ghost" size="icon" onClick={handleLogout} className="h-8 w-8">
               <LogOut className="w-3.5 h-3.5" />
             </Button>
@@ -797,9 +810,9 @@ export default function Dashboard() {
                   </div>
                   
                   {links.length === 0 ? (
-                    <div className="text-center py-12 text-muted-foreground">
-                      <Link2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p>No links yet. Add your first link above!</p>
+                    <div className="text-center py-6 sm:py-8 text-muted-foreground">
+                      <Link2 className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-2 opacity-50" />
+                      <p className="text-xs sm:text-sm">No links yet. Add your first link above!</p>
                     </div>
                   ) : (
                     <div className="space-y-4 sm:space-y-6">
@@ -828,6 +841,7 @@ export default function Dashboard() {
                                     onUpdate={updateLink}
                                     onDelete={deleteLink}
                                     groups={groups}
+                                    compact={compact}
                                   />
                                 ))}
                               </div>
@@ -871,6 +885,7 @@ export default function Dashboard() {
                                         onUpdate={updateLink}
                                         onDelete={deleteLink}
                                         groups={groups}
+                                        compact={compact}
                                       />
                                     ))}
                                   </div>

@@ -1,7 +1,17 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
-import { GripVertical, Eye, EyeOff, Trash2, BarChart3, Star, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  GripVertical,
+  Eye,
+  EyeOff,
+  Trash2,
+  BarChart3,
+  Star,
+  CheckCircle2,
+  AlertCircle,
+  MoreVertical,
+} from "lucide-react";
 import { LinkThumbnailUpload } from "./LinkThumbnailUpload";
 import { LinkScheduler } from "./LinkScheduler";
 import { LinkOgPreview } from "./LinkOgPreview";
@@ -9,8 +19,20 @@ import { LinkOgPreview } from "./LinkOgPreview";
 import { validateUrl } from "@/lib/link-validation";
 import { toast } from "@/hooks/use-toast";
 
-
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface LinkGroup {
   id: string;
@@ -36,9 +58,17 @@ interface SortableLinkItemProps {
   onUpdate: (id: string, updates: Partial<LinkItem>) => void;
   onDelete: (id: string) => void;
   groups?: LinkGroup[];
+  /** Compact mode shrinks padding & hides OG preview to keep cards dense. */
+  compact?: boolean;
 }
 
-export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: SortableLinkItemProps) {
+export function SortableLinkItem({
+  link,
+  onUpdate,
+  onDelete,
+  groups = [],
+  compact = false,
+}: SortableLinkItemProps) {
   const {
     attributes,
     listeners,
@@ -55,18 +85,28 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
     zIndex: isDragging ? 50 : "auto",
   };
 
+  // Strict min/max height caps keep each card at a Linktree-like density on mobile.
+  const containerPad = compact ? "p-2" : "p-2.5 sm:p-4";
+  const mobileMinH = "min-h-[64px]";
+  const mobileMaxH = compact ? "max-h-[168px]" : "max-h-[224px]";
+  const inputPadY = compact ? "py-1" : "py-1.5 sm:py-2";
+  const inputText = compact ? "text-[12px] sm:text-sm" : "text-[13px] sm:text-sm";
+  const gapY = compact ? "space-y-1" : "space-y-1.5 sm:space-y-2";
+
   return (
     <motion.div
       ref={setNodeRef}
       style={style}
       layout
-      className={`p-2.5 sm:p-4 rounded-xl border transition-all ${
-        link.is_featured 
-          ? "bg-primary/10 border-primary/30 ring-1 ring-primary/20" 
+      data-testid="sortable-link-item"
+      data-compact={compact ? "1" : "0"}
+      className={`${containerPad} rounded-xl border transition-all overflow-hidden ${mobileMinH} ${mobileMaxH} sm:max-h-none ${
+        link.is_featured
+          ? "bg-primary/10 border-primary/30 ring-1 ring-primary/20"
           : "bg-secondary/50 border-border"
       }`}
     >
-      <div className="flex items-start gap-2 sm:gap-3">
+      <div className="flex items-start gap-2 sm:gap-3 h-full">
         <button
           {...attributes}
           {...listeners}
@@ -75,8 +115,8 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
         >
           <GripVertical className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
         </button>
-        
-        {/* Thumbnail Upload */}
+
+        {/* Thumbnail */}
         <div className="shrink-0">
           <LinkThumbnailUpload
             userId={link.user_id}
@@ -86,13 +126,13 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
           />
         </div>
 
-        <div className="flex-1 min-w-0 space-y-2">
+        <div className={`flex-1 min-w-0 ${gapY}`}>
           <input
             value={link.title}
             onChange={(e) => onUpdate(link.id, { title: e.target.value })}
             onBlur={(e) => onUpdate(link.id, { title: e.target.value })}
             placeholder="Link Title"
-            className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border border-input bg-background text-[13px] sm:text-sm font-medium"
+            className={`w-full px-2.5 ${inputPadY} rounded-lg border border-input bg-background ${inputText} font-medium`}
           />
           {(() => {
             const urlResult = validateUrl(link.url || "");
@@ -108,15 +148,21 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
                       const v = e.target.value;
                       const res = validateUrl(v);
                       if (v.trim() && !res.valid) {
-                        toast({ title: "Invalid link URL", description: res.message, variant: "destructive" });
+                        toast({
+                          title: "Invalid link URL",
+                          description: res.message,
+                          variant: "destructive",
+                        });
                         return;
                       }
                       onUpdate(link.id, { url: v });
                     }}
                     placeholder="https://..."
                     aria-invalid={invalid}
-                    className={`w-full pr-8 px-2.5 py-1.5 sm:py-2 rounded-lg border bg-background text-[13px] sm:text-sm ${
-                      invalid ? "border-destructive focus-visible:ring-destructive" : "border-input"
+                    className={`w-full pr-8 px-2.5 ${inputPadY} rounded-lg border bg-background ${inputText} ${
+                      invalid
+                        ? "border-destructive focus-visible:ring-destructive"
+                        : "border-input"
                     }`}
                   />
                   {hasUrl && (
@@ -130,79 +176,157 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
                   )}
                 </div>
                 {invalid && urlResult.message && (
-                  <p className="text-[11px] text-destructive mt-1">{urlResult.message}</p>
+                  <p className="text-[11px] text-destructive mt-1">
+                    {urlResult.message}
+                  </p>
                 )}
-                {!invalid && hasUrl && (
-                  <LinkOgPreview url={link.url} fallbackTitle={link.title} />
+                {/* OG preview: hidden on mobile & compact to enforce height cap */}
+                {!invalid && hasUrl && !compact && (
+                  <div className="hidden sm:block">
+                    <LinkOgPreview url={link.url} fallbackTitle={link.title} />
+                  </div>
                 )}
               </div>
-
             );
           })()}
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] sm:text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <BarChart3 className="w-3 h-3" />
-              <span>{link.click_count} clicks</span>
+          {!compact ? (
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] sm:text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <BarChart3 className="w-3 h-3" />
+                <span>{link.click_count} clicks</span>
+              </div>
+              {/* Scheduler & group select hidden on mobile — available in overflow menu / non-compact desktop */}
+              <div className="hidden sm:flex items-center gap-3">
+                <LinkScheduler
+                  scheduledStart={link.scheduled_start || null}
+                  scheduledEnd={link.scheduled_end || null}
+                  onUpdate={(start, end) =>
+                    onUpdate(link.id, {
+                      scheduled_start: start,
+                      scheduled_end: end,
+                    })
+                  }
+                />
+                {groups.length > 0 && (
+                  <Select
+                    value={link.group_id || "none"}
+                    onValueChange={(value) =>
+                      onUpdate(link.id, {
+                        group_id: value === "none" ? null : value,
+                      })
+                    }
+                  >
+                    <SelectTrigger className="h-7 w-[130px] text-xs px-2">
+                      <SelectValue placeholder="No group" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No group</SelectItem>
+                      {groups.map((group) => (
+                        <SelectItem key={group.id} value={group.id}>
+                          {group.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
             </div>
-            <LinkScheduler
-              scheduledStart={link.scheduled_start || null}
-              scheduledEnd={link.scheduled_end || null}
-              onUpdate={(start, end) => onUpdate(link.id, { scheduled_start: start, scheduled_end: end })}
-            />
-            {groups.length > 0 && (
-              <Select
-                value={link.group_id || "none"}
-                onValueChange={(value) => onUpdate(link.id, { group_id: value === "none" ? null : value })}
-              >
-                <SelectTrigger className="h-6 sm:h-7 w-[110px] sm:w-[130px] text-[11px] sm:text-xs px-2">
-                  <SelectValue placeholder="No group" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No group</SelectItem>
-                  {groups.map(group => (
-                    <SelectItem key={group.id} value={group.id}>
-                      {group.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
+          ) : (
+            <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+              <BarChart3 className="w-3 h-3" />
+              <span className="tabular-nums">{link.click_count}</span>
+              {!link.visible && <span className="text-amber-400">• hidden</span>}
+              {link.is_featured && <span className="text-primary">• pinned</span>}
+            </div>
+          )}
         </div>
-        <div className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-0 shrink-0">
-          <button
-            onClick={() => onUpdate(link.id, { is_featured: !link.is_featured })}
-            className={`p-1.5 sm:p-2 rounded-lg transition-colors ${
-              link.is_featured 
-                ? "bg-primary/20 text-primary hover:bg-primary/30" 
-                : "hover:bg-secondary text-muted-foreground hover:text-primary"
-            }`}
-            title={link.is_featured ? "Unpin link" : "Pin to top"}
-          >
-            <Star className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${link.is_featured ? "fill-current" : ""}`} />
-          </button>
-          <button
-            onClick={() => onUpdate(link.id, { visible: !link.visible })}
-            className="p-1.5 sm:p-2 hover:bg-secondary rounded-lg"
-            title={link.visible ? "Hide link" : "Show link"}
-          >
-            {link.visible ? (
-              <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            ) : (
-              <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
-            )}
-          </button>
-          <button
-            onClick={() => onDelete(link.id)}
-            className="p-1.5 sm:p-2 hover:bg-destructive/10 rounded-lg text-destructive"
-            title="Delete link"
-          >
-            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </button>
+
+        {/* Actions — single overflow menu on mobile, inline row on desktop */}
+        <div className="shrink-0">
+          <div className="sm:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground"
+                  aria-label="Link actions"
+                  title="Link actions"
+                >
+                  <MoreVertical className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                <DropdownMenuItem
+                  onClick={() =>
+                    onUpdate(link.id, { is_featured: !link.is_featured })
+                  }
+                >
+                  <Star
+                    className={`w-4 h-4 mr-2 ${
+                      link.is_featured ? "fill-current text-primary" : ""
+                    }`}
+                  />
+                  {link.is_featured ? "Unpin" : "Pin to top"}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => onUpdate(link.id, { visible: !link.visible })}
+                >
+                  {link.visible ? (
+                    <EyeOff className="w-4 h-4 mr-2" />
+                  ) : (
+                    <Eye className="w-4 h-4 mr-2" />
+                  )}
+                  {link.visible ? "Hide" : "Show"}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive"
+                  onClick={() => onDelete(link.id)}
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete link
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <div className="hidden sm:flex items-center gap-0">
+            <button
+              onClick={() =>
+                onUpdate(link.id, { is_featured: !link.is_featured })
+              }
+              className={`p-2 rounded-lg transition-colors ${
+                link.is_featured
+                  ? "bg-primary/20 text-primary hover:bg-primary/30"
+                  : "hover:bg-secondary text-muted-foreground hover:text-primary"
+              }`}
+              title={link.is_featured ? "Unpin link" : "Pin to top"}
+            >
+              <Star
+                className={`w-4 h-4 ${link.is_featured ? "fill-current" : ""}`}
+              />
+            </button>
+            <button
+              onClick={() => onUpdate(link.id, { visible: !link.visible })}
+              className="p-2 hover:bg-secondary rounded-lg"
+              title={link.visible ? "Hide link" : "Show link"}
+            >
+              {link.visible ? (
+                <Eye className="w-4 h-4" />
+              ) : (
+                <EyeOff className="w-4 h-4 text-muted-foreground" />
+              )}
+            </button>
+            <button
+              onClick={() => onDelete(link.id)}
+              className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"
+              title="Delete link"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>
   );
 }
-
