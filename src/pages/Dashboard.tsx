@@ -1087,8 +1087,8 @@ export default function Dashboard() {
 
                   {/* Screen */}
                   <div
-                    className={`relative rounded-[2.25rem] overflow-hidden ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
-                    style={{ ...previewStyle, height: 560 }}
+                    className={`relative rounded-[2.25rem] overflow-hidden h-[420px] lg:h-[560px] ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
+                    style={previewStyle}
                   >
                     {/* Status bar */}
                     <div className="absolute top-0 inset-x-0 z-30 flex items-center justify-between px-6 pt-2 pb-1 text-[10px] font-semibold text-primary-foreground">
