@@ -18,11 +18,16 @@ import { LinkOgPreview } from "./LinkOgPreview";
 
 import { validateUrl } from "@/lib/link-validation";
 import { toast } from "@/hooks/use-toast";
+import { icons } from "lucide-react";
 import {
   LINK_TYPES,
+  getLinkTypeDef,
   detectLinkType,
   extractHandle,
   buildUrl,
+  splitPhone,
+  formatLocalPhone,
+  COUNTRY_CODES,
   type LinkType,
 } from "@/lib/link-types";
 
