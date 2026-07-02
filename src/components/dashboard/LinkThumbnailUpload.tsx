@@ -8,9 +8,11 @@ interface LinkThumbnailUploadProps {
   linkId: string;
   currentThumbnail: string | null;
   onUpload: (url: string | null) => void;
+  /** Optional auto-icon shown when no thumbnail is set. Tapping still opens the file picker. */
+  fallbackIcon?: React.ReactNode;
 }
 
-export function LinkThumbnailUpload({ userId, linkId, currentThumbnail, onUpload }: LinkThumbnailUploadProps) {
+export function LinkThumbnailUpload({ userId, linkId, currentThumbnail, onUpload, fallbackIcon }: LinkThumbnailUploadProps) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
