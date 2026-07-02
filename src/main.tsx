@@ -3,6 +3,9 @@ import { HelmetProvider } from "react-helmet-async";
 import App from "./App.tsx";
 import "./index.css";
 
+document.documentElement.classList.remove("light", "high-contrast", "deuteranopia", "tritanopia");
+document.documentElement.classList.add("dark", "protanopia");
+
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
     <App />

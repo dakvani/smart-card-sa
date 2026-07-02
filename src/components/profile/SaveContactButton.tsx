@@ -150,10 +150,10 @@ export function SaveContactButton({ profile, links, publicUrl }: SaveContactButt
     <button
       onClick={handleSave}
       disabled={busy}
-      className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-primary-foreground text-background font-semibold hover:bg-primary-foreground/90 active:scale-[0.98] transition-all shadow-lg disabled:opacity-70"
+      className="inline-flex h-8 items-center justify-center gap-1.5 rounded-full border border-primary-foreground/25 bg-primary-foreground/20 px-3 text-[11px] font-semibold text-primary-foreground shadow-lg backdrop-blur transition-all hover:bg-primary-foreground/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70"
     >
-      {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
-      Save to contacts
+      {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <UserPlus className="h-3.5 w-3.5" />}
+      Save Contact
     </button>
   );
 }

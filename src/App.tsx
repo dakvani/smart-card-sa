@@ -10,8 +10,14 @@ import { KeyboardShortcutsHelp } from "./components/accessibility/KeyboardShortc
 import { FocusVisibilityManager } from "./components/accessibility/FocusRing";
 import { LoadingScreen, shouldShowLoadingScreen } from "./components/LoadingScreen";
 import { WelcomeEmailTrigger } from "./components/WelcomeEmailTrigger";
+import { useTheme } from "./components/ThemeToggle";
 
 const queryClient = new QueryClient();
+
+const SiteThemeSync = () => {
+  useTheme();
+  return null;
+};
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(() => shouldShowLoadingScreen());
@@ -19,6 +25,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <SiteThemeSync />
         <FocusVisibilityManager />
         <Toaster />
         <Sonner />
