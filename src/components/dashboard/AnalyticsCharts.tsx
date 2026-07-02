@@ -128,7 +128,7 @@ export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="p-4 bg-secondary/50 rounded-xl">
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <Eye className="w-4 h-4" />
@@ -157,7 +157,22 @@ export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
           </div>
           <p className="text-2xl font-bold">{clickRate}%</p>
         </div>
+        <div className="p-4 bg-secondary/50 rounded-xl">
+          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <UserPlus className="w-4 h-4" />
+            <span className="text-xs">Contact Saves</span>
+          </div>
+          <p className="text-2xl font-bold">{contactSaveCount.toLocaleString()}</p>
+        </div>
+        <div className="p-4 bg-secondary/50 rounded-xl">
+          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <Mail className="w-4 h-4" />
+            <span className="text-xs">Subscribes</span>
+          </div>
+          <p className="text-2xl font-bold">{subscribeCount.toLocaleString()}</p>
+        </div>
       </div>
+
 
       {/* Views Chart */}
       <div className="p-4 bg-secondary/30 rounded-xl">
