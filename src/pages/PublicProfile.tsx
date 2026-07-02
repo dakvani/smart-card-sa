@@ -445,10 +445,10 @@ export default function PublicProfile() {
                         {link.thumbnail_url ? (
                           <img src={link.thumbnail_url} alt="" className="w-12 h-12 rounded-xl object-cover flex-shrink-0 ring-2 ring-primary-foreground/30" />
                         ) : (
-                          renderAutoIcon(link.url, "w-6 h-6")
+                          renderAutoIcon(link.url, "w-6 h-6", link.title)
                         )}
                         <span className="flex-1 text-primary-foreground font-bold text-center text-lg">{link.title}</span>
-                        {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-12" />}
+                        {(link.thumbnail_url || renderAutoIcon(link.url, "w-5 h-5", link.title)) && <div className="w-12" />}
                       </motion.button>
                     ))}
                   </div>
@@ -468,10 +468,10 @@ export default function PublicProfile() {
                         {link.thumbnail_url ? (
                           <img src={link.thumbnail_url} alt="" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
                         ) : (
-                          renderAutoIcon(link.url, "w-5 h-5")
+                          renderAutoIcon(link.url, "w-5 h-5", link.title)
                         )}
                         <span className="flex-1 text-primary-foreground font-semibold text-center">{link.title}</span>
-                        {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-10" />}
+                        {(link.thumbnail_url || renderAutoIcon(link.url, "w-5 h-5", link.title)) && <div className="w-10" />}
                       </motion.button>
                     ))}
                   </div>
@@ -501,10 +501,10 @@ export default function PublicProfile() {
                             {link.thumbnail_url ? (
                               <img src={link.thumbnail_url} alt="" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
                             ) : (
-                              renderAutoIcon(link.url, "w-5 h-5")
+                              renderAutoIcon(link.url, "w-5 h-5", link.title)
                             )}
                             <span className="flex-1 text-primary-foreground font-semibold text-center">{link.title}</span>
-                            {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-10" />}
+                            {(link.thumbnail_url || renderAutoIcon(link.url, "w-5 h-5", link.title)) && <div className="w-10" />}
                           </motion.button>
                         ))}
                       </div>
