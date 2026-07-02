@@ -793,7 +793,7 @@ export default function Dashboard() {
 
                   <div className="border-t border-border pt-4 sm:pt-6">
                     <Button onClick={addLink} variant="gradient" className="w-full">
-                      <Plus className="w-5 h-5" /> Add New Link
+                      <Plus className="w-4 h-4" /> Add New Link
                     </Button>
                   </div>
                   
@@ -1043,7 +1043,7 @@ export default function Dashboard() {
 
 
           {/* Preview Panel - iPhone Frame (mobile: collapsible & compact, desktop: sticky) */}
-          <details open className="order-first lg:order-none w-full lg:w-[360px] lg:sticky lg:top-20 lg:h-fit group [&_summary::-webkit-details-marker]:hidden">
+          <details open className="w-full lg:w-[360px] lg:sticky lg:top-20 lg:h-fit group [&_summary::-webkit-details-marker]:hidden">
             <summary className="lg:hidden mb-2 flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-background/60 backdrop-blur-sm border border-border/60 cursor-pointer list-none">
               <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider">
                 <Eye className="w-3.5 h-3.5 text-primary" /> Live Preview
