@@ -7,8 +7,9 @@ interface SaveContactButtonProps {
     title?: string | null;
     bio?: string | null;
     avatar_url?: string | null;
-    social_links?: Record<string, string | undefined> | null;
+    social_links?: Record<string, string | undefined> | Record<string, unknown> | null;
   };
+
   links: Array<{ title: string; url: string; visible?: boolean }>;
   publicUrl: string;
 }
