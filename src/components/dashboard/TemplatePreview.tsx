@@ -35,7 +35,7 @@ export function TemplatePreview({
   const s = Math.max(0.25, Math.min(3, speed));
   return (
     <div
-      className={`relative h-24 sm:h-32 overflow-hidden bg-gradient-${direction} ${gradientClass}`}
+      className={`relative h-14 sm:h-24 overflow-hidden bg-gradient-${direction} ${gradientClass}`}
     >
       {/* Custom user media (Pro upload) */}
       {customMedia && (
