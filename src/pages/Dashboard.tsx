@@ -622,6 +622,17 @@ export default function Dashboard() {
                 <span className="hidden sm:inline">View</span>
               </Button>
             </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleCompact}
+              className="h-8 w-8"
+              title={compact ? "Switch to comfortable density" : "Switch to compact density"}
+              aria-pressed={compact}
+              aria-label="Toggle compact dashboard mode"
+            >
+              {compact ? <Rows3 className="w-3.5 h-3.5" /> : <Rows2 className="w-3.5 h-3.5" />}
+            </Button>
             <Button variant="ghost" size="icon" onClick={handleLogout} className="h-8 w-8">
               <LogOut className="w-3.5 h-3.5" />
             </Button>
@@ -874,6 +885,7 @@ export default function Dashboard() {
                                         onUpdate={updateLink}
                                         onDelete={deleteLink}
                                         groups={groups}
+                                        compact={compact}
                                       />
                                     ))}
                                   </div>
