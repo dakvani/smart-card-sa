@@ -534,6 +534,19 @@ export default function PublicProfile() {
               {/* Inline QR — always on mobile, and on sm+ when in Compact mode */}
               <div className={isCompact ? "block" : "block sm:hidden"}>{InlineQR}</div>
 
+              {/* Email collection — small subscribe pill at the very bottom */}
+              {profile.email_collection_enabled && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.45 }}
+                  className="mt-6 flex justify-center"
+                >
+                  <EmailSignup profileId={profile.id} />
+                </motion.div>
+              )}
+
+
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
