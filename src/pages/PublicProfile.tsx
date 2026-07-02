@@ -9,6 +9,8 @@ import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { SocialIcons } from "@/components/profile/SocialIcons";
 import { EmailSignup } from "@/components/profile/EmailSignup";
+import { SaveContactButton } from "@/components/profile/SaveContactButton";
+
 import { AnimatedBackground } from "@/components/profile/AnimatedBackground";
 import { ClaimSmartCardDialog } from "@/components/profile/ClaimSmartCardDialog";
 import { parseUserAgent } from "@/lib/userAgentParser";
@@ -513,19 +515,37 @@ export default function PublicProfile() {
                 })}
               </div>
 
+              {/* Save contact - prominent button under links */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="mt-4"
+              >
+                <SaveContactButton
+                  profile={profile}
+                  links={links}
+                  publicUrl={typeof window !== "undefined" ? window.location.href : ""}
+                />
+              </motion.div>
+
+
+
+              {/* Inline QR — always on mobile, and on sm+ when in Compact mode */}
+              <div className={isCompact ? "block" : "block sm:hidden"}>{InlineQR}</div>
+
+              {/* Email collection — small subscribe pill at the very bottom */}
               {profile.email_collection_enabled && (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="mt-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.45 }}
+                  className="mt-6 flex justify-center"
                 >
                   <EmailSignup profileId={profile.id} />
                 </motion.div>
               )}
 
-              {/* Inline QR — always on mobile, and on sm+ when in Compact mode */}
-              <div className={isCompact ? "block" : "block sm:hidden"}>{InlineQR}</div>
 
               <motion.div
                 initial={{ opacity: 0 }}

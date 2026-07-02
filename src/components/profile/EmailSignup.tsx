@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Mail, Loader2, Check } from "lucide-react";
+import { Mail, Loader2, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -15,10 +14,11 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const result = emailSchema.safeParse(email);
     if (!result.success) {
       toast.error(result.error.errors[0].message);
@@ -54,40 +54,59 @@ export function EmailSignup({ profileId }: EmailSignupProps) {
 
   if (subscribed) {
     return (
-      <div className="flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-primary-foreground/20 backdrop-blur">
-        <Check className="w-5 h-5 text-green-400" />
-        <span className="text-primary-foreground font-medium">Thanks for subscribing!</span>
+      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-foreground/15 text-primary-foreground text-[11px]">
+        <Check className="w-3 h-3 text-green-400" />
+        <span>Subscribed</span>
       </div>
     );
   }
 
+  if (!expanded) {
+    return (
+      <button
+        type="button"
+        onClick={() => setExpanded(true)}
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-foreground/15 hover:bg-primary-foreground/25 backdrop-blur border border-primary-foreground/20 text-primary-foreground text-[11px] font-medium transition-colors"
+      >
+        <Mail className="w-3 h-3" />
+        Subscribe
+      </button>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="w-full">
-      <div className="flex gap-2 p-2 rounded-2xl bg-primary-foreground/20 backdrop-blur">
-        <div className="flex-1 flex items-center gap-2 px-4">
-          <Mail className="w-4 h-4 text-primary-foreground/70 flex-shrink-0" />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="flex-1 bg-transparent text-primary-foreground placeholder:text-primary-foreground/50 outline-none text-sm"
-            required
-            maxLength={255}
-          />
-        </div>
-        <Button 
-          type="submit" 
-          disabled={loading}
-          className="bg-primary-foreground text-background hover:bg-primary-foreground/90 rounded-xl px-4"
-        >
-          {loading ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            "Subscribe"
-          )}
-        </Button>
-      </div>
+    <form
+      onSubmit={handleSubmit}
+      className="inline-flex items-center gap-1 p-1 rounded-full bg-primary-foreground/15 backdrop-blur border border-primary-foreground/20"
+    >
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="your@email.com"
+        autoFocus
+        className="w-40 bg-transparent text-primary-foreground placeholder:text-primary-foreground/50 outline-none text-[11px] px-2.5"
+        required
+        maxLength={255}
+      />
+      <button
+        type="submit"
+        disabled={loading}
+        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-foreground text-background text-[11px] font-semibold hover:bg-primary-foreground/90 disabled:opacity-60"
+      >
+        {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Send"}
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setExpanded(false);
+          setEmail("");
+        }}
+        className="p-1 text-primary-foreground/60 hover:text-primary-foreground"
+        aria-label="Cancel"
+      >
+        <X className="w-3 h-3" />
+      </button>
     </form>
   );
 }
