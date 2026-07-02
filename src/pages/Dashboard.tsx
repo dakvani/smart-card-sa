@@ -19,14 +19,14 @@ import {
   verticalListSortingStrategy 
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder, Eye, MousePointerClick, Sparkles, Undo2, Redo2, Save } from "lucide-react";
+import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder, Eye, MousePointerClick, Sparkles, Undo2, Redo2, Save, icons as LucideIcons } from "lucide-react";
 import { toast } from "sonner";
 import type { User, Session } from "@supabase/supabase-js";
 import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
 import { SocialLinksEditor, SocialLinks } from "@/components/dashboard/SocialLinksEditor";
 import { SortableLinkItem } from "@/components/dashboard/SortableLinkItem";
 import { NewLinkDialog } from "@/components/dashboard/NewLinkDialog";
-import { getLinkTypeDef, type LinkType } from "@/lib/link-types";
+import { getLinkTypeDef, detectLinkType, type LinkType } from "@/lib/link-types";
 import { SocialIcons } from "@/components/profile/SocialIcons";
 const AnalyticsCharts = lazy(() =>
   import("@/components/dashboard/AnalyticsCharts").then((m) => ({ default: m.AnalyticsCharts }))
@@ -1177,17 +1177,25 @@ export default function Dashboard() {
                         <SocialIcons socialLinks={profile.social_links || {}} />
                       </div>
                       <div className="space-y-2 relative z-10">
-                        {links.filter(l => l.visible).map(link => (
-                          <div key={link.id} className="flex items-center gap-2 py-2.5 px-3 rounded-xl bg-primary-foreground/20 backdrop-blur">
-                            {link.thumbnail_url && (
-                              <img src={link.thumbnail_url} alt="" className="w-6 h-6 rounded-md object-cover flex-shrink-0" />
-                            )}
-                            <span className="flex-1 text-primary-foreground font-medium text-center text-[11px]">
-                              {link.title || "Untitled Link"}
-                            </span>
-                            {link.thumbnail_url && <div className="w-6" />}
-                          </div>
-                        ))}
+                        {links.filter(l => l.visible).map(link => {
+                          const t = detectLinkType(link.url || "");
+                          const def = getLinkTypeDef(t);
+                          const iconName = def.icon || (t === "website" ? "Globe" : "Link2");
+                          const Ico = (LucideIcons as Record<string, React.ComponentType<{ className?: string }>>)[iconName] || LucideIcons.Link2;
+                          return (
+                            <div key={link.id} className="flex items-center gap-2 py-2.5 px-3 rounded-xl bg-primary-foreground/20 backdrop-blur">
+                              {link.thumbnail_url ? (
+                                <img src={link.thumbnail_url} alt="" className="w-6 h-6 rounded-md object-cover flex-shrink-0" />
+                              ) : (
+                                <Ico className="w-4 h-4 text-primary-foreground shrink-0" />
+                              )}
+                              <span className="flex-1 text-primary-foreground font-medium text-center text-[11px]">
+                                {link.title || "Untitled Link"}
+                              </span>
+                              <div className="w-6" />
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
 
