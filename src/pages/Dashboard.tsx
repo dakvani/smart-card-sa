@@ -995,30 +995,31 @@ export default function Dashboard() {
 
               {activeTab === "settings" && (
                 <div className="space-y-4 sm:space-y-6">
-                  <div className="p-4 bg-secondary/50 rounded-xl">
-                    <p className="font-medium mb-1">Your SmartCard URL</p>
+                  <div className="p-3 sm:p-4 bg-secondary/50 rounded-xl">
+                    <p className="font-medium mb-1.5 text-sm">Your SmartCard URL</p>
                     <div className="flex items-center gap-2">
-                      <code className="flex-1 text-sm text-muted-foreground bg-background px-3 py-2 rounded-lg">
+                      <code className="flex-1 text-[11px] sm:text-sm text-muted-foreground bg-background px-2.5 py-2 rounded-lg truncate">
                         {window.location.origin}/{profile.username}
                       </code>
-                      <Button variant="outline" size="sm" onClick={copyProfileUrl}>
+                      <Button variant="outline" size="sm" onClick={copyProfileUrl} className="shrink-0">
                         {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                       </Button>
                     </div>
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-2">Username</label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-muted-foreground">smartcard.online/</span>
+                    <label className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Username</label>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs sm:text-sm text-muted-foreground shrink-0">smartcard.online/</span>
                       <input 
                         value={profile.username} 
                         onChange={(e) => setProfile({ ...profile, username: e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, '') })}
                         onBlur={(e) => updateProfile({ username: e.target.value })}
-                        className="flex-1 px-4 py-2 rounded-lg border border-input bg-background" 
+                        className="flex-1 min-w-0 px-3 py-2 rounded-lg border border-input bg-background text-sm" 
                       />
                     </div>
                   </div>
+
 
                   {/* Email Collection */}
                   <EmailSubscribers
