@@ -213,7 +213,11 @@ export default function PublicProfile() {
   );
 
   const handleLinkClick = async (linkId: string, url: string) => {
-    window.open(url, "_blank", "noopener,noreferrer");
+    if (/^(tel|mailto|sms):/i.test(url)) {
+      window.location.href = url;
+    } else {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
     if (!profile) return;
     const ua = parseUserAgent(navigator.userAgent);
     void supabase.rpc("increment_link_click", { link_uuid: linkId }).then(({ error }) => {

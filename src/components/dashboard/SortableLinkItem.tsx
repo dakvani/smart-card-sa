@@ -18,6 +18,13 @@ import { LinkOgPreview } from "./LinkOgPreview";
 
 import { validateUrl } from "@/lib/link-validation";
 import { toast } from "@/hooks/use-toast";
+import {
+  LINK_TYPES,
+  detectLinkType,
+  extractHandle,
+  buildUrl,
+  type LinkType,
+} from "@/lib/link-types";
 
 import {
   Select,
@@ -88,7 +95,7 @@ export function SortableLinkItem({
   // Strict min/max height caps keep each card at a Linktree-like density on mobile.
   const containerPad = compact ? "p-2" : "p-2.5 sm:p-4";
   const mobileMinH = "min-h-[64px]";
-  const mobileMaxH = compact ? "max-h-[168px]" : "max-h-[224px]";
+  const mobileMaxH = compact ? "max-h-[210px]" : "max-h-[260px]";
   const inputPadY = compact ? "py-1" : "py-1.5 sm:py-2";
   const inputText = compact ? "text-[12px] sm:text-sm" : "text-[13px] sm:text-sm";
   const gapY = compact ? "space-y-1" : "space-y-1.5 sm:space-y-2";
@@ -135,29 +142,75 @@ export function SortableLinkItem({
             className={`w-full px-2.5 ${inputPadY} rounded-lg border border-input bg-background ${inputText} font-medium`}
           />
           {(() => {
+            const currentType: LinkType = detectLinkType(link.url || "");
+            const typeDef =
+              LINK_TYPES.find((t) => t.value === currentType) ?? LINK_TYPES[0];
+            const handleValue = extractHandle(currentType, link.url || "");
             const urlResult = validateUrl(link.url || "");
             const hasUrl = (link.url || "").trim().length > 0;
             const invalid = hasUrl && !urlResult.valid;
+            const isSocialOrContact = currentType !== "custom";
+
             return (
-              <div>
+              <div className="space-y-1.5">
+                <Select
+                  value={currentType}
+                  onValueChange={(next) => {
+                    const nextType = next as LinkType;
+                    // Convert current handle into the new type's URL shape.
+                    const rebuilt = buildUrl(nextType, handleValue);
+                    onUpdate(link.id, { url: rebuilt });
+                  }}
+                >
+                  <SelectTrigger
+                    className={`h-7 w-full ${inputText} px-2`}
+                    aria-label="Link type"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-72">
+                    {LINK_TYPES.map((t) => (
+                      <SelectItem key={t.value} value={t.value}>
+                        {t.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 <div className="relative">
                   <input
-                    value={link.url}
-                    onChange={(e) => onUpdate(link.id, { url: e.target.value })}
+                    value={isSocialOrContact ? handleValue : link.url}
+                    onChange={(e) => {
+                      const raw = e.target.value;
+                      const nextUrl = isSocialOrContact
+                        ? buildUrl(currentType, raw)
+                        : raw;
+                      onUpdate(link.id, { url: nextUrl });
+                    }}
                     onBlur={(e) => {
-                      const v = e.target.value;
-                      const res = validateUrl(v);
-                      if (v.trim() && !res.valid) {
+                      const raw = e.target.value;
+                      const nextUrl = isSocialOrContact
+                        ? buildUrl(currentType, raw)
+                        : raw;
+                      const res = validateUrl(nextUrl);
+                      if (nextUrl.trim() && !res.valid) {
                         toast({
-                          title: "Invalid link URL",
+                          title: "Invalid link",
                           description: res.message,
                           variant: "destructive",
                         });
                         return;
                       }
-                      onUpdate(link.id, { url: v });
+                      onUpdate(link.id, { url: nextUrl });
                     }}
-                    placeholder="https://..."
+                    placeholder={typeDef.placeholder}
+                    inputMode={
+                      currentType === "phone" || currentType === "whatsapp"
+                        ? "tel"
+                        : currentType === "email"
+                        ? "email"
+                        : "url"
+                    }
                     aria-invalid={invalid}
                     className={`w-full pr-8 px-2.5 ${inputPadY} rounded-lg border bg-background ${inputText} ${
                       invalid
@@ -180,12 +233,21 @@ export function SortableLinkItem({
                     {urlResult.message}
                   </p>
                 )}
-                {/* OG preview: hidden on mobile & compact to enforce height cap */}
-                {!invalid && hasUrl && !compact && (
-                  <div className="hidden sm:block">
-                    <LinkOgPreview url={link.url} fallbackTitle={link.title} />
-                  </div>
+                {typeDef.hint && !invalid && (
+                  <p className="text-[10px] text-muted-foreground">
+                    {typeDef.hint}
+                  </p>
                 )}
+                {/* OG preview: skipped for tel:/mailto:, hidden on mobile & compact */}
+                {!invalid &&
+                  hasUrl &&
+                  !compact &&
+                  currentType !== "phone" &&
+                  currentType !== "email" && (
+                    <div className="hidden sm:block">
+                      <LinkOgPreview url={link.url} fallbackTitle={link.title} />
+                    </div>
+                  )}
               </div>
             );
           })()}

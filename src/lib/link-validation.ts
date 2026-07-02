@@ -10,6 +10,18 @@ const CHANNEL_RE = /^[a-zA-Z0-9._-]{1,60}$/;
 export function validateUrl(raw: string): ValidationResult {
   const value = (raw || "").trim();
   if (!value) return { valid: true };
+  // Allow tap-to-call / email / sms schemes without a hostname.
+  if (/^tel:/i.test(value)) {
+    return /^tel:\+?[\d\s().-]{3,}$/i.test(value)
+      ? { valid: true }
+      : { valid: false, message: "Enter a valid phone number" };
+  }
+  if (/^mailto:/i.test(value)) {
+    return /^mailto:[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(value)
+      ? { valid: true }
+      : { valid: false, message: "Enter a valid email address" };
+  }
+  if (/^sms:/i.test(value)) return { valid: true };
   let withScheme = value;
   if (!/^https?:\/\//i.test(withScheme)) withScheme = `https://${withScheme}`;
   try {
