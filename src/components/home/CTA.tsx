@@ -21,7 +21,7 @@ export function CTA() {
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
 
   return (
-    <section ref={sectionRef} className="py-24 relative overflow-hidden">
+    <section ref={sectionRef} className="py-14 sm:py-20 lg:py-24 relative overflow-hidden">
       {/* Background with parallax */}
       <motion.div 
         className="absolute inset-0 gradient-dark"
