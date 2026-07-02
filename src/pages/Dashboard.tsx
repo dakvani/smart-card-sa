@@ -1077,7 +1077,7 @@ export default function Dashboard() {
               </div>
 
               {/* iPhone Frame */}
-              <div className="mx-auto" style={{ width: 280 }}>
+              <div className="mx-auto w-[220px] lg:w-[280px]">
                 <div className="relative rounded-[2.75rem] bg-neutral-900 p-[10px] shadow-2xl ring-1 ring-white/10">
                   {/* Side buttons */}
                   <div className="absolute -left-[3px] top-24 w-[3px] h-8 rounded-l-md bg-neutral-700" />
