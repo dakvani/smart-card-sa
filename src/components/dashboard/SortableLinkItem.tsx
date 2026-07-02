@@ -273,13 +273,7 @@ export function SortableLinkItem({
                       onUpdate(link.id, { url: nextUrl });
                     }}
                     placeholder={typeDef.placeholder}
-                    inputMode={
-                      currentType === "whatsapp"
-                        ? "tel"
-                        : currentType === "email"
-                        ? "email"
-                        : "url"
-                    }
+                    inputMode={currentType === "email" ? "email" : "url"}
                     aria-invalid={invalid}
                     className={`flex-1 min-w-0 pr-8 px-2.5 ${inputPadY} rounded-r-lg border bg-background ${inputText} ${
                       invalid
