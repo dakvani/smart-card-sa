@@ -107,7 +107,7 @@ export function FloatingActionButton() {
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          {isOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <Plus className="w-6 h-6" aria-hidden="true" />}
+          {isOpen ? <X className="w-5 h-5" aria-hidden="true" /> : <Plus className="w-5 h-5" aria-hidden="true" />}
         </motion.div>
       </motion.button>
     </div>
