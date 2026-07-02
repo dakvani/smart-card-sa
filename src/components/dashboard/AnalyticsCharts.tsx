@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { format, subDays, startOfDay, eachDayOfInterval } from "date-fns";
-import { Loader2, TrendingUp, Eye, MousePointer } from "lucide-react";
+import { Loader2, TrendingUp, Eye, MousePointer, Mail, UserPlus } from "lucide-react";
 const DetailedAnalytics = lazy(() =>
   import("./DetailedAnalytics").then((m) => ({ default: m.DetailedAnalytics }))
 );
