@@ -14,7 +14,7 @@ const designs = [
 
 export function ProductDesigns() {
   return (
-    <section id="designs" className="py-24 relative overflow-hidden bg-secondary/10">
+    <section id="designs" className="py-14 sm:py-20 lg:py-24 relative overflow-hidden bg-secondary/10">
       
 
       <div className="container mx-auto px-4 relative z-10">
@@ -23,7 +23,7 @@ export function ProductDesigns() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          className="max-w-3xl mx-auto text-center mb-10 sm:mb-16"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs font-medium mb-4 text-foreground/80">
             <Palette className="w-3.5 h-3.5 text-primary" /> Designs that match your brand
@@ -36,7 +36,7 @@ export function ProductDesigns() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto mb-10 sm:mb-12">
           {designs.map((d, i) => (
             <motion.div
               key={d.name}

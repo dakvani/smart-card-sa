@@ -36,7 +36,7 @@ const benefits = [
 
 export function ProductBenefits() {
   return (
-    <section id="story-next" className="py-24 relative overflow-hidden bg-secondary/10">
+    <section id="story-next" className="py-14 sm:py-20 lg:py-24 relative overflow-hidden bg-secondary/10">
       
 
       <div className="container mx-auto px-4 relative z-10">
@@ -45,7 +45,7 @@ export function ProductBenefits() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          className="max-w-3xl mx-auto text-center mb-10 sm:mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-balance">
             Why thousands switched to <span className="gradient-text">SmartCard</span>
@@ -55,7 +55,7 @@ export function ProductBenefits() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-7xl mx-auto">
           {benefits.map((b, i) => (
             <motion.div
               key={b.title}
@@ -64,7 +64,7 @@ export function ProductBenefits() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.06 }}
               whileHover={{ y: -5 }}
-              className="p-6 rounded-2xl glass border border-border/30 hover:border-primary/30 hover:shadow-glow transition-all"
+              className="p-5 sm:p-6 rounded-2xl glass border border-border/30 hover:border-primary/30 hover:shadow-glow transition-all"
             >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mb-4">
                 <b.icon className="w-6 h-6 text-primary" />

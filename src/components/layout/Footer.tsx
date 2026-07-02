@@ -31,8 +31,9 @@ const footerLinks = {
 export function Footer() {
   return (
     <footer className="bg-secondary/50 border-t border-border" role="contentinfo">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
+      <div className="container mx-auto px-4 pt-10 pb-24 sm:py-14 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 sm:gap-10">
+
           {/* Brand + Contact */}
           <div className="col-span-2 md:col-span-2 space-y-5">
             <Link to="/" className="flex items-center gap-2.5 group" aria-label="SmartCard - Go to homepage">
@@ -86,7 +87,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-10 sm:mt-14 pt-6 sm:pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} SmartCard. All rights reserved.
           </p>

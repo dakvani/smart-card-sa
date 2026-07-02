@@ -441,17 +441,17 @@ export function ScrollStory() {
       style={{ height: `${STAGES * SCROLL_STORY_CONFIG.viewportPerStage * 100}vh` }}
       aria-label="How a SmartLink card works"
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-background">
+      <div className="sticky top-0 h-[100svh] w-full overflow-hidden bg-background">
         {/* Parallax ambient background — opposite axes, soft, behind everything */}
         <motion.div
           aria-hidden
           style={{ y: orbAY, x: orbAX, opacity: orbAOpacity }}
-          className="absolute top-[8%] left-[-8%] w-[520px] h-[520px] rounded-full bg-primary/20 blur-[140px] -z-10 will-change-transform"
+          className="absolute top-[8%] left-[-8%] w-[320px] h-[320px] md:w-[520px] md:h-[520px] rounded-full bg-primary/20 blur-[100px] md:blur-[140px] -z-10 will-change-transform"
         />
         <motion.div
           aria-hidden
           style={{ y: orbBY, x: orbBX, opacity: orbBOpacity }}
-          className="absolute bottom-[6%] right-[-8%] w-[520px] h-[520px] rounded-full bg-accent/20 blur-[140px] -z-10 will-change-transform"
+          className="absolute bottom-[6%] right-[-8%] w-[320px] h-[320px] md:w-[520px] md:h-[520px] rounded-full bg-accent/20 blur-[100px] md:blur-[140px] -z-10 will-change-transform"
         />
         <div
           aria-hidden
@@ -467,17 +467,17 @@ export function ScrollStory() {
         {/* Stage canvas — no hero overlay; motion starts immediately */}
         <motion.div
           style={{ scale: stageScale }}
-          className="relative h-full container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center will-change-transform"
+          className="relative h-full container mx-auto px-4 pt-16 pb-32 md:pt-0 md:pb-0 flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-10 items-center justify-start md:justify-center will-change-transform"
         >
-          {/* Left column: copy */}
-          <div className="relative h-[60vh] md:h-[50vh]">
+          {/* Copy */}
+          <div className="relative w-full h-[38vh] md:h-[50vh] order-1 md:order-none">
             {[0, 1, 2, 3].map((i) => (
               <StageCopy key={i} index={i} globalProgress={smoothProgress} />
             ))}
           </div>
 
-          {/* Right column: graphics */}
-          <div className="relative h-[60vh] md:h-[60vh] flex items-center justify-center">
+          {/* Graphics */}
+          <div className="relative w-full h-[38vh] md:h-[60vh] flex items-center justify-center order-2 md:order-none scale-[0.72] md:scale-100 origin-center">
             <StageSlot index={0} globalProgress={smoothProgress}>
               {(p) => <StageCard progress={p} />}
             </StageSlot>
@@ -493,6 +493,7 @@ export function ScrollStory() {
           </div>
         </motion.div>
 
+
         {/* Stage dots */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
           {[0, 1, 2, 3].map((i) => (
@@ -503,24 +504,26 @@ export function ScrollStory() {
         {/* CTA overlay — reveals during the final stage */}
         <motion.div
           style={{ opacity: ctaOpacity, y: ctaY }}
-          className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col sm:flex-row items-center gap-3 px-4"
+          className="absolute bottom-20 md:bottom-24 left-0 right-0 z-20 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 px-6"
         >
-          <Button asChild size="lg" className="gradient-primary shadow-glow">
+          <Button asChild size="lg" className="gradient-primary shadow-glow w-full sm:w-auto">
             <Link to="/nfc-products">
               Shop SmartCards <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="glass">
+          <Button asChild size="lg" variant="outline" className="glass w-full sm:w-auto">
             <Link to="/signup">Create your profile</Link>
           </Button>
           <Button
             size="lg"
             variant="ghost"
             onClick={() => smoothScrollTo("story-next")}
+            className="w-full sm:w-auto"
           >
             Keep exploring <ChevronDown className="ml-2 w-4 h-4" />
           </Button>
         </motion.div>
+
 
         {/* Scroll hint — only visible at the very top */}
         <ScrollHint progress={smoothProgress} />

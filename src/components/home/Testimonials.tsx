@@ -81,7 +81,7 @@ export function Testimonials() {
   const t = testimonials[current];
 
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-14 sm:py-20 lg:py-24 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
 
       <div className="container mx-auto px-4 relative z-10 max-w-4xl">
@@ -89,7 +89,7 @@ export function Testimonials() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <p className="text-primary font-semibold text-sm uppercase tracking-wider mb-3">Testimonials</p>
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
@@ -107,13 +107,14 @@ export function Testimonials() {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: direction * -60, scale: 0.96 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="w-full rounded-2xl border border-border/50 bg-card/60 backdrop-blur-xl p-8 sm:p-10 shadow-lg"
+              className="w-full rounded-2xl border border-border/50 bg-card/60 backdrop-blur-xl p-6 sm:p-10 shadow-lg"
             >
               <Quote className="w-8 h-8 text-primary/30 mb-4" />
 
-              <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed mb-8 italic">
+              <p className="text-base sm:text-xl text-foreground/90 leading-relaxed mb-6 sm:mb-8 italic">
                 "{t.quote}"
               </p>
+
 
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center gap-3">

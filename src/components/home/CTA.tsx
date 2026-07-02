@@ -21,7 +21,7 @@ export function CTA() {
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
 
   return (
-    <section ref={sectionRef} className="py-24 relative overflow-hidden">
+    <section ref={sectionRef} className="py-14 sm:py-20 lg:py-24 relative overflow-hidden">
       {/* Background with parallax */}
       <motion.div 
         className="absolute inset-0 gradient-dark"
@@ -58,29 +58,30 @@ export function CTA() {
             transition={{ duration: 0.6 }}
             className="text-left"
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-foreground/95 text-balance">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-foreground/95 text-balance">
               Order your SmartCard today. Tap into tomorrow.
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-lg">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-lg">
               Free worldwide shipping on orders over $50. Ships in 48 hours. Lifetime profile included.
             </p>
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-              <Link to="/nfc-products">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button variant="hero" size="xl" className="glass-heavy border-primary/30 hover:border-primary/50 shadow-glow">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 sm:gap-4">
+              <Link to="/nfc-products" className="w-full sm:w-auto">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} className="w-full">
+                  <Button variant="hero" size="xl" className="glass-heavy border-primary/30 hover:border-primary/50 shadow-glow w-full sm:w-auto">
                     Shop now
                     <ArrowRight className="w-5 h-5" />
                   </Button>
                 </motion.div>
               </Link>
-              <Link to="/pricing">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button variant="heroOutline" size="xl" className="border-border/50 text-foreground/80 hover:bg-card/40 hover:text-foreground">
+              <Link to="/pricing" className="w-full sm:w-auto">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} className="w-full">
+                  <Button variant="heroOutline" size="xl" className="border-border/50 text-foreground/80 hover:bg-card/40 hover:text-foreground w-full sm:w-auto">
                     View pricing
                   </Button>
                 </motion.div>
               </Link>
             </div>
+
           </motion.div>
 
           {/* Right side - Stats cards */}
