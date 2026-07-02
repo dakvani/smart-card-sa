@@ -382,13 +382,35 @@ export default function Dashboard() {
     const typeDef = getLinkTypeDef(type);
     const title =
       type === "custom" ? "New Link" : typeDef.label.replace(/\s*\(.*\)$/, "");
+    // Seed URL with a type marker so detectLinkType() picks the right editor
+    // even before the user types anything.
+    const seedUrl: Record<string, string> = {
+      phone: "tel:",
+      whatsapp: "https://wa.me/",
+      email: "mailto:",
+      instagram: "https://instagram.com/",
+      facebook: "https://facebook.com/",
+      messenger: "https://m.me/",
+      snapchat: "https://snapchat.com/",
+      twitter: "https://x.com/",
+      linkedin: "https://linkedin.com/",
+      youtube: "https://youtube.com/",
+      tiktok: "https://tiktok.com/",
+      github: "https://github.com/",
+      telegram: "https://t.me/",
+      discord: "https://discord.gg/",
+      pinterest: "https://pinterest.com/",
+      reddit: "https://reddit.com/",
+      twitch: "https://twitch.tv/",
+      spotify: "https://open.spotify.com/",
+    };
     const newPosition = links.length;
     const { data, error } = await supabase
       .from("links")
       .insert({
         user_id: user.id,
         title,
-        url: "",
+        url: seedUrl[type] ?? "",
         position: newPosition,
       })
       .select()
