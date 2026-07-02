@@ -7,14 +7,12 @@ interface SaveContactButtonProps {
     title?: string | null;
     bio?: string | null;
     avatar_url?: string | null;
-    // Loose shape — public profile passes a typed SocialLinks object.
-    social_links?: Partial<Record<string, string | undefined>> | null;
+    social_links?: unknown;
   };
-
-
   links: Array<{ title: string; url: string; visible?: boolean }>;
   publicUrl: string;
 }
+
 
 const escapeVcf = (s: string) =>
   (s || "").replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
