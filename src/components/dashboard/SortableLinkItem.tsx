@@ -18,6 +18,13 @@ import { LinkOgPreview } from "./LinkOgPreview";
 
 import { validateUrl } from "@/lib/link-validation";
 import { toast } from "@/hooks/use-toast";
+import {
+  LINK_TYPES,
+  detectLinkType,
+  extractHandle,
+  buildUrl,
+  type LinkType,
+} from "@/lib/link-types";
 
 import {
   Select,
