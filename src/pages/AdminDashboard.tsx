@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminTableViewer } from "@/components/admin/AdminTableViewer";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { AdminUserManager } from "@/components/admin/AdminUserManager";
 import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
 import { AdminWelcomeEmails } from "@/components/admin/AdminWelcomeEmails";
@@ -384,6 +385,22 @@ export default function AdminDashboard() {
 
               {/* Overview Tab */}
               <TabsContent value="overview" className="space-y-4">
+                {/* Public site appearance (admin only) */}
+                <Card className="border-border/60">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                    <div>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Palette className="w-4 h-4 text-primary" />
+                        Public site appearance
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Choose the theme every visitor sees on the public site.
+                      </CardDescription>
+                    </div>
+                    <ThemeToggle />
+                  </CardHeader>
+                </Card>
+
                 {/* Stats Grid */}
                 <TooltipProvider delayDuration={200}>
                   <div className="flex flex-wrap gap-3">
