@@ -1054,8 +1054,15 @@ export default function Dashboard() {
           </div>
 
 
-          {/* Preview Panel - iPhone Frame */}
-          <div className="hidden lg:block lg:w-[360px] lg:sticky lg:top-20 lg:h-fit">
+          {/* Preview Panel - iPhone Frame (mobile: collapsible & compact, desktop: sticky) */}
+          <details open className="order-first lg:order-none w-full lg:w-[360px] lg:sticky lg:top-20 lg:h-fit group [&_summary::-webkit-details-marker]:hidden">
+            <summary className="lg:hidden mb-2 flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-background/60 backdrop-blur-sm border border-border/60 cursor-pointer list-none">
+              <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider">
+                <Eye className="w-3.5 h-3.5 text-primary" /> Live Preview
+              </span>
+              <span className="text-[10px] text-muted-foreground group-open:hidden">Tap to show</span>
+              <span className="text-[10px] text-muted-foreground hidden group-open:inline">Tap to hide</span>
+            </summary>
             <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 p-4 shadow-sm">
               <div className="flex items-center justify-between mb-3 px-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Live Preview</p>
