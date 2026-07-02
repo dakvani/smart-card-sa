@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { format, subDays, startOfDay, eachDayOfInterval } from "date-fns";
-import { Loader2, TrendingUp, Eye, MousePointer } from "lucide-react";
+import { Loader2, TrendingUp, Eye, MousePointer, Mail, UserPlus } from "lucide-react";
 const DetailedAnalytics = lazy(() =>
   import("./DetailedAnalytics").then((m) => ({ default: m.DetailedAnalytics }))
 );
@@ -19,8 +19,11 @@ interface ViewData {
 
 export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
   const [viewsData, setViewsData] = useState<ViewData[]>([]);
+  const [subscribeCount, setSubscribeCount] = useState(0);
+  const [contactSaveCount, setContactSaveCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<7 | 30>(7);
+
 
   useEffect(() => {
     const loadAnalytics = async () => {
@@ -28,15 +31,32 @@ export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
       try {
         const startDate = startOfDay(subDays(new Date(), period - 1));
         
-        // Fetch views for the period
-        const { data: viewsRaw, error } = await supabase
-          .from("profile_views")
-          .select("viewed_at")
-          .eq("profile_id", profileId)
-          .gte("viewed_at", startDate.toISOString())
-          .order("viewed_at", { ascending: true });
+        // Fetch views and share events for the period in parallel.
+        const [{ data: viewsRaw, error }, subRes, saveRes] = await Promise.all([
+          supabase
+            .from("profile_views")
+            .select("viewed_at")
+            .eq("profile_id", profileId)
+            .gte("viewed_at", startDate.toISOString())
+            .order("viewed_at", { ascending: true }),
+          supabase
+            .from("profile_share_events")
+            .select("id", { count: "exact", head: true })
+            .eq("profile_id", profileId)
+            .eq("channel", "subscribe_submit")
+            .gte("created_at", startDate.toISOString()),
+          supabase
+            .from("profile_share_events")
+            .select("id", { count: "exact", head: true })
+            .eq("profile_id", profileId)
+            .eq("channel", "save_contact")
+            .gte("created_at", startDate.toISOString()),
+        ]);
 
         if (error) throw error;
+        setSubscribeCount(subRes.count || 0);
+        setContactSaveCount(saveRes.count || 0);
+
 
         // Create date range
         const dateRange = eachDayOfInterval({
@@ -108,7 +128,7 @@ export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="p-4 bg-secondary/50 rounded-xl">
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <Eye className="w-4 h-4" />
@@ -137,7 +157,22 @@ export function AnalyticsCharts({ profileId, links }: AnalyticsChartsProps) {
           </div>
           <p className="text-2xl font-bold">{clickRate}%</p>
         </div>
+        <div className="p-4 bg-secondary/50 rounded-xl">
+          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <UserPlus className="w-4 h-4" />
+            <span className="text-xs">Contact Saves</span>
+          </div>
+          <p className="text-2xl font-bold">{contactSaveCount.toLocaleString()}</p>
+        </div>
+        <div className="p-4 bg-secondary/50 rounded-xl">
+          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <Mail className="w-4 h-4" />
+            <span className="text-xs">Subscribes</span>
+          </div>
+          <p className="text-2xl font-bold">{subscribeCount.toLocaleString()}</p>
+        </div>
       </div>
+
 
       {/* Views Chart */}
       <div className="p-4 bg-secondary/30 rounded-xl">
