@@ -92,7 +92,7 @@ export function CTA() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex justify-center lg:justify-end"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 w-full max-w-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-3 sm:gap-4 w-full max-w-sm">
               {stats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
