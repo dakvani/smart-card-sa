@@ -7,8 +7,10 @@ interface SaveContactButtonProps {
     title?: string | null;
     bio?: string | null;
     avatar_url?: string | null;
-    social_links?: Record<string, string | undefined> | Record<string, unknown> | null;
+    // Loose shape — public profile passes a typed SocialLinks object.
+    social_links?: Partial<Record<string, string | undefined>> | null;
   };
+
 
   links: Array<{ title: string; url: string; visible?: boolean }>;
   publicUrl: string;
