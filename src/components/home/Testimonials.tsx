@@ -107,7 +107,7 @@ export function Testimonials() {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: direction * -60, scale: 0.96 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="w-full rounded-2xl border border-border/50 bg-card/60 backdrop-blur-xl p-8 sm:p-10 shadow-lg"
+              className="w-full rounded-2xl border border-border/50 bg-card/60 backdrop-blur-xl p-6 sm:p-10 shadow-lg"
             >
               <Quote className="w-8 h-8 text-primary/30 mb-4" />
 
