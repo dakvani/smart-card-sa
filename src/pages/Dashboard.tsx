@@ -210,36 +210,36 @@ export default function Dashboard() {
         trackOnboarding("onboarding_started", { isNewUser: true, provider, prefill });
       }
 
-      // Load links
-      const { data: linksData, error: linksError } = await supabase
-        .from("links")
-        .select("*")
-        .eq("user_id", userId)
-        .order("position", { ascending: true });
+      // Fire remaining queries in parallel to minimise dashboard first-paint delay.
+      const [linksRes, groupsRes, viewsRes] = await Promise.all([
+        supabase
+          .from("links")
+          .select("*")
+          .eq("user_id", userId)
+          .order("position", { ascending: true }),
+        supabase
+          .from("link_groups")
+          .select("*")
+          .eq("user_id", userId)
+          .order("position", { ascending: true }),
+        profileData
+          ? supabase
+              .from("profile_views")
+              .select("*", { count: "exact", head: true })
+              .eq("profile_id", profileData.id)
+          : Promise.resolve({ count: 0, error: null } as any),
+      ]);
 
-      if (linksError) throw linksError;
-      setLinks(linksData || []);
+      if (linksRes.error) throw linksRes.error;
+      if (groupsRes.error) throw groupsRes.error;
+      setLinks(linksRes.data || []);
+      setGroups(groupsRes.data || []);
 
-      // Load groups
-      const { data: groupsData, error: groupsError } = await supabase
-        .from("link_groups")
-        .select("*")
-        .eq("user_id", userId)
-        .order("position", { ascending: true });
-
-      if (groupsError) throw groupsError;
-      setGroups(groupsData || []);
-
-      // Load analytics
-      if (profileData) {
-        const { count: viewCount } = await supabase
-          .from("profile_views")
-          .select("*", { count: "exact", head: true })
-          .eq("profile_id", profileData.id);
-
-        const totalClicks = (linksData || []).reduce((sum, link) => sum + (link.click_count || 0), 0);
-        setAnalytics({ views: viewCount || 0, clicks: totalClicks });
-      }
+      const totalClicks = (linksRes.data || []).reduce(
+        (sum, link) => sum + (link.click_count || 0),
+        0,
+      );
+      setAnalytics({ views: (viewsRes as any).count || 0, clicks: totalClicks });
     } catch (error: any) {
       toast.error("Failed to load data: " + error.message);
     } finally {
@@ -1054,8 +1054,15 @@ export default function Dashboard() {
           </div>
 
 
-          {/* Preview Panel - iPhone Frame */}
-          <div className="hidden lg:block lg:w-[360px] lg:sticky lg:top-20 lg:h-fit">
+          {/* Preview Panel - iPhone Frame (mobile: collapsible & compact, desktop: sticky) */}
+          <details open className="order-first lg:order-none w-full lg:w-[360px] lg:sticky lg:top-20 lg:h-fit group [&_summary::-webkit-details-marker]:hidden">
+            <summary className="lg:hidden mb-2 flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-background/60 backdrop-blur-sm border border-border/60 cursor-pointer list-none">
+              <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider">
+                <Eye className="w-3.5 h-3.5 text-primary" /> Live Preview
+              </span>
+              <span className="text-[10px] text-muted-foreground group-open:hidden">Tap to show</span>
+              <span className="text-[10px] text-muted-foreground hidden group-open:inline">Tap to hide</span>
+            </summary>
             <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 p-4 shadow-sm">
               <div className="flex items-center justify-between mb-3 px-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Live Preview</p>
@@ -1070,7 +1077,7 @@ export default function Dashboard() {
               </div>
 
               {/* iPhone Frame */}
-              <div className="mx-auto" style={{ width: 280 }}>
+              <div className="mx-auto w-[220px] lg:w-[280px]">
                 <div className="relative rounded-[2.75rem] bg-neutral-900 p-[10px] shadow-2xl ring-1 ring-white/10">
                   {/* Side buttons */}
                   <div className="absolute -left-[3px] top-24 w-[3px] h-8 rounded-l-md bg-neutral-700" />
@@ -1080,8 +1087,8 @@ export default function Dashboard() {
 
                   {/* Screen */}
                   <div
-                    className={`relative rounded-[2.25rem] overflow-hidden ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
-                    style={{ ...previewStyle, height: 560 }}
+                    className={`relative rounded-[2.25rem] overflow-hidden h-[420px] lg:h-[560px] ${!previewStyle ? `bg-gradient-${profile.gradient_direction || 'to-b'} ${previewGradient}` : ''}`}
+                    style={previewStyle}
                   >
                     {/* Status bar */}
                     <div className="absolute top-0 inset-x-0 z-30 flex items-center justify-between px-6 pt-2 pb-1 text-[10px] font-semibold text-primary-foreground">
@@ -1170,7 +1177,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-          </div>
+          </details>
         </div>
       </div>
       <MobileTabBar activeTab={activeTab} onChange={setActiveTab} />

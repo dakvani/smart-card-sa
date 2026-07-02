@@ -522,7 +522,7 @@ export function ProfileTemplates({
       />
 
       {/* Templates Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-4">
         {filteredTemplates.map(template => {
           const isActive = template.theme_name === currentThemeName;
           const Icon = categoryIcons[template.category] || Palette;
@@ -584,7 +584,7 @@ export function ProfileTemplates({
                 )}
               </div>
 
-              <div className="p-4 bg-background">
+              <div className="p-2 sm:p-4 bg-background">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
