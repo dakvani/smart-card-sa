@@ -58,7 +58,7 @@ export function CTA() {
             transition={{ duration: 0.6 }}
             className="text-left"
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-foreground/95 text-balance">
+            <h2 className="text-[26px] leading-[1.15] sm:text-4xl lg:text-5xl sm:leading-tight font-bold mb-4 sm:mb-6 text-foreground/95 text-balance">
               Order your SmartCard today. Tap into tomorrow.
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-lg">
@@ -92,7 +92,7 @@ export function CTA() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex justify-center lg:justify-end"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 w-full max-w-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-3 sm:gap-4 w-full max-w-sm">
               {stats.map((stat, index) => (
                 <motion.div
                   key={stat.label}

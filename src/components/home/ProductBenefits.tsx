@@ -47,12 +47,13 @@ export function ProductBenefits() {
           transition={{ duration: 0.6 }}
           className="max-w-3xl mx-auto text-center mb-10 sm:mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-balance">
+          <h2 className="text-[26px] leading-[1.15] sm:text-4xl lg:text-5xl sm:leading-tight font-bold mb-4 text-balance">
             Why thousands switched to <span className="gradient-text">SmartCard</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-base sm:text-lg leading-relaxed text-muted-foreground">
             More than a business card. Every SmartCard product is a tiny piece of hardware doing serious work for your brand.
           </p>
+
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-7xl mx-auto">

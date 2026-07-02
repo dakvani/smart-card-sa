@@ -92,9 +92,10 @@ export function Testimonials() {
           className="text-center mb-10 sm:mb-16"
         >
           <p className="text-primary font-semibold text-sm uppercase tracking-wider mb-3">Testimonials</p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
+          <h2 className="text-[26px] leading-[1.15] sm:text-4xl sm:leading-tight font-bold text-foreground text-balance">
             Loved by <span className="gradient-text">creators everywhere</span>
           </h2>
+
         </motion.div>
 
         {/* Main testimonial card */}

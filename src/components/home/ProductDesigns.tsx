@@ -28,12 +28,13 @@ export function ProductDesigns() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs font-medium mb-4 text-foreground/80">
             <Palette className="w-3.5 h-3.5 text-primary" /> Designs that match your brand
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-balance">
+          <h2 className="text-[26px] leading-[1.15] sm:text-4xl lg:text-5xl sm:leading-tight font-bold mb-4 text-balance">
             Choose a finish. Or <span className="gradient-text">design your own.</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-base sm:text-lg leading-relaxed text-muted-foreground">
             Start from a curated preset, then customize colors, logo, and layout in our live editor.
           </p>
+
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto mb-10 sm:mb-12">

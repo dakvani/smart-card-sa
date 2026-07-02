@@ -345,12 +345,13 @@ function StageCopy({
         <span className="w-8 h-px bg-primary" />
         {STAGE_LABELS[index]}
       </div>
-      <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
+      <h2 className="text-[26px] leading-[1.15] md:text-5xl md:leading-tight font-bold tracking-tight text-foreground mb-3 md:mb-4">
         {STAGE_TITLES[index]}
       </h2>
-      <p className="text-base md:text-lg text-muted-foreground max-w-md leading-relaxed">
+      <p className="text-[15px] leading-relaxed md:text-lg text-muted-foreground max-w-md">
         {STAGE_COPY[index]}
       </p>
+
     </motion.div>
   );
 }
