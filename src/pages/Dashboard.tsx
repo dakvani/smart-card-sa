@@ -830,6 +830,7 @@ export default function Dashboard() {
                                     onUpdate={updateLink}
                                     onDelete={deleteLink}
                                     groups={groups}
+                                    compact={compact}
                                   />
                                 ))}
                               </div>
