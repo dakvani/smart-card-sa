@@ -1038,7 +1038,7 @@ export default function Dashboard() {
 
 
           {/* Preview Panel - iPhone Frame */}
-          <div className="lg:w-[360px] lg:sticky lg:top-20 lg:h-fit">
+          <div className="hidden lg:block lg:w-[360px] lg:sticky lg:top-20 lg:h-fit">
             <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 p-4 shadow-sm">
               <div className="flex items-center justify-between mb-3 px-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Live Preview</p>
