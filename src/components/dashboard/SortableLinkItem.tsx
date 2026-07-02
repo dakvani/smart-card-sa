@@ -128,14 +128,27 @@ export function SortableLinkItem({
           <GripVertical className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
         </button>
 
-        {/* Thumbnail */}
+        {/* Thumbnail — auto-shows platform icon, tap to upload a custom one */}
         <div className="shrink-0">
-          <LinkThumbnailUpload
-            userId={link.user_id}
-            linkId={link.id}
-            currentThumbnail={link.thumbnail_url || null}
-            onUpload={(url) => onUpdate(link.id, { thumbnail_url: url })}
-          />
+          {(() => {
+            const t = detectLinkType(link.url || "");
+            const def = getLinkTypeDef(t);
+            const Ico =
+              (def.icon &&
+                (icons as Record<string, React.ComponentType<{ className?: string }>>)[def.icon]) ||
+              icons.Link2;
+            const fallback =
+              t !== "custom" ? <Ico className="w-5 h-5" /> : null;
+            return (
+              <LinkThumbnailUpload
+                userId={link.user_id}
+                linkId={link.id}
+                currentThumbnail={link.thumbnail_url || null}
+                onUpload={(url) => onUpdate(link.id, { thumbnail_url: url })}
+                fallbackIcon={fallback}
+              />
+            );
+          })()}
         </div>
 
         <div className={`flex-1 min-w-0 ${gapY}`}>
