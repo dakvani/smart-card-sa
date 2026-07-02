@@ -111,9 +111,10 @@ export function Testimonials() {
             >
               <Quote className="w-8 h-8 text-primary/30 mb-4" />
 
-              <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed mb-8 italic">
+              <p className="text-base sm:text-xl text-foreground/90 leading-relaxed mb-6 sm:mb-8 italic">
                 "{t.quote}"
               </p>
+
 
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center gap-3">
