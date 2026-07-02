@@ -515,12 +515,12 @@ export default function PublicProfile() {
                 })}
               </div>
 
-              {/* Save contact - prominent button under links */}
+              {/* Save contact - compact action under links */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
-                className="mt-4"
+                className="mt-4 flex justify-center"
               >
                 <SaveContactButton
                   profile={profile}

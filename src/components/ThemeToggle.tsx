@@ -15,6 +15,12 @@ import { useToast } from "@/hooks/use-toast";
 
 export type Theme = "light" | "dark" | "system" | "high-contrast" | "protanopia" | "deuteranopia" | "tritanopia";
 
+const DEFAULT_PUBLIC_THEME: Theme = "protanopia";
+const THEME_VALUES: Theme[] = ["light", "dark", "system", "high-contrast", "protanopia", "deuteranopia", "tritanopia"];
+
+const normalizeTheme = (value: unknown): Theme =>
+  typeof value === "string" && THEME_VALUES.includes(value as Theme) ? (value as Theme) : DEFAULT_PUBLIC_THEME;
+
 const themeConfig: Record<Theme, { icon: typeof Sun; label: string; category: "standard" | "accessibility" }> = {
   light: { icon: Sun, label: "Light", category: "standard" },
   dark: { icon: Moon, label: "Dark", category: "standard" },
@@ -52,7 +58,7 @@ const applyThemeToDom = (newTheme: Theme): "light" | "dark" => {
  * All visitors (including anon) load and apply that theme.
  */
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>(DEFAULT_PUBLIC_THEME);
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("dark");
   const { toast } = useToast();
 
@@ -67,7 +73,7 @@ export function useTheme() {
         .eq("id", "global")
         .maybeSingle();
       if (!mounted) return;
-      const t = (data?.public_theme as Theme) || "dark";
+      const t = normalizeTheme(data?.public_theme);
       setThemeState(t);
       setResolvedTheme(applyThemeToDom(t));
     };
@@ -79,7 +85,7 @@ export function useTheme() {
         "postgres_changes",
         { event: "*", schema: "public", table: "site_settings", filter: "id=eq.global" },
         (payload: any) => {
-          const t = (payload.new?.public_theme as Theme) || "dark";
+          const t = normalizeTheme(payload.new?.public_theme);
           setThemeState(t);
           setResolvedTheme(applyThemeToDom(t));
         }
