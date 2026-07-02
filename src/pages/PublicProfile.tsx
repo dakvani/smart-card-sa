@@ -444,11 +444,13 @@ export default function PublicProfile() {
                         onClick={() => handleLinkClick(link.id, link.url)}
                         className="w-full flex items-center gap-3 py-3.5 px-5 rounded-2xl bg-primary-foreground/30 backdrop-blur border border-primary-foreground/20 hover:bg-primary-foreground/40 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg"
                       >
-                        {link.thumbnail_url && (
+                        {link.thumbnail_url ? (
                           <img src={link.thumbnail_url} alt="" className="w-12 h-12 rounded-xl object-cover flex-shrink-0 ring-2 ring-primary-foreground/30" />
+                        ) : (
+                          renderAutoIcon(link.url, "w-6 h-6")
                         )}
                         <span className="flex-1 text-primary-foreground font-bold text-center text-lg">{link.title}</span>
-                        {link.thumbnail_url && <div className="w-12" />}
+                        {(link.thumbnail_url || renderAutoIcon(link.url)) && <div className="w-12" />}
                       </motion.button>
                     ))}
                   </div>
