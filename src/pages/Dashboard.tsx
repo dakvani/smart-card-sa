@@ -19,8 +19,7 @@ import {
   verticalListSortingStrategy 
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder, Eye, MousePointerClick, Sparkles, Undo2, Redo2, Save, Rows3, Rows2 } from "lucide-react";
-import { useCompactMode } from "@/hooks/use-compact-mode";
+import { Plus, ExternalLink, LogOut, BarChart3, Palette, Settings as SettingsIcon, Link2, Loader2, Copy, Check, Folder, Eye, MousePointerClick, Sparkles, Undo2, Redo2, Save } from "lucide-react";
 import { toast } from "sonner";
 import type { User, Session } from "@supabase/supabase-js";
 import { AvatarUpload } from "@/components/dashboard/AvatarUpload";
@@ -129,7 +128,7 @@ export default function Dashboard() {
   const [groups, setGroups] = useState<LinkGroup[]>([]);
   const [analytics, setAnalytics] = useState({ views: 0, clicks: 0 });
   const { plan, planLabel, isPro, loading: planLoading } = usePlan(user?.id);
-  const { compact, toggle: toggleCompact } = useCompactMode();
+  const compact = true;
 
   // History stack for undo/redo of profile changes
   const [past, setPast] = useState<Profile[]>([]);
@@ -622,17 +621,6 @@ export default function Dashboard() {
                 <span className="hidden sm:inline">View</span>
               </Button>
             </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleCompact}
-              className="h-8 w-8"
-              title={compact ? "Switch to comfortable density" : "Switch to compact density"}
-              aria-pressed={compact}
-              aria-label="Toggle compact dashboard mode"
-            >
-              {compact ? <Rows3 className="w-3.5 h-3.5" /> : <Rows2 className="w-3.5 h-3.5" />}
-            </Button>
             <Button variant="ghost" size="icon" onClick={handleLogout} className="h-8 w-8">
               <LogOut className="w-3.5 h-3.5" />
             </Button>

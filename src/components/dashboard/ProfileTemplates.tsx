@@ -522,7 +522,7 @@ export function ProfileTemplates({
       />
 
       {/* Templates Grid */}
-      <div className="grid grid-cols-2 gap-2 sm:gap-4">
+      <div className="grid grid-cols-4 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
         {filteredTemplates.map(template => {
           const isActive = template.theme_name === currentThemeName;
           const Icon = categoryIcons[template.category] || Palette;
@@ -584,53 +584,55 @@ export function ProfileTemplates({
                 )}
               </div>
 
-              <div className="p-2 sm:p-4 bg-background">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <Icon className="w-4 h-4 text-muted-foreground" />
-                      <h4 className="font-medium text-sm">{template.name}</h4>
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide ${tierClass}`}>
+              <div className="p-1.5 sm:p-3 bg-background">
+                <div className="flex items-start justify-between gap-1 sm:gap-2 flex-col sm:flex-row">
+                  <div className="min-w-0 w-full">
+                    <div className="flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1 flex-wrap">
+                      <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+                      <h4 className="font-medium text-[10px] sm:text-sm truncate">{template.name}</h4>
+                      <span className={`hidden sm:inline text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide ${tierClass}`}>
                         {tierLabel}
                       </span>
                       {template.animation_type && (
-                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-primary/10 text-primary flex items-center gap-1">
+                        <span className="hidden sm:flex text-xs px-1.5 py-0.5 rounded-full bg-primary/10 text-primary items-center gap-1">
                           <Sparkles className="w-3 h-3" />
                           {animationLabels[template.animation_type] || "Animated"}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground">{template.description}</p>
+                    <p className="hidden sm:block text-xs text-muted-foreground">{template.description}</p>
                   </div>
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex items-center gap-1 shrink-0 w-full sm:w-auto justify-end">
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                      className="h-6 w-6 sm:h-8 sm:px-2 p-0 text-muted-foreground hover:text-foreground"
                       onClick={() => toggleHide(template.id, template.name)}
                       title={hidden ? "Show in gallery & previews" : "Hide from gallery & previews"}
                       aria-label={hidden ? "Unhide template" : "Hide template"}
                     >
-                      {hidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                      {hidden ? <Eye className="w-3 h-3 sm:w-4 sm:h-4" /> : <EyeOff className="w-3 h-3 sm:w-4 sm:h-4" />}
                     </Button>
                     {locked ? (
                       <Button
                         size="sm" variant="gradient"
+                        className="h-6 px-1.5 text-[10px] sm:h-8 sm:px-3 sm:text-xs"
                         onClick={() => { setUnlockFeature(template.name); setUnlockOpen(true); }}
                       >
-                        <Lock className="w-3.5 h-3.5" /> Unlock
+                        <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> <span className="hidden sm:inline">Unlock</span>
                       </Button>
                     ) : (
                       <Button
                         size="sm"
                         variant={isActive ? "outline" : "gradient"}
+                        className="h-6 px-1.5 text-[10px] sm:h-8 sm:px-3 sm:text-xs"
                         onClick={() => applyTemplate(template)}
                         disabled={applying === template.id}
                       >
                         {applying === template.id ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
                         ) : isActive ? (
-                          <><Check className="w-4 h-4" />Applied</>
+                          <><Check className="w-3 h-3 sm:w-4 sm:h-4" /><span className="hidden sm:inline">Applied</span></>
                         ) : ("Apply")}
                       </Button>
                     )}
