@@ -1010,6 +1010,27 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          id: string
+          public_theme: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          id?: string
+          public_theme?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          id?: string
+          public_theme?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
