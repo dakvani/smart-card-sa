@@ -157,23 +157,37 @@ export function SortableLinkItem({
                 (icons as Record<string, React.ComponentType<{ className?: string }>>)[typeDef.icon]) ||
               icons.Link2;
 
-            // Phone gets a dedicated country-code + local editor.
-            if (currentType === "phone") {
-              const { dial, local } = splitPhone(link.url || "");
+            // Phone & WhatsApp get a dedicated country-code + local number editor.
+            if (currentType === "phone" || currentType === "whatsapp") {
+              const rawForSplit =
+                currentType === "whatsapp"
+                  ? (() => {
+                      const m = (link.url || "").match(/wa\.me\/(\+?[\d]+)/i);
+                      return m ? `+${m[1].replace(/^\+/, "")}` : "";
+                    })()
+                  : link.url || "";
+              const { dial, local } = splitPhone(rawForSplit);
               const commit = (nextDial: string, nextLocal: string) => {
                 const digits = nextLocal.replace(/\D/g, "");
                 if (!digits) {
                   onUpdate(link.id, { url: "" });
                   return;
                 }
-                onUpdate(link.id, { url: `tel:${nextDial}${digits}` });
+                if (currentType === "whatsapp") {
+                  const full = `${nextDial}${digits}`.replace(/^\+/, "");
+                  onUpdate(link.id, { url: `https://wa.me/${full}` });
+                } else {
+                  onUpdate(link.id, { url: `tel:${nextDial}${digits}` });
+                }
               };
               return (
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
                     <div className="shrink-0 flex items-center gap-1 px-2 rounded-lg border border-input bg-background text-[11px] text-muted-foreground">
                       <TypeIcon className="w-3 h-3 text-primary" />
-                      <span>{typeDef.label.split(" ")[0]}</span>
+                      <span>
+                        {currentType === "whatsapp" ? "WhatsApp" : typeDef.label.split(" ")[0]}
+                      </span>
                     </div>
                   </div>
                   <div className="flex gap-1.5">
@@ -199,16 +213,20 @@ export function SortableLinkItem({
                     <input
                       value={formatLocalPhone(local)}
                       onChange={(e) => commit(dial, e.target.value)}
-                      placeholder="555 123 4567"
+                      placeholder={
+                        currentType === "whatsapp"
+                          ? "WhatsApp number"
+                          : "555 123 4567"
+                      }
                       inputMode="tel"
                       className={`flex-1 min-w-0 px-2.5 ${inputPadY} rounded-lg border border-input bg-background ${inputText} tabular-nums`}
                     />
                   </div>
-                  {typeDef.hint && (
-                    <p className="text-[10px] text-muted-foreground">
-                      {typeDef.hint}
-                    </p>
-                  )}
+                  <p className="text-[10px] text-muted-foreground">
+                    {currentType === "whatsapp"
+                      ? "Opens WhatsApp chat on tap"
+                      : typeDef.hint}
+                  </p>
                 </div>
               );
             }
@@ -255,13 +273,7 @@ export function SortableLinkItem({
                       onUpdate(link.id, { url: nextUrl });
                     }}
                     placeholder={typeDef.placeholder}
-                    inputMode={
-                      currentType === "whatsapp"
-                        ? "tel"
-                        : currentType === "email"
-                        ? "email"
-                        : "url"
-                    }
+                    inputMode={currentType === "email" ? "email" : "url"}
                     aria-invalid={invalid}
                     className={`flex-1 min-w-0 pr-8 px-2.5 ${inputPadY} rounded-r-lg border bg-background ${inputText} ${
                       invalid
