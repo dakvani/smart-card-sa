@@ -781,7 +781,7 @@ export default function Dashboard() {
               <div className="p-3 sm:p-4">
 
               {activeTab === "links" && (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Group Manager */}
                   <LinkGroupManager
                     groups={groups}
@@ -802,7 +802,7 @@ export default function Dashboard() {
                       <p>No links yet. Add your first link above!</p>
                     </div>
                   ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                       {/* Ungrouped Links */}
                       {links.filter(l => !l.group_id).length > 0 && (
                         <div>
@@ -886,7 +886,7 @@ export default function Dashboard() {
               )}
 
               {activeTab === "appearance" && (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Avatar Upload */}
                   <AvatarUpload
                     userId={user.id}
@@ -994,7 +994,7 @@ export default function Dashboard() {
               )}
 
               {activeTab === "settings" && (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div className="p-4 bg-secondary/50 rounded-xl">
                     <p className="font-medium mb-1">Your SmartCard URL</p>
                     <div className="flex items-center gap-2">
