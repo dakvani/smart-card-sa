@@ -89,7 +89,7 @@ export function Testimonials() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <p className="text-primary font-semibold text-sm uppercase tracking-wider mb-3">Testimonials</p>
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
