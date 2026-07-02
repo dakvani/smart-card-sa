@@ -60,36 +60,39 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
       ref={setNodeRef}
       style={style}
       layout
-      className={`p-4 rounded-xl border transition-all ${
+      className={`p-2.5 sm:p-4 rounded-xl border transition-all ${
         link.is_featured 
           ? "bg-primary/10 border-primary/30 ring-1 ring-primary/20" 
           : "bg-secondary/50 border-border"
       }`}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-2 sm:gap-3">
         <button
           {...attributes}
           {...listeners}
-          className="mt-2 cursor-grab active:cursor-grabbing touch-none"
+          className="mt-1.5 sm:mt-2 cursor-grab active:cursor-grabbing touch-none"
+          aria-label="Drag to reorder"
         >
-          <GripVertical className="w-5 h-5 text-muted-foreground" />
+          <GripVertical className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
         </button>
         
         {/* Thumbnail Upload */}
-        <LinkThumbnailUpload
-          userId={link.user_id}
-          linkId={link.id}
-          currentThumbnail={link.thumbnail_url || null}
-          onUpload={(url) => onUpdate(link.id, { thumbnail_url: url })}
-        />
+        <div className="shrink-0">
+          <LinkThumbnailUpload
+            userId={link.user_id}
+            linkId={link.id}
+            currentThumbnail={link.thumbnail_url || null}
+            onUpload={(url) => onUpdate(link.id, { thumbnail_url: url })}
+          />
+        </div>
 
-        <div className="flex-1 space-y-3">
+        <div className="flex-1 min-w-0 space-y-2">
           <input
             value={link.title}
             onChange={(e) => onUpdate(link.id, { title: e.target.value })}
             onBlur={(e) => onUpdate(link.id, { title: e.target.value })}
             placeholder="Link Title"
-            className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm font-medium"
+            className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border border-input bg-background text-[13px] sm:text-sm font-medium"
           />
           {(() => {
             const urlResult = validateUrl(link.url || "");
@@ -112,22 +115,22 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
                     }}
                     placeholder="https://..."
                     aria-invalid={invalid}
-                    className={`w-full pr-9 px-3 py-2 rounded-lg border bg-background text-sm ${
+                    className={`w-full pr-8 px-2.5 py-1.5 sm:py-2 rounded-lg border bg-background text-[13px] sm:text-sm ${
                       invalid ? "border-destructive focus-visible:ring-destructive" : "border-input"
                     }`}
                   />
                   {hasUrl && (
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
                       {urlResult.valid ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                       ) : (
-                        <AlertCircle className="w-4 h-4 text-destructive" />
+                        <AlertCircle className="w-3.5 h-3.5 text-destructive" />
                       )}
                     </span>
                   )}
                 </div>
                 {invalid && urlResult.message && (
-                  <p className="text-xs text-destructive mt-1">{urlResult.message}</p>
+                  <p className="text-[11px] text-destructive mt-1">{urlResult.message}</p>
                 )}
                 {!invalid && hasUrl && (
                   <LinkOgPreview url={link.url} fallbackTitle={link.title} />
@@ -137,7 +140,7 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
             );
           })()}
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] sm:text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <BarChart3 className="w-3 h-3" />
               <span>{link.click_count} clicks</span>
@@ -152,7 +155,7 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
                 value={link.group_id || "none"}
                 onValueChange={(value) => onUpdate(link.id, { group_id: value === "none" ? null : value })}
               >
-                <SelectTrigger className="h-7 w-[130px] text-xs">
+                <SelectTrigger className="h-6 sm:h-7 w-[110px] sm:w-[130px] text-[11px] sm:text-xs px-2">
                   <SelectValue placeholder="No group" />
                 </SelectTrigger>
                 <SelectContent>
@@ -167,35 +170,39 @@ export function SortableLinkItem({ link, onUpdate, onDelete, groups = [] }: Sort
             )}
           </div>
         </div>
-        <button
-          onClick={() => onUpdate(link.id, { is_featured: !link.is_featured })}
-          className={`p-2 rounded-lg transition-colors ${
-            link.is_featured 
-              ? "bg-primary/20 text-primary hover:bg-primary/30" 
-              : "hover:bg-secondary text-muted-foreground hover:text-primary"
-          }`}
-          title={link.is_featured ? "Unpin link" : "Pin to top"}
-        >
-          <Star className={`w-4 h-4 ${link.is_featured ? "fill-current" : ""}`} />
-        </button>
-        <button
-          onClick={() => onUpdate(link.id, { visible: !link.visible })}
-          className="p-2 hover:bg-secondary rounded-lg"
-          title={link.visible ? "Hide link" : "Show link"}
-        >
-          {link.visible ? (
-            <Eye className="w-4 h-4" />
-          ) : (
-            <EyeOff className="w-4 h-4 text-muted-foreground" />
-          )}
-        </button>
-        <button
-          onClick={() => onDelete(link.id)}
-          className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        <div className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-0 shrink-0">
+          <button
+            onClick={() => onUpdate(link.id, { is_featured: !link.is_featured })}
+            className={`p-1.5 sm:p-2 rounded-lg transition-colors ${
+              link.is_featured 
+                ? "bg-primary/20 text-primary hover:bg-primary/30" 
+                : "hover:bg-secondary text-muted-foreground hover:text-primary"
+            }`}
+            title={link.is_featured ? "Unpin link" : "Pin to top"}
+          >
+            <Star className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${link.is_featured ? "fill-current" : ""}`} />
+          </button>
+          <button
+            onClick={() => onUpdate(link.id, { visible: !link.visible })}
+            className="p-1.5 sm:p-2 hover:bg-secondary rounded-lg"
+            title={link.visible ? "Hide link" : "Show link"}
+          >
+            {link.visible ? (
+              <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            ) : (
+              <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
+            )}
+          </button>
+          <button
+            onClick={() => onDelete(link.id)}
+            className="p-1.5 sm:p-2 hover:bg-destructive/10 rounded-lg text-destructive"
+            title="Delete link"
+          >
+            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </button>
+        </div>
       </div>
     </motion.div>
   );
 }
+

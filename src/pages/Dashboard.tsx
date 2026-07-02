@@ -627,32 +627,34 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-5">
+      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-5">
         {/* Compact Stats Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-4">
+        <div className="grid grid-cols-4 md:grid-cols-4 gap-1.5 sm:gap-2.5 mb-3 sm:mb-4">
           {[
-            { label: "Profile Views", value: analytics.views, icon: Eye, color: "text-blue-400", bg: "from-blue-500/10 to-blue-500/0" },
-            { label: "Total Clicks", value: analytics.clicks, icon: MousePointerClick, color: "text-pink-400", bg: "from-pink-500/10 to-pink-500/0" },
-            { label: "Active Links", value: visibleLinks, icon: Link2, color: "text-emerald-400", bg: "from-emerald-500/10 to-emerald-500/0" },
+            { label: "Views", value: analytics.views, icon: Eye, color: "text-blue-400", bg: "from-blue-500/10 to-blue-500/0" },
+            { label: "Clicks", value: analytics.clicks, icon: MousePointerClick, color: "text-pink-400", bg: "from-pink-500/10 to-pink-500/0" },
+            { label: "Links", value: visibleLinks, icon: Link2, color: "text-emerald-400", bg: "from-emerald-500/10 to-emerald-500/0" },
             { label: "Groups", value: groups.length, icon: Folder, color: "text-amber-400", bg: "from-amber-500/10 to-amber-500/0" },
           ].map((stat) => (
             <motion.div
               key={stat.label}
               whileHover={{ y: -2 }}
-              className={`relative overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br ${stat.bg} bg-background/40 backdrop-blur-sm p-3`}
+              className={`relative overflow-hidden rounded-lg sm:rounded-xl border border-border/60 bg-gradient-to-br ${stat.bg} bg-background/40 backdrop-blur-sm px-2 py-2 sm:p-3`}
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{stat.label}</p>
-                  <p className="text-xl font-bold mt-0.5 tabular-nums">{stat.value.toLocaleString()}</p>
+              <div className="flex items-center justify-between gap-1">
+                <div className="min-w-0">
+                  <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-medium truncate">{stat.label}</p>
+                  <p className="text-base sm:text-xl font-bold mt-0.5 tabular-nums leading-none">{stat.value.toLocaleString()}</p>
                 </div>
-                <div className={`w-8 h-8 rounded-lg bg-background/60 border border-border/40 flex items-center justify-center ${stat.color}`}>
+                <div className={`hidden sm:flex w-8 h-8 rounded-lg bg-background/60 border border-border/40 items-center justify-center ${stat.color}`}>
                   <stat.icon className="w-4 h-4" />
                 </div>
+                <stat.icon className={`sm:hidden w-3.5 h-3.5 shrink-0 ${stat.color}`} />
               </div>
             </motion.div>
           ))}
         </div>
+
 
         {/* Profile Share Card — desktop/tablet only; reduces mobile clutter */}
         <div className="hidden md:block">
@@ -688,21 +690,22 @@ export default function Dashboard() {
           <div className="flex-1 min-w-0">
             <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 shadow-sm overflow-hidden">
               {/* Panel Header */}
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/60 bg-secondary/30">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 border-b border-border/60 bg-secondary/30 gap-2">
+                <div className="flex items-center gap-2 min-w-0">
                   {(() => {
                     const t = tabs.find(x => x.id === activeTab)!;
-                    return <t.icon className="w-3.5 h-3.5 text-primary" />;
+                    return <t.icon className="w-3.5 h-3.5 text-primary shrink-0" />;
                   })()}
-                  <h2 className="text-xs font-semibold uppercase tracking-wider">
-                    {tabs.find(x => x.id === activeTab)?.label} Builder
+                  <h2 className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider truncate">
+                    {tabs.find(x => x.id === activeTab)?.label}
+                    <span className="hidden sm:inline"> Builder</span>
                   </h2>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  {/* Autosave status pill */}
+                <div className="flex items-center gap-1 sm:gap-1.5">
+                  {/* Autosave status pill — icon only on mobile */}
                   <div
                     data-testid="autosave-status"
-                    className={`flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded-full mr-1 border transition-colors ${
+                    className={`flex items-center gap-1 text-[10px] font-medium px-1.5 sm:px-2 py-1 rounded-full border transition-colors ${
                       saveStatus === "saving"
                         ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
                         : saveStatus === "error"
@@ -714,25 +717,30 @@ export default function Dashboard() {
                   >
                     {saveStatus === "saving" && (
                       <>
-                        <Loader2 className="w-3 h-3 animate-spin" /> Saving…
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        <span className="hidden sm:inline">Saving…</span>
                       </>
                     )}
                     {saveStatus === "saved" && (
                       <>
                         <Check className="w-3 h-3" />
-                        {lastSavedAt
-                          ? `Saved ${lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
-                          : "Saved"}
+                        <span className="hidden sm:inline">
+                          {lastSavedAt
+                            ? `Saved ${lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+                            : "Saved"}
+                        </span>
                       </>
                     )}
                     {saveStatus === "error" && (
                       <>
-                        <span className="w-1.5 h-1.5 rounded-full bg-destructive" /> Save failed
+                        <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
+                        <span className="hidden sm:inline">Save failed</span>
                       </>
                     )}
                     {saveStatus === "idle" && (
                       <>
-                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" /> Not saved yet
+                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" />
+                        <span className="hidden sm:inline">Not saved yet</span>
                       </>
                     )}
                   </div>
@@ -740,7 +748,7 @@ export default function Dashboard() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7"
+                    className="h-7 w-7 hidden sm:inline-flex"
                     onClick={handleUndo}
                     disabled={past.length === 0 || saving}
                     title="Undo (last profile change)"
@@ -750,7 +758,7 @@ export default function Dashboard() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7"
+                    className="h-7 w-7 hidden sm:inline-flex"
                     onClick={handleRedo}
                     disabled={future.length === 0 || saving}
                     title="Redo"
@@ -760,7 +768,7 @@ export default function Dashboard() {
                   <Button
                     variant="gradient"
                     size="sm"
-                    className="h-7 text-[11px] px-2.5"
+                    className="h-7 text-[11px] px-2 sm:px-2.5"
                     onClick={handleSaveNow}
                     disabled={saving}
                     title="Save & publish to your live page"
@@ -770,9 +778,10 @@ export default function Dashboard() {
                 </div>
 
               </div>
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
+
               {activeTab === "links" && (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Group Manager */}
                   <LinkGroupManager
                     groups={groups}
@@ -781,7 +790,7 @@ export default function Dashboard() {
                     onDeleteGroup={deleteGroup}
                   />
 
-                  <div className="border-t border-border pt-6">
+                  <div className="border-t border-border pt-4 sm:pt-6">
                     <Button onClick={addLink} variant="gradient" className="w-full">
                       <Plus className="w-5 h-5" /> Add New Link
                     </Button>
@@ -793,7 +802,7 @@ export default function Dashboard() {
                       <p>No links yet. Add your first link above!</p>
                     </div>
                   ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                       {/* Ungrouped Links */}
                       {links.filter(l => !l.group_id).length > 0 && (
                         <div>
@@ -811,7 +820,7 @@ export default function Dashboard() {
                               items={links.filter(l => !l.group_id).map(l => l.id)} 
                               strategy={verticalListSortingStrategy}
                             >
-                              <div className="space-y-3">
+                              <div className="space-y-2 sm:space-y-3">
                                 {links.filter(l => !l.group_id).map(link => (
                                   <SortableLinkItem
                                     key={link.id}
@@ -877,7 +886,7 @@ export default function Dashboard() {
               )}
 
               {activeTab === "appearance" && (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Avatar Upload */}
                   <AvatarUpload
                     userId={user.id}
@@ -892,22 +901,23 @@ export default function Dashboard() {
                       value={profile.title} 
                       onChange={(e) => setProfile({ ...profile, title: e.target.value })}
                       onBlur={(e) => updateProfile({ title: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-input bg-background" 
+                      className="w-full px-3 py-2 sm:py-2.5 rounded-lg border border-input bg-background text-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Bio</label>
+                    <label className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Bio</label>
                     <textarea 
                       value={profile.bio || ""} 
                       onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                       onBlur={(e) => updateProfile({ bio: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-input bg-background resize-none" 
+                      className="w-full px-3 py-2 sm:py-2.5 rounded-lg border border-input bg-background text-sm resize-none" 
                       rows={2} 
                       maxLength={80} 
                       placeholder="Tell your audience about yourself..."
                     />
-                    <p className="text-xs text-muted-foreground mt-1">{(profile.bio || "").length}/80 characters</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">{(profile.bio || "").length}/80 characters</p>
                   </div>
+
                   
                   {/* Social Links */}
                   <SocialLinksEditor
@@ -933,7 +943,7 @@ export default function Dashboard() {
                   />
 
                   {/* Favorite Presets */}
-                  <div className="border-t border-border pt-6">
+                  <div className="border-t border-border pt-4 sm:pt-6">
                     <FavoritePresets
                       userId={user.id}
                       currentTheme={{
@@ -954,7 +964,7 @@ export default function Dashboard() {
                   </div>
 
                   {/* Profile Templates */}
-                  <div className="border-t border-border pt-6">
+                  <div className="border-t border-border pt-4 sm:pt-6">
                     <ProfileTemplates
                       isPro={isPro}
                       plan={plan}
@@ -984,31 +994,32 @@ export default function Dashboard() {
               )}
 
               {activeTab === "settings" && (
-                <div className="space-y-6">
-                  <div className="p-4 bg-secondary/50 rounded-xl">
-                    <p className="font-medium mb-1">Your SmartCard URL</p>
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="p-3 sm:p-4 bg-secondary/50 rounded-xl">
+                    <p className="font-medium mb-1.5 text-sm">Your SmartCard URL</p>
                     <div className="flex items-center gap-2">
-                      <code className="flex-1 text-sm text-muted-foreground bg-background px-3 py-2 rounded-lg">
+                      <code className="flex-1 text-[11px] sm:text-sm text-muted-foreground bg-background px-2.5 py-2 rounded-lg truncate">
                         {window.location.origin}/{profile.username}
                       </code>
-                      <Button variant="outline" size="sm" onClick={copyProfileUrl}>
+                      <Button variant="outline" size="sm" onClick={copyProfileUrl} className="shrink-0">
                         {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                       </Button>
                     </div>
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-2">Username</label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-muted-foreground">smartcard.online/</span>
+                    <label className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Username</label>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs sm:text-sm text-muted-foreground shrink-0">smartcard.online/</span>
                       <input 
                         value={profile.username} 
                         onChange={(e) => setProfile({ ...profile, username: e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, '') })}
                         onBlur={(e) => updateProfile({ username: e.target.value })}
-                        className="flex-1 px-4 py-2 rounded-lg border border-input bg-background" 
+                        className="flex-1 min-w-0 px-3 py-2 rounded-lg border border-input bg-background text-sm" 
                       />
                     </div>
                   </div>
+
 
                   {/* Email Collection */}
                   <EmailSubscribers
@@ -1029,7 +1040,7 @@ export default function Dashboard() {
 
 
           {/* Preview Panel - iPhone Frame */}
-          <div className="lg:w-[360px] lg:sticky lg:top-20 lg:h-fit">
+          <div className="hidden lg:block lg:w-[360px] lg:sticky lg:top-20 lg:h-fit">
             <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 p-4 shadow-sm">
               <div className="flex items-center justify-between mb-3 px-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Live Preview</p>
