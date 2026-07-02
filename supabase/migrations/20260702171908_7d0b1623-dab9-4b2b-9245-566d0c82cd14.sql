@@ -1,0 +1,2 @@
+UPDATE public.site_settings SET public_theme = 'protanopia', updated_at = now() WHERE id = (SELECT id FROM public.site_settings ORDER BY updated_at DESC LIMIT 1);
+ALTER TABLE public.site_settings ALTER COLUMN public_theme SET DEFAULT 'protanopia';
