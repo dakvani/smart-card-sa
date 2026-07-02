@@ -31,8 +31,9 @@ const footerLinks = {
 export function Footer() {
   return (
     <footer className="bg-secondary/50 border-t border-border" role="contentinfo">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
+      <div className="container mx-auto px-4 pt-10 pb-24 sm:py-14 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 sm:gap-10">
+
           {/* Brand + Contact */}
           <div className="col-span-2 md:col-span-2 space-y-5">
             <Link to="/" className="flex items-center gap-2.5 group" aria-label="SmartCard - Go to homepage">
