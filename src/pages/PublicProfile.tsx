@@ -515,36 +515,25 @@ export default function PublicProfile() {
                 })}
               </div>
 
-              {/* Save contact - compact action under links */}
+              {/* Save contact + Subscribe — compact side-by-side pill row */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
-                className="mt-4 flex justify-center"
+                className="mt-4 flex flex-row items-center justify-center gap-2 flex-wrap"
               >
                 <SaveContactButton
                   profile={profile}
                   links={links}
                   publicUrl={typeof window !== "undefined" ? window.location.href : ""}
                 />
+                {profile.email_collection_enabled && (
+                  <EmailSignup profileId={profile.id} />
+                )}
               </motion.div>
-
-
 
               {/* Inline QR — always on mobile, and on sm+ when in Compact mode */}
               <div className={isCompact ? "block" : "block sm:hidden"}>{InlineQR}</div>
-
-              {/* Email collection — small subscribe pill at the very bottom */}
-              {profile.email_collection_enabled && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.45 }}
-                  className="mt-6 flex justify-center"
-                >
-                  <EmailSignup profileId={profile.id} />
-                </motion.div>
-              )}
 
 
               <motion.div
