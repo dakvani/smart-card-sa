@@ -25,118 +25,107 @@ const themeConfig: Record<Theme, { icon: typeof Sun; label: string; category: "s
   tritanopia: { icon: Palette, label: "Tritanopia", category: "accessibility" },
 };
 
+const applyThemeToDom = (newTheme: Theme): "light" | "dark" => {
+  const root = window.document.documentElement;
+  root.classList.remove("light", "dark", "high-contrast", "protanopia", "deuteranopia", "tritanopia");
+  let effectiveTheme: "light" | "dark";
+  if (newTheme === "system") {
+    effectiveTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    root.classList.add(effectiveTheme);
+  } else if (
+    newTheme === "high-contrast" ||
+    newTheme === "protanopia" ||
+    newTheme === "deuteranopia" ||
+    newTheme === "tritanopia"
+  ) {
+    root.classList.add("dark", newTheme);
+    effectiveTheme = "dark";
+  } else {
+    effectiveTheme = newTheme;
+    root.classList.add(effectiveTheme);
+  }
+  return effectiveTheme;
+};
+
+/**
+ * Public site theme is controlled by admins via `site_settings.public_theme`.
+ * All visitors (including anon) load and apply that theme.
+ */
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("theme") as Theme) || "system";
-    }
-    return "system";
-  });
+  const [theme, setThemeState] = useState<Theme>("dark");
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("dark");
-  const [userId, setUserId] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // Check for logged in user
+  // Load site-wide theme on mount + subscribe to changes
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUserId(user?.id || null);
-      
-      // Load theme from database if user is logged in
-      if (user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("theme_preference")
-          .eq("user_id", user.id)
-          .single();
-        
-        if (profile?.theme_preference) {
-          setThemeState(profile.theme_preference as Theme);
-          localStorage.setItem("theme", profile.theme_preference);
-        }
-      }
+    let mounted = true;
+
+    const load = async () => {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("public_theme")
+        .eq("id", "global")
+        .maybeSingle();
+      if (!mounted) return;
+      const t = (data?.public_theme as Theme) || "dark";
+      setThemeState(t);
+      setResolvedTheme(applyThemeToDom(t));
     };
-    
-    checkUser();
-    
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setUserId(session?.user?.id || null);
-      
-      if (event === "SIGNED_IN" && session?.user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("theme_preference")
-          .eq("user_id", session.user.id)
-          .single();
-        
-        if (profile?.theme_preference) {
-          setThemeState(profile.theme_preference as Theme);
-          localStorage.setItem("theme", profile.theme_preference);
+    load();
+
+    const channel = supabase
+      .channel("site_settings_theme")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "site_settings", filter: "id=eq.global" },
+        (payload: any) => {
+          const t = (payload.new?.public_theme as Theme) || "dark";
+          setThemeState(t);
+          setResolvedTheme(applyThemeToDom(t));
         }
-      }
-    });
-    
-    return () => subscription.unsubscribe();
-  }, []);
+      )
+      .subscribe();
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    
-    const applyTheme = (newTheme: Theme) => {
-      let effectiveTheme: "light" | "dark";
-      
-      // Remove all theme classes
-      root.classList.remove("light", "dark", "high-contrast", "protanopia", "deuteranopia", "tritanopia");
-      
-      if (newTheme === "system") {
-        effectiveTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        root.classList.add(effectiveTheme);
-      } else if (newTheme === "high-contrast" || newTheme === "protanopia" || newTheme === "deuteranopia" || newTheme === "tritanopia") {
-        // Accessibility themes - add both the base dark class and the accessibility class
-        root.classList.add("dark", newTheme);
-        effectiveTheme = "dark";
-      } else {
-        effectiveTheme = newTheme;
-        root.classList.add(effectiveTheme);
-      }
-
-      setResolvedTheme(effectiveTheme);
-    };
-
-    applyTheme(theme);
-    localStorage.setItem("theme", theme);
-
-    // Listen for system preference changes
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = () => {
-      if (theme === "system") {
-        applyTheme("system");
-      }
+      setResolvedTheme(applyThemeToDom(theme));
     };
-
     mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [theme]);
 
-  const setTheme = useCallback(async (newTheme: Theme) => {
-    setThemeState(newTheme);
-    
-    // Save to database if user is logged in
-    if (userId) {
+    return () => {
+      mounted = false;
+      supabase.removeChannel(channel);
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const setTheme = useCallback(
+    async (newTheme: Theme) => {
+      setThemeState(newTheme);
+      setResolvedTheme(applyThemeToDom(newTheme));
       const { error } = await supabase
-        .from("profiles")
-        .update({ theme_preference: newTheme })
-        .eq("user_id", userId);
-      
+        .from("site_settings")
+        .update({ public_theme: newTheme, updated_at: new Date().toISOString() })
+        .eq("id", "global");
       if (error) {
-        console.error("Failed to save theme preference:", error);
+        toast({
+          title: "Couldn't update site appearance",
+          description: "Only admins can change the public appearance.",
+          variant: "destructive",
+        });
       }
-    }
-  }, [userId]);
+    },
+    [toast]
+  );
 
   return { theme, setTheme, resolvedTheme };
 }
 
+/**
+ * Admin-only appearance picker. Renders a dropdown to set the site-wide
+ * public theme. Not intended for public navigation.
+ */
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
@@ -152,7 +141,7 @@ export function ThemeToggle() {
           variant="ghost"
           size="icon"
           className="relative h-9 w-9"
-          aria-label={`Current theme: ${themeConfig[theme]?.label || theme}. Click to change theme`}
+          aria-label={`Current site appearance: ${themeConfig[theme]?.label || theme}. Click to change`}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -165,10 +154,10 @@ export function ThemeToggle() {
               <CurrentIcon className="h-5 w-5" aria-hidden="true" />
             </motion.div>
           </AnimatePresence>
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">Change site appearance</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" role="menu" aria-label="Theme options" className="w-48">
+      <DropdownMenuContent align="end" role="menu" aria-label="Site appearance options" className="w-48">
         <DropdownMenuLabel className="text-xs text-muted-foreground">Standard</DropdownMenuLabel>
         {standardThemes.map(([key, config]) => {
           const Icon = config.icon;
@@ -181,13 +170,11 @@ export function ThemeToggle() {
             >
               <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
               <span>{config.label}</span>
-              {theme === key && (
-                <span className="ml-auto text-xs text-primary">✓</span>
-              )}
+              {theme === key && <span className="ml-auto text-xs text-primary">✓</span>}
             </DropdownMenuItem>
           );
         })}
-        
+
         <DropdownMenuSeparator />
         <DropdownMenuLabel className="text-xs text-muted-foreground">Accessibility</DropdownMenuLabel>
         {accessibilityThemes.map(([key, config]) => {
@@ -201,9 +188,7 @@ export function ThemeToggle() {
             >
               <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
               <span>{config.label}</span>
-              {theme === key && (
-                <span className="ml-auto text-xs text-primary">✓</span>
-              )}
+              {theme === key && <span className="ml-auto text-xs text-primary">✓</span>}
             </DropdownMenuItem>
           );
         })}
