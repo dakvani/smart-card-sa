@@ -305,42 +305,63 @@ export default function Settings() {
   }
   if (!user) return null;
 
-  const activeItem = NAV.find((n) => n.id === active)!;
+  const activeItem = active ? NAV.find((n) => n.id === active)! : null;
+  // On desktop, if no explicit section, default to "account" in the main area.
+  const desktopActive: SectionId = active ?? "account";
+  const desktopActiveItem = NAV.find((n) => n.id === desktopActive)!;
   const groups = Array.from(new Set(NAV.map((n) => n.group)));
 
   return (
     <div className="min-h-screen bg-secondary/30">
       <header className="bg-background border-b border-border sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
+        <div className="container mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
+          {/* Mobile: back-to-menu when a section is open, else back home */}
+          {active ? (
+            <button
+              onClick={backToMenu}
+              className="lg:hidden flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground -ml-1 px-1 py-1"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Settings
+            </button>
+          ) : (
+            <Link to="/" className="lg:hidden flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground -ml-1 px-1 py-1">
+              <ArrowLeft className="w-4 h-4" />
+              Home
+            </Link>
+          )}
+          <Link to="/" className="hidden lg:flex items-center gap-2 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </Link>
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg gradient-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">S</span>
             </div>
-            <span className="font-bold text-xl">SmartCard</span>
+            <span className="font-bold text-lg sm:text-xl">SmartCard</span>
           </Link>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-          {/* Profile hero */}
-          <div className="bg-background rounded-2xl border border-border p-6 flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full overflow-hidden bg-secondary shrink-0 ring-2 ring-border">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 max-w-6xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 sm:space-y-6">
+          {/* Profile hero — hidden on mobile when inside a section, always shown on desktop */}
+          <div className={cn(
+            "bg-background rounded-2xl border border-border p-4 sm:p-6 flex items-center gap-3 sm:gap-4",
+            active && "hidden lg:flex",
+          )}>
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-secondary shrink-0 ring-2 ring-border">
               {avatarUrl ? (
                 <img src={avatarUrl} alt={displayName || "Profile"} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full gradient-primary flex items-center justify-center text-primary-foreground text-2xl font-bold">
+                <div className="w-full h-full gradient-primary flex items-center justify-center text-primary-foreground text-xl sm:text-2xl font-bold">
                   {(displayName?.[0] || user.email?.[0] || "U").toUpperCase()}
                 </div>
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <h1 className="text-2xl font-bold truncate">{displayName || "Your account"}</h1>
-              <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+              <h1 className="text-lg sm:text-2xl font-bold truncate">{displayName || "Your account"}</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground truncate">{user.email}</p>
             </div>
             <div className="hidden sm:flex items-center gap-2 text-xs">
               {isEmailVerified ? (
@@ -355,36 +376,50 @@ export default function Settings() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
-            {/* Side nav */}
-            <aside className="bg-background rounded-2xl border border-border p-3 lg:sticky lg:top-24 self-start">
-              <nav className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4 sm:gap-6">
+            {/* Side / master list — on mobile, hidden when a section is open */}
+            <aside className={cn(
+              "bg-background rounded-2xl border border-border p-2 sm:p-3 lg:sticky lg:top-24 self-start",
+              active ? "hidden lg:block" : "block",
+            )}>
+              <nav className="space-y-3 sm:space-y-4">
                 {groups.map((g) => (
                   <div key={g}>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground px-3 mb-1">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground px-3 pt-1 pb-1">
                       {g}
                     </p>
-                    <ul className="space-y-0.5">
+                    <ul className="divide-y divide-border/60 lg:divide-y-0 lg:space-y-0.5">
                       {NAV.filter((n) => n.group === g).map((n) => {
                         const Icon = n.icon;
-                        const isActive = n.id === active;
+                        const isActive = n.id === desktopActive;
                         const isDanger = n.id === "danger";
                         return (
                           <li key={n.id}>
                             <button
                               onClick={() => setActive(n.id)}
                               className={cn(
-                                "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all",
-                                isActive
+                                "w-full flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-none lg:rounded-xl text-sm transition-all min-h-[48px] lg:min-h-0",
+                                // Active highlight only applies on lg (desktop side nav)
+                                "lg:" + (isActive
                                   ? isDanger
                                     ? "bg-destructive/10 text-destructive"
                                     : "bg-secondary text-foreground font-medium"
-                                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"),
+                                isDanger ? "text-destructive" : "text-foreground",
+                                "hover:bg-secondary/60",
                               )}
                             >
-                              <Icon className="w-4 h-4 shrink-0" />
-                              <span className="flex-1 text-left">{n.label}</span>
-                              {isActive && <ChevronRight className="w-4 h-4" />}
+                              <span className={cn(
+                                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                                isDanger ? "bg-destructive/10" : "bg-secondary",
+                              )}>
+                                <Icon className="w-4 h-4" />
+                              </span>
+                              <span className="flex-1 text-left min-w-0">
+                                <span className="block truncate text-[15px] sm:text-sm font-medium">{n.label}</span>
+                                <span className="block truncate text-[11px] text-muted-foreground lg:hidden">{n.description}</span>
+                              </span>
+                              <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
                             </button>
                           </li>
                         );
@@ -395,21 +430,24 @@ export default function Settings() {
               </nav>
             </aside>
 
-            {/* Content */}
-            <main>
+            {/* Content — on mobile, hidden when no section is selected */}
+            <main className={cn(active ? "block" : "hidden lg:block")}>
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={active}
+                  key={desktopActive}
                   initial={{ opacity: 0, x: 8 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -8 }}
                   transition={{ duration: 0.18 }}
                   className="space-y-4"
                 >
-                  <div className="px-1">
-                    <h2 className="text-xl font-semibold">{activeItem.label}</h2>
-                    <p className="text-sm text-muted-foreground">{activeItem.description}</p>
+                  <div className="px-1 flex items-start gap-2">
+                    <div className="min-w-0 flex-1">
+                      <h2 className="text-lg sm:text-xl font-semibold truncate">{desktopActiveItem.label}</h2>
+                      <p className="text-xs sm:text-sm text-muted-foreground">{desktopActiveItem.description}</p>
+                    </div>
                   </div>
+
 
                   {active === "account" && (
                     <div className="bg-background rounded-2xl border border-border p-6 space-y-6">
