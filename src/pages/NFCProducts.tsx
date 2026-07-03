@@ -240,8 +240,10 @@ export default function NFCProducts() {
       setStep('select');
       setSelectedProduct(null);
       setCustomization(defaultCustomization);
-      
-      navigate("/order-history");
+
+      if (!isGuest) {
+        navigate("/order-history");
+      }
     } catch (error) {
       console.error("Error placing order:", error);
       toast({
