@@ -256,13 +256,13 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-green-500/20 cursor-pointer" onClick={() => setActiveTab("orders")}>
-                    <CardContent className="p-3">
+                    <CardContent className="p-2 sm:p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-[11px] text-muted-foreground font-medium">Revenue</p>
-                          <p className="text-lg font-bold text-foreground leading-tight truncate">{formatSAR(totalRevenue)}</p>
+                          <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Revenue</p>
+                          <p className="text-sm sm:text-lg font-bold text-foreground leading-tight truncate">{formatSAR(totalRevenue)}</p>
                         </div>
-                        <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
                           <DollarSign className="w-4 h-4 text-green-500" />
                         </div>
                       </div>
@@ -275,13 +275,13 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-blue-500/10 to-sky-500/5 border-blue-500/20 cursor-pointer" onClick={() => setActiveTab("users")}>
-                    <CardContent className="p-3">
+                    <CardContent className="p-2 sm:p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-[11px] text-muted-foreground font-medium">Total Users</p>
-                          <p className="text-lg font-bold text-foreground leading-tight">{stats.find(s => s.name === "Users")?.count.toLocaleString() || 0}</p>
+                          <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Total Users</p>
+                          <p className="text-sm sm:text-lg font-bold text-foreground leading-tight">{stats.find(s => s.name === "Users")?.count.toLocaleString() || 0}</p>
                         </div>
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
                           <Users className="w-4 h-4 text-blue-500" />
                         </div>
                       </div>
@@ -294,13 +294,13 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-yellow-500/10 to-amber-500/5 border-yellow-500/20 cursor-pointer" onClick={() => setActiveTab("orders")}>
-                    <CardContent className="p-3">
+                    <CardContent className="p-2 sm:p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-[11px] text-muted-foreground font-medium">Pending Orders</p>
-                          <p className="text-lg font-bold text-foreground leading-tight">{pendingOrders}</p>
+                          <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Pending Orders</p>
+                          <p className="text-sm sm:text-lg font-bold text-foreground leading-tight">{pendingOrders}</p>
                         </div>
-                        <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg bg-yellow-500/10 flex items-center justify-center shrink-0">
                           <Clock className="w-4 h-4 text-yellow-500" />
                         </div>
                       </div>
@@ -313,13 +313,13 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-purple-500/10 to-violet-500/5 border-purple-500/20 cursor-pointer" onClick={() => setActiveTab("tables")}>
-                    <CardContent className="p-3">
+                    <CardContent className="p-2 sm:p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-[11px] text-muted-foreground font-medium">Total Records</p>
-                          <p className="text-lg font-bold text-foreground leading-tight">{totalRecords.toLocaleString()}</p>
+                          <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Total Records</p>
+                          <p className="text-sm sm:text-lg font-bold text-foreground leading-tight">{totalRecords.toLocaleString()}</p>
                         </div>
-                        <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
                           <Database className="w-4 h-4 text-purple-500" />
                         </div>
                       </div>
