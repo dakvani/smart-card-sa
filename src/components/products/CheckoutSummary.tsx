@@ -325,10 +325,10 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
           variant="gradient"
           className="w-full mt-6"
           onClick={handleCheckout}
-          disabled={isSubmitting || (!isAuthenticated && !isGuestCheckout)}
+          disabled={isSubmitting || !isAuthenticated}
         >
           <CreditCard className="w-4 h-4 mr-2" />
-          {(!isAuthenticated && !isGuestCheckout) ? "Sign in to place order" : isSubmitting ? "Processing..." : "Place Order"}
+          {!isAuthenticated ? "Sign in to place order" : isSubmitting ? "Processing..." : "Place Order"}
         </Button>
 
         <p className="text-xs text-center text-muted-foreground mt-4">
