@@ -160,27 +160,30 @@ export function AdminProductManager() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5" />
+    <Card className="max-w-full overflow-hidden">
+      <CardHeader className="p-3 sm:p-6">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="min-w-0">
+            <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+              <Package className="w-4 h-4 sm:w-5 sm:h-5" />
               Product Catalog
             </CardTitle>
-            <CardDescription>{products.length} products • Manage items, photos, prices, and stock</CardDescription>
+            <CardDescription className="text-xs sm:text-sm">{products.length} products • Manage items, photos, prices, stock</CardDescription>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={load}>
-              <RefreshCw className="w-4 h-4 mr-2" /> Refresh
+          <div className="flex gap-1.5 shrink-0">
+            <Button variant="outline" size="sm" onClick={load} className="h-8 text-xs">
+              <RefreshCw className="w-3.5 h-3.5 sm:mr-1.5" />
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
-            <Button size="sm" onClick={openCreate}>
-              <Plus className="w-4 h-4 mr-2" /> New Product
+            <Button size="sm" onClick={openCreate} className="h-8 text-xs">
+              <Plus className="w-3.5 h-3.5 sm:mr-1.5" />
+              <span className="hidden sm:inline">New Product</span>
+              <span className="sm:hidden">New</span>
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
         {loading ? (
           <div className="py-16 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-muted-foreground" /></div>
         ) : products.length === 0 ? (
@@ -189,34 +192,39 @@ export function AdminProductManager() {
             <p>No products yet. Click "New Product" to add one.</p>
           </div>
         ) : (
-          <div className="grid gap-3">
+          <div className="grid gap-2 sm:gap-3">
             {products.map((p) => (
-              <div key={p.id} className="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 border rounded-xl bg-muted/20 hover:bg-muted/40 transition-colors">
-                <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-gradient-to-br ${p.gradient} flex items-center justify-center shrink-0`}>
+              <div key={p.id} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 border rounded-lg sm:rounded-xl bg-muted/20 hover:bg-muted/40 transition-colors min-w-0">
+                <div className={`w-10 h-10 sm:w-16 sm:h-16 rounded-md sm:rounded-lg overflow-hidden bg-gradient-to-br ${p.gradient} flex items-center justify-center shrink-0`}>
                   {p.photo_url ? (
                     <img src={p.photo_url} alt={p.name} className="w-full h-full object-cover" />
                   ) : (
-                    <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground/70" />
+                    <ImageIcon className="w-4 h-4 sm:w-6 sm:h-6 text-primary-foreground/70" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <p className="font-medium text-xs sm:text-sm truncate min-w-0 flex-1">{p.name}</p>
-                    <Badge variant="outline" className="text-[10px] sm:text-xs capitalize shrink-0 px-1.5 py-0 h-4 sm:h-5">{p.category}</Badge>
-                    {!p.is_active && <Badge variant="secondary" className="text-[10px] sm:text-xs shrink-0 px-1.5 py-0 h-4 sm:h-5">Hidden</Badge>}
+                  {/* Row 1: name + price */}
+                  <div className="flex items-start justify-between gap-2 min-w-0">
+                    <p className="font-medium text-xs sm:text-sm truncate min-w-0 flex-1 leading-tight">{p.name}</p>
+                    <p className="font-bold text-xs sm:text-base whitespace-nowrap shrink-0">{formatSAR(Number(p.base_price))}</p>
                   </div>
-                  <p className="text-[11px] sm:text-xs text-muted-foreground truncate">{p.slug} • Stock: {p.stock_quantity}</p>
-                </div>
-                <div className="text-right shrink-0">
-                  <p className="font-bold text-xs sm:text-base whitespace-nowrap">{formatSAR(Number(p.base_price))}</p>
-                </div>
-                <div className="flex gap-0.5 sm:gap-1 shrink-0">
-                  <Button variant="ghost" size="icon" onClick={() => openEdit(p)} className="h-8 w-8 sm:h-10 sm:w-10">
-                    <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={() => setDeleteId(p.id)} className="h-8 w-8 sm:h-10 sm:w-10 text-destructive hover:text-destructive">
-                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </Button>
+                  {/* Row 2: slug */}
+                  <p className="text-[10px] sm:text-xs text-muted-foreground truncate mt-0.5">{p.slug} • Stock: {p.stock_quantity}</p>
+                  {/* Row 3: badges + actions */}
+                  <div className="flex items-center justify-between gap-2 mt-1.5 min-w-0">
+                    <div className="flex items-center gap-1 min-w-0 flex-wrap">
+                      <Badge variant="outline" className="text-[10px] capitalize px-1.5 py-0 h-4">{p.category}</Badge>
+                      {!p.is_active && <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">Hidden</Badge>}
+                    </div>
+                    <div className="flex gap-0.5 shrink-0">
+                      <Button variant="ghost" size="icon" onClick={() => openEdit(p)} className="h-7 w-7">
+                        <Pencil className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => setDeleteId(p.id)} className="h-7 w-7 text-destructive hover:text-destructive">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

@@ -213,8 +213,8 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      <main id="main-content" className="flex-1 pt-20 pb-10">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 pt-20 pb-10 overflow-x-hidden">
+        <div className="w-full max-w-full px-3 sm:px-6 lg:px-8">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
