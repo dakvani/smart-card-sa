@@ -387,13 +387,13 @@ export default function AdminDashboard() {
               <TabsContent value="overview" className="space-y-4">
                 {/* Public site appearance (admin only) */}
                 <Card className="border-border/60">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                    <div>
-                      <CardTitle className="text-base flex items-center gap-2">
-                        <Palette className="w-4 h-4 text-primary" />
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3">
+                    <div className="min-w-0">
+                      <CardTitle className="text-sm sm:text-base flex items-center gap-1.5">
+                        <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
                         Public site appearance
                       </CardTitle>
-                      <CardDescription className="text-xs">
+                      <CardDescription className="text-[11px] sm:text-xs hidden sm:block">
                         Choose the theme every visitor sees on the public site.
                       </CardDescription>
                     </div>
