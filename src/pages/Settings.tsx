@@ -82,9 +82,9 @@ const VALID_SECTIONS: SectionId[] = [
   "danger",
 ];
 
-function sectionFromHash(hash: string): SectionId {
+function sectionFromHash(hash: string): SectionId | null {
   const id = hash.replace(/^#/, "") as SectionId;
-  return VALID_SECTIONS.includes(id) ? id : "account";
+  return VALID_SECTIONS.includes(id) ? id : null;
 }
 
 export default function Settings() {
@@ -93,13 +93,18 @@ export default function Settings() {
   const [user, setUser] = useState<User | null>(null);
   const [, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [active, setActiveState] = useState<SectionId>(() => sectionFromHash(location.hash));
+  const [active, setActiveState] = useState<SectionId | null>(() => sectionFromHash(location.hash));
 
   const setActive = (id: SectionId) => {
     setActiveState(id);
     if (location.hash !== `#${id}`) {
       navigate(`${location.pathname}#${id}`, { replace: false });
     }
+  };
+
+  const backToMenu = () => {
+    setActiveState(null);
+    if (location.hash) navigate(location.pathname, { replace: false });
   };
 
   // keep state in sync with hash (back/forward navigation, direct refresh)
