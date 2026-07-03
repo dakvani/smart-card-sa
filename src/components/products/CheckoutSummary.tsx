@@ -29,7 +29,6 @@ interface CheckoutSummaryProps {
 export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, onPlaceOrder }: CheckoutSummaryProps) {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [isGuestCheckout, setIsGuestCheckout] = useState(false);
   const [shippingInfo, setShippingInfo] = useState({
     name: "",
     email: "",
@@ -44,11 +43,17 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
     // Check initial auth state
     supabase.auth.getUser().then(({ data: { user } }) => {
       setIsAuthenticated(!!user);
+      if (user?.email) {
+        setShippingInfo(prev => prev.email ? prev : { ...prev, email: user.email as string });
+      }
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session?.user);
+      if (session?.user?.email) {
+        setShippingInfo(prev => prev.email ? prev : { ...prev, email: session.user.email as string });
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -59,6 +64,14 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
   const total = subtotal + shipping;
 
   const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in or create an account to place your order.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (!shippingInfo.name || !shippingInfo.email || !shippingInfo.address) {
       toast({
         title: "Missing information",
@@ -69,34 +82,24 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
     }
 
     setIsSubmitting(true);
-    
+
     if (onPlaceOrder) {
-      await onPlaceOrder(shippingInfo, isGuestCheckout);
+      await onPlaceOrder(shippingInfo, false);
     } else {
       toast({
         title: "Checkout initiated",
         description: "Payment integration coming soon! Your order has been saved.",
       });
     }
-    
+
     setIsSubmitting(false);
   };
 
   const handleAuthSuccess = () => {
     setIsAuthenticated(true);
-    setIsGuestCheckout(false);
     toast({
       title: "Success!",
       description: "You can now complete your order.",
-    });
-  };
-
-  const handleGuestCheckout = (email: string) => {
-    setIsGuestCheckout(true);
-    setShippingInfo(prev => ({ ...prev, email }));
-    toast({
-      title: "Guest checkout",
-      description: "Please fill in your shipping details to complete the order.",
     });
   };
 
@@ -203,25 +206,20 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
           </AnimatePresence>
         </div>
 
-        {/* Show Auth Form for guests who haven't chosen guest checkout */}
-        {!isAuthenticated && !isGuestCheckout && (
+        {/* Show Auth Form for guests — account required */}
+        {!isAuthenticated && (
           <div className="mt-8">
-            <CheckoutAuth onAuthSuccess={handleAuthSuccess} onGuestCheckout={handleGuestCheckout} />
+            <CheckoutAuth onAuthSuccess={handleAuthSuccess} />
           </div>
         )}
       </div>
 
       {/* Checkout Form - Show for authenticated users or guest checkout */}
       <div className="bg-card rounded-2xl border border-border p-6">
-        {(isAuthenticated || isGuestCheckout) ? (
+        {isAuthenticated ? (
           <>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold">Shipping Details</h3>
-              {isGuestCheckout && (
-                <span className="text-xs bg-accent px-2 py-1 rounded-full text-muted-foreground">
-                  Guest Checkout
-                </span>
-              )}
             </div>
 
             <div className="space-y-4">
@@ -243,7 +241,6 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
                     value={shippingInfo.email}
                     onChange={(e) => setShippingInfo({ ...shippingInfo, email: e.target.value })}
                     className="mt-1"
-                    disabled={isGuestCheckout}
                   />
                 </div>
               </div>
@@ -294,9 +291,9 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
         ) : (
           <div className="text-center py-8 mb-6">
             <ShoppingCart className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-            <h3 className="text-lg font-semibold mb-2">Almost there!</h3>
+            <h3 className="text-lg font-semibold mb-2">Account required</h3>
             <p className="text-sm text-muted-foreground">
-              Please sign in or continue as guest on the left to complete your purchase.
+              Please sign in or create an account on the left to complete your purchase. This keeps your order details, contact information and history secure.
             </p>
           </div>
         )}
@@ -328,10 +325,10 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
           variant="gradient"
           className="w-full mt-6"
           onClick={handleCheckout}
-          disabled={isSubmitting || (!isAuthenticated && !isGuestCheckout)}
+          disabled={isSubmitting || !isAuthenticated}
         >
           <CreditCard className="w-4 h-4 mr-2" />
-          {(!isAuthenticated && !isGuestCheckout) ? "Sign in to place order" : isSubmitting ? "Processing..." : "Place Order"}
+          {!isAuthenticated ? "Sign in to place order" : isSubmitting ? "Processing..." : "Place Order"}
         </Button>
 
         <p className="text-xs text-center text-muted-foreground mt-4">
