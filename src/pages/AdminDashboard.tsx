@@ -338,47 +338,79 @@ export default function AdminDashboard() {
             transition={{ delay: 0.2 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-3">
-              <TabsList className="grid w-full grid-cols-8 h-10 gap-1">
-                <TabsTrigger value="overview" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
-                  <BarChart3 className="w-3.5 h-3.5" />
+              <TabsList className="grid w-full grid-cols-8 h-11 sm:h-10 gap-0.5 sm:gap-1 p-1 bg-muted/60">
+                <TabsTrigger
+                  value="overview"
+                  className="min-w-0 gap-1.5 px-1 sm:px-3 text-xs h-9 sm:h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:ring-1 data-[state=active]:ring-primary/40 transition-colors"
+                  aria-label="Overview"
+                >
+                  <BarChart3 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   <span className="hidden sm:inline">Overview</span>
                 </TabsTrigger>
-                <TabsTrigger value="products" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
-                  <ShoppingBag className="w-3.5 h-3.5" />
+                <TabsTrigger
+                  value="products"
+                  className="min-w-0 gap-1.5 px-1 sm:px-3 text-xs h-9 sm:h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:ring-1 data-[state=active]:ring-primary/40 transition-colors"
+                  aria-label="Products"
+                >
+                  <ShoppingBag className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   <span className="hidden sm:inline">Products</span>
                 </TabsTrigger>
-                <TabsTrigger value="orders" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8 relative">
-                  <Package className="w-3.5 h-3.5" />
+                <TabsTrigger
+                  value="orders"
+                  className="min-w-0 gap-1 px-1 sm:px-3 text-xs h-9 sm:h-8 relative data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:ring-1 data-[state=active]:ring-primary/40 transition-colors"
+                  aria-label="Orders"
+                >
+                  <Package className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   <span className="hidden sm:inline">Orders</span>
                   {pendingOrderNotifCount > 0 && (
-                    <span className="ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-yellow-500 text-background animate-attention">
+                    <span className="absolute -top-1 -right-1 sm:static sm:ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-yellow-500 text-background animate-attention">
                       {pendingOrderNotifCount}
                     </span>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="pro" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8 relative">
-                  <Star className="w-3.5 h-3.5" />
+                <TabsTrigger
+                  value="pro"
+                  className="min-w-0 gap-1 px-1 sm:px-3 text-xs h-9 sm:h-8 relative data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:ring-1 data-[state=active]:ring-primary/40 transition-colors"
+                  aria-label="Pro requests"
+                >
+                  <Star className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   <span className="hidden sm:inline">Pro</span>
                   {pendingProCount > 0 && (
-                    <span className="ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-primary text-primary-foreground animate-attention">
+                    <span className="absolute -top-1 -right-1 sm:static sm:ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-bold rounded-full bg-primary text-primary-foreground animate-attention">
                       {pendingProCount}
                     </span>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="emails" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
-                  <Mail className="w-3.5 h-3.5" />
+                <TabsTrigger
+                  value="emails"
+                  className="min-w-0 gap-1.5 px-1 sm:px-3 text-xs h-9 sm:h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:ring-1 data-[state=active]:ring-primary/40 transition-colors"
+                  aria-label="Emails"
+                >
+                  <Mail className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   <span className="hidden sm:inline">Emails</span>
                 </TabsTrigger>
-                <TabsTrigger value="tables" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
-                  <Database className="w-3.5 h-3.5" />
+                <TabsTrigger
+                  value="tables"
+                  className="min-w-0 gap-1.5 px-1 sm:px-3 text-xs h-9 sm:h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:ring-1 data-[state=active]:ring-primary/40 transition-colors"
+                  aria-label="Database"
+                >
+                  <Database className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   <span className="hidden sm:inline">Database</span>
                 </TabsTrigger>
-                <TabsTrigger value="users" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
-                  <Users className="w-3.5 h-3.5" />
+                <TabsTrigger
+                  value="users"
+                  className="min-w-0 gap-1.5 px-1 sm:px-3 text-xs h-9 sm:h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:ring-1 data-[state=active]:ring-primary/40 transition-colors"
+                  aria-label="Users"
+                >
+                  <Users className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   <span className="hidden sm:inline">Users</span>
                 </TabsTrigger>
-                <TabsTrigger value="audit" className="min-w-0 gap-1.5 px-1.5 sm:px-3 text-xs h-8">
-                  <Clock className="w-3.5 h-3.5" />
+                <TabsTrigger
+                  value="audit"
+                  className="min-w-0 gap-1.5 px-1 sm:px-3 text-xs h-9 sm:h-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md data-[state=active]:ring-1 data-[state=active]:ring-primary/40 transition-colors"
+                  aria-label="Audit log"
+                >
+                  <Clock className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   <span className="hidden sm:inline">Audit</span>
                 </TabsTrigger>
               </TabsList>
