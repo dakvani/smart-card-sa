@@ -449,7 +449,7 @@ export default function Settings() {
                   </div>
 
 
-                  {active === "account" && (
+                  {desktopActive === "account" && (
                     <div className="bg-background rounded-2xl border border-border p-6 space-y-6">
                       {/* Avatar */}
                       <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-secondary/40">
@@ -567,7 +567,7 @@ export default function Settings() {
                     </div>
                   )}
 
-                  {active === "email" && (
+                  {desktopActive === "email" && (
                     <div className="bg-background rounded-2xl border border-border p-6 space-y-6">
                       {/* Mobile number */}
                       <div className="space-y-3">
@@ -629,7 +629,7 @@ export default function Settings() {
                     </div>
                   )}
 
-                  {active === "password" && (
+                  {desktopActive === "password" && (
                     <div className="bg-background rounded-2xl border border-border p-6">
                       <form onSubmit={handleUpdatePassword} className="space-y-4">
                         <div>
@@ -701,12 +701,12 @@ export default function Settings() {
                     </div>
                   )}
 
-                  {active === "orders" && <EcommerceSettings userId={user.id} section="orders" />}
-                  {active === "wallet" && <EcommerceSettings userId={user.id} section="wallet" />}
-                  {active === "addresses" && <EcommerceSettings userId={user.id} section="addresses" />}
-                  {active === "payments" && <EcommerceSettings userId={user.id} section="payments" />}
+                  {desktopActive === "orders" && <EcommerceSettings userId={user.id} section="orders" />}
+                  {desktopActive === "wallet" && <EcommerceSettings userId={user.id} section="wallet" />}
+                  {desktopActive === "addresses" && <EcommerceSettings userId={user.id} section="addresses" />}
+                  {desktopActive === "payments" && <EcommerceSettings userId={user.id} section="payments" />}
 
-                  {active === "danger" && <DeleteAccountSection userId={user.id} navigate={navigate} />}
+                  {desktopActive === "danger" && <DeleteAccountSection userId={user.id} navigate={navigate} />}
                 </motion.div>
               </AnimatePresence>
             </main>
