@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
 import { EmailAuthForm } from "@/components/auth/EmailAuthForm";
 import { SignupVisual } from "@/components/auth/SignupVisual";
+import { getPostLoginRedirect } from "@/lib/post-login-redirect";
 
 
 export default function Signup() {
@@ -14,10 +15,15 @@ export default function Signup() {
   const prefillUsername = searchParams.get("username") || "";
 
   useEffect(() => {
+    const go = async (userId: string) => {
+      const dest = await getPostLoginRedirect(userId);
+      navigate(dest, { replace: true });
+    };
+
     const checkUser = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (session) navigate("/dashboard");
+        if (session) go(session.user.id);
       } catch (error) {
         console.error("Session check failed:", error);
       }
@@ -25,7 +31,7 @@ export default function Signup() {
     checkUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) navigate("/dashboard");
+      if (session) go(session.user.id);
     });
     return () => subscription.unsubscribe();
   }, [navigate]);

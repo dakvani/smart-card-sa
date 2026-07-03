@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { getPostLoginRedirect } from "@/lib/post-login-redirect";
 
 interface EmailAuthFormProps {
   mode: "login" | "signup";
@@ -54,8 +55,8 @@ export function EmailAuthForm({ mode, onToggleMode }: EmailAuthFormProps) {
           setLoading(false);
         } else if (data?.session) {
           setRedirecting(true);
-          // Brief delay so the overlay renders before navigation
-          setTimeout(() => navigate("/dashboard", { replace: true }), 150);
+          const dest = await getPostLoginRedirect(data.session.user.id);
+          setTimeout(() => navigate(dest, { replace: true }), 150);
         } else {
           setLoading(false);
         }
