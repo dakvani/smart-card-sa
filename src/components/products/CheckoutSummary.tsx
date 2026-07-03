@@ -29,7 +29,6 @@ interface CheckoutSummaryProps {
 export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, onPlaceOrder }: CheckoutSummaryProps) {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [isGuestCheckout, setIsGuestCheckout] = useState(false);
   const [shippingInfo, setShippingInfo] = useState({
     name: "",
     email: "",
@@ -44,11 +43,17 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
     // Check initial auth state
     supabase.auth.getUser().then(({ data: { user } }) => {
       setIsAuthenticated(!!user);
+      if (user?.email) {
+        setShippingInfo(prev => prev.email ? prev : { ...prev, email: user.email as string });
+      }
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session?.user);
+      if (session?.user?.email) {
+        setShippingInfo(prev => prev.email ? prev : { ...prev, email: session.user.email as string });
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -59,6 +64,14 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
   const total = subtotal + shipping;
 
   const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in or create an account to place your order.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (!shippingInfo.name || !shippingInfo.email || !shippingInfo.address) {
       toast({
         title: "Missing information",
@@ -69,34 +82,24 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
     }
 
     setIsSubmitting(true);
-    
+
     if (onPlaceOrder) {
-      await onPlaceOrder(shippingInfo, isGuestCheckout);
+      await onPlaceOrder(shippingInfo, false);
     } else {
       toast({
         title: "Checkout initiated",
         description: "Payment integration coming soon! Your order has been saved.",
       });
     }
-    
+
     setIsSubmitting(false);
   };
 
   const handleAuthSuccess = () => {
     setIsAuthenticated(true);
-    setIsGuestCheckout(false);
     toast({
       title: "Success!",
       description: "You can now complete your order.",
-    });
-  };
-
-  const handleGuestCheckout = (email: string) => {
-    setIsGuestCheckout(true);
-    setShippingInfo(prev => ({ ...prev, email }));
-    toast({
-      title: "Guest checkout",
-      description: "Please fill in your shipping details to complete the order.",
     });
   };
 
