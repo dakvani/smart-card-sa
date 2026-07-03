@@ -191,31 +191,31 @@ export function AdminProductManager() {
         ) : (
           <div className="grid gap-3">
             {products.map((p) => (
-              <div key={p.id} className="flex items-center gap-4 p-3 border rounded-xl bg-muted/20 hover:bg-muted/40 transition-colors">
-                <div className={`w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br ${p.gradient} flex items-center justify-center shrink-0`}>
+              <div key={p.id} className="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 border rounded-xl bg-muted/20 hover:bg-muted/40 transition-colors">
+                <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-gradient-to-br ${p.gradient} flex items-center justify-center shrink-0`}>
                   {p.photo_url ? (
                     <img src={p.photo_url} alt={p.name} className="w-full h-full object-cover" />
                   ) : (
-                    <ImageIcon className="w-6 h-6 text-primary-foreground/70" />
+                    <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground/70" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-medium text-sm">{p.name}</p>
-                    <Badge variant="outline" className="text-xs capitalize">{p.category}</Badge>
-                    {!p.is_active && <Badge variant="secondary" className="text-xs">Hidden</Badge>}
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <p className="font-medium text-xs sm:text-sm truncate min-w-0 flex-1">{p.name}</p>
+                    <Badge variant="outline" className="text-[10px] sm:text-xs capitalize shrink-0 px-1.5 py-0 h-4 sm:h-5">{p.category}</Badge>
+                    {!p.is_active && <Badge variant="secondary" className="text-[10px] sm:text-xs shrink-0 px-1.5 py-0 h-4 sm:h-5">Hidden</Badge>}
                   </div>
-                  <p className="text-xs text-muted-foreground truncate">{p.slug} • Stock: {p.stock_quantity}</p>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground truncate">{p.slug} • Stock: {p.stock_quantity}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="font-bold">{formatSAR(Number(p.base_price))}</p>
+                  <p className="font-bold text-xs sm:text-base whitespace-nowrap">{formatSAR(Number(p.base_price))}</p>
                 </div>
-                <div className="flex gap-1 shrink-0">
-                  <Button variant="ghost" size="icon" onClick={() => openEdit(p)}>
-                    <Pencil className="w-4 h-4" />
+                <div className="flex gap-0.5 sm:gap-1 shrink-0">
+                  <Button variant="ghost" size="icon" onClick={() => openEdit(p)} className="h-8 w-8 sm:h-10 sm:w-10">
+                    <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={() => setDeleteId(p.id)} className="text-destructive hover:text-destructive">
-                    <Trash2 className="w-4 h-4" />
+                  <Button variant="ghost" size="icon" onClick={() => setDeleteId(p.id)} className="h-8 w-8 sm:h-10 sm:w-10 text-destructive hover:text-destructive">
+                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </Button>
                 </div>
               </div>
