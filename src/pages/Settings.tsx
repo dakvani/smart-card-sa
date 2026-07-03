@@ -376,7 +376,7 @@ export default function Settings() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4 sm:gap-6 overflow-x-hidden">
             {/* Side / master list — on mobile, hidden when a section is open */}
             <aside className={cn(
               "bg-background rounded-2xl border border-border p-2 sm:p-3 lg:sticky lg:top-24 self-start",
