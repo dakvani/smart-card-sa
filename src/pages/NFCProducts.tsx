@@ -152,21 +152,28 @@ export default function NFCProducts() {
     city: string;
     postalCode: string;
     country: string;
-  }) => {
-    // Check auth state again before placing order
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      // Store cart in session storage so it persists after login
-      sessionStorage.setItem('nfc_cart', JSON.stringify(cart));
-      sessionStorage.setItem('nfc_shipping', JSON.stringify(shippingInfo));
-      
-      toast({
-        title: "Please log in to continue",
-        description: "You'll be redirected back to complete your order after logging in.",
-      });
-      navigate("/auth", { state: { returnTo: '/nfc-products', step: 'checkout' } });
-      return;
+  }, isGuest?: boolean) => {
+    let orderUserId: string | null = userId;
+
+    if (!isGuest) {
+      // Re-verify auth for signed-in checkout only
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        // Store cart in session storage so it persists after login
+        sessionStorage.setItem('nfc_cart', JSON.stringify(cart));
+        sessionStorage.setItem('nfc_shipping', JSON.stringify(shippingInfo));
+
+        toast({
+          title: "Please log in to continue",
+          description: "You'll be redirected back to complete your order after logging in.",
+        });
+        navigate("/auth", { state: { returnTo: '/nfc-products', step: 'checkout' } });
+        return;
+      }
+      orderUserId = user.id;
+    } else {
+      orderUserId = null;
     }
 
     const subtotal = cart.reduce((sum, item) => sum + item.product.basePrice * item.quantity, 0);
@@ -176,7 +183,7 @@ export default function NFCProducts() {
 
     try {
       const { error } = await supabase.from("nfc_orders").insert({
-        user_id: userId,
+        user_id: orderUserId,
         order_number: orderNumber,
         status: "processing",
         items: cart.map(item => ({
