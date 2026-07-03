@@ -403,28 +403,27 @@ export default function AdminDashboard() {
 
                 {/* Stats Grid */}
                 <TooltipProvider delayDuration={200}>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2">
                     {stats.map((stat, index) => (
                       <motion.div
                         key={stat.name}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.05 + index * 0.03 }}
-                        className="flex-[1_1_150px] sm:flex-[1_1_210px]"
+                        className="flex-[1_1_108px] sm:flex-[1_1_180px]"
                       >
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Card className="hover:shadow-md transition-shadow cursor-pointer group" onClick={() => setActiveTab(stat.tab)}>
-                              <CardContent className="p-3">
-                                <div className="flex items-center gap-2.5">
-                                  <div className={`p-2 rounded-lg bg-muted ${stat.color} shrink-0`}>
-                                    <stat.icon className="w-4 h-4" />
+                              <CardContent className="p-2 sm:p-3">
+                                <div className="flex items-center gap-2">
+                                  <div className={`p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-muted ${stat.color} shrink-0`}>
+                                    <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-[11px] text-muted-foreground leading-none">{stat.name}</p>
-                                    <p className="text-lg font-bold leading-tight">{stat.count.toLocaleString()}</p>
+                                    <p className="text-[10px] sm:text-[11px] text-muted-foreground leading-none truncate">{stat.name}</p>
+                                    <p className="text-sm sm:text-lg font-bold leading-tight">{stat.count.toLocaleString()}</p>
                                   </div>
-                                  <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
                                 </div>
                               </CardContent>
                             </Card>
