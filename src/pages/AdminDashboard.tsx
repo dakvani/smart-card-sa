@@ -221,25 +221,25 @@ export default function AdminDashboard() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-4"
           >
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-primary" />
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 </div>
-                <div>
-                  <h1 className="text-xl font-bold text-foreground leading-tight">Admin Control Center</h1>
-                  <p className="text-xs text-muted-foreground">Full account overview & management</p>
+                <div className="min-w-0">
+                  <h1 className="text-sm sm:text-xl font-bold text-foreground leading-tight truncate">Admin Control Center</h1>
+                  <p className="hidden sm:block text-xs text-muted-foreground">Full account overview & management</p>
                 </div>
               </div>
-              <div className="flex gap-1.5 flex-wrap items-center">
+              <div className="flex gap-1 items-center shrink-0">
                 <AdminNotificationBell isAdmin={isAdmin} onOpenTab={setActiveTab} />
-                <Button size="sm" variant="outline" onClick={loadAllData} disabled={refreshing} className="h-8 text-xs">
-                  <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${refreshing ? 'animate-spin' : ''}`} />
-                  Refresh
+                <Button size="sm" variant="outline" onClick={loadAllData} disabled={refreshing} className="h-7 w-7 sm:h-8 sm:w-auto p-0 sm:px-3 text-xs" aria-label="Refresh">
+                  <RefreshCw className={`w-3.5 h-3.5 sm:mr-1.5 ${refreshing ? 'animate-spin' : ''}`} />
+                  <span className="hidden sm:inline">Refresh</span>
                 </Button>
-                <Button size="sm" variant="outline" onClick={handleAdminLogout} className="gap-1.5 text-destructive hover:text-destructive h-8 text-xs">
-                  <LogOut className="w-3.5 h-3.5" />
-                  Logout
+                <Button size="sm" variant="outline" onClick={handleAdminLogout} className="h-7 w-7 sm:h-8 sm:w-auto p-0 sm:px-3 text-xs text-destructive hover:text-destructive" aria-label="Logout">
+                  <LogOut className="w-3.5 h-3.5 sm:mr-1.5" />
+                  <span className="hidden sm:inline">Logout</span>
                 </Button>
               </div>
             </div>
