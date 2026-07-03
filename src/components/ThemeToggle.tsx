@@ -80,7 +80,7 @@ export function useTheme() {
     load();
 
     const channel = supabase
-      .channel("site_settings_theme")
+      .channel(`site_settings_theme:${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "site_settings", filter: "id=eq.global" },
