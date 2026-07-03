@@ -49,7 +49,7 @@ export function FloatingActionButton() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="absolute bottom-16 right-0 flex flex-col gap-3 items-end"
+            className="absolute bottom-14 right-0 flex flex-col gap-3 items-end"
           >
             {quickActions.map((action, index) => (
               <motion.div
@@ -87,27 +87,30 @@ export function FloatingActionButton() {
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={scrollToTop}
             aria-label="Scroll to top of page"
-            className="absolute bottom-16 right-0 w-12 h-12 rounded-full glass-heavy border border-border/30 flex items-center justify-center shadow-elevated text-foreground/70 hover:text-foreground transition-colors"
+            className="absolute bottom-14 right-0 w-10 h-10 rounded-full glass-heavy border border-border/30 flex items-center justify-center shadow-elevated text-foreground/70 hover:text-foreground transition-colors"
           >
             <ArrowUp className="w-5 h-5" aria-hidden="true" />
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* Main FAB */}
+      {/* Main FAB — small at rest, expands on hover / when menu is open */}
       <motion.button
+        whileHover={{ scale: 1.35 }}
         whileTap={{ scale: 0.95 }}
+        animate={isOpen ? { scale: 1.35 } : { scale: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label={isOpen ? "Close quick actions menu" : "Open quick actions menu"}
         aria-controls="quick-actions-menu"
-        className="w-14 h-14 rounded-full gradient-primary shadow-glow flex items-center justify-center text-primary-foreground"
+        className="w-10 h-10 rounded-full gradient-primary shadow-glow flex items-center justify-center text-primary-foreground"
       >
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          {isOpen ? <X className="w-5 h-5" aria-hidden="true" /> : <Plus className="w-5 h-5" aria-hidden="true" />}
+          {isOpen ? <X className="w-4 h-4" aria-hidden="true" /> : <Plus className="w-4 h-4" aria-hidden="true" />}
         </motion.div>
       </motion.button>
     </div>
