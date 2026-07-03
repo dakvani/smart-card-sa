@@ -398,15 +398,11 @@ export default function Settings() {
                             <button
                               onClick={() => setActive(n.id)}
                               className={cn(
-                                "w-full flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-none lg:rounded-xl text-sm transition-all min-h-[48px] lg:min-h-0",
-                                // Active highlight only applies on lg (desktop side nav)
-                                "lg:" + (isActive
-                                  ? isDanger
-                                    ? "bg-destructive/10 text-destructive"
-                                    : "bg-secondary text-foreground font-medium"
-                                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"),
+                                "w-full flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-none lg:rounded-xl text-sm transition-all min-h-[48px] lg:min-h-0 hover:bg-secondary/60",
                                 isDanger ? "text-destructive" : "text-foreground",
-                                "hover:bg-secondary/60",
+                                // Active highlight (visible on desktop; on mobile the list is hidden once a section opens)
+                                isActive && !isDanger && "lg:bg-secondary lg:font-medium",
+                                isActive && isDanger && "lg:bg-destructive/10",
                               )}
                             >
                               <span className={cn(
