@@ -206,10 +206,10 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
           </AnimatePresence>
         </div>
 
-        {/* Show Auth Form for guests who haven't chosen guest checkout */}
-        {!isAuthenticated && !isGuestCheckout && (
+        {/* Show Auth Form for guests — account required */}
+        {!isAuthenticated && (
           <div className="mt-8">
-            <CheckoutAuth onAuthSuccess={handleAuthSuccess} onGuestCheckout={handleGuestCheckout} />
+            <CheckoutAuth onAuthSuccess={handleAuthSuccess} />
           </div>
         )}
       </div>
