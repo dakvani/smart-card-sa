@@ -221,25 +221,25 @@ export default function AdminDashboard() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-4"
           >
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-primary" />
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 </div>
-                <div>
-                  <h1 className="text-xl font-bold text-foreground leading-tight">Admin Control Center</h1>
-                  <p className="text-xs text-muted-foreground">Full account overview & management</p>
+                <div className="min-w-0">
+                  <h1 className="text-sm sm:text-xl font-bold text-foreground leading-tight truncate">Admin Control Center</h1>
+                  <p className="hidden sm:block text-xs text-muted-foreground">Full account overview & management</p>
                 </div>
               </div>
-              <div className="flex gap-1.5 flex-wrap items-center">
+              <div className="flex gap-1 items-center shrink-0">
                 <AdminNotificationBell isAdmin={isAdmin} onOpenTab={setActiveTab} />
-                <Button size="sm" variant="outline" onClick={loadAllData} disabled={refreshing} className="h-8 text-xs">
-                  <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${refreshing ? 'animate-spin' : ''}`} />
-                  Refresh
+                <Button size="sm" variant="outline" onClick={loadAllData} disabled={refreshing} className="h-7 w-7 sm:h-8 sm:w-auto p-0 sm:px-3 text-xs" aria-label="Refresh">
+                  <RefreshCw className={`w-3.5 h-3.5 sm:mr-1.5 ${refreshing ? 'animate-spin' : ''}`} />
+                  <span className="hidden sm:inline">Refresh</span>
                 </Button>
-                <Button size="sm" variant="outline" onClick={handleAdminLogout} className="gap-1.5 text-destructive hover:text-destructive h-8 text-xs">
-                  <LogOut className="w-3.5 h-3.5" />
-                  Logout
+                <Button size="sm" variant="outline" onClick={handleAdminLogout} className="h-7 w-7 sm:h-8 sm:w-auto p-0 sm:px-3 text-xs text-destructive hover:text-destructive" aria-label="Logout">
+                  <LogOut className="w-3.5 h-3.5 sm:mr-1.5" />
+                  <span className="hidden sm:inline">Logout</span>
                 </Button>
               </div>
             </div>
@@ -250,19 +250,19 @@ export default function AdminDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3"
           >
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-green-500/20 cursor-pointer" onClick={() => setActiveTab("orders")}>
-                    <CardContent className="p-3">
+                    <CardContent className="p-2 sm:p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-[11px] text-muted-foreground font-medium">Revenue</p>
-                          <p className="text-lg font-bold text-foreground leading-tight truncate">{formatSAR(totalRevenue)}</p>
+                          <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Revenue</p>
+                          <p className="text-sm sm:text-lg font-bold text-foreground leading-tight truncate">{formatSAR(totalRevenue)}</p>
                         </div>
-                        <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
                           <DollarSign className="w-4 h-4 text-green-500" />
                         </div>
                       </div>
@@ -275,13 +275,13 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-blue-500/10 to-sky-500/5 border-blue-500/20 cursor-pointer" onClick={() => setActiveTab("users")}>
-                    <CardContent className="p-3">
+                    <CardContent className="p-2 sm:p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-[11px] text-muted-foreground font-medium">Total Users</p>
-                          <p className="text-lg font-bold text-foreground leading-tight">{stats.find(s => s.name === "Users")?.count.toLocaleString() || 0}</p>
+                          <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Total Users</p>
+                          <p className="text-sm sm:text-lg font-bold text-foreground leading-tight">{stats.find(s => s.name === "Users")?.count.toLocaleString() || 0}</p>
                         </div>
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
                           <Users className="w-4 h-4 text-blue-500" />
                         </div>
                       </div>
@@ -294,13 +294,13 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-yellow-500/10 to-amber-500/5 border-yellow-500/20 cursor-pointer" onClick={() => setActiveTab("orders")}>
-                    <CardContent className="p-3">
+                    <CardContent className="p-2 sm:p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-[11px] text-muted-foreground font-medium">Pending Orders</p>
-                          <p className="text-lg font-bold text-foreground leading-tight">{pendingOrders}</p>
+                          <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Pending Orders</p>
+                          <p className="text-sm sm:text-lg font-bold text-foreground leading-tight">{pendingOrders}</p>
                         </div>
-                        <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg bg-yellow-500/10 flex items-center justify-center shrink-0">
                           <Clock className="w-4 h-4 text-yellow-500" />
                         </div>
                       </div>
@@ -313,13 +313,13 @@ export default function AdminDashboard() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Card className="bg-gradient-to-br from-purple-500/10 to-violet-500/5 border-purple-500/20 cursor-pointer" onClick={() => setActiveTab("tables")}>
-                    <CardContent className="p-3">
+                    <CardContent className="p-2 sm:p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-[11px] text-muted-foreground font-medium">Total Records</p>
-                          <p className="text-lg font-bold text-foreground leading-tight">{totalRecords.toLocaleString()}</p>
+                          <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Total Records</p>
+                          <p className="text-sm sm:text-lg font-bold text-foreground leading-tight">{totalRecords.toLocaleString()}</p>
                         </div>
-                        <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
                           <Database className="w-4 h-4 text-purple-500" />
                         </div>
                       </div>
@@ -387,13 +387,13 @@ export default function AdminDashboard() {
               <TabsContent value="overview" className="space-y-4">
                 {/* Public site appearance (admin only) */}
                 <Card className="border-border/60">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                    <div>
-                      <CardTitle className="text-base flex items-center gap-2">
-                        <Palette className="w-4 h-4 text-primary" />
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3">
+                    <div className="min-w-0">
+                      <CardTitle className="text-sm sm:text-base flex items-center gap-1.5">
+                        <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
                         Public site appearance
                       </CardTitle>
-                      <CardDescription className="text-xs">
+                      <CardDescription className="text-[11px] sm:text-xs hidden sm:block">
                         Choose the theme every visitor sees on the public site.
                       </CardDescription>
                     </div>
@@ -403,28 +403,27 @@ export default function AdminDashboard() {
 
                 {/* Stats Grid */}
                 <TooltipProvider delayDuration={200}>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2">
                     {stats.map((stat, index) => (
                       <motion.div
                         key={stat.name}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.05 + index * 0.03 }}
-                        className="flex-[1_1_150px] sm:flex-[1_1_210px]"
+                        className="flex-[1_1_108px] sm:flex-[1_1_180px]"
                       >
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Card className="hover:shadow-md transition-shadow cursor-pointer group" onClick={() => setActiveTab(stat.tab)}>
-                              <CardContent className="p-3">
-                                <div className="flex items-center gap-2.5">
-                                  <div className={`p-2 rounded-lg bg-muted ${stat.color} shrink-0`}>
-                                    <stat.icon className="w-4 h-4" />
+                              <CardContent className="p-2 sm:p-3">
+                                <div className="flex items-center gap-2">
+                                  <div className={`p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-muted ${stat.color} shrink-0`}>
+                                    <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-[11px] text-muted-foreground leading-none">{stat.name}</p>
-                                    <p className="text-lg font-bold leading-tight">{stat.count.toLocaleString()}</p>
+                                    <p className="text-[10px] sm:text-[11px] text-muted-foreground leading-none truncate">{stat.name}</p>
+                                    <p className="text-sm sm:text-lg font-bold leading-tight">{stat.count.toLocaleString()}</p>
                                   </div>
-                                  <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
                                 </div>
                               </CardContent>
                             </Card>
