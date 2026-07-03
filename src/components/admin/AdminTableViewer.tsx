@@ -583,11 +583,11 @@ export function AdminTableViewer() {
                     )}
                     <div className="flex-1 space-y-2">
                       {columns.slice(0, 4).map(column => (
-                        <div key={column} className="flex justify-between items-start gap-2">
-                          <span className="text-xs text-muted-foreground capitalize">
+                        <div key={column} className="flex justify-between items-start gap-2 min-w-0">
+                          <span className="text-xs text-muted-foreground capitalize shrink-0">
                             {column.replace(/_/g, " ")}
                           </span>
-                          <span className="text-sm font-mono text-right truncate max-w-[60%]">
+                          <span className="text-xs sm:text-sm font-mono text-right min-w-0 flex-1 truncate">
                             {formatCellValue(row[column])}
                           </span>
                         </div>
