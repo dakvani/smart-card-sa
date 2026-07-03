@@ -46,7 +46,7 @@ export function SocialAuthButtons() {
         return;
       }
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: `${window.location.origin}/dashboard`,
+        redirect_uri: `${window.location.origin}/login`,
       });
 
       if (result.error) {
@@ -54,7 +54,7 @@ export function SocialAuthButtons() {
         return;
       }
       if (result.redirected) return;
-      window.location.href = "/dashboard";
+      window.location.href = "/login";
     } catch (error) {
       console.error("Google sign-in failed:", error);
       toast.error(describeOAuthError(error, "Google"));
@@ -72,7 +72,7 @@ export function SocialAuthButtons() {
       }
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "apple",
-        options: { redirectTo: `${window.location.origin}/dashboard` },
+        options: { redirectTo: `${window.location.origin}/login` },
       });
       if (error) {
         toast.error(describeOAuthError(error, "Apple"));

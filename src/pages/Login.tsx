@@ -6,15 +6,21 @@ import { Shield, ArrowLeft } from "lucide-react";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
 import { EmailAuthForm } from "@/components/auth/EmailAuthForm";
 import { LoginVisual } from "@/components/auth/LoginVisual";
+import { getPostLoginRedirect } from "@/lib/post-login-redirect";
 
 export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const go = async (userId: string) => {
+      const dest = await getPostLoginRedirect(userId);
+      navigate(dest, { replace: true });
+    };
+
     const checkUser = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (session) navigate("/dashboard");
+        if (session) go(session.user.id);
       } catch (error) {
         console.error("Session check failed:", error);
       }
@@ -22,7 +28,7 @@ export default function Login() {
     checkUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) navigate("/dashboard");
+      if (session) go(session.user.id);
     });
     return () => subscription.unsubscribe();
   }, [navigate]);
