@@ -94,20 +94,23 @@ export function FloatingActionButton() {
         )}
       </AnimatePresence>
 
-      {/* Main FAB */}
+      {/* Main FAB — small at rest, expands on hover / when menu is open */}
       <motion.button
+        whileHover={{ scale: 1.35 }}
         whileTap={{ scale: 0.95 }}
+        animate={isOpen ? { scale: 1.35 } : { scale: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label={isOpen ? "Close quick actions menu" : "Open quick actions menu"}
         aria-controls="quick-actions-menu"
-        className="w-14 h-14 rounded-full gradient-primary shadow-glow flex items-center justify-center text-primary-foreground"
+        className="w-10 h-10 rounded-full gradient-primary shadow-glow flex items-center justify-center text-primary-foreground"
       >
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          {isOpen ? <X className="w-5 h-5" aria-hidden="true" /> : <Plus className="w-5 h-5" aria-hidden="true" />}
+          {isOpen ? <X className="w-4 h-4" aria-hidden="true" /> : <Plus className="w-4 h-4" aria-hidden="true" />}
         </motion.div>
       </motion.button>
     </div>
