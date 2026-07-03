@@ -417,6 +417,14 @@ export function Navbar() {
                       Dashboard
                     </Button>
                   </Link>
+                  {isAdmin && (
+                    <Link to="/admin" onClick={() => setMobileOpen(false)}>
+                      <Button variant="outline" className="w-full border-primary/40 text-primary hover:text-primary" aria-label="Go to admin panel">
+                        <Shield className="w-4 h-4 mr-2" />
+                        Admin Panel
+                      </Button>
+                    </Link>
+                  )}
                   <Link to="/settings" onClick={() => setMobileOpen(false)}>
                     <Button variant="outline" className="w-full border-border/50" aria-label="Go to settings">
                       <Settings className="w-4 h-4 mr-2" />
