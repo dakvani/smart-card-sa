@@ -216,15 +216,10 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
 
       {/* Checkout Form - Show for authenticated users or guest checkout */}
       <div className="bg-card rounded-2xl border border-border p-6">
-        {(isAuthenticated || isGuestCheckout) ? (
+        {isAuthenticated ? (
           <>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold">Shipping Details</h3>
-              {isGuestCheckout && (
-                <span className="text-xs bg-accent px-2 py-1 rounded-full text-muted-foreground">
-                  Guest Checkout
-                </span>
-              )}
             </div>
 
             <div className="space-y-4">
@@ -246,7 +241,6 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
                     value={shippingInfo.email}
                     onChange={(e) => setShippingInfo({ ...shippingInfo, email: e.target.value })}
                     className="mt-1"
-                    disabled={isGuestCheckout}
                   />
                 </div>
               </div>
@@ -297,9 +291,9 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
         ) : (
           <div className="text-center py-8 mb-6">
             <ShoppingCart className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-            <h3 className="text-lg font-semibold mb-2">Almost there!</h3>
+            <h3 className="text-lg font-semibold mb-2">Account required</h3>
             <p className="text-sm text-muted-foreground">
-              Please sign in or continue as guest on the left to complete your purchase.
+              Please sign in or create an account on the left to complete your purchase. This keeps your order details, contact information and history secure.
             </p>
           </div>
         )}
