@@ -427,16 +427,17 @@ export default function Settings() {
             </aside>
 
             {/* Content — on mobile, hidden when no section is selected */}
-            <main className={cn(active ? "block" : "hidden lg:block")}>
-              <AnimatePresence mode="wait">
+            <main className={cn("overflow-x-hidden", active ? "block" : "hidden lg:block")}>
+              <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={desktopActive}
-                  initial={{ opacity: 0, x: 8 }}
+                  initial={{ opacity: 0, x: 12 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -8 }}
-                  transition={{ duration: 0.18 }}
-                  className="space-y-4"
+                  exit={{ opacity: 0, x: -12 }}
+                  transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+                  className="space-y-4 will-change-transform"
                 >
+
                   <div className="px-1 flex items-start gap-2">
                     <div className="min-w-0 flex-1">
                       <h2 className="text-lg sm:text-xl font-semibold truncate">{desktopActiveItem.label}</h2>
