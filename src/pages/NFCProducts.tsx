@@ -386,19 +386,47 @@ export default function NFCProducts() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mb-12">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 mb-10">
                   {products.map((product, index) => (
                     <motion.div
                       key={product.id}
-                      initial={{ opacity: 0, y: 30 }}
+                      initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className="flex flex-col"
                     >
-                      <ProductCard
-                        product={product}
-                        isSelected={selectedProduct?.id === product.id}
-                        onSelect={() => handleProductSelect(product)}
-                      />
+                      <div className="[&_h3]:!text-sm [&_h3]:!leading-tight [&_.p-5]:!p-3 [&_.text-2xl]:!text-base [&_.text-sm]:!text-[11px] [&_.text-xs]:!text-[10px] [&_.mb-4]:!mb-2 [&_.mb-2]:!mb-1 [&_.pt-3]:!pt-2 [&_.rounded-3xl]:!rounded-2xl">
+                        <ProductCard
+                          product={product}
+                          isSelected={selectedProduct?.id === product.id}
+                          onSelect={() => handleProductSelect(product)}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-9 text-xs px-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
+                        >
+                          <ShoppingCart className="w-3.5 h-3.5 mr-1" />
+                          Add
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="gradient"
+                          className="h-9 text-xs px-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleQuickBuy(product);
+                          }}
+                        >
+                          Buy now
+                        </Button>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
@@ -410,7 +438,7 @@ export default function NFCProducts() {
                     onClick={handleContinueToCustomize}
                     disabled={!selectedProduct}
                   >
-                    Continue to Customize
+                    Customize selected
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </div>
