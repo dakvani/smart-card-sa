@@ -458,7 +458,7 @@ export default function NFCProducts() {
                       <Button
                         variant="outline"
                         className="flex-1"
-                        onClick={handleAddToCart}
+                        onClick={() => handleAddToCart()}
                       >
                         <ShoppingCart className="w-4 h-4 mr-2" />
                         Add to Cart
