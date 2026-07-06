@@ -95,19 +95,35 @@ export default function NFCProducts() {
     setStep('customize');
   };
 
-  const handleAddToCart = () => {
-    if (!selectedProduct) return;
-    
-    setCart([...cart, {
-      product: selectedProduct,
-      customization: { ...customization },
-      quantity: 1,
-    }]);
-    
+  const handleAddToCart = (productOverride?: NFCProduct) => {
+    const product = productOverride ?? selectedProduct;
+    if (!product) return;
+
+    setCart((prev) => [
+      ...prev,
+      {
+        product,
+        customization: { ...defaultCustomization },
+        quantity: 1,
+      },
+    ]);
+
     toast({
       title: "Added to cart!",
-      description: `${selectedProduct.name} has been added to your cart.`,
+      description: `${product.name} has been added to your cart.`,
     });
+  };
+
+  const handleQuickBuy = (product: NFCProduct) => {
+    setCart([
+      {
+        product,
+        customization: { ...defaultCustomization },
+        quantity: 1,
+      },
+    ]);
+    setSelectedProduct(product);
+    setStep('checkout');
   };
 
   const handleProceedToCheckout = () => {
