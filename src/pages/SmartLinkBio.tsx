@@ -9,193 +9,150 @@ import { trackEvent } from "@/lib/analytics";
 import { SEO } from "@/components/SEO";
 
 
-const categories = ["All", "Creative", "Music", "Tech", "Fashion", "Fitness", "Food", "Business", "Health", "Education", "Real Estate"];
+const categories = [
+  "All templates",
+  "Fashion",
+  "Health & Fitness",
+  "Creator",
+  "Business",
+  "Music",
+  "Social Media",
+  "Tech",
+  "Food",
+  "Education",
+  "Real Estate",
+];
 
-type Social = { label: string; handle: string; url: string };
+type SocialIcon = "instagram" | "youtube" | "x" | "tiktok" | "linkedin" | "github" | "facebook" | "website" | "email" | "whatsapp" | "twitch" | "spotify";
+
+const iconMap: Record<SocialIcon, typeof Instagram> = {
+  instagram: Instagram,
+  youtube: Youtube,
+  x: Twitter,
+  tiktok: Music2,
+  linkedin: Linkedin,
+  github: Github,
+  facebook: Facebook,
+  website: Globe,
+  email: Mail,
+  whatsapp: MessageCircle,
+  twitch: Twitch,
+  spotify: Camera,
+};
 
 type SampleProfile = {
   name: string;
   username: string;
-  profession: string;
   category: string;
   initials: string;
-  accent: string;
-  location: string;
   bio: string;
-  links: { label: string; url: string }[];
-  socials: Social[];
+  background: string;   // tailwind gradient classes
+  buttonStyle: "white" | "peach" | "orange" | "black" | "glass";
+  textOnDark: boolean;  // whether name/bio should render light
+  links: string[];      // link labels
+  socials: SocialIcon[];
 };
 
 const templates: SampleProfile[] = [
   {
-    name: "Sara Al-Otaibi", username: "sara.designs", profession: "Graphic Designer", category: "Creative",
-    initials: "SA", accent: "#EC4899", location: "Riyadh, SA",
-    bio: "Brand & visual identity designer. Building calm, confident brands.",
-    links: [
-      { label: "View Portfolio", url: "https://sara.designs" },
-      { label: "Book a Project", url: "https://sara.designs/book" },
-    ],
-    socials: [
-      { label: "Instagram", handle: "@sara.designs", url: "https://instagram.com/sara.designs" },
-      { label: "Behance", handle: "sara-otaibi", url: "https://behance.net/sara-otaibi" },
-      { label: "Dribbble", handle: "saradesigns", url: "https://dribbble.com/saradesigns" },
-    ],
+    name: "Sara Al-Otaibi", username: "sara.designs", category: "Creator",
+    initials: "SA", bio: "Brand & visual identity designer",
+    background: "bg-gradient-to-br from-rose-300 via-pink-400 to-fuchsia-500",
+    buttonStyle: "white", textOnDark: true,
+    links: ["Portfolio", "Book a Project", "Case Studies", "Shop Prints"],
+    socials: ["instagram", "youtube", "x", "website"],
   },
   {
-    name: "Omar Khaled", username: "omar.dev", profession: "Software Engineer", category: "Tech",
-    initials: "OK", accent: "#22D3EE", location: "Jeddah, SA",
-    bio: "Full-stack engineer • React, Node, Postgres. Open to consulting.",
-    links: [
-      { label: "GitHub", url: "https://github.com/omarkhaled" },
-      { label: "Hire Me", url: "https://omar.dev/hire" },
-    ],
-    socials: [
-      { label: "GitHub", handle: "@omarkhaled", url: "https://github.com/omarkhaled" },
-      { label: "LinkedIn", handle: "omar-khaled", url: "https://linkedin.com/in/omar-khaled" },
-      { label: "X", handle: "@omar_dev", url: "https://x.com/omar_dev" },
-    ],
+    name: "Omar Khaled", username: "omar.dev", category: "Tech",
+    initials: "OK", bio: "Full-stack engineer • React, Node, Postgres",
+    background: "bg-gradient-to-br from-slate-900 via-sky-900 to-cyan-700",
+    buttonStyle: "glass", textOnDark: true,
+    links: ["GitHub", "Hire Me", "Open Source", "Read Blog"],
+    socials: ["github", "linkedin", "x", "website"],
   },
   {
-    name: "Layla Hassan", username: "layla.sings", profession: "Musician & Vocalist", category: "Music",
-    initials: "LH", accent: "#F59E0B", location: "Dubai, UAE",
-    bio: "Indie pop • New single 'Golden Hour' out now on all platforms.",
-    links: [
-      { label: "Listen on Spotify", url: "https://open.spotify.com/artist/layla" },
-      { label: "Book a Show", url: "mailto:booking@laylahassan.com" },
-    ],
-    socials: [
-      { label: "Spotify", handle: "Layla Hassan", url: "https://open.spotify.com/artist/layla" },
-      { label: "YouTube", handle: "@laylasings", url: "https://youtube.com/@laylasings" },
-      { label: "Instagram", handle: "@layla.sings", url: "https://instagram.com/layla.sings" },
-    ],
+    name: "Layla Hassan", username: "layla.sings", category: "Music",
+    initials: "LH", bio: "Indie pop • New single 'Golden Hour' out now",
+    background: "bg-gradient-to-br from-purple-900 via-fuchsia-700 to-pink-600",
+    buttonStyle: "white", textOnDark: true,
+    links: ["Listen on Spotify", "New Music Video", "Tour Tickets", "Merch Store"],
+    socials: ["spotify", "youtube", "instagram", "tiktok"],
   },
   {
-    name: "Faisal Aziz", username: "faisal.fit", profession: "Personal Trainer", category: "Fitness",
-    initials: "FA", accent: "#F97316", location: "Riyadh, SA",
-    bio: "Certified coach. Strength, nutrition, and habits that actually stick.",
-    links: [
-      { label: "Join 8-Week Program", url: "https://faisalfit.co/program" },
-      { label: "Book 1:1 Session", url: "https://faisalfit.co/book" },
-    ],
-    socials: [
-      { label: "Instagram", handle: "@faisal.fit", url: "https://instagram.com/faisal.fit" },
-      { label: "YouTube", handle: "@faisalfit", url: "https://youtube.com/@faisalfit" },
-      { label: "TikTok", handle: "@faisal.fit", url: "https://tiktok.com/@faisal.fit" },
-    ],
+    name: "Faisal Aziz", username: "faisal.fit", category: "Health & Fitness",
+    initials: "FA", bio: "Certified coach • Strength & nutrition",
+    background: "bg-gradient-to-br from-orange-500 via-red-500 to-rose-600",
+    buttonStyle: "black", textOnDark: true,
+    links: ["8-Week Program", "Book 1:1 Session", "Free Workout PDF", "Supplements"],
+    socials: ["instagram", "youtube", "tiktok", "whatsapp"],
   },
   {
-    name: "Noura Salem", username: "noura.style", profession: "Fashion Stylist", category: "Fashion",
-    initials: "NS", accent: "#F43F5E", location: "Dubai, UAE",
-    bio: "Editorial and personal styling. Lookbook 2026 now live.",
-    links: [
-      { label: "Shop My Looks", url: "https://noura.style/shop" },
-      { label: "Book Styling", url: "https://noura.style/book" },
-    ],
-    socials: [
-      { label: "Instagram", handle: "@noura.style", url: "https://instagram.com/noura.style" },
-      { label: "Pinterest", handle: "nourastyle", url: "https://pinterest.com/nourastyle" },
-      { label: "TikTok", handle: "@noura.style", url: "https://tiktok.com/@noura.style" },
-    ],
+    name: "Noura Salem", username: "noura.style", category: "Fashion",
+    initials: "NS", bio: "Editorial & personal styling — Dubai",
+    background: "bg-gradient-to-br from-amber-200 via-orange-300 to-pink-400",
+    buttonStyle: "white", textOnDark: false,
+    links: ["Shop My Looks", "Lookbook 2026", "Book Styling", "Newsletter"],
+    socials: ["instagram", "tiktok", "youtube", "website"],
   },
   {
-    name: "Yousef Rahman", username: "chef.yousef", profession: "Chef & Restaurateur", category: "Food",
-    initials: "YR", accent: "#D97706", location: "Riyadh, SA",
-    bio: "Modern Middle Eastern kitchen. Reservations open weekly.",
-    links: [
-      { label: "Reserve a Table", url: "https://chefyousef.sa/reserve" },
-      { label: "Order Catering", url: "https://chefyousef.sa/catering" },
-    ],
-    socials: [
-      { label: "Instagram", handle: "@chef.yousef", url: "https://instagram.com/chef.yousef" },
-      { label: "YouTube", handle: "@chefyousef", url: "https://youtube.com/@chefyousef" },
-      { label: "TikTok", handle: "@chef.yousef", url: "https://tiktok.com/@chef.yousef" },
-    ],
+    name: "Yousef Rahman", username: "chef.yousef", category: "Food",
+    initials: "YR", bio: "Modern Middle Eastern kitchen",
+    background: "bg-gradient-to-br from-amber-900 via-orange-800 to-yellow-700",
+    buttonStyle: "peach", textOnDark: true,
+    links: ["Reserve a Table", "Order Catering", "Recipe Book", "Cooking Classes"],
+    socials: ["instagram", "youtube", "tiktok", "website"],
   },
   {
-    name: "Reem Al-Fahad", username: "reem.consults", profession: "Business Consultant", category: "Business",
-    initials: "RA", accent: "#60A5FA", location: "Riyadh, SA",
-    bio: "Strategy & GTM for early-stage founders across MENA.",
-    links: [
-      { label: "Book a Call", url: "https://cal.com/reem" },
-      { label: "Case Studies", url: "https://reem.consults/work" },
-    ],
-    socials: [
-      { label: "LinkedIn", handle: "reem-alfahad", url: "https://linkedin.com/in/reem-alfahad" },
-      { label: "X", handle: "@reem_consults", url: "https://x.com/reem_consults" },
-      { label: "Email", handle: "hi@reem.consults", url: "mailto:hi@reem.consults" },
-    ],
+    name: "Reem Al-Fahad", username: "reem.consults", category: "Business",
+    initials: "RA", bio: "GTM strategy for early-stage founders",
+    background: "bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900",
+    buttonStyle: "white", textOnDark: true,
+    links: ["Book a Call", "Case Studies", "Newsletter", "Podcast"],
+    socials: ["linkedin", "x", "youtube", "email"],
   },
   {
-    name: "Dr. Ahmed Nasser", username: "dr.ahmed", profession: "Family Physician", category: "Health",
-    initials: "AN", accent: "#10B981", location: "Jeddah, SA",
-    bio: "Family Medicine. Clinic hours Sun–Thu. Same-week appointments.",
-    links: [
-      { label: "Book Appointment", url: "https://drahmed.clinic/book" },
-      { label: "Clinic Location", url: "https://maps.google.com/?q=drahmed+clinic" },
-    ],
-    socials: [
-      { label: "LinkedIn", handle: "dr-ahmed-nasser", url: "https://linkedin.com/in/dr-ahmed-nasser" },
-      { label: "WhatsApp", handle: "+966 5X XXX XXXX", url: "https://wa.me/9665000000000" },
-      { label: "Email", handle: "clinic@drahmed.sa", url: "mailto:clinic@drahmed.sa" },
-    ],
+    name: "Dr. Ahmed Nasser", username: "dr.ahmed", category: "Health & Fitness",
+    initials: "AN", bio: "Family Medicine • Same-week appointments",
+    background: "bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600",
+    buttonStyle: "white", textOnDark: true,
+    links: ["Book Appointment", "Clinic Location", "Patient Portal", "Health Tips"],
+    socials: ["linkedin", "whatsapp", "website", "email"],
   },
   {
-    name: "Mona Zahran", username: "mona.photo", profession: "Photographer", category: "Creative",
-    initials: "MZ", accent: "#FCD34D", location: "Cairo, EG",
-    bio: "Weddings & editorial portraits. Booking Spring 2026.",
-    links: [
-      { label: "Portfolio", url: "https://monazahran.com" },
-      { label: "Book a Shoot", url: "https://monazahran.com/book" },
-    ],
-    socials: [
-      { label: "Instagram", handle: "@mona.photo", url: "https://instagram.com/mona.photo" },
-      { label: "Vimeo", handle: "monazahran", url: "https://vimeo.com/monazahran" },
-      { label: "Pinterest", handle: "monaphoto", url: "https://pinterest.com/monaphoto" },
-    ],
+    name: "Mona Zahran", username: "mona.photo", category: "Creator",
+    initials: "MZ", bio: "Weddings & editorial portraits",
+    background: "bg-gradient-to-br from-stone-800 via-stone-700 to-amber-900",
+    buttonStyle: "peach", textOnDark: true,
+    links: ["Portfolio", "Book a Shoot", "Print Store", "Behind the Scenes"],
+    socials: ["instagram", "youtube", "website", "email"],
   },
   {
-    name: "Ustadha Hana", username: "hana.tutor", profession: "Online Tutor", category: "Education",
-    initials: "HT", accent: "#818CF8", location: "Online",
-    bio: "IELTS, Arabic and English tutoring. Group and private classes.",
-    links: [
-      { label: "Book a Lesson", url: "https://hanatutor.com/book" },
-      { label: "Free Worksheet", url: "https://hanatutor.com/free" },
-    ],
-    socials: [
-      { label: "YouTube", handle: "@hanatutor", url: "https://youtube.com/@hanatutor" },
-      { label: "Instagram", handle: "@hana.tutor", url: "https://instagram.com/hana.tutor" },
-      { label: "Email", handle: "hi@hanatutor.com", url: "mailto:hi@hanatutor.com" },
-    ],
+    name: "Ustadha Hana", username: "hana.tutor", category: "Education",
+    initials: "HT", bio: "IELTS, Arabic & English tutoring",
+    background: "bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600",
+    buttonStyle: "white", textOnDark: true,
+    links: ["Book a Lesson", "Free Worksheet", "Group Classes", "YouTube Lessons"],
+    socials: ["youtube", "instagram", "tiktok", "email"],
   },
   {
-    name: "Khalid Majed", username: "khalid.realty", profession: "Real Estate Agent", category: "Real Estate",
-    initials: "KM", accent: "#EAB308", location: "Riyadh & Jeddah",
-    bio: "Residential & investment listings across Saudi Arabia.",
-    links: [
-      { label: "View Listings", url: "https://khalidrealty.sa" },
-      { label: "Schedule Viewing", url: "https://khalidrealty.sa/viewing" },
-    ],
-    socials: [
-      { label: "WhatsApp", handle: "+966 5X XXX XXXX", url: "https://wa.me/9665000000001" },
-      { label: "LinkedIn", handle: "khalid-majed", url: "https://linkedin.com/in/khalid-majed" },
-      { label: "Instagram", handle: "@khalid.realty", url: "https://instagram.com/khalid.realty" },
-    ],
+    name: "Khalid Majed", username: "khalid.realty", category: "Real Estate",
+    initials: "KM", bio: "Residential & investment listings — KSA",
+    background: "bg-gradient-to-br from-yellow-500 via-amber-600 to-orange-700",
+    buttonStyle: "black", textOnDark: true,
+    links: ["View Listings", "Schedule Viewing", "Market Report", "Sell Your Home"],
+    socials: ["whatsapp", "linkedin", "instagram", "website"],
   },
   {
-    name: "Aisha Rami", username: "aisha.creates", profession: "Content Creator", category: "Creative",
-    initials: "AR", accent: "#D946EF", location: "Abu Dhabi, UAE",
-    bio: "Lifestyle • Travel • Tech reviews. Weekly videos on YouTube.",
-    links: [
-      { label: "Latest Video", url: "https://youtube.com/@aishacreates" },
-      { label: "Brand Collabs", url: "mailto:collabs@aisharami.com" },
-    ],
-    socials: [
-      { label: "YouTube", handle: "@aishacreates", url: "https://youtube.com/@aishacreates" },
-      { label: "Instagram", handle: "@aisha.creates", url: "https://instagram.com/aisha.creates" },
-      { label: "TikTok", handle: "@aisha.creates", url: "https://tiktok.com/@aisha.creates" },
-    ],
+    name: "Aisha Rami", username: "aisha.creates", category: "Social Media",
+    initials: "AR", bio: "Lifestyle • Travel • Tech reviews",
+    background: "bg-gradient-to-br from-fuchsia-500 via-pink-500 to-orange-400",
+    buttonStyle: "white", textOnDark: true,
+    links: ["Latest Video", "Brand Collabs", "Amazon Storefront", "Newsletter"],
+    socials: ["youtube", "instagram", "tiktok", "x"],
   },
 ];
+
+
 
 const features = [
   { icon: Layers, title: "Link Management", description: "Unlimited links with drag-and-drop reordering and scheduling." },
