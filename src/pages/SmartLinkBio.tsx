@@ -353,20 +353,26 @@ export default function SmartLinkBio() {
               </aside>
 
               {/* Phone grid */}
-              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">
                 {filteredTemplates.map((template, index) => {
-                  const btnClass =
-                    template.buttonStyle === "white"
-                      ? "bg-white text-neutral-900"
-                      : template.buttonStyle === "peach"
-                        ? "bg-orange-200/95 text-neutral-900"
-                        : template.buttonStyle === "orange"
-                          ? "bg-orange-500 text-white"
-                          : template.buttonStyle === "black"
-                            ? "bg-neutral-900 text-white"
-                            : "bg-white/15 text-white backdrop-blur-md border border-white/20";
-                  const nameColor = template.textOnDark ? "text-white" : "text-neutral-900";
-                  const bioColor = template.textOnDark ? "text-white/80" : "text-neutral-800/80";
+                  const shapeClass =
+                    template.buttonShape === "pill"
+                      ? "rounded-full"
+                      : template.buttonShape === "square"
+                        ? "rounded-none"
+                        : template.buttonShape === "outline"
+                          ? "rounded-full"
+                          : template.buttonShape === "shadow-hard"
+                            ? "rounded-lg shadow-[4px_4px_0_0_rgba(0,0,0,0.9)]"
+                            : "rounded-2xl [clip-path:polygon(2%_10%,98%_4%,100%_88%,4%_96%)]"; // torn
+                  const fontClass =
+                    template.font === "serif"
+                      ? "font-serif tracking-tight"
+                      : template.font === "mono"
+                        ? "font-mono tracking-tighter"
+                        : template.font === "display"
+                          ? "font-black uppercase tracking-wide"
+                          : "font-semibold";
 
                   return (
                     <motion.div
@@ -377,28 +383,40 @@ export default function SmartLinkBio() {
                       transition={{ delay: index * 0.04 }}
                       className="group"
                     >
-                      <div className="relative rounded-[36px] overflow-hidden aspect-[9/16] shadow-elevated ring-1 ring-black/10 group-hover:shadow-glow group-hover:-translate-y-1 transition-all duration-300">
-                        <div className={`absolute inset-0 ${template.background}`} />
-                        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-transparent to-black/20" />
+                      <div className="relative rounded-[36px] overflow-hidden aspect-[9/17] shadow-elevated ring-1 ring-black/10 group-hover:shadow-glow group-hover:-translate-y-1 transition-all duration-300">
+                        {/* Cover photo */}
+                        <img
+                          src={template.bgImage}
+                          alt=""
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                        {template.bgTint && <div className={`absolute inset-0 ${template.bgTint}`} />}
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/0 to-black/40" />
 
-                        <div className="relative h-full flex flex-col items-center px-5 pt-10 pb-6">
+                        <div className="relative h-full flex flex-col items-center px-5 pt-8 pb-6">
                           {/* Avatar */}
-                          <div className={`w-16 h-16 rounded-full flex items-center justify-center text-lg font-bold ring-2 ${template.textOnDark ? "ring-white/40 bg-white/20 text-white backdrop-blur" : "ring-neutral-900/20 bg-neutral-900/10 text-neutral-900 backdrop-blur"}`}>
-                            {template.initials}
-                          </div>
+                          <img
+                            src={template.avatarImage}
+                            alt={template.name}
+                            loading="lazy"
+                            className="w-20 h-20 rounded-full object-cover ring-2 ring-white/70 shadow-lg"
+                          />
 
                           {/* Name / bio */}
-                          <h3 className={`mt-3 font-semibold text-base ${nameColor}`}>{template.name}</h3>
-                          <p className={`text-[11px] text-center leading-snug mt-1 line-clamp-2 ${bioColor}`}>
+                          <h3 className={`mt-3 text-lg text-center ${fontClass} ${template.nameColor}`}>
+                            {template.name}
+                          </h3>
+                          <p className={`text-[11px] text-center leading-snug mt-1 line-clamp-3 max-w-[85%] ${template.bioColor}`}>
                             {template.bio}
                           </p>
 
-                          {/* Link pills */}
-                          <div className="w-full mt-4 space-y-2">
+                          {/* Link buttons */}
+                          <div className="w-full mt-5 space-y-2.5">
                             {template.links.map((label) => (
                               <div
                                 key={label}
-                                className={`w-full text-center text-[11px] font-medium py-2.5 rounded-full shadow-sm ${btnClass}`}
+                                className={`w-full text-center text-[11px] font-semibold py-3 ${shapeClass} ${template.buttonBg}`}
                               >
                                 {label}
                               </div>
@@ -409,12 +427,7 @@ export default function SmartLinkBio() {
                           <div className="mt-auto pt-4 flex items-center gap-4">
                             {template.socials.map((s) => {
                               const Icon = iconMap[s];
-                              return (
-                                <Icon
-                                  key={s}
-                                  className={`w-4 h-4 ${template.textOnDark ? "text-white" : "text-neutral-900"}`}
-                                />
-                              );
+                              return <Icon key={s} className={`w-4 h-4 ${template.socialColor}`} />;
                             })}
                           </div>
                         </div>
