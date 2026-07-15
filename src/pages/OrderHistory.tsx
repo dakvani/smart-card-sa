@@ -5,8 +5,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
-import { Package, Clock, CheckCircle, Truck, XCircle, ArrowLeft, ShoppingBag } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { Package, Clock, CheckCircle, Truck, XCircle, ArrowLeft, ShoppingBag, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { formatSAR } from "@/lib/currency";
 
@@ -28,7 +28,10 @@ interface OrderItem {
 interface Order {
   id: string;
   order_number: string;
+  invoice_number: string | null;
   status: string;
+  payment_method: string | null;
+  payment_status: string | null;
   items: OrderItem[];
   shipping_info: {
     name: string;
