@@ -3,27 +3,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CartItem } from "./types";
-import { ShoppingCart, Plus, Minus, Trash2, CreditCard, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, CreditCard, ArrowLeft, Banknote, Landmark } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckoutAuth } from "./CheckoutAuth";
 import { formatSAR } from "@/lib/currency";
 
+export type PaymentMethod = "cod" | "bank_transfer";
+
 interface CheckoutSummaryProps {
   cart: CartItem[];
   onUpdateQuantity: (index: number, quantity: number) => void;
   onRemoveItem: (index: number) => void;
   onBack: () => void;
-  onPlaceOrder?: (shippingInfo: {
-    name: string;
-    email: string;
-    address: string;
-    city: string;
-    postalCode: string;
-    country: string;
-  }, isGuest?: boolean) => void;
+  onPlaceOrder?: (
+    shippingInfo: {
+      name: string;
+      email: string;
+      address: string;
+      city: string;
+      postalCode: string;
+      country: string;
+    },
+    isGuest?: boolean,
+    paymentMethod?: PaymentMethod,
+  ) => void;
 }
 
 export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, onPlaceOrder }: CheckoutSummaryProps) {
