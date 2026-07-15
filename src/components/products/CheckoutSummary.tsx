@@ -45,6 +45,7 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
     country: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
 
   useEffect(() => {
     // Check initial auth state
@@ -91,7 +92,7 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
     setIsSubmitting(true);
 
     if (onPlaceOrder) {
-      await onPlaceOrder(shippingInfo, false);
+      await onPlaceOrder(shippingInfo, false, paymentMethod);
     } else {
       toast({
         title: "Checkout initiated",
