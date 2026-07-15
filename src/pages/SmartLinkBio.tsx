@@ -182,8 +182,8 @@ const plans = [
 ];
 
 export default function SmartLinkBio() {
-  const [activeCategory, setActiveCategory] = useState("All");
-  const filteredTemplates = activeCategory === "All" ? templates : templates.filter(t => t.category === activeCategory);
+  const [activeCategory, setActiveCategory] = useState("All templates");
+  const filteredTemplates = activeCategory === "All templates" ? templates : templates.filter(t => t.category === activeCategory);
   const location = useLocation();
   const pricingRef = useRef<HTMLElement | null>(null);
 
