@@ -9,81 +9,191 @@ import { trackEvent } from "@/lib/analytics";
 import { SEO } from "@/components/SEO";
 
 
-const categories = ["All", "Business", "Creative", "Music", "Fashion", "Fitness", "Food", "Tech", "Education"];
+const categories = ["All", "Creative", "Music", "Tech", "Fashion", "Fitness", "Food", "Business", "Health", "Education", "Real Estate"];
+
+type Social = { label: string; handle: string; url: string };
 
 type SampleProfile = {
   name: string;
-  handle: string;
+  username: string;
   profession: string;
   category: string;
   initials: string;
-  gradient: string;
   accent: string;
+  location: string;
   bio: string;
-  links: string[];
-  socials: string[];
+  links: { label: string; url: string }[];
+  socials: Social[];
 };
 
 const templates: SampleProfile[] = [
   {
-    name: "Sara Al-Otaibi", handle: "@sara.designs", profession: "Graphic Designer", category: "Creative",
-    initials: "SA", gradient: "from-indigo-900 via-purple-900 to-pink-900", accent: "bg-pink-400",
-    bio: "Brand & visual identity", links: ["View Portfolio", "Book a Project", "Shop Prints"], socials: ["IG", "Be", "Dr"],
+    name: "Sara Al-Otaibi", username: "sara.designs", profession: "Graphic Designer", category: "Creative",
+    initials: "SA", accent: "#EC4899", location: "Riyadh, SA",
+    bio: "Brand & visual identity designer. Building calm, confident brands.",
+    links: [
+      { label: "View Portfolio", url: "https://sara.designs" },
+      { label: "Book a Project", url: "https://sara.designs/book" },
+    ],
+    socials: [
+      { label: "Instagram", handle: "@sara.designs", url: "https://instagram.com/sara.designs" },
+      { label: "Behance", handle: "sara-otaibi", url: "https://behance.net/sara-otaibi" },
+      { label: "Dribbble", handle: "saradesigns", url: "https://dribbble.com/saradesigns" },
+    ],
   },
   {
-    name: "Omar Khaled", handle: "@omar.dev", profession: "Software Engineer", category: "Tech",
-    initials: "OK", gradient: "from-slate-900 via-slate-800 to-cyan-900", accent: "bg-cyan-400",
-    bio: "Full-stack • React • Node", links: ["My GitHub", "Hire Me", "Read My Blog"], socials: ["Gh", "In", "X"],
+    name: "Omar Khaled", username: "omar.dev", profession: "Software Engineer", category: "Tech",
+    initials: "OK", accent: "#22D3EE", location: "Jeddah, SA",
+    bio: "Full-stack engineer • React, Node, Postgres. Open to consulting.",
+    links: [
+      { label: "GitHub", url: "https://github.com/omarkhaled" },
+      { label: "Hire Me", url: "https://omar.dev/hire" },
+    ],
+    socials: [
+      { label: "GitHub", handle: "@omarkhaled", url: "https://github.com/omarkhaled" },
+      { label: "LinkedIn", handle: "omar-khaled", url: "https://linkedin.com/in/omar-khaled" },
+      { label: "X", handle: "@omar_dev", url: "https://x.com/omar_dev" },
+    ],
   },
   {
-    name: "Layla Hassan", handle: "@layla.sings", profession: "Musician & Vocalist", category: "Music",
-    initials: "LH", gradient: "from-pink-500 via-red-500 to-yellow-500", accent: "bg-yellow-300",
-    bio: "New single out now", links: ["Listen on Spotify", "Watch on YouTube", "Book a Show"], socials: ["Sp", "Yt", "IG"],
+    name: "Layla Hassan", username: "layla.sings", profession: "Musician & Vocalist", category: "Music",
+    initials: "LH", accent: "#F59E0B", location: "Dubai, UAE",
+    bio: "Indie pop • New single 'Golden Hour' out now on all platforms.",
+    links: [
+      { label: "Listen on Spotify", url: "https://open.spotify.com/artist/layla" },
+      { label: "Book a Show", url: "mailto:booking@laylahassan.com" },
+    ],
+    socials: [
+      { label: "Spotify", handle: "Layla Hassan", url: "https://open.spotify.com/artist/layla" },
+      { label: "YouTube", handle: "@laylasings", url: "https://youtube.com/@laylasings" },
+      { label: "Instagram", handle: "@layla.sings", url: "https://instagram.com/layla.sings" },
+    ],
   },
   {
-    name: "Faisal Aziz", handle: "@faisal.fit", profession: "Personal Trainer", category: "Fitness",
-    initials: "FA", gradient: "from-orange-500 via-rose-500 to-red-600", accent: "bg-orange-300",
-    bio: "Coach • Nutrition • Habits", links: ["Join 8-Week Program", "Book 1:1 Session", "Free Meal Plan"], socials: ["IG", "Yt", "Tk"],
+    name: "Faisal Aziz", username: "faisal.fit", profession: "Personal Trainer", category: "Fitness",
+    initials: "FA", accent: "#F97316", location: "Riyadh, SA",
+    bio: "Certified coach. Strength, nutrition, and habits that actually stick.",
+    links: [
+      { label: "Join 8-Week Program", url: "https://faisalfit.co/program" },
+      { label: "Book 1:1 Session", url: "https://faisalfit.co/book" },
+    ],
+    socials: [
+      { label: "Instagram", handle: "@faisal.fit", url: "https://instagram.com/faisal.fit" },
+      { label: "YouTube", handle: "@faisalfit", url: "https://youtube.com/@faisalfit" },
+      { label: "TikTok", handle: "@faisal.fit", url: "https://tiktok.com/@faisal.fit" },
+    ],
   },
   {
-    name: "Noura Salem", handle: "@noura.style", profession: "Fashion Stylist", category: "Fashion",
-    initials: "NS", gradient: "from-rose-400 via-pink-400 to-fuchsia-500", accent: "bg-white",
-    bio: "Editorial & personal styling", links: ["Shop My Looks", "Book Styling", "Lookbook 2026"], socials: ["IG", "Pn", "Tk"],
+    name: "Noura Salem", username: "noura.style", profession: "Fashion Stylist", category: "Fashion",
+    initials: "NS", accent: "#F43F5E", location: "Dubai, UAE",
+    bio: "Editorial and personal styling. Lookbook 2026 now live.",
+    links: [
+      { label: "Shop My Looks", url: "https://noura.style/shop" },
+      { label: "Book Styling", url: "https://noura.style/book" },
+    ],
+    socials: [
+      { label: "Instagram", handle: "@noura.style", url: "https://instagram.com/noura.style" },
+      { label: "Pinterest", handle: "nourastyle", url: "https://pinterest.com/nourastyle" },
+      { label: "TikTok", handle: "@noura.style", url: "https://tiktok.com/@noura.style" },
+    ],
   },
   {
-    name: "Yousef Rahman", handle: "@chef.yousef", profession: "Chef & Food Creator", category: "Food",
-    initials: "YR", gradient: "from-amber-700 via-orange-600 to-red-700", accent: "bg-amber-300",
-    bio: "Modern Middle Eastern", links: ["Reserve a Table", "Order Catering", "My Cookbook"], socials: ["IG", "Yt", "Tk"],
+    name: "Yousef Rahman", username: "chef.yousef", profession: "Chef & Restaurateur", category: "Food",
+    initials: "YR", accent: "#D97706", location: "Riyadh, SA",
+    bio: "Modern Middle Eastern kitchen. Reservations open weekly.",
+    links: [
+      { label: "Reserve a Table", url: "https://chefyousef.sa/reserve" },
+      { label: "Order Catering", url: "https://chefyousef.sa/catering" },
+    ],
+    socials: [
+      { label: "Instagram", handle: "@chef.yousef", url: "https://instagram.com/chef.yousef" },
+      { label: "YouTube", handle: "@chefyousef", url: "https://youtube.com/@chefyousef" },
+      { label: "TikTok", handle: "@chef.yousef", url: "https://tiktok.com/@chef.yousef" },
+    ],
   },
   {
-    name: "Reem Al-Fahad", handle: "@reem.consults", profession: "Business Consultant", category: "Business",
-    initials: "RA", gradient: "from-slate-800 via-blue-900 to-indigo-900", accent: "bg-blue-300",
-    bio: "Strategy for founders", links: ["Book a Call", "Case Studies", "Newsletter"], socials: ["In", "X", "Ml"],
+    name: "Reem Al-Fahad", username: "reem.consults", profession: "Business Consultant", category: "Business",
+    initials: "RA", accent: "#60A5FA", location: "Riyadh, SA",
+    bio: "Strategy & GTM for early-stage founders across MENA.",
+    links: [
+      { label: "Book a Call", url: "https://cal.com/reem" },
+      { label: "Case Studies", url: "https://reem.consults/work" },
+    ],
+    socials: [
+      { label: "LinkedIn", handle: "reem-alfahad", url: "https://linkedin.com/in/reem-alfahad" },
+      { label: "X", handle: "@reem_consults", url: "https://x.com/reem_consults" },
+      { label: "Email", handle: "hi@reem.consults", url: "mailto:hi@reem.consults" },
+    ],
   },
   {
-    name: "Dr. Ahmed Nasser", handle: "@dr.ahmed", profession: "Physician", category: "Business",
-    initials: "AN", gradient: "from-teal-700 via-emerald-700 to-slate-900", accent: "bg-emerald-300",
-    bio: "Family Medicine • Clinic", links: ["Book Appointment", "Clinic Location", "Health Blog"], socials: ["In", "Wa", "Ml"],
+    name: "Dr. Ahmed Nasser", username: "dr.ahmed", profession: "Family Physician", category: "Health",
+    initials: "AN", accent: "#10B981", location: "Jeddah, SA",
+    bio: "Family Medicine. Clinic hours Sun–Thu. Same-week appointments.",
+    links: [
+      { label: "Book Appointment", url: "https://drahmed.clinic/book" },
+      { label: "Clinic Location", url: "https://maps.google.com/?q=drahmed+clinic" },
+    ],
+    socials: [
+      { label: "LinkedIn", handle: "dr-ahmed-nasser", url: "https://linkedin.com/in/dr-ahmed-nasser" },
+      { label: "WhatsApp", handle: "+966 5X XXX XXXX", url: "https://wa.me/9665000000000" },
+      { label: "Email", handle: "clinic@drahmed.sa", url: "mailto:clinic@drahmed.sa" },
+    ],
   },
   {
-    name: "Mona Zahran", handle: "@mona.photo", profession: "Photographer", category: "Creative",
-    initials: "MZ", gradient: "from-neutral-900 via-neutral-800 to-stone-900", accent: "bg-amber-200",
-    bio: "Weddings & portraits", links: ["Portfolio", "Book a Shoot", "Client Gallery"], socials: ["IG", "Vs", "Pn"],
+    name: "Mona Zahran", username: "mona.photo", profession: "Photographer", category: "Creative",
+    initials: "MZ", accent: "#FCD34D", location: "Cairo, EG",
+    bio: "Weddings & editorial portraits. Booking Spring 2026.",
+    links: [
+      { label: "Portfolio", url: "https://monazahran.com" },
+      { label: "Book a Shoot", url: "https://monazahran.com/book" },
+    ],
+    socials: [
+      { label: "Instagram", handle: "@mona.photo", url: "https://instagram.com/mona.photo" },
+      { label: "Vimeo", handle: "monazahran", url: "https://vimeo.com/monazahran" },
+      { label: "Pinterest", handle: "monaphoto", url: "https://pinterest.com/monaphoto" },
+    ],
   },
   {
-    name: "Ustadha Hana", handle: "@hana.tutor", profession: "Online Tutor", category: "Education",
-    initials: "HT", gradient: "from-sky-600 via-indigo-600 to-violet-700", accent: "bg-sky-200",
-    bio: "IELTS • Arabic • English", links: ["Book a Lesson", "Free Worksheet", "Group Classes"], socials: ["Yt", "IG", "Ml"],
+    name: "Ustadha Hana", username: "hana.tutor", profession: "Online Tutor", category: "Education",
+    initials: "HT", accent: "#818CF8", location: "Online",
+    bio: "IELTS, Arabic and English tutoring. Group and private classes.",
+    links: [
+      { label: "Book a Lesson", url: "https://hanatutor.com/book" },
+      { label: "Free Worksheet", url: "https://hanatutor.com/free" },
+    ],
+    socials: [
+      { label: "YouTube", handle: "@hanatutor", url: "https://youtube.com/@hanatutor" },
+      { label: "Instagram", handle: "@hana.tutor", url: "https://instagram.com/hana.tutor" },
+      { label: "Email", handle: "hi@hanatutor.com", url: "mailto:hi@hanatutor.com" },
+    ],
   },
   {
-    name: "Khalid Majed", handle: "@khalid.realestate", profession: "Real Estate Agent", category: "Business",
-    initials: "KM", gradient: "from-stone-800 via-amber-800 to-yellow-700", accent: "bg-yellow-200",
-    bio: "Riyadh • Jeddah listings", links: ["View Listings", "Schedule Viewing", "Sell Your Home"], socials: ["Wa", "In", "IG"],
+    name: "Khalid Majed", username: "khalid.realty", profession: "Real Estate Agent", category: "Real Estate",
+    initials: "KM", accent: "#EAB308", location: "Riyadh & Jeddah",
+    bio: "Residential & investment listings across Saudi Arabia.",
+    links: [
+      { label: "View Listings", url: "https://khalidrealty.sa" },
+      { label: "Schedule Viewing", url: "https://khalidrealty.sa/viewing" },
+    ],
+    socials: [
+      { label: "WhatsApp", handle: "+966 5X XXX XXXX", url: "https://wa.me/9665000000001" },
+      { label: "LinkedIn", handle: "khalid-majed", url: "https://linkedin.com/in/khalid-majed" },
+      { label: "Instagram", handle: "@khalid.realty", url: "https://instagram.com/khalid.realty" },
+    ],
   },
   {
-    name: "Aisha Rami", handle: "@aisha.creates", profession: "Content Creator", category: "Creative",
-    initials: "AR", gradient: "from-fuchsia-600 via-purple-600 to-indigo-700", accent: "bg-fuchsia-300",
-    bio: "Lifestyle • Travel • Tech", links: ["Latest Video", "Brand Collabs", "Amazon Storefront"], socials: ["Yt", "IG", "Tk"],
+    name: "Aisha Rami", username: "aisha.creates", profession: "Content Creator", category: "Creative",
+    initials: "AR", accent: "#D946EF", location: "Abu Dhabi, UAE",
+    bio: "Lifestyle • Travel • Tech reviews. Weekly videos on YouTube.",
+    links: [
+      { label: "Latest Video", url: "https://youtube.com/@aishacreates" },
+      { label: "Brand Collabs", url: "mailto:collabs@aisharami.com" },
+    ],
+    socials: [
+      { label: "YouTube", handle: "@aishacreates", url: "https://youtube.com/@aishacreates" },
+      { label: "Instagram", handle: "@aisha.creates", url: "https://instagram.com/aisha.creates" },
+      { label: "TikTok", handle: "@aisha.creates", url: "https://tiktok.com/@aisha.creates" },
+    ],
   },
 ];
 
@@ -223,58 +333,93 @@ export default function SmartLinkBio() {
                 </button>
               ))}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredTemplates.map((template, index) => (
                 <motion.div
-                  key={template.handle}
+                  key={template.username}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.04 }}
-                  className="group cursor-pointer"
+                  className="group rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-glow transition-all p-4 flex gap-4"
                 >
-                  <div className="relative aspect-[9/19] rounded-[36px] bg-neutral-900 p-[6px] shadow-elevated group-hover:shadow-glow transition-all duration-300 group-hover:-translate-y-2 ring-1 ring-white/10">
-                    <div className={`relative w-full h-full rounded-[30px] bg-gradient-to-b ${template.gradient} overflow-hidden`}>
-                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-3.5 bg-black rounded-full z-10" />
-                      <div className="pt-8 px-3 flex flex-col items-center text-center h-full">
-                        <div className={`w-12 h-12 rounded-full ${template.accent} flex items-center justify-center text-[10px] font-bold text-neutral-900 ring-2 ring-white/40 mb-1.5`}>
+                  {/* Mini phone mockup */}
+                  <div className="shrink-0 w-[92px]">
+                    <div
+                      className="relative aspect-[9/19] rounded-[18px] bg-neutral-900 p-[3px] ring-1 ring-white/10 shadow-elevated"
+                      style={{ boxShadow: `0 10px 30px -12px ${template.accent}55` }}
+                    >
+                      <div className="relative w-full h-full rounded-[15px] overflow-hidden bg-neutral-950 flex flex-col items-center pt-3 px-1.5">
+                        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-2 bg-black rounded-full z-10" />
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-[8px] font-bold text-neutral-900 ring-1 ring-white/30 mt-1"
+                          style={{ backgroundColor: template.accent }}
+                        >
                           {template.initials}
                         </div>
-                        <div className="text-white text-[9px] font-semibold leading-tight truncate max-w-full">
-                          {template.name}
-                        </div>
-                        <div className="text-white/70 text-[7px] leading-tight truncate max-w-full">
-                          {template.handle}
-                        </div>
-                        <div className="text-white/85 text-[7px] mt-1 leading-tight px-1 line-clamp-2">
-                          {template.bio}
-                        </div>
-                        <div className="flex gap-1 mt-1.5">
-                          {template.socials.map((s) => (
-                            <div key={s} className="w-4 h-4 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-[6px] font-bold text-white">
-                              {s}
-                            </div>
+                        <div className="text-white text-[6px] font-semibold mt-1 truncate max-w-full">@{template.username}</div>
+                        <div className="w-full mt-1 space-y-1">
+                          {template.links.slice(0, 2).map((l) => (
+                            <div key={l.label} className="w-full h-2.5 rounded bg-white/90" />
                           ))}
-                        </div>
-                        <div className="w-full mt-2 space-y-1.5 px-0.5">
-                          {template.links.map((label) => (
-                            <div
-                              key={label}
-                              className="w-full h-6 rounded-lg bg-white/95 text-neutral-900 text-[7px] font-semibold flex items-center justify-center shadow-sm"
-                            >
-                              {label}
-                            </div>
+                          {template.socials.slice(0, 3).map((s) => (
+                            <div key={s.label} className="w-full h-1.5 rounded bg-white/25" />
                           ))}
-                        </div>
-                        <div className="mt-auto mb-2 text-[6px] text-white/50 tracking-wider">
-                          SMARTCARD
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="mt-4 text-center">
-                    <h3 className="font-semibold text-sm">{template.name}</h3>
-                    <p className="text-xs text-muted-foreground">{template.profession}</p>
+
+                  {/* Real profile details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-base truncate">{template.name}</h3>
+                        <p className="text-xs text-muted-foreground truncate">
+                          @{template.username} · {template.location}
+                        </p>
+                      </div>
+                      <span
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0"
+                        style={{ backgroundColor: `${template.accent}22`, color: template.accent }}
+                      >
+                        {template.category}
+                      </span>
+                    </div>
+                    <p className="text-xs font-medium mt-1" style={{ color: template.accent }}>
+                      {template.profession}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">{template.bio}</p>
+
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {template.socials.map((s) => (
+                        <a
+                          key={s.label}
+                          href={s.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] px-2 py-1 rounded-md bg-secondary hover:bg-secondary/70 text-secondary-foreground transition-colors"
+                          title={`${s.label}: ${s.handle}`}
+                        >
+                          <span className="font-semibold">{s.label}</span>
+                          <span className="text-muted-foreground ml-1">{s.handle}</span>
+                        </a>
+                      ))}
+                    </div>
+
+                    <div className="mt-2.5 flex flex-wrap gap-1.5">
+                      {template.links.map((l) => (
+                        <a
+                          key={l.label}
+                          href={l.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] px-2 py-1 rounded-md border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
+                        >
+                          {l.label}
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </motion.div>
               ))}
