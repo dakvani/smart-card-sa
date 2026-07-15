@@ -9,12 +9,16 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BarChart3, CreditCard, Layers, Lock, Palette, Smartphone,
-  Check, Sparkles, Wand2,
+  Check, Sparkles, Wand2, Undo2, Redo2, Monitor, AlertCircle,
 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { SEO } from "@/components/SEO";
-import { templates, templateCategories, type TemplateProfile } from "@/lib/smartlink-templates";
+import {
+  templates, templateCategories, bioInputSchema,
+  type TemplateProfile, type BioInput,
+} from "@/lib/smartlink-templates";
 import { TemplatePhoneCard } from "@/components/smartlink/TemplatePhoneCard";
+import { useHistoryState, useDebouncedCommit } from "@/hooks/use-history-state";
 
 const features = [
   { icon: Layers, title: "Link Management", description: "Unlimited links with drag-and-drop reordering and scheduling." },
