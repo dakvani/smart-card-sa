@@ -40,115 +40,163 @@ const iconMap: Record<SocialIcon, typeof Instagram> = {
   spotify: Camera,
 };
 
+type ButtonShape = "pill" | "square" | "torn" | "outline" | "shadow-hard";
+type FontFamily = "sans" | "serif" | "mono" | "display";
+
 type SampleProfile = {
   name: string;
   username: string;
   category: string;
-  initials: string;
   bio: string;
-  background: string;   // tailwind gradient classes
-  buttonStyle: "white" | "peach" | "orange" | "black" | "glass";
-  textOnDark: boolean;  // whether name/bio should render light
-  links: string[];      // link labels
+  // Visual identity
+  bgImage: string;              // full-bleed cover photo
+  bgTint?: string;              // optional overlay tint (tailwind)
+  avatarImage: string;          // circular avatar
+  font: FontFamily;
+  nameColor: string;            // tailwind text color
+  bioColor: string;
+  // Buttons
+  buttonShape: ButtonShape;
+  buttonBg: string;             // full tailwind classes for button bg + text
+  // Social icon color
+  socialColor: string;
+  links: string[];
   socials: SocialIcon[];
 };
 
+// Use Unsplash source photos so each template has a real, distinctive look.
 const templates: SampleProfile[] = [
   {
+    name: "Matthew Hugh", username: "matthew.skates", category: "Social Media",
+    bio: "Aspiring skater with a taste for cooking.",
+    bgImage: "https://images.unsplash.com/photo-1520045892732-304bc3ac5d8e?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&q=70",
+    font: "serif", nameColor: "text-white", bioColor: "text-white/90",
+    buttonShape: "torn", buttonBg: "bg-orange-200/95 text-neutral-900",
+    socialColor: "text-white",
+    links: ["Youtube Channel", "Tiktok Account", "Instagram"],
+    socials: ["tiktok", "youtube", "x", "instagram"],
+  },
+  {
+    name: "Timothy Teodor", username: "timothy.teo", category: "Music",
+    bio: "Online most people know me as Teodor, so that's what I prefer to go by. I'm the best at everything.",
+    bgImage: "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=70",
+    font: "mono", nameColor: "text-white", bioColor: "text-white/85",
+    buttonShape: "pill", buttonBg: "bg-orange-500 text-white",
+    socialColor: "text-white",
+    links: ["Twitch Account", "Merch Store", "Contact"],
+    socials: ["tiktok", "youtube", "x", "instagram"],
+  },
+  {
+    name: "Gabrielle Lacey", username: "gabby.hoops", category: "Health & Fitness",
+    bio: "Basketball today, tomorrow and forever.",
+    bgImage: "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=70",
+    font: "sans", nameColor: "text-white", bioColor: "text-white/90",
+    buttonShape: "pill", buttonBg: "bg-white text-neutral-900",
+    socialColor: "text-white",
+    links: ["Favourite Courts", "Donate to our team", "Team store"],
+    socials: ["tiktok", "youtube", "x", "instagram"],
+  },
+  {
     name: "Sara Al-Otaibi", username: "sara.designs", category: "Creator",
-    initials: "SA", bio: "Brand & visual identity designer",
-    background: "bg-gradient-to-br from-rose-300 via-pink-400 to-fuchsia-500",
-    buttonStyle: "white", textOnDark: true,
+    bio: "Brand & visual identity designer — Riyadh",
+    bgImage: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=70",
+    font: "display", nameColor: "text-neutral-900", bioColor: "text-neutral-800/80",
+    buttonShape: "shadow-hard", buttonBg: "bg-white text-neutral-900 border-2 border-neutral-900",
+    socialColor: "text-neutral-900",
     links: ["Portfolio", "Book a Project", "Case Studies", "Shop Prints"],
     socials: ["instagram", "youtube", "x", "website"],
   },
   {
     name: "Omar Khaled", username: "omar.dev", category: "Tech",
-    initials: "OK", bio: "Full-stack engineer • React, Node, Postgres",
-    background: "bg-gradient-to-br from-slate-900 via-sky-900 to-cyan-700",
-    buttonStyle: "glass", textOnDark: true,
+    bio: "Full-stack engineer • React, Node, Postgres",
+    bgImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=70",
+    font: "mono", nameColor: "text-emerald-300", bioColor: "text-emerald-100/80",
+    buttonShape: "outline", buttonBg: "bg-transparent text-emerald-200 border border-emerald-300/60",
+    socialColor: "text-emerald-200",
     links: ["GitHub", "Hire Me", "Open Source", "Read Blog"],
     socials: ["github", "linkedin", "x", "website"],
   },
   {
     name: "Layla Hassan", username: "layla.sings", category: "Music",
-    initials: "LH", bio: "Indie pop • New single 'Golden Hour' out now",
-    background: "bg-gradient-to-br from-purple-900 via-fuchsia-700 to-pink-600",
-    buttonStyle: "white", textOnDark: true,
+    bio: "Indie pop • New single 'Golden Hour' out now",
+    bgImage: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=70",
+    font: "display", nameColor: "text-white", bioColor: "text-white/85",
+    buttonShape: "pill", buttonBg: "bg-fuchsia-500 text-white",
+    socialColor: "text-white",
     links: ["Listen on Spotify", "New Music Video", "Tour Tickets", "Merch Store"],
     socials: ["spotify", "youtube", "instagram", "tiktok"],
   },
   {
     name: "Faisal Aziz", username: "faisal.fit", category: "Health & Fitness",
-    initials: "FA", bio: "Certified coach • Strength & nutrition",
-    background: "bg-gradient-to-br from-orange-500 via-red-500 to-rose-600",
-    buttonStyle: "black", textOnDark: true,
+    bio: "Certified coach • Strength & nutrition",
+    bgImage: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&q=70",
+    font: "sans", nameColor: "text-white", bioColor: "text-white/90",
+    buttonShape: "square", buttonBg: "bg-neutral-900 text-white",
+    socialColor: "text-white",
     links: ["8-Week Program", "Book 1:1 Session", "Free Workout PDF", "Supplements"],
     socials: ["instagram", "youtube", "tiktok", "whatsapp"],
   },
   {
     name: "Noura Salem", username: "noura.style", category: "Fashion",
-    initials: "NS", bio: "Editorial & personal styling — Dubai",
-    background: "bg-gradient-to-br from-amber-200 via-orange-300 to-pink-400",
-    buttonStyle: "white", textOnDark: false,
+    bio: "Editorial & personal styling — Dubai",
+    bgImage: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=200&q=70",
+    font: "serif", nameColor: "text-white", bioColor: "text-white/85",
+    buttonShape: "outline", buttonBg: "bg-transparent text-white border border-white/70",
+    socialColor: "text-white",
     links: ["Shop My Looks", "Lookbook 2026", "Book Styling", "Newsletter"],
     socials: ["instagram", "tiktok", "youtube", "website"],
   },
   {
     name: "Yousef Rahman", username: "chef.yousef", category: "Food",
-    initials: "YR", bio: "Modern Middle Eastern kitchen",
-    background: "bg-gradient-to-br from-amber-900 via-orange-800 to-yellow-700",
-    buttonStyle: "peach", textOnDark: true,
+    bio: "Modern Middle Eastern kitchen",
+    bgImage: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=200&q=70",
+    font: "serif", nameColor: "text-amber-50", bioColor: "text-amber-50/80",
+    buttonShape: "torn", buttonBg: "bg-amber-100 text-neutral-900",
+    socialColor: "text-amber-50",
     links: ["Reserve a Table", "Order Catering", "Recipe Book", "Cooking Classes"],
     socials: ["instagram", "youtube", "tiktok", "website"],
   },
   {
     name: "Reem Al-Fahad", username: "reem.consults", category: "Business",
-    initials: "RA", bio: "GTM strategy for early-stage founders",
-    background: "bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900",
-    buttonStyle: "white", textOnDark: true,
+    bio: "GTM strategy for early-stage founders",
+    bgImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=70",
+    font: "sans", nameColor: "text-white", bioColor: "text-white/85",
+    buttonShape: "square", buttonBg: "bg-white text-neutral-900",
+    socialColor: "text-white",
     links: ["Book a Call", "Case Studies", "Newsletter", "Podcast"],
     socials: ["linkedin", "x", "youtube", "email"],
   },
   {
-    name: "Dr. Ahmed Nasser", username: "dr.ahmed", category: "Health & Fitness",
-    initials: "AN", bio: "Family Medicine • Same-week appointments",
-    background: "bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600",
-    buttonStyle: "white", textOnDark: true,
-    links: ["Book Appointment", "Clinic Location", "Patient Portal", "Health Tips"],
-    socials: ["linkedin", "whatsapp", "website", "email"],
-  },
-  {
-    name: "Mona Zahran", username: "mona.photo", category: "Creator",
-    initials: "MZ", bio: "Weddings & editorial portraits",
-    background: "bg-gradient-to-br from-stone-800 via-stone-700 to-amber-900",
-    buttonStyle: "peach", textOnDark: true,
-    links: ["Portfolio", "Book a Shoot", "Print Store", "Behind the Scenes"],
-    socials: ["instagram", "youtube", "website", "email"],
-  },
-  {
     name: "Ustadha Hana", username: "hana.tutor", category: "Education",
-    initials: "HT", bio: "IELTS, Arabic & English tutoring",
-    background: "bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600",
-    buttonStyle: "white", textOnDark: true,
+    bio: "IELTS, Arabic & English tutoring",
+    bgImage: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=70",
+    font: "serif", nameColor: "text-white", bioColor: "text-white/85",
+    buttonShape: "pill", buttonBg: "bg-white text-neutral-900",
+    socialColor: "text-white",
     links: ["Book a Lesson", "Free Worksheet", "Group Classes", "YouTube Lessons"],
     socials: ["youtube", "instagram", "tiktok", "email"],
   },
   {
     name: "Khalid Majed", username: "khalid.realty", category: "Real Estate",
-    initials: "KM", bio: "Residential & investment listings — KSA",
-    background: "bg-gradient-to-br from-yellow-500 via-amber-600 to-orange-700",
-    buttonStyle: "black", textOnDark: true,
+    bio: "Residential & investment listings — KSA",
+    bgImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=70",
+    avatarImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=70",
+    font: "sans", nameColor: "text-white", bioColor: "text-white/85",
+    buttonShape: "shadow-hard", buttonBg: "bg-amber-400 text-neutral-900 border-2 border-neutral-900",
+    socialColor: "text-white",
     links: ["View Listings", "Schedule Viewing", "Market Report", "Sell Your Home"],
     socials: ["whatsapp", "linkedin", "instagram", "website"],
-  },
-  {
-    name: "Aisha Rami", username: "aisha.creates", category: "Social Media",
-    initials: "AR", bio: "Lifestyle • Travel • Tech reviews",
-    background: "bg-gradient-to-br from-fuchsia-500 via-pink-500 to-orange-400",
-    buttonStyle: "white", textOnDark: true,
-    links: ["Latest Video", "Brand Collabs", "Amazon Storefront", "Newsletter"],
-    socials: ["youtube", "instagram", "tiktok", "x"],
   },
 ];
 
