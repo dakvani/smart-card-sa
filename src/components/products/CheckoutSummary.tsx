@@ -295,6 +295,47 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
             </div>
 
             <Separator className="my-6" />
+
+            {/* Payment method */}
+            <div className="mb-2">
+              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-3">Payment method</h4>
+              <RadioGroup
+                value={paymentMethod}
+                onValueChange={(v) => setPaymentMethod(v as PaymentMethod)}
+                className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+              >
+                <label
+                  htmlFor="pm-cod"
+                  className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-colors ${
+                    paymentMethod === "cod" ? "border-primary bg-primary/5" : "border-border hover:bg-accent/40"
+                  }`}
+                >
+                  <RadioGroupItem id="pm-cod" value="cod" className="mt-1" />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 font-medium">
+                      <Banknote className="w-4 h-4" /> Cash on Delivery
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">Pay in cash when your order arrives.</p>
+                  </div>
+                </label>
+                <label
+                  htmlFor="pm-bank"
+                  className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-colors ${
+                    paymentMethod === "bank_transfer" ? "border-primary bg-primary/5" : "border-border hover:bg-accent/40"
+                  }`}
+                >
+                  <RadioGroupItem id="pm-bank" value="bank_transfer" className="mt-1" />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 font-medium">
+                      <Landmark className="w-4 h-4" /> Bank Transfer
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">We'll email you bank details after ordering.</p>
+                  </div>
+                </label>
+              </RadioGroup>
+            </div>
+
+            <Separator className="my-6" />
           </>
         ) : (
           <div className="text-center py-8 mb-6">
