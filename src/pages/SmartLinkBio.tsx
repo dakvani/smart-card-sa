@@ -223,32 +223,58 @@ export default function SmartLinkBio() {
                 </button>
               ))}
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredTemplates.map((template, index) => (
                 <motion.div
-                  key={template.name}
+                  key={template.handle}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.04 }}
                   className="group cursor-pointer"
                 >
-                  <div className="relative aspect-[9/16] rounded-[32px] bg-foreground p-2 shadow-elevated group-hover:shadow-glow transition-all duration-300 group-hover:-translate-y-2">
-                    <div className={`w-full h-full rounded-[24px] bg-gradient-to-b ${template.gradient} overflow-hidden relative`}>
-                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-4 bg-foreground rounded-full" />
-                      <div className="pt-12 px-4 text-center">
-                        <div className="w-14 h-14 mx-auto rounded-full bg-white/20 backdrop-blur mb-3" />
-                        <div className="h-3 w-20 mx-auto bg-white/40 rounded-full mb-2" />
-                        <div className="h-2 w-28 mx-auto bg-white/20 rounded-full mb-6" />
-                        {[1, 2, 3].map((i) => (
-                          <div key={i} className="w-full h-10 bg-white/20 backdrop-blur rounded-xl mb-2" />
-                        ))}
+                  <div className="relative aspect-[9/19] rounded-[36px] bg-neutral-900 p-[6px] shadow-elevated group-hover:shadow-glow transition-all duration-300 group-hover:-translate-y-2 ring-1 ring-white/10">
+                    <div className={`relative w-full h-full rounded-[30px] bg-gradient-to-b ${template.gradient} overflow-hidden`}>
+                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-3.5 bg-black rounded-full z-10" />
+                      <div className="pt-8 px-3 flex flex-col items-center text-center h-full">
+                        <div className={`w-12 h-12 rounded-full ${template.accent} flex items-center justify-center text-[10px] font-bold text-neutral-900 ring-2 ring-white/40 mb-1.5`}>
+                          {template.initials}
+                        </div>
+                        <div className="text-white text-[9px] font-semibold leading-tight truncate max-w-full">
+                          {template.name}
+                        </div>
+                        <div className="text-white/70 text-[7px] leading-tight truncate max-w-full">
+                          {template.handle}
+                        </div>
+                        <div className="text-white/85 text-[7px] mt-1 leading-tight px-1 line-clamp-2">
+                          {template.bio}
+                        </div>
+                        <div className="flex gap-1 mt-1.5">
+                          {template.socials.map((s) => (
+                            <div key={s} className="w-4 h-4 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-[6px] font-bold text-white">
+                              {s}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="w-full mt-2 space-y-1.5 px-0.5">
+                          {template.links.map((label) => (
+                            <div
+                              key={label}
+                              className="w-full h-6 rounded-lg bg-white/95 text-neutral-900 text-[7px] font-semibold flex items-center justify-center shadow-sm"
+                            >
+                              {label}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-auto mb-2 text-[6px] text-white/50 tracking-wider">
+                          SMARTCARD
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div className="mt-4 text-center">
-                    <h3 className="font-semibold">{template.name}</h3>
-                    <p className="text-sm text-muted-foreground">{template.category}</p>
+                    <h3 className="font-semibold text-sm">{template.name}</h3>
+                    <p className="text-xs text-muted-foreground">{template.profession}</p>
                   </div>
                 </motion.div>
               ))}
