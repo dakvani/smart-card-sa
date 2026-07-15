@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { BarChart3, CreditCard, Layers, Lock, Palette, Smartphone, Check, Sparkles } from "lucide-react";
+import { BarChart3, CreditCard, Layers, Lock, Palette, Smartphone, Check, Sparkles, Instagram, Youtube, Twitter, Linkedin, Github, Music2, Facebook, Globe, Mail, MessageCircle, Twitch, Camera } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { SEO } from "@/components/SEO";
 
