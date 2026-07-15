@@ -176,9 +176,14 @@ export default function OrderHistory() {
                           <Package className="w-6 h-6 text-primary" />
                         </div>
                         <div>
-                          <h3 className="font-semibold">Order #{order.order_number}</h3>
+                          <h3 className="font-semibold">{order.invoice_number ?? `Order #${order.order_number}`}</h3>
                           <p className="text-sm text-muted-foreground">
                             {format(new Date(order.created_at), "MMM d, yyyy 'at' h:mm a")}
+                            {order.payment_method && (
+                              <span className="ml-2 text-xs uppercase tracking-wide">
+                                • {order.payment_method === "bank_transfer" ? "Bank transfer" : "COD"}
+                              </span>
+                            )}
                           </p>
                         </div>
                       </div>
@@ -251,6 +256,14 @@ export default function OrderHistory() {
                                 <span>{formatSAR(Number(order.total))}</span>
                               </div>
                             </div>
+
+                            <Link
+                              to={`/invoice/${order.id}`}
+                              className="inline-flex items-center gap-2 mt-4 text-sm font-medium text-primary hover:underline"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <FileText className="w-4 h-4" /> View / Download invoice
+                            </Link>
                           </div>
                         </div>
                       </motion.div>
