@@ -3,6 +3,31 @@ import {
   Facebook, Globe, Mail, MessageCircle, Twitch, Camera,
   type LucideIcon,
 } from "lucide-react";
+import { z } from "zod";
+
+/* ---------------- Zod schemas ---------------- */
+
+/** Schema for the user-editable bio content in the live editor. */
+export const bioInputSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "Display name is required" })
+    .max(40, { message: "Keep it under 40 characters" }),
+  username: z
+    .string()
+    .trim()
+    .min(2, { message: "Username must be at least 2 characters" })
+    .max(30, { message: "Username must be under 30 characters" })
+    .regex(/^[a-zA-Z0-9._-]+$/, {
+      message: "Only letters, numbers, dots, dashes and underscores",
+    }),
+  bio: z
+    .string()
+    .trim()
+    .max(160, { message: "Bio must be 160 characters or fewer" }),
+});
+export type BioInput = z.infer<typeof bioInputSchema>;
 
 /* ---------------- Type-safe schema ---------------- */
 

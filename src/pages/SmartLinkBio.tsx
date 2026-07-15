@@ -9,12 +9,16 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BarChart3, CreditCard, Layers, Lock, Palette, Smartphone,
-  Check, Sparkles, Wand2,
+  Check, Sparkles, Wand2, Undo2, Redo2, Monitor, AlertCircle,
 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { SEO } from "@/components/SEO";
-import { templates, templateCategories, type TemplateProfile } from "@/lib/smartlink-templates";
+import {
+  templates, templateCategories, bioInputSchema,
+  type TemplateProfile, type BioInput,
+} from "@/lib/smartlink-templates";
 import { TemplatePhoneCard } from "@/components/smartlink/TemplatePhoneCard";
+import { useHistoryState, useDebouncedCommit } from "@/hooks/use-history-state";
 
 const features = [
   { icon: Layers, title: "Link Management", description: "Unlimited links with drag-and-drop reordering and scheduling." },
@@ -37,15 +41,75 @@ const plans = [
     cta: "Try Pro", popular: false },
 ];
 
+type EditorState = { username: string; name: string; bio: string; handle: string };
+
+const STORAGE_KEY = "smartlink.editor.v1";
+
+
+const loadInitial = (): EditorState => {
+  const fallback: EditorState = {
+    username: templates[0].username,
+    name: templates[0].name,
+    bio: templates[0].bio,
+    handle: templates[0].username,
+  };
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw) as Partial<EditorState>;
+    // Only restore username if template still exists.
+    const exists = templates.find((t) => t.username === parsed.username);
+    return {
+      username: exists?.username ?? fallback.username,
+      name: typeof parsed.name === "string" ? parsed.name : fallback.name,
+      bio: typeof parsed.bio === "string" ? parsed.bio : fallback.bio,
+      handle: typeof parsed.handle === "string" ? parsed.handle : fallback.handle,
+    };
+  } catch {
+    return fallback;
+  }
+};
+
 export default function SmartLinkBio() {
   const [activeCategory, setActiveCategory] = useState<string>("All templates");
-  const [selectedUsername, setSelectedUsername] = useState<string>(templates[0].username);
-  const [bioName, setBioName] = useState<string>(templates[0].name);
-  const [bioText, setBioText] = useState<string>(templates[0].bio);
-  const [bioHandle, setBioHandle] = useState<string>(templates[0].username);
+  const [previewMode, setPreviewMode] = useState<"phone" | "full">("phone");
+
+  // Persisted, history-tracked editor state.
+  const initial = useMemo(loadInitial, []);
+  const history = useHistoryState<EditorState>(initial, 60);
+  const { value: editor, set: pushHistory, replace: replaceHistory, undo, redo, canUndo, canRedo, reset } = history;
+
+  // Local input state (typed live, committed to history after a short pause).
+  const [draft, setDraft] = useState<EditorState>(initial);
+  useEffect(() => { setDraft(editor); }, [editor]);
+  useDebouncedCommit(draft, (v) => {
+    if (v.name !== editor.name || v.bio !== editor.bio || v.handle !== editor.handle || v.username !== editor.username) {
+      pushHistory(v);
+    }
+  }, 450);
+
+  // Persist committed history value.
+  useEffect(() => {
+    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(editor)); } catch { /* ignore */ }
+  }, [editor]);
+
+  // Zod validation for friendly field errors.
+  const validation = useMemo(() => bioInputSchema.safeParse({
+    name: draft.name, username: draft.handle, bio: draft.bio,
+  } satisfies BioInput), [draft]);
+  const errors: Partial<Record<"name" | "username" | "bio", string>> = {};
+  if (!validation.success) {
+    for (const issue of validation.error.issues) {
+      const key = issue.path[0];
+      if (key === "name" || key === "username" || key === "bio") {
+        errors[key] ??= issue.message;
+      }
+    }
+  }
 
   const selected: TemplateProfile =
-    templates.find((t) => t.username === selectedUsername) ?? templates[0];
+    templates.find((t) => t.username === editor.username) ?? templates[0];
 
   const filteredTemplates = useMemo(
     () => (activeCategory === "All templates"
@@ -87,16 +151,31 @@ export default function SmartLinkBio() {
     return () => io.disconnect();
   }, [location.pathname]);
 
+  // Keyboard shortcuts for undo/redo while focused inside the editor.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+      const target = e.target as HTMLElement | null;
+      if (!target?.closest?.("[data-smartlink-editor]")) return;
+      if (e.key.toLowerCase() === "z" && !e.shiftKey) { e.preventDefault(); undo(); }
+      else if ((e.key.toLowerCase() === "z" && e.shiftKey) || e.key.toLowerCase() === "y") {
+        e.preventDefault(); redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [undo, redo]);
+
   const applyTemplate = (t: TemplateProfile) => {
-    setSelectedUsername(t.username);
-    setBioName(t.name);
-    setBioText(t.bio);
-    setBioHandle(t.username);
+    pushHistory({ username: t.username, name: t.name, bio: t.bio, handle: t.username });
     trackEvent("smartlink_template_selected", { username: t.username, category: t.category });
     requestAnimationFrame(() => {
       previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
+
+  const updateDraft = (patch: Partial<EditorState>) => setDraft((d) => ({ ...d, ...patch }));
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -153,45 +232,148 @@ export default function SmartLinkBio() {
               </p>
             </div>
 
-            <div ref={previewRef} className="grid lg:grid-cols-[1fr_360px] gap-10 items-start max-w-5xl mx-auto">
+            <div ref={previewRef} data-smartlink-editor className="grid lg:grid-cols-[1fr_420px] gap-10 items-start max-w-6xl mx-auto">
               {/* Editor */}
               <div className="order-2 lg:order-1 space-y-5 rounded-2xl border border-border bg-card p-6">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <Wand2 className="w-4 h-4 text-primary" /> Your bio content
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 text-sm font-semibold">
+                    <Wand2 className="w-4 h-4 text-primary" /> Your bio content
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      type="button" size="icon" variant="ghost"
+                      onClick={undo} disabled={!canUndo}
+                      aria-label="Undo" title="Undo (⌘Z)"
+                    >
+                      <Undo2 className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      type="button" size="icon" variant="ghost"
+                      onClick={redo} disabled={!canRedo}
+                      aria-label="Redo" title="Redo (⌘⇧Z)"
+                    >
+                      <Redo2 className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      type="button" size="sm" variant="ghost"
+                      onClick={() => {
+                        try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+                        const first = templates[0];
+                        reset({ username: first.username, name: first.name, bio: first.bio, handle: first.username });
+                      }}
+                    >
+                      Reset
+                    </Button>
+                  </div>
                 </div>
-                <div className="space-y-2">
+
+                <div className="space-y-1.5">
                   <Label htmlFor="sl-name">Display name</Label>
-                  <Input id="sl-name" value={bioName} onChange={(e) => setBioName(e.target.value)} maxLength={40} />
+                  <Input
+                    id="sl-name"
+                    value={draft.name}
+                    onChange={(e) => updateDraft({ name: e.target.value })}
+                    maxLength={40}
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? "sl-name-err" : undefined}
+                  />
+                  {errors.name && (
+                    <p id="sl-name-err" className="text-xs text-destructive flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {errors.name}
+                    </p>
+                  )}
                 </div>
-                <div className="space-y-2">
+
+                <div className="space-y-1.5">
                   <Label htmlFor="sl-handle">Username</Label>
-                  <Input id="sl-handle" value={bioHandle} onChange={(e) => setBioHandle(e.target.value.replace(/\s+/g, ""))} maxLength={30} />
+                  <Input
+                    id="sl-handle"
+                    value={draft.handle}
+                    onChange={(e) => updateDraft({ handle: e.target.value.replace(/\s+/g, "") })}
+                    maxLength={30}
+                    aria-invalid={!!errors.username}
+                    aria-describedby={errors.username ? "sl-handle-err" : undefined}
+                  />
+                  {errors.username && (
+                    <p id="sl-handle-err" className="text-xs text-destructive flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {errors.username}
+                    </p>
+                  )}
                 </div>
-                <div className="space-y-2">
+
+                <div className="space-y-1.5">
                   <Label htmlFor="sl-bio">Bio</Label>
-                  <Textarea id="sl-bio" value={bioText} onChange={(e) => setBioText(e.target.value)} rows={3} maxLength={160} />
-                  <p className="text-xs text-muted-foreground text-right">{bioText.length}/160</p>
+                  <Textarea
+                    id="sl-bio"
+                    value={draft.bio}
+                    onChange={(e) => updateDraft({ bio: e.target.value })}
+                    rows={3}
+                    maxLength={200}
+                    aria-invalid={!!errors.bio}
+                    aria-describedby={errors.bio ? "sl-bio-err" : undefined}
+                  />
+                  <div className="flex justify-between text-xs">
+                    <span className={errors.bio ? "text-destructive flex items-center gap-1" : "text-transparent"}>
+                      {errors.bio && <><AlertCircle className="w-3 h-3" />{errors.bio}</>}
+                    </span>
+                    <span className={draft.bio.length > 160 ? "text-destructive" : "text-muted-foreground"}>
+                      {draft.bio.length}/160
+                    </span>
+                  </div>
                 </div>
+
                 <div className="rounded-lg bg-secondary/40 px-3 py-2 text-xs text-muted-foreground">
                   Current template: <span className="font-semibold text-foreground">{selected.name}</span> · {selected.category}
                 </div>
                 <Link to="/signup" className="block">
-                  <Button variant="gradient" className="w-full">Publish this bio</Button>
+                  <Button variant="gradient" className="w-full" disabled={!validation.success}>
+                    {validation.success ? "Publish this bio" : "Fix errors to publish"}
+                  </Button>
                 </Link>
               </div>
 
-              {/* Live preview */}
-              <div className="order-1 lg:order-2 mx-auto w-full max-w-[300px]">
-                <TemplatePhoneCard
-                  template={selected}
-                  size="full"
-                  overrides={{ name: bioName || selected.name, bio: bioText, username: bioHandle }}
-                />
-                <p className="mt-3 text-center text-xs text-muted-foreground">Live preview</p>
+              {/* Live preview with mode toggle */}
+              <div className="order-1 lg:order-2">
+                <div className="flex items-center justify-center gap-1 mb-4 p-1 rounded-full bg-secondary/60 w-fit mx-auto">
+                  <button
+                    type="button"
+                    onClick={() => setPreviewMode("phone")}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition ${
+                      previewMode === "phone" ? "bg-background shadow" : "text-muted-foreground"
+                    }`}
+                  >
+                    <Smartphone className="w-3.5 h-3.5" /> Phone
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPreviewMode("full")}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition ${
+                      previewMode === "full" ? "bg-background shadow" : "text-muted-foreground"
+                    }`}
+                  >
+                    <Monitor className="w-3.5 h-3.5" /> Full width
+                  </button>
+                </div>
+
+                <div className={previewMode === "phone" ? "mx-auto w-full max-w-[300px]" : "mx-auto w-full max-w-[420px]"}>
+                  <TemplatePhoneCard
+                    template={selected}
+                    size="full"
+                    overrides={{
+                      name: (draft.name || selected.name).slice(0, 40),
+                      bio: draft.bio.slice(0, 200),
+                      username: draft.handle,
+                    }}
+                  />
+                </div>
+                <p className="mt-3 text-center text-xs text-muted-foreground">
+                  Live preview · saved automatically
+                </p>
               </div>
             </div>
           </div>
         </section>
+
 
         {/* Templates */}
         <section id="templates" className="py-20">
@@ -229,7 +411,7 @@ export default function SmartLinkBio() {
 
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">
                 {filteredTemplates.map((template, index) => {
-                  const isSelected = template.username === selectedUsername;
+                  const isSelected = template.username === editor.username;
                   return (
                     <motion.div
                       key={template.username}
