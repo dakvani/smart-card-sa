@@ -251,7 +251,7 @@ export default function NFCProducts() {
 
       toast({
         title: "Order placed!",
-        description: `Order #${orderNumber} has been submitted. Check your email for confirmation.`,
+        description: `Order ${inserted?.invoice_number ?? orderNumber} has been submitted. Check your email for confirmation.`,
       });
 
       setCart([]);
@@ -259,7 +259,9 @@ export default function NFCProducts() {
       setSelectedProduct(null);
       setCustomization(defaultCustomization);
 
-      if (!isGuest) {
+      if (!isGuest && inserted?.id) {
+        navigate(`/invoice/${inserted.id}`);
+      } else if (!isGuest) {
         navigate("/order-history");
       }
     } catch (error) {
