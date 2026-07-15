@@ -411,7 +411,7 @@ export default function SmartLinkBio() {
 
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">
                 {filteredTemplates.map((template, index) => {
-                  const isSelected = template.username === selectedUsername;
+                  const isSelected = template.username === editor.username;
                   return (
                     <motion.div
                       key={template.username}
