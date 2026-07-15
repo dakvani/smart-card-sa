@@ -44,12 +44,74 @@ const plans = [
 export default function SmartLinkBio() {
   const [activeCategory, setActiveCategory] = useState<string>("All templates");
   const [selectedUsername, setSelectedUsername] = useState<string>(templates[0].username);
-  const [bioName, setBioName] = useState<string>(templates[0].name);
-  const [bioText, setBioText] = useState<string>(templates[0].bio);
-  const [bioHandle, setBioHandle] = useState<string>(templates[0].username);
+type EditorState = { username: string; name: string; bio: string; handle: string };
+
+const STORAGE_KEY = "smartlink.editor.v1";
+
+const loadInitial = (): EditorState => {
+  const fallback: EditorState = {
+    username: templates[0].username,
+    name: templates[0].name,
+    bio: templates[0].bio,
+    handle: templates[0].username,
+  };
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw) as Partial<EditorState>;
+    // Only restore username if template still exists.
+    const exists = templates.find((t) => t.username === parsed.username);
+    return {
+      username: exists?.username ?? fallback.username,
+      name: typeof parsed.name === "string" ? parsed.name : fallback.name,
+      bio: typeof parsed.bio === "string" ? parsed.bio : fallback.bio,
+      handle: typeof parsed.handle === "string" ? parsed.handle : fallback.handle,
+    };
+  } catch {
+    return fallback;
+  }
+};
+
+export default function SmartLinkBio() {
+  const [activeCategory, setActiveCategory] = useState<string>("All templates");
+  const [previewMode, setPreviewMode] = useState<"phone" | "full">("phone");
+
+  // Persisted, history-tracked editor state.
+  const initial = useMemo(loadInitial, []);
+  const history = useHistoryState<EditorState>(initial, 60);
+  const { value: editor, set: pushHistory, replace: replaceHistory, undo, redo, canUndo, canRedo, reset } = history;
+
+  // Local input state (typed live, committed to history after a short pause).
+  const [draft, setDraft] = useState<EditorState>(initial);
+  useEffect(() => { setDraft(editor); }, [editor]);
+  useDebouncedCommit(draft, (v) => {
+    if (v.name !== editor.name || v.bio !== editor.bio || v.handle !== editor.handle || v.username !== editor.username) {
+      pushHistory(v);
+    }
+  }, 450);
+
+  // Persist committed history value.
+  useEffect(() => {
+    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(editor)); } catch { /* ignore */ }
+  }, [editor]);
+
+  // Zod validation for friendly field errors.
+  const validation = useMemo(() => bioInputSchema.safeParse({
+    name: draft.name, username: draft.handle, bio: draft.bio,
+  } satisfies BioInput), [draft]);
+  const errors: Partial<Record<"name" | "username" | "bio", string>> = {};
+  if (!validation.success) {
+    for (const issue of validation.error.issues) {
+      const key = issue.path[0];
+      if (key === "name" || key === "username" || key === "bio") {
+        errors[key] ??= issue.message;
+      }
+    }
+  }
 
   const selected: TemplateProfile =
-    templates.find((t) => t.username === selectedUsername) ?? templates[0];
+    templates.find((t) => t.username === editor.username) ?? templates[0];
 
   const filteredTemplates = useMemo(
     () => (activeCategory === "All templates"
@@ -91,16 +153,31 @@ export default function SmartLinkBio() {
     return () => io.disconnect();
   }, [location.pathname]);
 
+  // Keyboard shortcuts for undo/redo while focused inside the editor.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+      const target = e.target as HTMLElement | null;
+      if (!target?.closest?.("[data-smartlink-editor]")) return;
+      if (e.key.toLowerCase() === "z" && !e.shiftKey) { e.preventDefault(); undo(); }
+      else if ((e.key.toLowerCase() === "z" && e.shiftKey) || e.key.toLowerCase() === "y") {
+        e.preventDefault(); redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [undo, redo]);
+
   const applyTemplate = (t: TemplateProfile) => {
-    setSelectedUsername(t.username);
-    setBioName(t.name);
-    setBioText(t.bio);
-    setBioHandle(t.username);
+    pushHistory({ username: t.username, name: t.name, bio: t.bio, handle: t.username });
     trackEvent("smartlink_template_selected", { username: t.username, category: t.category });
     requestAnimationFrame(() => {
       previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
+
+  const updateDraft = (patch: Partial<EditorState>) => setDraft((d) => ({ ...d, ...patch }));
 
   return (
     <div className="min-h-screen flex flex-col">
