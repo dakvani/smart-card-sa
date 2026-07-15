@@ -3,27 +3,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CartItem } from "./types";
-import { ShoppingCart, Plus, Minus, Trash2, CreditCard, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, CreditCard, ArrowLeft, Banknote, Landmark } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckoutAuth } from "./CheckoutAuth";
 import { formatSAR } from "@/lib/currency";
 
+export type PaymentMethod = "cod" | "bank_transfer";
+
 interface CheckoutSummaryProps {
   cart: CartItem[];
   onUpdateQuantity: (index: number, quantity: number) => void;
   onRemoveItem: (index: number) => void;
   onBack: () => void;
-  onPlaceOrder?: (shippingInfo: {
-    name: string;
-    email: string;
-    address: string;
-    city: string;
-    postalCode: string;
-    country: string;
-  }, isGuest?: boolean) => void;
+  onPlaceOrder?: (
+    shippingInfo: {
+      name: string;
+      email: string;
+      address: string;
+      city: string;
+      postalCode: string;
+      country: string;
+    },
+    isGuest?: boolean,
+    paymentMethod?: PaymentMethod,
+  ) => void;
 }
 
 export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, onPlaceOrder }: CheckoutSummaryProps) {
@@ -38,6 +45,7 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
     country: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
 
   useEffect(() => {
     // Check initial auth state
@@ -84,7 +92,7 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
     setIsSubmitting(true);
 
     if (onPlaceOrder) {
-      await onPlaceOrder(shippingInfo, false);
+      await onPlaceOrder(shippingInfo, false, paymentMethod);
     } else {
       toast({
         title: "Checkout initiated",
@@ -284,6 +292,47 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, 
                   />
                 </div>
               </div>
+            </div>
+
+            <Separator className="my-6" />
+
+            {/* Payment method */}
+            <div className="mb-2">
+              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-3">Payment method</h4>
+              <RadioGroup
+                value={paymentMethod}
+                onValueChange={(v) => setPaymentMethod(v as PaymentMethod)}
+                className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+              >
+                <label
+                  htmlFor="pm-cod"
+                  className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-colors ${
+                    paymentMethod === "cod" ? "border-primary bg-primary/5" : "border-border hover:bg-accent/40"
+                  }`}
+                >
+                  <RadioGroupItem id="pm-cod" value="cod" className="mt-1" />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 font-medium">
+                      <Banknote className="w-4 h-4" /> Cash on Delivery
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">Pay in cash when your order arrives.</p>
+                  </div>
+                </label>
+                <label
+                  htmlFor="pm-bank"
+                  className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-colors ${
+                    paymentMethod === "bank_transfer" ? "border-primary bg-primary/5" : "border-border hover:bg-accent/40"
+                  }`}
+                >
+                  <RadioGroupItem id="pm-bank" value="bank_transfer" className="mt-1" />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 font-medium">
+                      <Landmark className="w-4 h-4" /> Bank Transfer
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">We'll email you bank details after ordering.</p>
+                  </div>
+                </label>
+              </RadioGroup>
             </div>
 
             <Separator className="my-6" />

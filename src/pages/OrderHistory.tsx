@@ -5,8 +5,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
-import { Package, Clock, CheckCircle, Truck, XCircle, ArrowLeft, ShoppingBag } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { Package, Clock, CheckCircle, Truck, XCircle, ArrowLeft, ShoppingBag, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { formatSAR } from "@/lib/currency";
 
@@ -28,7 +28,10 @@ interface OrderItem {
 interface Order {
   id: string;
   order_number: string;
+  invoice_number: string | null;
   status: string;
+  payment_method: string | null;
+  payment_status: string | null;
   items: OrderItem[];
   shipping_info: {
     name: string;
@@ -173,9 +176,14 @@ export default function OrderHistory() {
                           <Package className="w-6 h-6 text-primary" />
                         </div>
                         <div>
-                          <h3 className="font-semibold">Order #{order.order_number}</h3>
+                          <h3 className="font-semibold">{order.invoice_number ?? `Order #${order.order_number}`}</h3>
                           <p className="text-sm text-muted-foreground">
                             {format(new Date(order.created_at), "MMM d, yyyy 'at' h:mm a")}
+                            {order.payment_method && (
+                              <span className="ml-2 text-xs uppercase tracking-wide">
+                                • {order.payment_method === "bank_transfer" ? "Bank transfer" : "COD"}
+                              </span>
+                            )}
                           </p>
                         </div>
                       </div>
@@ -248,6 +256,14 @@ export default function OrderHistory() {
                                 <span>{formatSAR(Number(order.total))}</span>
                               </div>
                             </div>
+
+                            <Link
+                              to={`/invoice/${order.id}`}
+                              className="inline-flex items-center gap-2 mt-4 text-sm font-medium text-primary hover:underline"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <FileText className="w-4 h-4" /> View / Download invoice
+                            </Link>
                           </div>
                         </div>
                       </motion.div>

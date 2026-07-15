@@ -168,7 +168,7 @@ export default function NFCProducts() {
     city: string;
     postalCode: string;
     country: string;
-  }, isGuest?: boolean) => {
+  }, isGuest?: boolean, paymentMethod: "cod" | "bank_transfer" = "cod") => {
     let orderUserId: string | null = userId;
 
     if (!isGuest) {
@@ -198,10 +198,12 @@ export default function NFCProducts() {
     const orderNumber = `NFC-${Date.now().toString(36).toUpperCase()}`;
 
     try {
-      const { error } = await supabase.from("nfc_orders").insert({
+      const { data: inserted, error } = await supabase.from("nfc_orders").insert({
         user_id: orderUserId,
         order_number: orderNumber,
         status: "processing",
+        payment_method: paymentMethod,
+        payment_status: "unpaid",
         items: cart.map(item => ({
           product: {
             id: item.product.id,
@@ -229,7 +231,7 @@ export default function NFCProducts() {
         subtotal,
         shipping_cost: shipping,
         total,
-      });
+      }).select("id, invoice_number").maybeSingle();
 
       if (error) throw error;
 
@@ -249,7 +251,7 @@ export default function NFCProducts() {
 
       toast({
         title: "Order placed!",
-        description: `Order #${orderNumber} has been submitted. Check your email for confirmation.`,
+        description: `Order ${inserted?.invoice_number ?? orderNumber} has been submitted. Check your email for confirmation.`,
       });
 
       setCart([]);
@@ -257,7 +259,9 @@ export default function NFCProducts() {
       setSelectedProduct(null);
       setCustomization(defaultCustomization);
 
-      if (!isGuest) {
+      if (!isGuest && inserted?.id) {
+        navigate(`/invoice/${inserted.id}`);
+      } else if (!isGuest) {
         navigate("/order-history");
       }
     } catch (error) {

@@ -20,6 +20,7 @@ const SmartLinkBio = lazy(() => import("@/pages/SmartLinkBio"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const NFCProducts = lazy(() => import("@/pages/NFCProducts"));
 const OrderHistory = lazy(() => import("@/pages/OrderHistory"));
+const Invoice = lazy(() => import("@/pages/Invoice"));
 const AdminOrders = lazy(() => import("@/pages/AdminOrders"));
 const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
 const Marketplace = lazy(() => import("@/pages/Marketplace"));
@@ -69,6 +70,7 @@ export function AnimatedRoutes() {
             <Route path="/products" element={<Navigate to="/smartlink-bio#features" replace />} />
             <Route path="/nfc-products" element={<PageTransition><NFCProducts /></PageTransition>} />
             <Route path="/order-history" element={<PageTransition><OrderHistory /></PageTransition>} />
+            <Route path="/invoice/:id" element={<PageTransition><Invoice /></PageTransition>} />
             <Route path="/admin" element={<PageTransition><AdminDashboard /></PageTransition>} />
             <Route path="/admin/orders" element={<PageTransition><AdminOrders /></PageTransition>} />
             <Route path="/marketplace" element={<PageTransition><Marketplace /></PageTransition>} />
