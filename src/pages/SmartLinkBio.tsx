@@ -268,121 +268,120 @@ export default function SmartLinkBio() {
           </div>
         </section>
 
-        {/* Templates */}
+        {/* Templates — Linktree-style: sidebar + full phone mockups */}
         <section id="templates" className="py-20">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-3">Stunning <span className="gradient-text">templates</span></h2>
-              <p className="text-muted-foreground">Pick a starting point. Make it yours in seconds.</p>
+            <div className="text-center mb-14 max-w-3xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+                A SmartLink template to suit <span className="gradient-text">every brand and creator</span>
+              </h2>
+              <p className="text-muted-foreground text-lg">
+                Different link styles, integrations and visuals help you build a bio that looks and feels like you.
+                Explore our template library and start growing today.
+              </p>
             </div>
-            <div className="flex flex-wrap justify-center gap-2 mb-10">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    activeCategory === cat
-                      ? "gradient-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTemplates.map((template, index) => (
-                <motion.div
-                  key={template.username}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.04 }}
-                  className="group rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-glow transition-all p-4 flex gap-4"
-                >
-                  {/* Mini phone mockup */}
-                  <div className="shrink-0 w-[92px]">
-                    <div
-                      className="relative aspect-[9/19] rounded-[18px] bg-neutral-900 p-[3px] ring-1 ring-white/10 shadow-elevated"
-                      style={{ boxShadow: `0 10px 30px -12px ${template.accent}55` }}
+
+            <div className="grid lg:grid-cols-[220px_1fr] gap-10">
+              {/* Sidebar */}
+              <aside className="lg:sticky lg:top-28 self-start">
+                <p className="text-xs font-semibold tracking-widest text-muted-foreground mb-4">
+                  BROWSE BY CATEGORY
+                </p>
+                <div className="flex lg:flex-col flex-wrap gap-2">
+                  {categories.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`px-4 py-2.5 rounded-full text-sm font-medium text-left transition-all lg:w-full ${
+                        activeCategory === cat
+                          ? "bg-foreground text-background"
+                          : "bg-secondary/60 text-foreground hover:bg-secondary"
+                      }`}
                     >
-                      <div className="relative w-full h-full rounded-[15px] overflow-hidden bg-neutral-950 flex flex-col items-center pt-3 px-1.5">
-                        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-2 bg-black rounded-full z-10" />
-                        <div
-                          className="w-7 h-7 rounded-full flex items-center justify-center text-[8px] font-bold text-neutral-900 ring-1 ring-white/30 mt-1"
-                          style={{ backgroundColor: template.accent }}
-                        >
-                          {template.initials}
-                        </div>
-                        <div className="text-white text-[6px] font-semibold mt-1 truncate max-w-full">@{template.username}</div>
-                        <div className="w-full mt-1 space-y-1">
-                          {template.links.slice(0, 2).map((l) => (
-                            <div key={l.label} className="w-full h-2.5 rounded bg-white/90" />
-                          ))}
-                          {template.socials.slice(0, 3).map((s) => (
-                            <div key={s.label} className="w-full h-1.5 rounded bg-white/25" />
-                          ))}
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </aside>
+
+              {/* Phone grid */}
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredTemplates.map((template, index) => {
+                  const btnClass =
+                    template.buttonStyle === "white"
+                      ? "bg-white text-neutral-900"
+                      : template.buttonStyle === "peach"
+                        ? "bg-orange-200/95 text-neutral-900"
+                        : template.buttonStyle === "orange"
+                          ? "bg-orange-500 text-white"
+                          : template.buttonStyle === "black"
+                            ? "bg-neutral-900 text-white"
+                            : "bg-white/15 text-white backdrop-blur-md border border-white/20";
+                  const nameColor = template.textOnDark ? "text-white" : "text-neutral-900";
+                  const bioColor = template.textOnDark ? "text-white/80" : "text-neutral-800/80";
+
+                  return (
+                    <motion.div
+                      key={template.username}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.04 }}
+                      className="group"
+                    >
+                      <div className="relative rounded-[36px] overflow-hidden aspect-[9/16] shadow-elevated ring-1 ring-black/10 group-hover:shadow-glow group-hover:-translate-y-1 transition-all duration-300">
+                        <div className={`absolute inset-0 ${template.background}`} />
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-transparent to-black/20" />
+
+                        <div className="relative h-full flex flex-col items-center px-5 pt-10 pb-6">
+                          {/* Avatar */}
+                          <div className={`w-16 h-16 rounded-full flex items-center justify-center text-lg font-bold ring-2 ${template.textOnDark ? "ring-white/40 bg-white/20 text-white backdrop-blur" : "ring-neutral-900/20 bg-neutral-900/10 text-neutral-900 backdrop-blur"}`}>
+                            {template.initials}
+                          </div>
+
+                          {/* Name / bio */}
+                          <h3 className={`mt-3 font-semibold text-base ${nameColor}`}>{template.name}</h3>
+                          <p className={`text-[11px] text-center leading-snug mt-1 line-clamp-2 ${bioColor}`}>
+                            {template.bio}
+                          </p>
+
+                          {/* Link pills */}
+                          <div className="w-full mt-4 space-y-2">
+                            {template.links.map((label) => (
+                              <div
+                                key={label}
+                                className={`w-full text-center text-[11px] font-medium py-2.5 rounded-full shadow-sm ${btnClass}`}
+                              >
+                                {label}
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Socials */}
+                          <div className="mt-auto pt-4 flex items-center gap-4">
+                            {template.socials.map((s) => {
+                              const Icon = iconMap[s];
+                              return (
+                                <Icon
+                                  key={s}
+                                  className={`w-4 h-4 ${template.textOnDark ? "text-white" : "text-neutral-900"}`}
+                                />
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Real profile details */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <h3 className="font-semibold text-base truncate">{template.name}</h3>
-                        <p className="text-xs text-muted-foreground truncate">
-                          @{template.username} · {template.location}
-                        </p>
-                      </div>
-                      <span
-                        className="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0"
-                        style={{ backgroundColor: `${template.accent}22`, color: template.accent }}
-                      >
-                        {template.category}
-                      </span>
-                    </div>
-                    <p className="text-xs font-medium mt-1" style={{ color: template.accent }}>
-                      {template.profession}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">{template.bio}</p>
-
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {template.socials.map((s) => (
-                        <a
-                          key={s.label}
-                          href={s.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[10px] px-2 py-1 rounded-md bg-secondary hover:bg-secondary/70 text-secondary-foreground transition-colors"
-                          title={`${s.label}: ${s.handle}`}
-                        >
-                          <span className="font-semibold">{s.label}</span>
-                          <span className="text-muted-foreground ml-1">{s.handle}</span>
-                        </a>
-                      ))}
-                    </div>
-
-                    <div className="mt-2.5 flex flex-wrap gap-1.5">
-                      {template.links.map((l) => (
-                        <a
-                          key={l.label}
-                          href={l.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[10px] px-2 py-1 rounded-md border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
-                        >
-                          {l.label}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                      <p className="mt-4 font-semibold text-sm">{template.name}</p>
+                      <p className="text-xs text-muted-foreground">@{template.username} · {template.category}</p>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </section>
+
 
         {/* Features */}
         <section id="features" className="py-20 bg-secondary/30">
