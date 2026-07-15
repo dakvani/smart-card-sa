@@ -41,12 +41,10 @@ const plans = [
     cta: "Try Pro", popular: false },
 ];
 
-export default function SmartLinkBio() {
-  const [activeCategory, setActiveCategory] = useState<string>("All templates");
-  const [selectedUsername, setSelectedUsername] = useState<string>(templates[0].username);
 type EditorState = { username: string; name: string; bio: string; handle: string };
 
 const STORAGE_KEY = "smartlink.editor.v1";
+
 
 const loadInitial = (): EditorState => {
   const fallback: EditorState = {
