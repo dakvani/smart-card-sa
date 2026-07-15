@@ -308,6 +308,51 @@ export type Database = {
         }
         Relationships: []
       }
+      invoice_company_settings: {
+        Row: {
+          address_line1: string
+          address_line2: string
+          city: string
+          company_name: string
+          country: string
+          cr_number: string
+          email: string
+          id: number
+          logo_url: string | null
+          phone: string
+          updated_at: string
+          vat_number: string
+        }
+        Insert: {
+          address_line1?: string
+          address_line2?: string
+          city?: string
+          company_name?: string
+          country?: string
+          cr_number?: string
+          email?: string
+          id?: number
+          logo_url?: string | null
+          phone?: string
+          updated_at?: string
+          vat_number?: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string
+          city?: string
+          company_name?: string
+          country?: string
+          cr_number?: string
+          email?: string
+          id?: number
+          logo_url?: string | null
+          phone?: string
+          updated_at?: string
+          vat_number?: string
+        }
+        Relationships: []
+      }
       link_clicks: {
         Row: {
           browser: string | null
@@ -528,9 +573,12 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          invoice_number: string | null
           items: Json
           notes: string | null
           order_number: string
+          payment_method: string
+          payment_status: string
           shipping_cost: number
           shipping_info: Json
           status: string
@@ -542,9 +590,12 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          invoice_number?: string | null
           items?: Json
           notes?: string | null
           order_number: string
+          payment_method?: string
+          payment_status?: string
           shipping_cost?: number
           shipping_info?: Json
           status?: string
@@ -556,9 +607,12 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          invoice_number?: string | null
           items?: Json
           notes?: string | null
           order_number?: string
+          payment_method?: string
+          payment_status?: string
           shipping_cost?: number
           shipping_info?: Json
           status?: string
