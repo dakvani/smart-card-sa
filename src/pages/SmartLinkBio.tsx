@@ -333,58 +333,93 @@ export default function SmartLinkBio() {
                 </button>
               ))}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredTemplates.map((template, index) => (
                 <motion.div
-                  key={template.handle}
+                  key={template.username}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.04 }}
-                  className="group cursor-pointer"
+                  className="group rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-glow transition-all p-4 flex gap-4"
                 >
-                  <div className="relative aspect-[9/19] rounded-[36px] bg-neutral-900 p-[6px] shadow-elevated group-hover:shadow-glow transition-all duration-300 group-hover:-translate-y-2 ring-1 ring-white/10">
-                    <div className={`relative w-full h-full rounded-[30px] bg-gradient-to-b ${template.gradient} overflow-hidden`}>
-                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-3.5 bg-black rounded-full z-10" />
-                      <div className="pt-8 px-3 flex flex-col items-center text-center h-full">
-                        <div className={`w-12 h-12 rounded-full ${template.accent} flex items-center justify-center text-[10px] font-bold text-neutral-900 ring-2 ring-white/40 mb-1.5`}>
+                  {/* Mini phone mockup */}
+                  <div className="shrink-0 w-[92px]">
+                    <div
+                      className="relative aspect-[9/19] rounded-[18px] bg-neutral-900 p-[3px] ring-1 ring-white/10 shadow-elevated"
+                      style={{ boxShadow: `0 10px 30px -12px ${template.accent}55` }}
+                    >
+                      <div className="relative w-full h-full rounded-[15px] overflow-hidden bg-neutral-950 flex flex-col items-center pt-3 px-1.5">
+                        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-2 bg-black rounded-full z-10" />
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-[8px] font-bold text-neutral-900 ring-1 ring-white/30 mt-1"
+                          style={{ backgroundColor: template.accent }}
+                        >
                           {template.initials}
                         </div>
-                        <div className="text-white text-[9px] font-semibold leading-tight truncate max-w-full">
-                          {template.name}
-                        </div>
-                        <div className="text-white/70 text-[7px] leading-tight truncate max-w-full">
-                          {template.handle}
-                        </div>
-                        <div className="text-white/85 text-[7px] mt-1 leading-tight px-1 line-clamp-2">
-                          {template.bio}
-                        </div>
-                        <div className="flex gap-1 mt-1.5">
-                          {template.socials.map((s) => (
-                            <div key={s} className="w-4 h-4 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-[6px] font-bold text-white">
-                              {s}
-                            </div>
+                        <div className="text-white text-[6px] font-semibold mt-1 truncate max-w-full">@{template.username}</div>
+                        <div className="w-full mt-1 space-y-1">
+                          {template.links.slice(0, 2).map((l) => (
+                            <div key={l.label} className="w-full h-2.5 rounded bg-white/90" />
                           ))}
-                        </div>
-                        <div className="w-full mt-2 space-y-1.5 px-0.5">
-                          {template.links.map((label) => (
-                            <div
-                              key={label}
-                              className="w-full h-6 rounded-lg bg-white/95 text-neutral-900 text-[7px] font-semibold flex items-center justify-center shadow-sm"
-                            >
-                              {label}
-                            </div>
+                          {template.socials.slice(0, 3).map((s) => (
+                            <div key={s.label} className="w-full h-1.5 rounded bg-white/25" />
                           ))}
-                        </div>
-                        <div className="mt-auto mb-2 text-[6px] text-white/50 tracking-wider">
-                          SMARTCARD
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="mt-4 text-center">
-                    <h3 className="font-semibold text-sm">{template.name}</h3>
-                    <p className="text-xs text-muted-foreground">{template.profession}</p>
+
+                  {/* Real profile details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-base truncate">{template.name}</h3>
+                        <p className="text-xs text-muted-foreground truncate">
+                          @{template.username} · {template.location}
+                        </p>
+                      </div>
+                      <span
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0"
+                        style={{ backgroundColor: `${template.accent}22`, color: template.accent }}
+                      >
+                        {template.category}
+                      </span>
+                    </div>
+                    <p className="text-xs font-medium mt-1" style={{ color: template.accent }}>
+                      {template.profession}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">{template.bio}</p>
+
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {template.socials.map((s) => (
+                        <a
+                          key={s.label}
+                          href={s.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] px-2 py-1 rounded-md bg-secondary hover:bg-secondary/70 text-secondary-foreground transition-colors"
+                          title={`${s.label}: ${s.handle}`}
+                        >
+                          <span className="font-semibold">{s.label}</span>
+                          <span className="text-muted-foreground ml-1">{s.handle}</span>
+                        </a>
+                      ))}
+                    </div>
+
+                    <div className="mt-2.5 flex flex-wrap gap-1.5">
+                      {template.links.map((l) => (
+                        <a
+                          key={l.label}
+                          href={l.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] px-2 py-1 rounded-md border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
+                        >
+                          {l.label}
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </motion.div>
               ))}
