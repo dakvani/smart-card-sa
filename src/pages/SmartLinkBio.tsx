@@ -530,46 +530,70 @@ export default function SmartLinkBio() {
               <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-3 leading-tight">Simple, transparent <span className="gradient-text">pricing</span></h2>
               <p className="hidden sm:block text-xs sm:text-base text-muted-foreground">Start free. Scale when you are ready.</p>
             </div>
-            <div className="flex md:grid md:grid-cols-3 gap-2.5 sm:gap-8 max-w-6xl mx-auto overflow-x-auto snap-x snap-mandatory md:overflow-visible -mx-3 px-3 md:mx-0 md:px-0 scrollbar-hide pb-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-8 max-w-6xl mx-auto">
               {plans.map((plan, index) => (
                 <motion.div
                   key={plan.name}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`snap-start shrink-0 w-[80%] md:w-auto relative rounded-xl sm:rounded-2xl p-3 sm:p-8 ${plan.popular ? "gradient-primary text-primary-foreground shadow-glow" : "bg-card border border-border"}`}
+                  transition={{ delay: index * 0.06 }}
+                  className={`relative rounded-xl sm:rounded-2xl p-2.5 sm:p-8 ${plan.popular ? "gradient-primary text-primary-foreground shadow-glow" : "bg-card border border-border"}`}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 sm:px-4 sm:py-1 bg-background text-foreground text-[10px] sm:text-sm font-semibold rounded-full">
+                    <div className="absolute -top-2 right-3 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 px-2 py-0.5 sm:px-4 sm:py-1 bg-background text-foreground text-[9px] sm:text-sm font-semibold rounded-full">
                       Popular
                     </div>
                   )}
-                  <div className="flex items-baseline justify-between sm:block">
-                    <h3 className="text-sm sm:text-xl font-bold mb-0 sm:mb-2">{plan.name}</h3>
-                    <div className="sm:mb-6">
-                      <span className="text-xl sm:text-5xl font-bold">{plan.price}</span>
-                      {plan.period && <span className={`text-[10px] sm:text-base ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.period}</span>}
+
+                  {/* Mobile: compact horizontal row */}
+                  <div className="sm:hidden flex items-center gap-2.5">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline gap-1.5">
+                        <h3 className="text-sm font-bold">{plan.name}</h3>
+                        <span className="text-base font-bold">{plan.price}</span>
+                        {plan.period && <span className={`text-[10px] ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.period}</span>}
+                      </div>
+                      <p className={`text-[10px] leading-tight line-clamp-1 ${plan.popular ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+                        {plan.features.slice(1, 4).join(" · ") || plan.description}
+                      </p>
                     </div>
+                    <Link to="/signup" className="shrink-0">
+                      <Button
+                        size="sm"
+                        variant={plan.popular ? "heroOutline" : "gradient"}
+                        className={`h-8 text-[11px] px-3 ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
+                      >
+                        {plan.cta}
+                      </Button>
+                    </Link>
                   </div>
-                  <p className={`text-[11px] sm:text-sm mb-2 sm:mb-6 leading-snug ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.description}</p>
-                  <Link to="/signup">
-                    <Button
-                      size="sm"
-                      variant={plan.popular ? "heroOutline" : "gradient"}
-                      className={`w-full h-8 text-xs mb-2 sm:mb-8 sm:h-11 sm:text-base ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
-                    >
-                      {plan.cta}
-                    </Button>
-                  </Link>
-                  <ul className="space-y-1 sm:space-y-3">
-                    {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-1.5 sm:gap-3">
-                        <Check className={`w-3 h-3 sm:w-5 sm:h-5 mt-0.5 shrink-0 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
-                        <span className={`text-[11px] leading-snug sm:text-sm ${plan.popular ? "text-primary-foreground/90" : ""}`}>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+
+                  {/* Desktop: full stacked card */}
+                  <div className="hidden sm:block">
+                    <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                    <div className="mb-6">
+                      <span className="text-5xl font-bold">{plan.price}</span>
+                      {plan.period && <span className={`text-base ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.period}</span>}
+                    </div>
+                    <p className={`text-sm mb-6 leading-snug ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.description}</p>
+                    <Link to="/signup">
+                      <Button
+                        variant={plan.popular ? "heroOutline" : "gradient"}
+                        className={`w-full mb-8 h-11 text-base ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
+                      >
+                        {plan.cta}
+                      </Button>
+                    </Link>
+                    <ul className="space-y-3">
+                      {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-start gap-3">
+                          <Check className={`w-5 h-5 mt-0.5 shrink-0 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
+                          <span className={`text-sm ${plan.popular ? "text-primary-foreground/90" : ""}`}>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </motion.div>
               ))}
             </div>
