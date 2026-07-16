@@ -46,7 +46,6 @@ export function loadPersistedCart(): CartItem[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    // Basic shape guard — must have product + customization + numeric qty.
     return parsed.filter(
       (item): item is CartItem =>
         !!item &&
@@ -70,5 +69,91 @@ export function persistCart(cart: CartItem[]): void {
     }
   } catch {
     // Storage full / disabled — silently ignore.
+  }
+}
+
+// ---------- Cart persistence (Supabase, cross-device) ----------
+
+/**
+ * Merge a locally-persisted cart with a remote (DB) cart into a single list.
+ * Items are deduped by (product.id + JSON(customization)) so re-adding the
+ * same design on another device just bumps quantity instead of duplicating.
+ */
+export function mergeCarts(local: CartItem[], remote: CartItem[]): CartItem[] {
+  const key = (i: CartItem) =>
+    `${i.product.id}::${JSON.stringify(i.customization)}`;
+  const map = new Map<string, CartItem>();
+  for (const item of [...remote, ...local]) {
+    const k = key(item);
+    const existing = map.get(k);
+    if (existing) {
+      existing.quantity += item.quantity;
+    } else {
+      map.set(k, { ...item, quantity: item.quantity });
+    }
+  }
+  return Array.from(map.values());
+}
+
+// Structural type so this module doesn't need to import generated DB types.
+type CartSupabase = {
+  from: (t: "user_carts") => {
+    select: (cols: string) => {
+      eq: (col: string, val: string) => {
+        maybeSingle: () => Promise<{ data: { items: unknown } | null; error: unknown }>;
+      };
+    };
+    upsert: (
+      row: { user_id: string; items: unknown },
+      opts?: { onConflict?: string },
+    ) => Promise<{ error: unknown }>;
+    delete: () => { eq: (col: string, val: string) => Promise<{ error: unknown }> };
+  };
+};
+
+export async function loadRemoteCart(
+  supabase: CartSupabase,
+  userId: string,
+): Promise<CartItem[]> {
+  try {
+    const { data, error } = await supabase
+      .from("user_carts")
+      .select("items")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (error || !data) return [];
+    const items = data.items;
+    if (!Array.isArray(items)) return [];
+    return items.filter(
+      (item): item is CartItem =>
+        !!item &&
+        typeof item === "object" &&
+        !!(item as CartItem).product &&
+        !!(item as CartItem).customization &&
+        typeof (item as CartItem).quantity === "number",
+    );
+  } catch {
+    return [];
+  }
+}
+
+export async function saveRemoteCart(
+  supabase: CartSupabase,
+  userId: string,
+  cart: CartItem[],
+): Promise<void> {
+  try {
+    if (cart.length === 0) {
+      await supabase.from("user_carts").delete().eq("user_id", userId);
+      return;
+    }
+    await supabase
+      .from("user_carts")
+      .upsert(
+        { user_id: userId, items: cart as unknown },
+        { onConflict: "user_id" },
+      );
+  } catch {
+    // Non-fatal; local cart is still persisted.
   }
 }
