@@ -72,7 +72,7 @@ const loadInitial = (): EditorState => {
   }
 };
 
-type MobileTab = "hero" | "studio" | "templates" | "features" | "pricing";
+type MobileTab = "hero" | "studio" | "templates";
 
 export default function SmartLinkBio() {
   const [activeCategory, setActiveCategory] = useState<string>("All templates");
