@@ -186,22 +186,22 @@ export default function SmartLinkBio() {
       />
       <Navbar />
 
-      <main className="flex-1 pt-24">
+      <main className="flex-1 pt-16 md:pt-24">
         {/* Hero */}
-        <section className="relative py-20 overflow-hidden">
+        <section className="relative py-8 sm:py-16 md:py-20 overflow-hidden">
           <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
           <div className="container mx-auto px-4 text-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-6"
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] sm:text-xs font-medium mb-3 sm:mb-6"
             >
-              <Sparkles className="w-3.5 h-3.5" /> SmartLink Bio
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> SmartLink Bio
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl font-bold mb-6"
+              className="text-2xl sm:text-4xl md:text-6xl font-bold mb-3 sm:mb-6 leading-tight"
             >
               One link for <span className="gradient-text">everything you are</span>
             </motion.h1>
@@ -209,13 +209,13 @@ export default function SmartLinkBio() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8"
+              className="text-sm sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 sm:mb-8"
             >
-              Beautiful templates, powerful features, and pricing that scales with you — all in one bio link.
+              Beautiful templates, powerful features, and pricing that scales with you.
             </motion.p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Link to="/signup"><Button variant="gradient" size="lg" className="shadow-glow">Create your bio free</Button></Link>
-              <a href="#pricing"><Button variant="outline" size="lg">See pricing</Button></a>
+            <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
+              <Link to="/signup"><Button variant="gradient" size="sm" className="sm:h-11 sm:px-8 shadow-glow">Create your bio free</Button></Link>
+              <a href="#pricing"><Button variant="outline" size="sm" className="sm:h-11 sm:px-8">See pricing</Button></a>
             </div>
           </div>
         </section>
