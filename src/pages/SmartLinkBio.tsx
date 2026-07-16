@@ -554,6 +554,45 @@ export default function SmartLinkBio() {
           </div>
         </section>
       </main>
+
+      {/* Mobile-only bottom section tabs — single-screen navigation */}
+      <nav
+        aria-label="SmartLink sections"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]"
+      >
+        <ul className="grid grid-cols-6">
+          {([
+            { id: "hero", label: "Home", Icon: Home },
+            { id: "preview", label: "Preview", Icon: Eye },
+            { id: "editor", label: "Edit", Icon: Pencil },
+            { id: "templates", label: "Themes", Icon: Grid3x3 },
+            { id: "features", label: "Features", Icon: Zap },
+            { id: "pricing", label: "Pricing", Icon: DollarSign },
+          ] as const).map(({ id, label, Icon }) => {
+            const active = mobileTab === id;
+            return (
+              <li key={id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileTab(id);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  aria-current={active ? "page" : undefined}
+                  className={`w-full min-h-[52px] flex flex-col items-center justify-center gap-0.5 transition-colors ${
+                    active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${active ? "scale-110" : ""} transition-transform`} />
+                  <span className="text-[9px] font-medium tracking-wide">{label}</span>
+                  {active && <span className="block w-5 h-0.5 rounded-full bg-primary mt-0.5" />}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
       <Footer />
     </div>
   );
