@@ -95,21 +95,9 @@ export function mergeCarts(local: CartItem[], remote: CartItem[]): CartItem[] {
   return Array.from(map.values());
 }
 
-// Structural type so this module doesn't need to import generated DB types.
-type CartSupabase = {
-  from: (t: "user_carts") => {
-    select: (cols: string) => {
-      eq: (col: string, val: string) => {
-        maybeSingle: () => Promise<{ data: { items: unknown } | null; error: unknown }>;
-      };
-    };
-    upsert: (
-      row: { user_id: string; items: unknown },
-      opts?: { onConflict?: string },
-    ) => Promise<{ error: unknown }>;
-    delete: () => { eq: (col: string, val: string) => Promise<{ error: unknown }> };
-  };
-};
+// Loose type: any Supabase-like client. Full generic typing would drag the
+// generated Database type through this helper and blow up type instantiation.
+type CartSupabase = { from: (t: string) => any };
 
 export async function loadRemoteCart(
   supabase: CartSupabase,
@@ -122,7 +110,7 @@ export async function loadRemoteCart(
       .eq("user_id", userId)
       .maybeSingle();
     if (error || !data) return [];
-    const items = data.items;
+    const items = (data as { items: unknown }).items;
     if (!Array.isArray(items)) return [];
     return items.filter(
       (item): item is CartItem =>
