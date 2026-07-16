@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Star, Users, Zap } from "lucide-react";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, Users, Star, Zap, Sparkles } from "lucide-react";
 
 const stats = [
   { icon: Users, value: "50K+", label: "Cards shipped" },
@@ -11,113 +10,95 @@ const stats = [
 ];
 
 export function CTA() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-  
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
-
   return (
-    <section ref={sectionRef} className="py-14 sm:py-20 lg:py-24 relative overflow-hidden">
-      {/* Background with parallax */}
-      <motion.div 
-        className="absolute inset-0 gradient-dark"
-        style={{ y: backgroundY }}
-      />
-      
-      {/* Blurred orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{ x: [-20, 20, -20], y: [-10, 10, -10] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/10 blur-[100px]"
-        />
-        <motion.div
-          animate={{ x: [20, -20, 20], y: [10, -10, 10] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-accent/15 blur-[120px]"
-        />
-      </div>
-      
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-60" />
-      
-      <motion.div 
-        className="container mx-auto px-4 relative z-10"
-        style={{ scale }}
-      >
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
-          {/* Left side - Text content */}
+    <section className="relative overflow-hidden bg-[#0a0a1a] py-16 sm:py-24 lg:py-28 text-white">
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="mx-auto max-w-6xl">
+          {/* Big CTA panel */}
           <motion.div
-            initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-left"
+            transition={{ duration: 0.7 }}
+            className="relative overflow-hidden rounded-[28px] border border-[#4f46e5]/30 bg-gradient-to-br from-[#1e1e5a] via-[#141432] to-[#0a0a1a] p-8 sm:rounded-[36px] sm:p-12 lg:p-16"
           >
-            <h2 className="text-[26px] leading-[1.15] sm:text-4xl lg:text-5xl sm:leading-tight font-bold mb-4 sm:mb-6 text-foreground/95 text-balance">
-              Order your SmartCard today. Tap into tomorrow.
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-lg">
-              Free worldwide shipping on orders over $50. Ships in 48 hours. Lifetime profile included.
-            </p>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 sm:gap-4">
-              <Link to="/nfc-products" className="w-full sm:w-auto">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} className="w-full">
-                  <Button variant="hero" size="xl" className="glass-heavy border-primary/30 hover:border-primary/50 shadow-glow w-full sm:w-auto">
-                    Shop now
-                    <ArrowRight className="w-5 h-5" />
-                  </Button>
-                </motion.div>
-              </Link>
-              <Link to="/pricing" className="w-full sm:w-auto">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} className="w-full">
-                  <Button variant="heroOutline" size="xl" className="border-border/50 text-foreground/80 hover:bg-card/40 hover:text-foreground w-full sm:w-auto">
-                    View pricing
-                  </Button>
-                </motion.div>
-              </Link>
+            {/* Ambient glows inside */}
+            <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#4f46e5]/30 blur-[100px]" />
+            <div className="pointer-events-none absolute -bottom-32 -right-24 h-96 w-96 rounded-full bg-[#7c3aed]/20 blur-[120px]" />
+
+            {/* Radial rings */}
+            <div className="pointer-events-none absolute right-6 top-6 opacity-40 sm:right-10 sm:top-10">
+              <div className="relative h-24 w-24 sm:h-32 sm:w-32">
+                <div className="absolute inset-0 rounded-full border border-[#a5b4fc]/40" />
+                <div className="absolute inset-3 rounded-full border border-[#a5b4fc]/30" />
+                <div className="absolute inset-6 rounded-full border border-[#a5b4fc]/20" />
+                <div className="absolute inset-10 rounded-full bg-[#4f46e5] shadow-[0_0_40px_#4f46e5]" />
+              </div>
             </div>
 
-          </motion.div>
+            <div className="relative z-10">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#4f46e5]/40 bg-white/5 px-3 py-1 font-body-alt text-[11px] font-semibold uppercase tracking-[0.2em] text-[#c4b5fd] backdrop-blur">
+                <Sparkles className="h-3.5 w-3.5" />
+                Ships in 48 hours
+              </div>
 
-          {/* Right side - Stats cards */}
-          <motion.div
-            initial={{ opacity: 0, x: 50, filter: "blur(10px)" }}
-            whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex justify-center lg:justify-end"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-3 sm:gap-4 w-full max-w-sm">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  className="p-6 rounded-2xl glass border border-border/30 hover:border-primary/20 transition-all duration-300"
+              <h2 className="max-w-2xl font-display text-4xl font-bold leading-[1.02] sm:text-6xl lg:text-7xl">
+                Order your SmartCard.
+                <br />
+                <span className="bg-gradient-to-r from-[#818cf8] via-[#a78bfa] to-[#c4b5fd] bg-clip-text text-transparent">
+                  Tap into tomorrow.
+                </span>
+              </h2>
+              <p className="mt-5 max-w-lg font-body-alt text-base text-white/60 sm:text-lg">
+                Free worldwide shipping on orders over $50. Lifetime profile included with every card.
+              </p>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Button
+                  asChild
+                  className="h-14 w-full rounded-full bg-white px-8 font-body-alt text-base font-bold text-[#0a0a1a] shadow-[0_20px_50px_-15px_rgba(255,255,255,0.4)] transition hover:bg-white/90 sm:w-auto"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
-                      <stat.icon className="w-6 h-6 text-primary" />
+                  <Link to="/nfc-products">
+                    Shop now
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="h-14 w-full rounded-full border border-white/15 bg-white/5 px-8 font-body-alt text-base font-semibold text-white backdrop-blur transition hover:bg-white/10 sm:w-auto"
+                >
+                  <Link to="/pricing">View pricing</Link>
+                </Button>
+              </div>
+
+              {/* Stats row */}
+              <div className="mt-10 grid grid-cols-3 gap-3 border-t border-white/10 pt-8 sm:mt-14 sm:gap-6 sm:pt-10">
+                {stats.map((s, i) => (
+                  <motion.div
+                    key={s.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
+                    className="flex flex-col"
+                  >
+                    <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#4f46e5]/20 text-[#a5b4fc] sm:h-10 sm:w-10">
+                      <s.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                     </div>
-                    <div>
-                      <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-                      <p className="text-sm text-muted-foreground">{stat.label}</p>
+                    <div className="font-display text-2xl font-extrabold leading-none text-white sm:text-4xl lg:text-5xl">
+                      {s.value}
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="mt-1 font-body-alt text-[11px] uppercase tracking-[0.15em] text-white/50 sm:text-xs">
+                      {s.label}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
