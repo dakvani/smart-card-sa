@@ -181,12 +181,12 @@ function BentoTile({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.55, delay, ease: [0.2, 0.8, 0.2, 1] }}
+      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      transition={{ duration: 0.35, delay, ease: [0.2, 0.8, 0.2, 1] }}
       whileHover={{ y: -3 }}
-      className={`group relative overflow-hidden rounded-2xl border p-5 sm:rounded-3xl sm:p-6 lg:p-7 transition-colors duration-500 ${
+      className={`group relative overflow-hidden rounded-xl border p-3.5 sm:rounded-3xl sm:p-6 lg:p-7 transition-colors duration-500 ${
         variant === "accent"
           ? "border-[#4f46e5]/40 bg-gradient-to-br from-[#1e1e5a] via-[#1e1e5a]/70 to-[#141432] hover:border-[#4f46e5]/70"
           : "border-white/[0.06] bg-[#141432]/80 hover:border-[#4f46e5]/40"
@@ -199,7 +199,7 @@ function BentoTile({
 
 function IconBadge({ children }: { children: React.ReactNode }) {
   return (
-    <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#4f46e5]/30 bg-[#4f46e5]/15 text-[#a5b4fc] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)]">
+    <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#4f46e5]/30 bg-[#4f46e5]/15 text-[#a5b4fc] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)] sm:h-10 sm:w-10 sm:rounded-xl">
       {children}
     </div>
   );
