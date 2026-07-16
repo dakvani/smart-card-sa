@@ -90,37 +90,37 @@ function TestimonialCard({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5, delay: i * 0.06 }}
-      className={`group relative overflow-hidden rounded-2xl border p-6 transition-colors duration-500 sm:rounded-3xl sm:p-7 ${
+      viewport={{ once: true, margin: "0px 0px -5% 0px" }}
+      transition={{ duration: 0.35, delay: Math.min(i, 3) * 0.04 }}
+      className={`group relative overflow-hidden rounded-xl border p-4 transition-colors duration-500 sm:rounded-3xl sm:p-7 ${
         featured
           ? "border-[#4f46e5]/40 bg-gradient-to-br from-[#1e1e5a]/60 via-[#141432] to-[#141432] hover:border-[#4f46e5]/70"
           : "border-white/[0.06] bg-[#141432]/80 hover:border-[#4f46e5]/30"
       } ${className}`}
     >
-      <Quote className={`mb-4 h-6 w-6 ${featured ? "text-[#a5b4fc]" : "text-[#4f46e5]/50"}`} />
-      <p className={`font-body-alt leading-relaxed text-white/85 ${featured ? "text-lg sm:text-xl" : "text-sm sm:text-base"}`}>
+      <Quote className={`mb-2 h-4 w-4 sm:mb-4 sm:h-6 sm:w-6 ${featured ? "text-[#a5b4fc]" : "text-[#4f46e5]/50"}`} />
+      <p className={`font-body-alt leading-relaxed text-white/85 ${featured ? "text-[13px] sm:text-xl" : "text-[13px] sm:text-base"}`}>
         "{t.quote}"
       </p>
 
-      <div className="mt-6 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10 border border-[#4f46e5]/40">
+      <div className="mt-4 flex items-center justify-between gap-2 sm:mt-6 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Avatar className="h-8 w-8 border border-[#4f46e5]/40 sm:h-10 sm:w-10">
             <AvatarImage src={t.avatar} alt={`${t.name} — ${t.role}`} />
             <AvatarFallback className="bg-[#1e1e5a] text-[#a5b4fc]">
               {t.name.split(" ").map((n) => n[0]).join("")}
             </AvatarFallback>
           </Avatar>
-          <div>
-            <p className="font-display text-sm font-bold text-white">{t.name}</p>
-            <p className="font-body-alt text-xs text-white/50">{t.role}</p>
+          <div className="min-w-0">
+            <p className="truncate font-display text-xs font-bold text-white sm:text-sm">{t.name}</p>
+            <p className="truncate font-body-alt text-[10px] text-white/50 sm:text-xs">{t.role}</p>
           </div>
         </div>
-        <div className="flex gap-0.5">
+        <div className="flex shrink-0 gap-0.5">
           {Array.from({ length: t.rating }).map((_, k) => (
-            <Star key={k} className="h-3.5 w-3.5 fill-[#a5b4fc] text-[#a5b4fc]" />
+            <Star key={k} className="h-3 w-3 fill-[#a5b4fc] text-[#a5b4fc] sm:h-3.5 sm:w-3.5" />
           ))}
         </div>
       </div>
