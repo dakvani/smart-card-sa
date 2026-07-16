@@ -99,11 +99,18 @@ export default function NFCProducts() {
     const product = productOverride ?? selectedProduct;
     if (!product) return;
 
+    // If adding from the customize step (no override), preserve the shopper's
+    // live customization. Direct "add" from a product listing has no edited
+    // state yet, so fall back to defaults.
+    const itemCustomization = productOverride
+      ? { ...defaultCustomization }
+      : { ...customization };
+
     setCart((prev) => [
       ...prev,
       {
         product,
-        customization: { ...defaultCustomization },
+        customization: itemCustomization,
         quantity: 1,
       },
     ]);
