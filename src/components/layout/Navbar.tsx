@@ -21,11 +21,11 @@ import { PlanWelcomeDialog } from "@/components/dashboard/PlanWelcomeDialog";
 import { usePlan } from "@/hooks/use-plan";
 
 const navLinks = [
-  { name: "SmartCard Products", href: "/nfc-products" },
-  { name: "SmartLink Bio", href: "/smartlink-bio" },
-  { name: "Marketplace", href: "/marketplace" },
-  { name: "Contact Us", href: "/contact" },
-  { name: "Learn", href: "/learn" },
+  { name: "SmartCard Products", href: "/nfc-products", icon: CreditCard },
+  { name: "SmartLink Bio", href: "/smartlink-bio", icon: Link2 },
+  { name: "Marketplace", href: "/marketplace", icon: Store },
+  { name: "Contact Us", href: "/contact", icon: Mail },
+  { name: "Learn", href: "/learn", icon: BookOpen },
 ];
 
 export function Navbar() {
