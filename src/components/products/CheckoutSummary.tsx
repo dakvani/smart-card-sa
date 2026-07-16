@@ -18,6 +18,7 @@ interface CheckoutSummaryProps {
   cart: CartItem[];
   onUpdateQuantity: (index: number, quantity: number) => void;
   onRemoveItem: (index: number) => void;
+  onEditItem?: (index: number) => void;
   onBack: () => void;
   onPlaceOrder?: (
     shippingInfo: {
@@ -33,7 +34,7 @@ interface CheckoutSummaryProps {
   ) => void;
 }
 
-export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onBack, onPlaceOrder }: CheckoutSummaryProps) {
+export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onEditItem, onBack, onPlaceOrder }: CheckoutSummaryProps) {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [shippingInfo, setShippingInfo] = useState({
