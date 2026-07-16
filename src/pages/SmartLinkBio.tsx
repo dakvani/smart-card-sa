@@ -277,7 +277,7 @@ export default function SmartLinkBio() {
               </div>
 
               {/* Editor */}
-              <div className="order-2 lg:order-1 space-y-3 sm:space-y-5 rounded-xl sm:rounded-2xl border border-border bg-card p-3 sm:p-6">
+              <div className={`order-2 lg:order-1 space-y-3 sm:space-y-5 rounded-xl sm:rounded-2xl border border-border bg-card p-3 sm:p-6 ${mobileTab === "editor" ? "" : "hidden"} md:block`}>
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold">
                     <Wand2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" /> Your bio content
