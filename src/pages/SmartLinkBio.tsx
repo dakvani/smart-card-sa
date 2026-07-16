@@ -232,7 +232,7 @@ export default function SmartLinkBio() {
                 size="sm"
                 className="h-8 text-xs sm:h-11 sm:text-sm sm:px-8"
                 onClick={() => {
-                  setMobileTab("pricing");
+                  setMobileTab("hero");
                   requestAnimationFrame(() => {
                     (pricingRef.current ?? document.getElementById("pricing"))?.scrollIntoView({ behavior: "smooth", block: "start" });
                   });
