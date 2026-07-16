@@ -221,41 +221,83 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Live Preview + Editor */}
-        <section id="preview" className="py-16 bg-secondary/20 border-y border-border">
+        <section id="preview" className="py-8 sm:py-16 bg-secondary/20 border-y border-border">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10 max-w-2xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold mb-3">
+            <div className="text-center mb-5 sm:mb-10 max-w-2xl mx-auto">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">
                 Try it live — <span className="gradient-text">edit as you go</span>
               </h2>
-              <p className="text-muted-foreground">
-                Change your name and bio, pick a template, and watch your public SmartLink update instantly.
+              <p className="text-xs sm:text-base text-muted-foreground">
+                Change your name, pick a template, and watch your SmartLink update instantly.
               </p>
             </div>
 
-            <div ref={previewRef} data-smartlink-editor className="grid lg:grid-cols-[1fr_420px] gap-10 items-start max-w-6xl mx-auto">
+            <div ref={previewRef} data-smartlink-editor className="grid lg:grid-cols-[1fr_420px] gap-4 sm:gap-10 items-start max-w-6xl mx-auto">
+              {/* Live preview with mode toggle — first on mobile so it's in-view */}
+              <div className="order-1 lg:order-2">
+                <div className="flex items-center justify-center gap-1 mb-2 sm:mb-4 p-0.5 sm:p-1 rounded-full bg-secondary/60 w-fit mx-auto">
+                  <button
+                    type="button"
+                    onClick={() => setPreviewMode("phone")}
+                    className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition ${
+                      previewMode === "phone" ? "bg-background shadow" : "text-muted-foreground"
+                    }`}
+                  >
+                    <Smartphone className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Phone
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPreviewMode("full")}
+                    className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium flex items-center gap-1 sm:gap-1.5 transition ${
+                      previewMode === "full" ? "bg-background shadow" : "text-muted-foreground"
+                    }`}
+                  >
+                    <Monitor className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Full
+                  </button>
+                </div>
+
+                <div className={previewMode === "phone" ? "mx-auto w-full max-w-[190px] sm:max-w-[300px]" : "mx-auto w-full max-w-[240px] sm:max-w-[420px]"}>
+                  <TemplatePhoneCard
+                    template={selected}
+                    size="full"
+                    overrides={{
+                      name: (draft.name || selected.name).slice(0, 40),
+                      bio: draft.bio.slice(0, 200),
+                      username: draft.handle,
+                    }}
+                  />
+                </div>
+                <p className="mt-1.5 sm:mt-3 text-center text-[10px] sm:text-xs text-muted-foreground">
+                  Live preview · saved automatically
+                </p>
+              </div>
+
               {/* Editor */}
-              <div className="order-2 lg:order-1 space-y-5 rounded-2xl border border-border bg-card p-6">
+              <div className="order-2 lg:order-1 space-y-3 sm:space-y-5 rounded-xl sm:rounded-2xl border border-border bg-card p-3 sm:p-6">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 text-sm font-semibold">
-                    <Wand2 className="w-4 h-4 text-primary" /> Your bio content
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold">
+                    <Wand2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" /> Your bio content
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5 sm:gap-1">
                     <Button
                       type="button" size="icon" variant="ghost"
                       onClick={undo} disabled={!canUndo}
                       aria-label="Undo" title="Undo (⌘Z)"
+                      className="h-7 w-7 sm:h-9 sm:w-9"
                     >
-                      <Undo2 className="w-4 h-4" />
+                      <Undo2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </Button>
                     <Button
                       type="button" size="icon" variant="ghost"
                       onClick={redo} disabled={!canRedo}
                       aria-label="Redo" title="Redo (⌘⇧Z)"
+                      className="h-7 w-7 sm:h-9 sm:w-9"
                     >
-                      <Redo2 className="w-4 h-4" />
+                      <Redo2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </Button>
                     <Button
                       type="button" size="sm" variant="ghost"
+                      className="h-7 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
                       onClick={() => {
                         try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
                         const first = templates[0];
@@ -267,52 +309,57 @@ export default function SmartLinkBio() {
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <Label htmlFor="sl-name">Display name</Label>
-                  <Input
-                    id="sl-name"
-                    value={draft.name}
-                    onChange={(e) => updateDraft({ name: e.target.value })}
-                    maxLength={40}
-                    aria-invalid={!!errors.name}
-                    aria-describedby={errors.name ? "sl-name-err" : undefined}
-                  />
-                  {errors.name && (
-                    <p id="sl-name-err" className="text-xs text-destructive flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.name}
-                    </p>
-                  )}
+                <div className="grid grid-cols-2 gap-2 sm:block sm:space-y-5">
+                  <div className="space-y-1">
+                    <Label htmlFor="sl-name" className="text-xs">Display name</Label>
+                    <Input
+                      id="sl-name"
+                      className="h-9 text-sm"
+                      value={draft.name}
+                      onChange={(e) => updateDraft({ name: e.target.value })}
+                      maxLength={40}
+                      aria-invalid={!!errors.name}
+                      aria-describedby={errors.name ? "sl-name-err" : undefined}
+                    />
+                    {errors.name && (
+                      <p id="sl-name-err" className="text-[10px] text-destructive flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> {errors.name}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label htmlFor="sl-handle" className="text-xs">Username</Label>
+                    <Input
+                      id="sl-handle"
+                      className="h-9 text-sm"
+                      value={draft.handle}
+                      onChange={(e) => updateDraft({ handle: e.target.value.replace(/\s+/g, "") })}
+                      maxLength={30}
+                      aria-invalid={!!errors.username}
+                      aria-describedby={errors.username ? "sl-handle-err" : undefined}
+                    />
+                    {errors.username && (
+                      <p id="sl-handle-err" className="text-[10px] text-destructive flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> {errors.username}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <Label htmlFor="sl-handle">Username</Label>
-                  <Input
-                    id="sl-handle"
-                    value={draft.handle}
-                    onChange={(e) => updateDraft({ handle: e.target.value.replace(/\s+/g, "") })}
-                    maxLength={30}
-                    aria-invalid={!!errors.username}
-                    aria-describedby={errors.username ? "sl-handle-err" : undefined}
-                  />
-                  {errors.username && (
-                    <p id="sl-handle-err" className="text-xs text-destructive flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.username}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="sl-bio">Bio</Label>
+                <div className="space-y-1">
+                  <Label htmlFor="sl-bio" className="text-xs">Bio</Label>
                   <Textarea
                     id="sl-bio"
                     value={draft.bio}
                     onChange={(e) => updateDraft({ bio: e.target.value })}
-                    rows={3}
+                    rows={2}
                     maxLength={200}
+                    className="text-sm resize-none"
                     aria-invalid={!!errors.bio}
                     aria-describedby={errors.bio ? "sl-bio-err" : undefined}
                   />
-                  <div className="flex justify-between text-xs">
+                  <div className="flex justify-between text-[10px] sm:text-xs">
                     <span className={errors.bio ? "text-destructive flex items-center gap-1" : "text-transparent"}>
                       {errors.bio && <><AlertCircle className="w-3 h-3" />{errors.bio}</>}
                     </span>
@@ -322,53 +369,14 @@ export default function SmartLinkBio() {
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-secondary/40 px-3 py-2 text-xs text-muted-foreground">
-                  Current template: <span className="font-semibold text-foreground">{selected.name}</span> · {selected.category}
+                <div className="rounded-lg bg-secondary/40 px-2.5 py-1.5 sm:px-3 sm:py-2 text-[10px] sm:text-xs text-muted-foreground truncate">
+                  Template: <span className="font-semibold text-foreground">{selected.name}</span> · {selected.category}
                 </div>
                 <Link to="/signup" className="block">
-                  <Button variant="gradient" className="w-full" disabled={!validation.success}>
+                  <Button variant="gradient" size="sm" className="w-full sm:h-11 sm:text-base" disabled={!validation.success}>
                     {validation.success ? "Publish this bio" : "Fix errors to publish"}
                   </Button>
                 </Link>
-              </div>
-
-              {/* Live preview with mode toggle */}
-              <div className="order-1 lg:order-2">
-                <div className="flex items-center justify-center gap-1 mb-4 p-1 rounded-full bg-secondary/60 w-fit mx-auto">
-                  <button
-                    type="button"
-                    onClick={() => setPreviewMode("phone")}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition ${
-                      previewMode === "phone" ? "bg-background shadow" : "text-muted-foreground"
-                    }`}
-                  >
-                    <Smartphone className="w-3.5 h-3.5" /> Phone
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPreviewMode("full")}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition ${
-                      previewMode === "full" ? "bg-background shadow" : "text-muted-foreground"
-                    }`}
-                  >
-                    <Monitor className="w-3.5 h-3.5" /> Full width
-                  </button>
-                </div>
-
-                <div className={previewMode === "phone" ? "mx-auto w-full max-w-[300px]" : "mx-auto w-full max-w-[420px]"}>
-                  <TemplatePhoneCard
-                    template={selected}
-                    size="full"
-                    overrides={{
-                      name: (draft.name || selected.name).slice(0, 40),
-                      bio: draft.bio.slice(0, 200),
-                      username: draft.handle,
-                    }}
-                  />
-                </div>
-                <p className="mt-3 text-center text-xs text-muted-foreground">
-                  Live preview · saved automatically
-                </p>
               </div>
             </div>
           </div>
