@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { Menu, X, LayoutDashboard, Home, Settings, LogOut, ChevronDown, Shield } from "lucide-react";
+import { Menu, X, LayoutDashboard, Home, Settings, LogOut, ChevronDown, Shield, CreditCard, Link2, Store, Mail, BookOpen, LogIn, UserPlus, ChevronRight } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 // ThemeToggle removed from public navigation — site appearance is admin-controlled.
 import { supabase } from "@/integrations/supabase/client";
