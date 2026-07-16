@@ -443,18 +443,18 @@ export default function SmartLinkBio() {
                         )}
                       </div>
 
-                      <div className="mt-4 flex items-start justify-between gap-3">
+                      <div className="mt-2 sm:mt-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1.5 sm:gap-3">
                         <div className="min-w-0">
-                          <p className="font-semibold text-sm truncate">{template.name}</p>
-                          <p className="text-xs text-muted-foreground truncate">@{template.username} · {template.category}</p>
+                          <p className="font-semibold text-xs sm:text-sm truncate">{template.name}</p>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground truncate">@{template.username}</p>
                         </div>
                         <Button
                           size="sm"
                           variant={isSelected ? "secondary" : "gradient"}
                           onClick={() => applyTemplate(template)}
-                          className="shrink-0"
+                          className="shrink-0 h-7 text-[11px] px-2.5 sm:h-9 sm:text-sm sm:px-3 w-full sm:w-auto"
                         >
-                          {isSelected ? "Applied" : "Use this template"}
+                          {isSelected ? "Applied" : "Use template"}
                         </Button>
                       </div>
                     </motion.div>
