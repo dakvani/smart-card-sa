@@ -255,16 +255,17 @@ export default function SmartLinkBio() {
 
 
         {/* Live Preview + Editor */}
-        <section id="preview" className={`py-8 sm:py-16 bg-secondary/20 border-y border-border ${mobileTab === "preview" || mobileTab === "editor" ? "" : "hidden"} md:block`}>
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-5 sm:mb-10 max-w-2xl mx-auto">
-              <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">
+        <section id="preview" className={`py-4 sm:py-16 bg-secondary/20 border-y border-border ${mobileTab === "preview" || mobileTab === "editor" ? "" : "hidden"} md:block`}>
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="text-center mb-3 sm:mb-10 max-w-2xl mx-auto">
+              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-3 leading-tight">
                 Try it live — <span className="gradient-text">edit as you go</span>
               </h2>
-              <p className="text-xs sm:text-base text-muted-foreground">
+              <p className="hidden sm:block text-xs sm:text-base text-muted-foreground">
                 Change your name, pick a template, and watch your SmartLink update instantly.
               </p>
             </div>
+
 
             <div ref={previewRef} data-smartlink-editor className="grid lg:grid-cols-[1fr_420px] gap-4 sm:gap-10 items-start max-w-6xl mx-auto">
               {/* Live preview with mode toggle — first on mobile so it's in-view */}
