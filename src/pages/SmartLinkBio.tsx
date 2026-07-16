@@ -225,7 +225,7 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Live Preview + Editor */}
-        <section id="preview" className="py-8 sm:py-16 bg-secondary/20 border-y border-border">
+        <section id="preview" className={`py-8 sm:py-16 bg-secondary/20 border-y border-border ${mobileTab === "preview" || mobileTab === "editor" ? "" : "hidden"} md:block`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-5 sm:mb-10 max-w-2xl mx-auto">
               <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">
