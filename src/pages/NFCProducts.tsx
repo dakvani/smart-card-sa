@@ -173,6 +173,26 @@ export default function NFCProducts() {
     setCart(cart.filter((_, i) => i !== index));
   };
 
+  // Edit a cart line item: jump back to the customizer preloaded with this
+  // item's design. Removing the line item keeps quantities correct — the
+  // shopper will re-add it once they save their edits.
+  const handleEditItem = (index: number) => {
+    const item = cart[index];
+    if (!item) return;
+    setSelectedProduct(item.product);
+    setCustomization(
+      typeof structuredClone === "function"
+        ? structuredClone(item.customization)
+        : JSON.parse(JSON.stringify(item.customization)),
+    );
+    setCart(cart.filter((_, i) => i !== index));
+    setStep('customize');
+    toast({
+      title: "Editing item",
+      description: "Make your changes and add it back to the cart.",
+    });
+  };
+
   const handleBack = () => {
     if (step === 'customize') {
       setStep('select');
