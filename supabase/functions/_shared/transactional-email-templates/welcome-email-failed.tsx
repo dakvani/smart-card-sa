@@ -122,4 +122,4 @@ const rowValue = {
   margin: '2px 0 0',
   wordBreak: 'break-all' as const,
 }
-const link = { color: '#6366f1', textDecoration: 'underline' }
+const link = { color: '#4f46e5', textDecoration: 'underline' }

@@ -57,8 +57,8 @@ const container = { padding: '20px 25px' }
 const h1 = { fontSize: '22px', fontWeight: 'bold' as const, color: '#000000', margin: '0 0 20px' }
 const text = { fontSize: '14px', color: '#55575d', lineHeight: '1.5', margin: '0 0 25px' }
 const button = {
-  backgroundColor: '#6366f1',
-  backgroundImage: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+  backgroundColor: '#4f46e5',
+  backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #1e1e5a 100%)',
   color: '#ffffff',
   fontSize: '14px',
   fontWeight: 'bold' as const,
