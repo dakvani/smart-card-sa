@@ -38,7 +38,7 @@ export function ProductBenefits() {
           </div>
           <h2 className="font-display text-3xl font-bold leading-[1.05] text-white sm:text-5xl lg:text-6xl">
             Why thousands switched to{" "}
-            <span className="bg-gradient-to-r from-[#818cf8] via-[#a78bfa] to-[#c4b5fd] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#4f46e5] via-[#6d5ef0] to-[#7c3aed] bg-clip-text text-transparent">
               SmartCard
             </span>
           </h2>
