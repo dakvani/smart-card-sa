@@ -26,26 +26,26 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="relative overflow-hidden bg-[#0a0a1a] py-16 sm:py-24 lg:py-28 text-white">
+    <section className="relative overflow-hidden bg-[#0a0a1a] py-10 sm:py-24 lg:py-28 text-white">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-[#4f46e5]/10 blur-[140px]" />
       </div>
 
       <div className="container relative z-10 mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mb-10 max-w-2xl text-center sm:mb-14"
+          viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+          transition={{ duration: 0.4 }}
+          className="mx-auto mb-6 max-w-2xl text-center sm:mb-14"
         >
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#4f46e5]/30 bg-[#4f46e5]/10 px-3 py-1 font-body-alt text-[11px] font-semibold uppercase tracking-[0.18em] text-[#a5b4fc]">
-            <Star className="h-3.5 w-3.5 fill-[#a5b4fc]" />
+          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[#4f46e5]/30 bg-[#4f46e5]/10 px-2.5 py-1 font-body-alt text-[10px] font-semibold uppercase tracking-[0.16em] text-[#a5b4fc] sm:mb-4 sm:gap-2 sm:px-3 sm:text-[11px] sm:tracking-[0.18em]">
+            <Star className="h-3 w-3 fill-[#a5b4fc] sm:h-3.5 sm:w-3.5" />
             4.9 average · 12k+ reviews
           </div>
-          <h2 className="font-display text-3xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">
+          <h2 className="font-display text-2xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">
             Loved by{" "}
-            <span className="bg-gradient-to-r from-[#818cf8] via-[#a78bfa] to-[#c4b5fd] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#4f46e5] via-[#6d5ef0] to-[#7c3aed] bg-clip-text text-transparent">
               creators everywhere
             </span>
           </h2>
@@ -53,13 +53,13 @@ export function Testimonials() {
 
         {/* Mobile: horizontal snap scroll (engaging swipe) */}
         <div className="sm:hidden -mx-4 px-4">
-          <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-none">
+          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 scrollbar-none">
             {testimonials.map((t, i) => (
-              <TestimonialCard key={t.name} t={t} i={i} className="w-[85%] shrink-0 snap-center" />
+              <TestimonialCard key={t.name} t={t} i={i} className="w-[82%] shrink-0 snap-center" />
             ))}
           </div>
-          <div className="mt-3 text-center font-body-alt text-[11px] uppercase tracking-widest text-white/40">
-            ← Swipe to read more →
+          <div className="mt-2 text-center font-body-alt text-[10px] uppercase tracking-widest text-white/40">
+            ← Swipe →
           </div>
         </div>
 
