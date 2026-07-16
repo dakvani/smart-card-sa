@@ -388,7 +388,7 @@ export default function SmartLinkBio() {
 
 
         {/* Templates */}
-        <section id="templates" className="py-8 sm:py-16 md:py-20">
+        <section id="templates" className={`py-8 sm:py-16 md:py-20 ${mobileTab === "templates" ? "" : "hidden"} md:block`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-5 sm:mb-12 max-w-3xl mx-auto">
               <h2 className="text-xl sm:text-4xl md:text-5xl font-bold mb-1.5 sm:mb-4 tracking-tight">
