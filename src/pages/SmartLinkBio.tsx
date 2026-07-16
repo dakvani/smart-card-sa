@@ -72,9 +72,12 @@ const loadInitial = (): EditorState => {
   }
 };
 
+type MobileTab = "hero" | "preview" | "editor" | "templates" | "features" | "pricing";
+
 export default function SmartLinkBio() {
   const [activeCategory, setActiveCategory] = useState<string>("All templates");
   const [previewMode, setPreviewMode] = useState<"phone" | "full">("phone");
+  const [mobileTab, setMobileTab] = useState<MobileTab>("hero");
 
   // Persisted, history-tracked editor state.
   const initial = useMemo(loadInitial, []);
