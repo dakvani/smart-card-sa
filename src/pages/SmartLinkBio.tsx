@@ -413,11 +413,22 @@ export default function SmartLinkBio() {
                 <div className="rounded-lg bg-secondary/40 px-2.5 py-1.5 sm:px-3 sm:py-2 text-[10px] sm:text-xs text-muted-foreground truncate">
                   Template: <span className="font-semibold text-foreground">{selected.name}</span> · {selected.category}
                 </div>
-                <Link to="/signup" className="block">
-                  <Button variant="gradient" size="sm" className="w-full sm:h-11 sm:text-base" disabled={!validation.success}>
-                    {validation.success ? "Publish this bio" : "Fix errors to publish"}
+                <div className="grid grid-cols-1 md:block gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="md:hidden h-9 text-xs"
+                    onClick={() => { setMobileTab("preview"); window.scrollTo({ top: 0 }); }}
+                  >
+                    <Eye className="w-3.5 h-3.5 mr-1" /> See live preview
                   </Button>
-                </Link>
+                  <Link to="/signup" className="block">
+                    <Button variant="gradient" size="sm" className="w-full sm:h-11 sm:text-base" disabled={!validation.success}>
+                      {validation.success ? "Publish this bio" : "Fix errors to publish"}
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
