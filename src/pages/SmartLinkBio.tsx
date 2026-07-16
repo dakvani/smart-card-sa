@@ -72,7 +72,7 @@ const loadInitial = (): EditorState => {
   }
 };
 
-type MobileTab = "hero" | "preview" | "editor" | "templates" | "features" | "pricing";
+type MobileTab = "hero" | "studio" | "templates" | "features" | "pricing";
 
 export default function SmartLinkBio() {
   const [activeCategory, setActiveCategory] = useState<string>("All templates");
@@ -177,7 +177,7 @@ export default function SmartLinkBio() {
     trackEvent("smartlink_template_selected", { username: t.username, category: t.category });
     // On mobile, jump to the Preview tab so the user sees the change immediately.
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
-      setMobileTab("preview");
+      setMobileTab("studio");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       requestAnimationFrame(() => {
@@ -245,7 +245,7 @@ export default function SmartLinkBio() {
                 variant="ghost"
                 size="sm"
                 className="h-8 text-xs sm:hidden"
-                onClick={() => { setMobileTab("preview"); window.scrollTo({ top: 0 }); }}
+                onClick={() => { setMobileTab("studio"); window.scrollTo({ top: 0 }); }}
               >
                 Try live preview →
               </Button>
@@ -254,11 +254,11 @@ export default function SmartLinkBio() {
         </section>
 
 
-        {/* Live Preview + Editor */}
-        <section id="preview" className={`py-4 sm:py-16 bg-secondary/20 border-y border-border ${mobileTab === "preview" || mobileTab === "editor" ? "" : "hidden"} md:block`}>
+        {/* Studio: Editor + Live Preview merged */}
+        <section id="preview" className={`py-3 sm:py-16 bg-secondary/20 border-y border-border ${mobileTab === "studio" ? "" : "hidden"} md:block`}>
           <div className="container mx-auto px-3 sm:px-4">
-            <div className="text-center mb-3 sm:mb-10 max-w-2xl mx-auto">
-              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-3 leading-tight">
+            <div className="text-center mb-2 sm:mb-10 max-w-2xl mx-auto">
+              <h2 className="text-base sm:text-3xl md:text-4xl font-bold mb-0.5 sm:mb-3 leading-tight">
                 Try it live — <span className="gradient-text">edit as you go</span>
               </h2>
               <p className="hidden sm:block text-xs sm:text-base text-muted-foreground">
@@ -266,11 +266,94 @@ export default function SmartLinkBio() {
               </p>
             </div>
 
+            <div ref={previewRef} data-smartlink-editor className="grid lg:grid-cols-[1fr_420px] gap-3 sm:gap-10 items-start max-w-6xl mx-auto">
+              {/* Editor — first on mobile (top), second on desktop (left) */}
+              <div className="order-1 lg:order-1 space-y-2.5 sm:space-y-5 rounded-xl sm:rounded-2xl border border-border bg-card p-2.5 sm:p-6">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 text-[11px] sm:text-sm font-semibold">
+                    <Wand2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" /> Edit your bio
+                  </div>
+                  <div className="flex items-center gap-0.5 sm:gap-1">
+                    <Button type="button" size="icon" variant="ghost" onClick={undo} disabled={!canUndo} aria-label="Undo" title="Undo (⌘Z)" className="h-7 w-7 sm:h-9 sm:w-9">
+                      <Undo2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    </Button>
+                    <Button type="button" size="icon" variant="ghost" onClick={redo} disabled={!canRedo} aria-label="Redo" title="Redo (⌘⇧Z)" className="h-7 w-7 sm:h-9 sm:w-9">
+                      <Redo2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    </Button>
+                    <Button
+                      type="button" size="sm" variant="ghost"
+                      className="h-7 px-2 text-[11px] sm:h-9 sm:px-3 sm:text-sm"
+                      onClick={() => {
+                        try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+                        const first = templates[0];
+                        reset({ username: first.username, name: first.name, bio: first.bio, handle: first.username });
+                      }}
+                    >
+                      Reset
+                    </Button>
+                  </div>
+                </div>
 
-            <div ref={previewRef} data-smartlink-editor className="grid lg:grid-cols-[1fr_420px] gap-4 sm:gap-10 items-start max-w-6xl mx-auto">
-              {/* Live preview with mode toggle — first on mobile so it's in-view */}
-              <div className={`order-1 lg:order-2 ${mobileTab === "preview" ? "" : "hidden"} md:block`}>
-                <div className="flex items-center justify-center gap-1 mb-2 sm:mb-4 p-0.5 sm:p-1 rounded-full bg-secondary/60 w-fit mx-auto">
+                <div className="grid grid-cols-2 gap-2 sm:block sm:space-y-5">
+                  <div className="space-y-1">
+                    <Label htmlFor="sl-name" className="text-[11px] sm:text-xs">Display name</Label>
+                    <Input
+                      id="sl-name"
+                      className="h-8 sm:h-9 text-xs sm:text-sm"
+                      value={draft.name}
+                      onChange={(e) => updateDraft({ name: e.target.value })}
+                      maxLength={40}
+                      aria-invalid={!!errors.name}
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label htmlFor="sl-handle" className="text-[11px] sm:text-xs">Username</Label>
+                    <Input
+                      id="sl-handle"
+                      className="h-8 sm:h-9 text-xs sm:text-sm"
+                      value={draft.handle}
+                      onChange={(e) => updateDraft({ handle: e.target.value.replace(/\s+/g, "") })}
+                      maxLength={30}
+                      aria-invalid={!!errors.username}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <Label htmlFor="sl-bio" className="text-[11px] sm:text-xs">Bio</Label>
+                  <Textarea
+                    id="sl-bio"
+                    value={draft.bio}
+                    onChange={(e) => updateDraft({ bio: e.target.value })}
+                    rows={2}
+                    maxLength={200}
+                    className="text-xs sm:text-sm resize-none"
+                    aria-invalid={!!errors.bio}
+                  />
+                  <div className="flex justify-between text-[10px] sm:text-xs">
+                    <span className={errors.bio ? "text-destructive flex items-center gap-1" : "text-transparent"}>
+                      {errors.bio && <><AlertCircle className="w-3 h-3" />{errors.bio}</>}
+                    </span>
+                    <span className={draft.bio.length > 160 ? "text-destructive" : "text-muted-foreground"}>
+                      {draft.bio.length}/160
+                    </span>
+                  </div>
+                </div>
+
+                <div className="rounded-lg bg-secondary/40 px-2 py-1 sm:px-3 sm:py-2 text-[10px] sm:text-xs text-muted-foreground truncate">
+                  Template: <span className="font-semibold text-foreground">{selected.name}</span> · {selected.category}
+                </div>
+                <Link to="/signup" className="block">
+                  <Button variant="gradient" size="sm" className="w-full h-9 text-xs sm:h-11 sm:text-base" disabled={!validation.success}>
+                    {validation.success ? "Publish this bio" : "Fix errors to publish"}
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Live preview — second on mobile (below editor), first on desktop (right) */}
+              <div className="order-2 lg:order-2">
+                <div className="hidden sm:flex items-center justify-center gap-1 mb-2 sm:mb-4 p-0.5 sm:p-1 rounded-full bg-secondary/60 w-fit mx-auto">
                   <button
                     type="button"
                     onClick={() => setPreviewMode("phone")}
@@ -291,7 +374,10 @@ export default function SmartLinkBio() {
                   </button>
                 </div>
 
-                <div className={previewMode === "phone" ? "mx-auto w-full max-w-[170px] sm:max-w-[300px]" : "mx-auto w-full max-w-[210px] sm:max-w-[420px]"}>
+                <p className="sm:hidden text-center text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+                  <Eye className="w-3 h-3 inline -mt-0.5 mr-1" />Live preview
+                </p>
+                <div className={previewMode === "phone" ? "mx-auto w-full max-w-[150px] sm:max-w-[300px]" : "mx-auto w-full max-w-[180px] sm:max-w-[420px]"}>
                   <TemplatePhoneCard
                     template={selected}
                     size="full"
@@ -302,133 +388,9 @@ export default function SmartLinkBio() {
                     }}
                   />
                 </div>
-                <p className="mt-1.5 sm:mt-3 text-center text-[10px] sm:text-xs text-muted-foreground">
-                  Live preview · saved automatically
+                <p className="mt-1 sm:mt-3 text-center text-[10px] sm:text-xs text-muted-foreground">
+                  Saved automatically
                 </p>
-                <div className="md:hidden mt-2 flex justify-center">
-                  <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => { setMobileTab("editor"); window.scrollTo({ top: 0 }); }}>
-                    <Pencil className="w-3 h-3 mr-1" /> Edit content
-                  </Button>
-                </div>
-              </div>
-
-
-              {/* Editor */}
-              <div className={`order-2 lg:order-1 space-y-3 sm:space-y-5 rounded-xl sm:rounded-2xl border border-border bg-card p-3 sm:p-6 ${mobileTab === "editor" ? "" : "hidden"} md:block`}>
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold">
-                    <Wand2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" /> Your bio content
-                  </div>
-                  <div className="flex items-center gap-0.5 sm:gap-1">
-                    <Button
-                      type="button" size="icon" variant="ghost"
-                      onClick={undo} disabled={!canUndo}
-                      aria-label="Undo" title="Undo (⌘Z)"
-                      className="h-7 w-7 sm:h-9 sm:w-9"
-                    >
-                      <Undo2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    </Button>
-                    <Button
-                      type="button" size="icon" variant="ghost"
-                      onClick={redo} disabled={!canRedo}
-                      aria-label="Redo" title="Redo (⌘⇧Z)"
-                      className="h-7 w-7 sm:h-9 sm:w-9"
-                    >
-                      <Redo2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    </Button>
-                    <Button
-                      type="button" size="sm" variant="ghost"
-                      className="h-7 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
-                      onClick={() => {
-                        try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
-                        const first = templates[0];
-                        reset({ username: first.username, name: first.name, bio: first.bio, handle: first.username });
-                      }}
-                    >
-                      Reset
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 sm:block sm:space-y-5">
-                  <div className="space-y-1">
-                    <Label htmlFor="sl-name" className="text-xs">Display name</Label>
-                    <Input
-                      id="sl-name"
-                      className="h-9 text-sm"
-                      value={draft.name}
-                      onChange={(e) => updateDraft({ name: e.target.value })}
-                      maxLength={40}
-                      aria-invalid={!!errors.name}
-                      aria-describedby={errors.name ? "sl-name-err" : undefined}
-                    />
-                    {errors.name && (
-                      <p id="sl-name-err" className="text-[10px] text-destructive flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" /> {errors.name}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-1">
-                    <Label htmlFor="sl-handle" className="text-xs">Username</Label>
-                    <Input
-                      id="sl-handle"
-                      className="h-9 text-sm"
-                      value={draft.handle}
-                      onChange={(e) => updateDraft({ handle: e.target.value.replace(/\s+/g, "") })}
-                      maxLength={30}
-                      aria-invalid={!!errors.username}
-                      aria-describedby={errors.username ? "sl-handle-err" : undefined}
-                    />
-                    {errors.username && (
-                      <p id="sl-handle-err" className="text-[10px] text-destructive flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" /> {errors.username}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <Label htmlFor="sl-bio" className="text-xs">Bio</Label>
-                  <Textarea
-                    id="sl-bio"
-                    value={draft.bio}
-                    onChange={(e) => updateDraft({ bio: e.target.value })}
-                    rows={2}
-                    maxLength={200}
-                    className="text-sm resize-none"
-                    aria-invalid={!!errors.bio}
-                    aria-describedby={errors.bio ? "sl-bio-err" : undefined}
-                  />
-                  <div className="flex justify-between text-[10px] sm:text-xs">
-                    <span className={errors.bio ? "text-destructive flex items-center gap-1" : "text-transparent"}>
-                      {errors.bio && <><AlertCircle className="w-3 h-3" />{errors.bio}</>}
-                    </span>
-                    <span className={draft.bio.length > 160 ? "text-destructive" : "text-muted-foreground"}>
-                      {draft.bio.length}/160
-                    </span>
-                  </div>
-                </div>
-
-                <div className="rounded-lg bg-secondary/40 px-2.5 py-1.5 sm:px-3 sm:py-2 text-[10px] sm:text-xs text-muted-foreground truncate">
-                  Template: <span className="font-semibold text-foreground">{selected.name}</span> · {selected.category}
-                </div>
-                <div className="grid grid-cols-1 md:block gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="md:hidden h-9 text-xs"
-                    onClick={() => { setMobileTab("preview"); window.scrollTo({ top: 0 }); }}
-                  >
-                    <Eye className="w-3.5 h-3.5 mr-1" /> See live preview
-                  </Button>
-                  <Link to="/signup" className="block">
-                    <Button variant="gradient" size="sm" className="w-full sm:h-11 sm:text-base" disabled={!validation.success}>
-                      {validation.success ? "Publish this bio" : "Fix errors to publish"}
-                    </Button>
-                  </Link>
-                </div>
               </div>
             </div>
           </div>
@@ -448,7 +410,7 @@ export default function SmartLinkBio() {
             </div>
 
 
-            <div className="grid lg:grid-cols-[220px_1fr] gap-4 sm:gap-10">
+            <div className="flex flex-col lg:grid lg:grid-cols-[220px_minmax(0,1fr)] gap-4 sm:gap-10">
               <aside className="lg:sticky lg:top-28 self-start -mx-4 px-4 lg:mx-0 lg:px-0">
                 <p className="hidden lg:block text-xs font-semibold tracking-widest text-muted-foreground mb-4">
                   BROWSE BY CATEGORY
@@ -470,7 +432,7 @@ export default function SmartLinkBio() {
                 </div>
               </aside>
 
-              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-8">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-8 min-w-0">
                 {filteredTemplates.map((template, index) => {
                   const isSelected = template.username === editor.username;
                   return (
@@ -482,7 +444,7 @@ export default function SmartLinkBio() {
                       transition={{ delay: index * 0.04 }}
                       className="group"
                     >
-                      <div className="relative">
+                      <div className="relative rounded-[28px] sm:rounded-[36px] overflow-hidden">
                         <TemplatePhoneCard
                           template={template}
                           className={`transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-glow ${
@@ -490,22 +452,36 @@ export default function SmartLinkBio() {
                           }`}
                         />
                         {isSelected && (
-                          <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-primary text-primary-foreground text-[10px] font-semibold px-2 py-1 shadow">
-                            <Check className="w-3 h-3" /> Selected
+                          <span className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-full bg-primary text-primary-foreground text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1 shadow">
+                            <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> On
                           </span>
                         )}
+                        {/* Mobile-only info + CTA overlay for compact, always-visible card */}
+                        <div className="sm:hidden absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/85 via-black/60 to-transparent">
+                          <p className="text-white text-[11px] font-semibold leading-tight truncate">{template.name}</p>
+                          <p className="text-white/70 text-[9px] truncate mb-1.5">@{template.username}</p>
+                          <Button
+                            size="sm"
+                            variant={isSelected ? "secondary" : "gradient"}
+                            onClick={() => applyTemplate(template)}
+                            className="w-full h-7 text-[10px] px-2"
+                          >
+                            {isSelected ? "Applied" : "Use this"}
+                          </Button>
+                        </div>
                       </div>
 
-                      <div className="mt-2 sm:mt-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1.5 sm:gap-3">
+                      {/* Desktop-only label row */}
+                      <div className="hidden sm:flex mt-4 items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="font-semibold text-xs sm:text-sm truncate">{template.name}</p>
-                          <p className="text-[10px] sm:text-xs text-muted-foreground truncate">@{template.username}</p>
+                          <p className="font-semibold text-sm truncate">{template.name}</p>
+                          <p className="text-xs text-muted-foreground truncate">@{template.username}</p>
                         </div>
                         <Button
                           size="sm"
                           variant={isSelected ? "secondary" : "gradient"}
                           onClick={() => applyTemplate(template)}
-                          className="shrink-0 h-7 text-[11px] px-2.5 sm:h-9 sm:text-sm sm:px-3 w-full sm:w-auto"
+                          className="shrink-0 h-9 text-sm px-3"
                         >
                           {isSelected ? "Applied" : "Use template"}
                         </Button>
@@ -554,46 +530,70 @@ export default function SmartLinkBio() {
               <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-3 leading-tight">Simple, transparent <span className="gradient-text">pricing</span></h2>
               <p className="hidden sm:block text-xs sm:text-base text-muted-foreground">Start free. Scale when you are ready.</p>
             </div>
-            <div className="flex md:grid md:grid-cols-3 gap-2.5 sm:gap-8 max-w-6xl mx-auto overflow-x-auto snap-x snap-mandatory md:overflow-visible -mx-3 px-3 md:mx-0 md:px-0 scrollbar-hide pb-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-8 max-w-6xl mx-auto">
               {plans.map((plan, index) => (
                 <motion.div
                   key={plan.name}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`snap-start shrink-0 w-[80%] md:w-auto relative rounded-xl sm:rounded-2xl p-3 sm:p-8 ${plan.popular ? "gradient-primary text-primary-foreground shadow-glow" : "bg-card border border-border"}`}
+                  transition={{ delay: index * 0.06 }}
+                  className={`relative rounded-xl sm:rounded-2xl p-2.5 sm:p-8 ${plan.popular ? "gradient-primary text-primary-foreground shadow-glow" : "bg-card border border-border"}`}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 sm:px-4 sm:py-1 bg-background text-foreground text-[10px] sm:text-sm font-semibold rounded-full">
+                    <div className="absolute -top-2 right-3 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 px-2 py-0.5 sm:px-4 sm:py-1 bg-background text-foreground text-[9px] sm:text-sm font-semibold rounded-full">
                       Popular
                     </div>
                   )}
-                  <div className="flex items-baseline justify-between sm:block">
-                    <h3 className="text-sm sm:text-xl font-bold mb-0 sm:mb-2">{plan.name}</h3>
-                    <div className="sm:mb-6">
-                      <span className="text-xl sm:text-5xl font-bold">{plan.price}</span>
-                      {plan.period && <span className={`text-[10px] sm:text-base ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.period}</span>}
+
+                  {/* Mobile: compact horizontal row */}
+                  <div className="sm:hidden flex items-center gap-2.5">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline gap-1.5">
+                        <h3 className="text-sm font-bold">{plan.name}</h3>
+                        <span className="text-base font-bold">{plan.price}</span>
+                        {plan.period && <span className={`text-[10px] ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.period}</span>}
+                      </div>
+                      <p className={`text-[10px] leading-tight line-clamp-1 ${plan.popular ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+                        {plan.features.slice(1, 4).join(" · ") || plan.description}
+                      </p>
                     </div>
+                    <Link to="/signup" className="shrink-0">
+                      <Button
+                        size="sm"
+                        variant={plan.popular ? "heroOutline" : "gradient"}
+                        className={`h-8 text-[11px] px-3 ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
+                      >
+                        {plan.cta}
+                      </Button>
+                    </Link>
                   </div>
-                  <p className={`text-[11px] sm:text-sm mb-2 sm:mb-6 leading-snug ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.description}</p>
-                  <Link to="/signup">
-                    <Button
-                      size="sm"
-                      variant={plan.popular ? "heroOutline" : "gradient"}
-                      className={`w-full h-8 text-xs mb-2 sm:mb-8 sm:h-11 sm:text-base ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
-                    >
-                      {plan.cta}
-                    </Button>
-                  </Link>
-                  <ul className="space-y-1 sm:space-y-3">
-                    {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-1.5 sm:gap-3">
-                        <Check className={`w-3 h-3 sm:w-5 sm:h-5 mt-0.5 shrink-0 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
-                        <span className={`text-[11px] leading-snug sm:text-sm ${plan.popular ? "text-primary-foreground/90" : ""}`}>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+
+                  {/* Desktop: full stacked card */}
+                  <div className="hidden sm:block">
+                    <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                    <div className="mb-6">
+                      <span className="text-5xl font-bold">{plan.price}</span>
+                      {plan.period && <span className={`text-base ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.period}</span>}
+                    </div>
+                    <p className={`text-sm mb-6 leading-snug ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.description}</p>
+                    <Link to="/signup">
+                      <Button
+                        variant={plan.popular ? "heroOutline" : "gradient"}
+                        className={`w-full mb-8 h-11 text-base ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
+                      >
+                        {plan.cta}
+                      </Button>
+                    </Link>
+                    <ul className="space-y-3">
+                      {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-start gap-3">
+                          <Check className={`w-5 h-5 mt-0.5 shrink-0 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
+                          <span className={`text-sm ${plan.popular ? "text-primary-foreground/90" : ""}`}>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -611,11 +611,10 @@ export default function SmartLinkBio() {
         aria-label="SmartLink sections"
         className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]"
       >
-        <ul className="grid grid-cols-6">
+        <ul className="grid grid-cols-5">
           {([
             { id: "hero", label: "Home", Icon: Home },
-            { id: "preview", label: "Preview", Icon: Eye },
-            { id: "editor", label: "Edit", Icon: Pencil },
+            { id: "studio", label: "Studio", Icon: Pencil },
             { id: "templates", label: "Themes", Icon: Grid3x3 },
             { id: "features", label: "Features", Icon: Zap },
             { id: "pricing", label: "Pricing", Icon: DollarSign },
