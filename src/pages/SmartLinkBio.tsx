@@ -190,9 +190,9 @@ export default function SmartLinkBio() {
       />
       <Navbar />
 
-      <main className="flex-1 pt-16 md:pt-24">
+      <main className="flex-1 pt-16 md:pt-24 mobile-safe-bottom md:pb-0">
         {/* Hero */}
-        <section className="relative py-8 sm:py-16 md:py-20 overflow-hidden">
+        <section className={`relative py-8 sm:py-16 md:py-20 overflow-hidden ${mobileTab === "hero" ? "" : "hidden"} md:block`}>
           <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
           <div className="container mx-auto px-4 text-center">
             <motion.div
