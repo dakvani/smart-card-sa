@@ -128,6 +128,7 @@ export default function SmartLinkBio() {
 
   useEffect(() => {
     if (location.hash !== "#pricing") return;
+    setMobileTab("pricing");
     let tries = 0;
     const tick = () => {
       const el = pricingRef.current ?? document.getElementById("pricing");
