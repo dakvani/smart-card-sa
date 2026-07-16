@@ -498,7 +498,7 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" ref={pricingRef} className="py-8 sm:py-16 md:py-20 scroll-mt-24">
+        <section id="pricing" ref={pricingRef} className={`py-8 sm:py-16 md:py-20 scroll-mt-24 ${mobileTab === "pricing" ? "" : "hidden"} md:block`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-5 sm:mb-12">
               <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">Simple, transparent <span className="gradient-text">pricing</span></h2>
