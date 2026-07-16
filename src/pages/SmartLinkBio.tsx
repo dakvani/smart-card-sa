@@ -470,7 +470,7 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Features */}
-        <section id="features" className="py-8 sm:py-16 md:py-20 bg-secondary/30">
+        <section id="features" className={`py-8 sm:py-16 md:py-20 bg-secondary/30 ${mobileTab === "features" ? "" : "hidden"} md:block`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-5 sm:mb-12">
               <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">Everything you need to <span className="gradient-text">grow</span></h2>
