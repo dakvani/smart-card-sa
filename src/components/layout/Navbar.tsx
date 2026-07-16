@@ -350,114 +350,131 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu — compact, minimalist dropdown list */}
       {mobileOpen && (
         <motion.div
           ref={mobileMenuRef}
           id="mobile-menu"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          className="lg:hidden mt-2 glass-heavy rounded-2xl ring-1 ring-border/30 shadow-2xl overflow-hidden"
+          initial={{ opacity: 0, y: -8, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -8, scale: 0.98 }}
+          transition={{ duration: 0.18, ease: "easeOut" }}
+          className="lg:hidden absolute right-3 sm:right-6 mt-2 w-64 origin-top-right rounded-xl border border-border/60 bg-popover/95 backdrop-blur-xl shadow-2xl overflow-hidden"
           role="menu"
           aria-label="Mobile navigation menu"
         >
-          <div className="container mx-auto px-4 py-4 space-y-2">
-            {navLinks.map((link, index) => (
-              <motion.div
-                key={link.name}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-                role="none"
-              >
+          {/* Signed-in user header */}
+          {isAuthenticated && (
+            <div className="flex items-center gap-2.5 px-3 py-2.5 border-b border-border/60">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={avatarUrl || undefined} alt="Your profile" />
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                  {getUserInitials()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold truncate leading-tight">{userEmail}</p>
+                <p className="text-[10px] text-muted-foreground leading-tight">Signed in</p>
+              </div>
+            </div>
+          )}
+
+          {/* Primary nav */}
+          <ul className="py-1" role="none">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              const active = location.pathname === link.href;
+              return (
+                <li key={link.name} role="none">
+                  <Link
+                    to={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    role="menuitem"
+                    aria-current={active ? "page" : undefined}
+                    className={`flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium transition-colors ${
+                      active
+                        ? "bg-accent text-accent-foreground"
+                        : "text-foreground/85 hover:bg-accent/60 hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 shrink-0 text-muted-foreground" />
+                    <span className="flex-1 truncate">{link.name}</span>
+                    {active && <ChevronRight className="w-3.5 h-3.5 text-primary" />}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          {/* Account section */}
+          <div className="border-t border-border/60 py-1" role="group" aria-label="Account">
+            {isAuthenticated ? (
+              <>
+                {location.pathname !== "/" && (
+                  <Link
+                    to="/"
+                    onClick={() => setMobileOpen(false)}
+                    role="menuitem"
+                    className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
+                  >
+                    <Home className="w-4 h-4 shrink-0 text-muted-foreground" /> Home
+                  </Link>
+                )}
                 <Link
-                  to={link.href}
+                  to="/dashboard"
                   onClick={() => setMobileOpen(false)}
                   role="menuitem"
-                  aria-current={location.pathname === link.href ? "page" : undefined}
-                  className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    location.pathname === link.href
-                      ? "bg-accent/80 text-accent-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/40"
-                  }`}
+                  className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
                 >
-                  {link.name}
+                  <LayoutDashboard className="w-4 h-4 shrink-0 text-muted-foreground" /> Dashboard
                 </Link>
-              </motion.div>
-            ))}
-            <div className="pt-4 flex flex-col gap-2" role="group" aria-label="Authentication options">
-              {isAuthenticated ? (
-                <>
-                  {/* User info */}
-                  <div className="flex items-center gap-3 px-4 py-3 bg-accent/30 rounded-lg mb-2">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src={avatarUrl || undefined} alt="Your account profile picture" />
-                      <AvatarFallback className="bg-primary text-primary-foreground">
-                        {getUserInitials()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{userEmail}</p>
-                      <p className="text-xs text-muted-foreground">Signed in</p>
-                    </div>
-                  </div>
-                  
-                  {location.pathname !== "/" && (
-                    <Link to="/" onClick={() => setMobileOpen(false)}>
-                      <Button variant="outline" className="w-full border-border/50" aria-label="Go to homepage">
-                        <Home className="w-4 h-4 mr-2" />
-                        Home
-                      </Button>
-                    </Link>
-                  )}
-                  <Link to="/dashboard" onClick={() => setMobileOpen(false)}>
-                    <Button variant="outline" className="w-full border-border/50" aria-label="Go to dashboard">
-                      <LayoutDashboard className="w-4 h-4 mr-2" />
-                      Dashboard
-                    </Button>
-                  </Link>
-                  {isAdmin && (
-                    <Link to="/admin" onClick={() => setMobileOpen(false)}>
-                      <Button variant="outline" className="w-full border-primary/40 text-primary hover:text-primary" aria-label="Go to admin panel">
-                        <Shield className="w-4 h-4 mr-2" />
-                        Admin Panel
-                      </Button>
-                    </Link>
-                  )}
-                  <Link to="/settings" onClick={() => setMobileOpen(false)}>
-                    <Button variant="outline" className="w-full border-border/50" aria-label="Go to settings">
-                      <Settings className="w-4 h-4 mr-2" />
-                      Settings
-                    </Button>
-                  </Link>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10" 
-                    onClick={() => {
-                      handleLogout();
-                      setMobileOpen(false);
-                    }}
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileOpen(false)}
+                    role="menuitem"
+                    className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-primary hover:bg-primary/10 transition-colors"
                   >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Log out
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" onClick={() => setMobileOpen(false)}>
-                    <Button variant="outline" className="w-full border-border/50" aria-label="Log in to your account">
-                      Log in
-                    </Button>
+                    <Shield className="w-4 h-4 shrink-0" /> Admin Panel
                   </Link>
-                  <Link to="/signup" onClick={() => setMobileOpen(false)}>
-                    <Button variant="gradient" className="w-full shadow-glow" aria-label="Sign up for a free account">
-                      Sign up free
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
+                )}
+                <Link
+                  to="/settings"
+                  onClick={() => setMobileOpen(false)}
+                  role="menuitem"
+                  className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
+                >
+                  <Settings className="w-4 h-4 shrink-0 text-muted-foreground" /> Settings
+                </Link>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => { handleLogout(); setMobileOpen(false); }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-destructive hover:bg-destructive/10 transition-colors"
+                >
+                  <LogOut className="w-4 h-4 shrink-0" /> Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  role="menuitem"
+                  className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
+                >
+                  <LogIn className="w-4 h-4 shrink-0 text-muted-foreground" /> Log in
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setMobileOpen(false)}
+                  role="menuitem"
+                  className="flex items-center gap-2.5 mx-2 my-1 px-3 py-2 rounded-lg text-[13px] font-semibold gradient-primary text-primary-foreground shadow-glow transition-transform hover:scale-[1.02]"
+                >
+                  <UserPlus className="w-4 h-4 shrink-0" /> Sign up free
+                </Link>
+              </>
+            )}
           </div>
         </motion.div>
       )}
