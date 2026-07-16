@@ -10,6 +10,7 @@ import { CheckoutSummary } from "@/components/products/CheckoutSummary";
 import { DraftManager } from "@/components/products/DraftManager";
 import { CostComparisonCalculator } from "@/components/products/CostComparisonCalculator";
 import { nfcProducts as fallbackProducts, defaultCustomization, CartItem, DesignCustomization, NFCProduct } from "@/components/products/types";
+import { buildCartItem, loadPersistedCart, persistCart } from "@/components/products/cart-helpers";
 import { ArrowRight, ShoppingCart, ArrowLeft, Wifi, History } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,7 +27,7 @@ export default function NFCProducts() {
   const [step, setStep] = useState<Step>('select');
   const [selectedProduct, setSelectedProduct] = useState<NFCProduct | null>(null);
   const [customization, setCustomization] = useState<DesignCustomization>(defaultCustomization);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => loadPersistedCart());
   const [userId, setUserId] = useState<string | null>(null);
   const [products, setProducts] = useState<NFCProduct[]>(fallbackProducts);
   const [loadingProducts, setLoadingProducts] = useState(true);
@@ -95,25 +96,20 @@ export default function NFCProducts() {
     setStep('customize');
   };
 
+  // Keep the cart in sync with localStorage so refreshing the page or
+  // reopening the browser before checkout preserves every customized item.
+  useEffect(() => {
+    persistCart(cart);
+  }, [cart]);
+
   const handleAddToCart = (productOverride?: NFCProduct) => {
     const product = productOverride ?? selectedProduct;
     if (!product) return;
 
-    // If adding from the customize step (no override), preserve the shopper's
-    // live customization. Direct "add" from a product listing has no edited
-    // state yet, so fall back to defaults.
-    const itemCustomization = productOverride
-      ? { ...defaultCustomization }
-      : { ...customization };
-
-    setCart((prev) => [
-      ...prev,
-      {
-        product,
-        customization: itemCustomization,
-        quantity: 1,
-      },
-    ]);
+    // Delegates to a pure helper so the "preserve live customization" rule
+    // is regression-tested independently of the page (see cart-helpers.test.ts).
+    const item = buildCartItem(product, customization, productOverride);
+    setCart((prev) => [...prev, item]);
 
     toast({
       title: "Added to cart!",
