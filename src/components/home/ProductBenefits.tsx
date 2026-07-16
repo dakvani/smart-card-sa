@@ -10,16 +10,19 @@ export function ProductBenefits() {
   return (
     <section
       id="story-next"
-      className="relative overflow-hidden py-16 sm:py-24 lg:py-28 bg-[#0a0a1a] text-white"
+      className="relative overflow-hidden pt-20 pb-16 sm:pt-28 sm:pb-24 lg:pt-32 lg:pb-28 text-white"
+      style={{
+        // Smooth vertical wash: starts at the app background (matches ScrollStory's
+        // trailing color exactly, so there is no visible seam) and settles into the
+        // Midnight Indigo canvas the bento sits on.
+        backgroundImage:
+          "linear-gradient(to bottom, hsl(var(--background)) 0%, #05060f 12%, #0a0a1a 28%)",
+      }}
     >
-      {/* Seamless blend from previous (ScrollStory) section — no visible seam */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background to-transparent"
-      />
-      {/* Ambient glows */}
+      {/* Ambient glows — pushed further down so they can't create a bright band
+          near the section boundary on mobile. */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-[520px] w-[520px] rounded-full bg-[#4f46e5]/15 blur-[140px]" />
+        <div className="absolute top-32 left-1/2 -translate-x-1/2 h-[520px] w-[520px] rounded-full bg-[#4f46e5]/15 blur-[140px]" />
         <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-[#1e1e5a]/40 blur-[120px]" />
       </div>
 
