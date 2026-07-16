@@ -58,21 +58,43 @@ export default function NFCProducts() {
   }, []);
 
   useEffect(() => {
-    // Get initial user
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    // Get initial user, and if they're already signed in, hydrate remote cart.
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
       setUserId(user?.id || null);
+      if (user?.id) {
+        const remote = await loadRemoteCart(supabase, user.id);
+        setCart((local) => {
+          const merged = mergeCarts(local, remote);
+          // Push merged back so both devices converge to the same state.
+          void saveRemoteCart(supabase, user.id, merged);
+          return merged;
+        });
+      }
     });
 
     // Listen for auth state changes (e.g., after login redirect)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUserId(session?.user?.id || null);
-      
-      // If user just logged in and we're at checkout with items, show success
-      if (event === 'SIGNED_IN' && step === 'checkout' && cart.length > 0) {
-        toast({
-          title: "Logged in successfully!",
-          description: "You can now complete your order.",
-        });
+      const uid = session?.user?.id || null;
+      setUserId(uid);
+
+      if (event === 'SIGNED_IN' && uid) {
+        // Merge whatever the shopper built while signed out with their DB cart
+        // so their cart follows them across devices.
+        void (async () => {
+          const remote = await loadRemoteCart(supabase, uid);
+          setCart((local) => {
+            const merged = mergeCarts(local, remote);
+            void saveRemoteCart(supabase, uid, merged);
+            return merged;
+          });
+        })();
+
+        if (step === 'checkout' && cart.length > 0) {
+          toast({
+            title: "Logged in successfully!",
+            description: "You can now complete your order.",
+          });
+        }
       }
     });
 
@@ -96,11 +118,12 @@ export default function NFCProducts() {
     setStep('customize');
   };
 
-  // Keep the cart in sync with localStorage so refreshing the page or
-  // reopening the browser before checkout preserves every customized item.
+  // Keep the cart in sync with localStorage (guest resume) AND — when signed
+  // in — with the DB so the customer can continue on another device.
   useEffect(() => {
     persistCart(cart);
-  }, [cart]);
+    if (userId) void saveRemoteCart(supabase, userId, cart);
+  }, [cart, userId]);
 
   const handleAddToCart = (productOverride?: NFCProduct) => {
     const product = productOverride ?? selectedProduct;
