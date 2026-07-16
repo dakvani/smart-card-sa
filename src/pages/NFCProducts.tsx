@@ -10,7 +10,7 @@ import { CheckoutSummary } from "@/components/products/CheckoutSummary";
 import { DraftManager } from "@/components/products/DraftManager";
 import { CostComparisonCalculator } from "@/components/products/CostComparisonCalculator";
 import { nfcProducts as fallbackProducts, defaultCustomization, CartItem, DesignCustomization, NFCProduct } from "@/components/products/types";
-import { buildCartItem, loadPersistedCart, persistCart } from "@/components/products/cart-helpers";
+import { buildCartItem, loadPersistedCart, persistCart, loadRemoteCart, saveRemoteCart, mergeCarts } from "@/components/products/cart-helpers";
 import { ArrowRight, ShoppingCart, ArrowLeft, Wifi, History } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
