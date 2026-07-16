@@ -50,97 +50,99 @@ export function ProductBenefits() {
           </p>
         </motion.div>
 
-        {/* Bento grid — mobile first, 6-col on md, 12-col on lg */}
-        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:grid-cols-6 sm:gap-4 lg:grid-cols-12 lg:gap-5">
+        {/* Bento grid — compact 4-col mosaic on mobile, 6-col md, 12-col lg */}
+        <div className="mx-auto grid max-w-6xl grid-cols-4 gap-2.5 sm:grid-cols-6 sm:gap-4 lg:grid-cols-12 lg:gap-5">
           {/* Hero tile — Instant tap */}
           <BentoTile
-            className="col-span-2 sm:col-span-6 lg:col-span-7 lg:row-span-2 min-h-[260px] sm:min-h-[300px] lg:min-h-[380px]"
+            className="col-span-4 sm:col-span-6 lg:col-span-7 lg:row-span-2 min-h-[200px] sm:min-h-[300px] lg:min-h-[380px]"
             delay={0}
           >
             <div className="flex h-full flex-col justify-between">
               <div className="flex items-start justify-between">
                 <IconBadge>
-                  <Zap className="h-5 w-5" />
+                  <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
                 </IconBadge>
-                <ArrowUpRight className="h-5 w-5 text-white/30 transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#a5b4fc]" />
+                <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5 text-white/30 transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#a5b4fc]" />
               </div>
               <div>
-                <h3 className="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+                <h3 className="font-display text-xl font-bold leading-[1.1] sm:text-3xl lg:text-4xl">
                   Tap. Share.<br />
                   <span className="text-[#a5b4fc]">In under a second.</span>
                 </h3>
-                <p className="mt-3 max-w-md font-body-alt text-sm text-white/60 sm:text-base">
-                  Your card, sticker or keychain shares everything with one physical tap — no app, no scanning apps, no friction.
+                <p className="mt-2 max-w-md font-body-alt text-[13px] text-white/60 sm:mt-3 sm:text-base">
+                  Your card, sticker or keychain shares everything with one physical tap — no app, no scanning, no friction.
                 </p>
               </div>
             </div>
-            {/* Radiating tap pulse */}
-            <div className="pointer-events-none absolute -bottom-24 -right-24 h-64 w-64">
+            {/* Radiating tap pulse — desktop only, expensive on mobile */}
+            <div className="pointer-events-none absolute -bottom-24 -right-24 hidden h-64 w-64 sm:block">
               <div className="absolute inset-0 animate-ping rounded-full border border-[#4f46e5]/30" style={{ animationDuration: "3s" }} />
               <div className="absolute inset-6 rounded-full border border-[#4f46e5]/40" />
               <div className="absolute inset-14 rounded-full bg-[#4f46e5]/20 blur-2xl" />
             </div>
+            {/* Mobile-only subtle glow — cheap, no animation */}
+            <div className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full bg-[#4f46e5]/20 blur-2xl sm:hidden" />
           </BentoTile>
 
           {/* Stat tile */}
           <BentoTile
-            className="col-span-2 sm:col-span-3 lg:col-span-5 min-h-[160px] sm:min-h-[180px]"
+            className="col-span-2 sm:col-span-3 lg:col-span-5 min-h-[120px] sm:min-h-[180px]"
             variant="accent"
-            delay={0.05}
+            delay={0}
           >
             <div className="flex h-full flex-col justify-between">
-              <span className="font-body-alt text-xs uppercase tracking-[0.2em] text-white/70">Track every tap</span>
+              <span className="font-body-alt text-[10px] uppercase tracking-[0.18em] text-white/70 sm:text-xs sm:tracking-[0.2em]">Track every tap</span>
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-display text-5xl font-extrabold text-white sm:text-6xl">340<span className="text-[#c4b5fd]">%</span></span>
+                  <span className="font-display text-3xl font-extrabold leading-none text-white sm:text-6xl">340<span className="text-[#c4b5fd]">%</span></span>
                 </div>
-                <p className="mt-1 font-body-alt text-sm text-white/70">Average link-click lift in the first month</p>
+                <p className="mt-1 font-body-alt text-[11px] leading-snug text-white/70 sm:text-sm">Avg. link-click lift in the first month</p>
               </div>
             </div>
           </BentoTile>
 
           {/* Update anytime */}
           <BentoTile
-            className="col-span-1 sm:col-span-3 lg:col-span-5 min-h-[160px] sm:min-h-[180px]"
-            delay={0.1}
+            className="col-span-2 sm:col-span-3 lg:col-span-5 min-h-[120px] sm:min-h-[180px]"
+            delay={0.03}
           >
-            <IconBadge><Recycle className="h-5 w-5" /></IconBadge>
-            <h3 className="mt-4 font-display text-lg font-bold sm:text-xl">Update anytime, free</h3>
-            <p className="mt-1 font-body-alt text-xs text-white/55 sm:text-sm">Change your profile, links or offers whenever. Your card never expires.</p>
+            <IconBadge><Recycle className="h-4 w-4 sm:h-5 sm:w-5" /></IconBadge>
+            <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">Update anytime, free</h3>
+            <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">Change profile, links or offers whenever.</p>
           </BentoTile>
 
           {/* Works on any phone */}
           <BentoTile
-            className="col-span-1 sm:col-span-3 lg:col-span-3 min-h-[160px] sm:min-h-[180px]"
-            delay={0.15}
+            className="col-span-2 sm:col-span-3 lg:col-span-3 min-h-[120px] sm:min-h-[180px]"
+            delay={0.06}
           >
-            <IconBadge><Globe className="h-5 w-5" /></IconBadge>
-            <h3 className="mt-4 font-display text-lg font-bold sm:text-xl">Any phone</h3>
-            <p className="mt-1 font-body-alt text-xs text-white/55 sm:text-sm">Works natively on modern iPhone &amp; Android.</p>
+            <IconBadge><Globe className="h-4 w-4 sm:h-5 sm:w-5" /></IconBadge>
+            <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">Any phone</h3>
+            <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">Works natively on iPhone &amp; Android.</p>
           </BentoTile>
 
           {/* Analytics wide */}
           <BentoTile
-            className="col-span-2 sm:col-span-6 lg:col-span-6 min-h-[180px]"
-            delay={0.2}
+            className="col-span-4 sm:col-span-6 lg:col-span-6 min-h-[140px] sm:min-h-[180px]"
+            delay={0.09}
           >
-            <div className="flex h-full items-center justify-between gap-6">
+            <div className="flex h-full items-center justify-between gap-4 sm:gap-6">
               <div>
-                <IconBadge><BarChart3 className="h-5 w-5" /></IconBadge>
-                <h3 className="mt-4 font-display text-lg font-bold sm:text-xl">Real ROI on every handshake</h3>
-                <p className="mt-1 font-body-alt text-xs text-white/55 sm:text-sm">See who tapped, what they clicked, and when.</p>
+                <IconBadge><BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" /></IconBadge>
+                <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">Real ROI on every handshake</h3>
+                <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">See who tapped, what they clicked, and when.</p>
               </div>
               {/* Mini bar chart */}
-              <div className="hidden shrink-0 items-end gap-1.5 sm:flex">
+              <div className="flex shrink-0 items-end gap-1 sm:gap-1.5">
                 {[38, 62, 44, 78, 55, 90, 72].map((h, i) => (
                   <motion.span
                     key={i}
                     initial={{ height: 0 }}
                     whileInView={{ height: `${h}%` }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3 + i * 0.06 }}
-                    className={`w-2 rounded-sm ${i === 5 ? "bg-[#4f46e5]" : "bg-[#4f46e5]/30"}`}
-                    style={{ minHeight: 8 }}
+                    transition={{ duration: 0.5, delay: 0.1 + i * 0.03 }}
+                    className={`w-1.5 rounded-sm sm:w-2 ${i === 5 ? "bg-[#4f46e5]" : "bg-[#4f46e5]/30"}`}
+                    style={{ minHeight: 8, height: 40 }}
                   />
                 ))}
               </div>
@@ -148,17 +150,17 @@ export function ProductBenefits() {
           </BentoTile>
 
           {/* QR backup */}
-          <BentoTile className="col-span-1 sm:col-span-3 lg:col-span-3 min-h-[160px]" delay={0.25}>
-            <IconBadge><Smartphone className="h-5 w-5" /></IconBadge>
-            <h3 className="mt-4 font-display text-lg font-bold sm:text-xl">QR backup built in</h3>
-            <p className="mt-1 font-body-alt text-xs text-white/55 sm:text-sm">Non-NFC devices connect instantly too.</p>
+          <BentoTile className="col-span-2 sm:col-span-3 lg:col-span-3 min-h-[120px] sm:min-h-[160px]" delay={0.12}>
+            <IconBadge><Smartphone className="h-4 w-4 sm:h-5 sm:w-5" /></IconBadge>
+            <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">QR backup built in</h3>
+            <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">Non-NFC devices connect instantly too.</p>
           </BentoTile>
 
           {/* Built to last */}
-          <BentoTile className="col-span-1 sm:col-span-3 lg:col-span-3 min-h-[160px]" delay={0.3}>
-            <IconBadge><InfinityIcon className="h-5 w-5" /></IconBadge>
-            <h3 className="mt-4 font-display text-lg font-bold sm:text-xl">Built to last</h3>
-            <p className="mt-1 font-body-alt text-xs text-white/55 sm:text-sm">Premium PVC, metal &amp; silicone. Lifetime chip.</p>
+          <BentoTile className="col-span-2 sm:col-span-3 lg:col-span-3 min-h-[120px] sm:min-h-[160px]" delay={0.15}>
+            <IconBadge><InfinityIcon className="h-4 w-4 sm:h-5 sm:w-5" /></IconBadge>
+            <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">Built to last</h3>
+            <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">Premium PVC, metal &amp; silicone.</p>
           </BentoTile>
         </div>
       </div>
