@@ -23,11 +23,16 @@ export function buildCartItem(
   liveCustomization: DesignCustomization,
   productOverride?: NFCProduct,
 ): CartItem {
-  const customization = productOverride
-    ? { ...defaultCustomization }
-    : { ...liveCustomization };
+  const resolvedProduct = productOverride ?? product;
+  const source = productOverride ? defaultCustomization : liveCustomization;
+  // Deep-clone so later edits to the live customizer state never leak into
+  // the cart line item (each item captures a snapshot of its own design).
+  const customization: DesignCustomization =
+    typeof structuredClone === "function"
+      ? structuredClone(source)
+      : JSON.parse(JSON.stringify(source));
 
-  return { product, customization, quantity: 1 };
+  return { product: resolvedProduct, customization, quantity: 1 };
 }
 
 // ---------- Cart persistence (localStorage) ----------
