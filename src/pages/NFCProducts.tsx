@@ -10,7 +10,7 @@ import { CheckoutSummary } from "@/components/products/CheckoutSummary";
 import { DraftManager } from "@/components/products/DraftManager";
 import { CostComparisonCalculator } from "@/components/products/CostComparisonCalculator";
 import { nfcProducts as fallbackProducts, defaultCustomization, CartItem, DesignCustomization, NFCProduct } from "@/components/products/types";
-import { buildCartItem, loadPersistedCart, persistCart, loadRemoteCart, saveRemoteCart, mergeCarts } from "@/components/products/cart-helpers";
+import { loadPersistedCart, persistCart, loadRemoteCart, saveRemoteCart, mergeCarts } from "@/components/products/cart-helpers";
 import { ArrowRight, ShoppingCart, ArrowLeft, Wifi, History } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -129,10 +129,20 @@ export default function NFCProducts() {
     const product = productOverride ?? selectedProduct;
     if (!product) return;
 
-    // Delegates to a pure helper so the "preserve live customization" rule
-    // is regression-tested independently of the page (see cart-helpers.test.ts).
-    const item = buildCartItem(product, customization, productOverride);
-    setCart((prev) => [...prev, item]);
+    const customizationSource = productOverride ? defaultCustomization : customization;
+    const customizationSnapshot: DesignCustomization =
+      typeof structuredClone === "function"
+        ? structuredClone(customizationSource)
+        : JSON.parse(JSON.stringify(customizationSource));
+
+    setCart((prev) => [
+      ...prev,
+      {
+        product,
+        customization: customizationSnapshot,
+        quantity: 1,
+      },
+    ]);
 
     toast({
       title: "Added to cart!",
