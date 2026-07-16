@@ -27,7 +27,7 @@ export default function NFCProducts() {
   const [step, setStep] = useState<Step>('select');
   const [selectedProduct, setSelectedProduct] = useState<NFCProduct | null>(null);
   const [customization, setCustomization] = useState<DesignCustomization>(defaultCustomization);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => loadPersistedCart());
   const [userId, setUserId] = useState<string | null>(null);
   const [products, setProducts] = useState<NFCProduct[]>(fallbackProducts);
   const [loadingProducts, setLoadingProducts] = useState(true);
