@@ -432,7 +432,7 @@ export default function SmartLinkBio() {
                 </div>
               </aside>
 
-              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-8">
+              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-8">
                 {filteredTemplates.map((template, index) => {
                   const isSelected = template.username === editor.username;
                   return (
@@ -444,7 +444,7 @@ export default function SmartLinkBio() {
                       transition={{ delay: index * 0.04 }}
                       className="group"
                     >
-                      <div className="relative">
+                      <div className="relative rounded-[28px] sm:rounded-[36px] overflow-hidden">
                         <TemplatePhoneCard
                           template={template}
                           className={`transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-glow ${
@@ -452,22 +452,36 @@ export default function SmartLinkBio() {
                           }`}
                         />
                         {isSelected && (
-                          <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-primary text-primary-foreground text-[10px] font-semibold px-2 py-1 shadow">
-                            <Check className="w-3 h-3" /> Selected
+                          <span className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-full bg-primary text-primary-foreground text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1 shadow">
+                            <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> On
                           </span>
                         )}
+                        {/* Mobile-only info + CTA overlay for compact, always-visible card */}
+                        <div className="sm:hidden absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/85 via-black/60 to-transparent">
+                          <p className="text-white text-[11px] font-semibold leading-tight truncate">{template.name}</p>
+                          <p className="text-white/70 text-[9px] truncate mb-1.5">@{template.username}</p>
+                          <Button
+                            size="sm"
+                            variant={isSelected ? "secondary" : "gradient"}
+                            onClick={() => applyTemplate(template)}
+                            className="w-full h-7 text-[10px] px-2"
+                          >
+                            {isSelected ? "Applied" : "Use this"}
+                          </Button>
+                        </div>
                       </div>
 
-                      <div className="mt-2 sm:mt-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1.5 sm:gap-3">
+                      {/* Desktop-only label row */}
+                      <div className="hidden sm:flex mt-4 items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="font-semibold text-xs sm:text-sm truncate">{template.name}</p>
-                          <p className="text-[10px] sm:text-xs text-muted-foreground truncate">@{template.username}</p>
+                          <p className="font-semibold text-sm truncate">{template.name}</p>
+                          <p className="text-xs text-muted-foreground truncate">@{template.username}</p>
                         </div>
                         <Button
                           size="sm"
                           variant={isSelected ? "secondary" : "gradient"}
                           onClick={() => applyTemplate(template)}
-                          className="shrink-0 h-7 text-[11px] px-2.5 sm:h-9 sm:text-sm sm:px-3 w-full sm:w-auto"
+                          className="shrink-0 h-9 text-sm px-3"
                         >
                           {isSelected ? "Applied" : "Use template"}
                         </Button>
