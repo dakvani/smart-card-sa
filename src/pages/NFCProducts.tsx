@@ -568,6 +568,7 @@ export default function NFCProducts() {
                   cart={cart}
                   onUpdateQuantity={handleUpdateQuantity}
                   onRemoveItem={handleRemoveItem}
+                  onEditItem={handleEditItem}
                   onBack={handleBack}
                   onPlaceOrder={handlePlaceOrder}
                 />
