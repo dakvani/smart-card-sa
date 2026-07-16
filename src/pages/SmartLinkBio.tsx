@@ -305,7 +305,13 @@ export default function SmartLinkBio() {
                 <p className="mt-1.5 sm:mt-3 text-center text-[10px] sm:text-xs text-muted-foreground">
                   Live preview · saved automatically
                 </p>
+                <div className="md:hidden mt-2 flex justify-center">
+                  <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => { setMobileTab("editor"); window.scrollTo({ top: 0 }); }}>
+                    <Pencil className="w-3 h-3 mr-1" /> Edit content
+                  </Button>
+                </div>
               </div>
+
 
               {/* Editor */}
               <div className={`order-2 lg:order-1 space-y-3 sm:space-y-5 rounded-xl sm:rounded-2xl border border-border bg-card p-3 sm:p-6 ${mobileTab === "editor" ? "" : "hidden"} md:block`}>
