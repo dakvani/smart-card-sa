@@ -519,12 +519,13 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Features */}
-        <section id="features" className={`py-8 sm:py-16 md:py-20 bg-secondary/30 ${mobileTab === "features" ? "" : "hidden"} md:block`}>
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-5 sm:mb-12">
-              <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">Everything you need to <span className="gradient-text">grow</span></h2>
-              <p className="text-xs sm:text-base text-muted-foreground">Powerful features for creators, makers, and brands.</p>
+        <section id="features" className={`py-4 sm:py-16 md:py-20 bg-secondary/30 ${mobileTab === "features" ? "" : "hidden"} md:block`}>
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="text-center mb-3 sm:mb-12">
+              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-3 leading-tight">Everything you need to <span className="gradient-text">grow</span></h2>
+              <p className="hidden sm:block text-xs sm:text-base text-muted-foreground">Powerful features for creators, makers, and brands.</p>
             </div>
+
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6">
               {features.map((f, i) => (
                 <motion.div
