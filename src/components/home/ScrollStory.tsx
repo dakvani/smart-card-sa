@@ -414,7 +414,7 @@ export function ScrollStory() {
             ))}
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-3 mt-12">
-            <Button asChild size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white border-0 shadow-glow">
+            <Button asChild size="lg" data-testid="cta-shop-smartcards-desktop" className="gradient-primary shadow-glow text-white border-0">
               <Link to="/nfc-products">
                 Shop SmartCards <ArrowRight className="ml-2 w-4 h-4" />
               </Link>
@@ -507,7 +507,7 @@ export function ScrollStory() {
           style={{ opacity: ctaOpacity, y: ctaY }}
           className="absolute bottom-20 md:bottom-24 left-0 right-0 z-20 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 px-6"
         >
-          <Button asChild size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white border-0 shadow-glow w-full sm:w-auto">
+          <Button asChild size="lg" data-testid="cta-shop-smartcards" className="gradient-primary shadow-glow w-full sm:w-auto text-white border-0">
             <Link to="/nfc-products">
               Shop SmartCards <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
