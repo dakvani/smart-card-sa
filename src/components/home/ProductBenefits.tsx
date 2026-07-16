@@ -12,6 +12,11 @@ export function ProductBenefits() {
       id="story-next"
       className="relative overflow-hidden py-16 sm:py-24 lg:py-28 bg-[#0a0a1a] text-white"
     >
+      {/* Seamless blend from previous (ScrollStory) section — no visible seam */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background to-transparent"
+      />
       {/* Ambient glows */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-[520px] w-[520px] rounded-full bg-[#4f46e5]/15 blur-[140px]" />
