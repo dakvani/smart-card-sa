@@ -8,10 +8,22 @@ import { format } from "date-fns";
 import { formatSAR } from "@/lib/currency";
 import { SEO } from "@/components/SEO";
 
+interface CustomizationSide {
+  name?: string;
+  title?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  accentColor?: string;
+}
+
 interface OrderItem {
   product: { id: string; name: string; basePrice: number; category: string };
   quantity: number;
-  customization?: { front?: { name?: string }; linkedProfileUsername?: string };
+  customization?: {
+    front?: CustomizationSide;
+    back?: CustomizationSide;
+    linkedProfileUsername?: string;
+  };
 }
 
 interface OrderRow {
