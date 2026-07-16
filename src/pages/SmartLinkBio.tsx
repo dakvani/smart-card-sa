@@ -628,13 +628,11 @@ export default function SmartLinkBio() {
         aria-label="SmartLink sections"
         className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]"
       >
-        <ul className="grid grid-cols-5">
+        <ul className="grid grid-cols-3">
           {([
             { id: "hero", label: "Home", Icon: Home },
             { id: "studio", label: "Studio", Icon: Pencil },
             { id: "templates", label: "Themes", Icon: Grid3x3 },
-            { id: "features", label: "Features", Icon: Zap },
-            { id: "pricing", label: "Pricing", Icon: DollarSign },
           ] as const).map(({ id, label, Icon }) => {
             const active = mobileTab === id;
             return (
