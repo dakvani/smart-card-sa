@@ -494,15 +494,32 @@ export default function SmartLinkBio() {
           </div>
         </section>
 
-        {/* Features */}
-        <section id="features" className={`py-4 sm:py-16 md:py-20 bg-secondary/30 ${mobileTab === "features" ? "" : "hidden"} md:block`}>
-          <div className="container mx-auto px-3 sm:px-4">
+        {/* Features — minimalist, part of Home on mobile */}
+        <section id="features" className={`py-4 sm:py-16 md:py-20 bg-secondary/30 ${mobileTab === "hero" ? "" : "hidden"} md:block`}>
+          <div className="container mx-auto px-3 sm:px-4 max-w-5xl">
             <div className="text-center mb-3 sm:mb-12">
-              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-3 leading-tight">Everything you need to <span className="gradient-text">grow</span></h2>
-              <p className="hidden sm:block text-xs sm:text-base text-muted-foreground">Powerful features for creators, makers, and brands.</p>
+              <p className="text-[10px] sm:hidden font-semibold tracking-[0.18em] text-muted-foreground uppercase mb-1">Features</p>
+              <h2 className="text-base sm:text-3xl md:text-4xl font-bold leading-tight">Everything you need to <span className="gradient-text">grow</span></h2>
+              <p className="hidden sm:block text-xs sm:text-base text-muted-foreground mt-2">Powerful features for creators, makers, and brands.</p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6">
+            {/* Mobile: compact list */}
+            <ul className="sm:hidden divide-y divide-border/60 rounded-xl border border-border bg-card overflow-hidden">
+              {features.map((f) => (
+                <li key={f.title} className="flex items-center gap-2.5 px-2.5 py-2">
+                  <div className="w-7 h-7 shrink-0 rounded-md gradient-primary flex items-center justify-center">
+                    <f.icon className="w-3.5 h-3.5 text-primary-foreground" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold leading-tight">{f.title}</p>
+                    <p className="text-[10px] leading-tight text-muted-foreground line-clamp-1">{f.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Desktop: card grid */}
+            <div className="hidden sm:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((f, i) => (
                 <motion.div
                   key={f.title}
@@ -510,13 +527,13 @@ export default function SmartLinkBio() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.05 }}
-                  className="p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-glow transition-all"
+                  className="p-6 rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-glow transition-all"
                 >
-                  <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl gradient-primary flex items-center justify-center mb-2 sm:mb-4">
-                    <f.icon className="w-4 h-4 sm:w-6 sm:h-6 text-primary-foreground" />
+                  <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mb-4">
+                    <f.icon className="w-6 h-6 text-primary-foreground" />
                   </div>
-                  <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2">{f.title}</h3>
-                  <p className="text-[11px] leading-snug sm:text-sm text-muted-foreground">{f.description}</p>
+                  <h3 className="text-lg font-semibold mb-2">{f.title}</h3>
+                  <p className="text-sm text-muted-foreground">{f.description}</p>
                 </motion.div>
               ))}
             </div>
