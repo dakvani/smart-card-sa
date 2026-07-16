@@ -68,9 +68,12 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onEditIt
     return () => subscription.unsubscribe();
   }, []);
 
-  const subtotal = cart.reduce((sum, item) => sum + item.product.basePrice * item.quantity, 0);
-  const shipping = subtotal > 50 ? 0 : 5.99;
-  const total = subtotal + shipping;
+  // Recompute on every cart change so quantity edits update pricing instantly.
+  const { subtotal, shipping, total } = useMemo(() => {
+    const s = cart.reduce((sum, item) => sum + item.product.basePrice * item.quantity, 0);
+    const ship = s > 50 ? 0 : 5.99;
+    return { subtotal: s, shipping: ship, total: s + ship };
+  }, [cart]);
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
