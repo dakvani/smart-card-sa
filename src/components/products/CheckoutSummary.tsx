@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CartItem } from "./types";
-import { ShoppingCart, Plus, Minus, Trash2, CreditCard, ArrowLeft, Banknote, Landmark } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, CreditCard, ArrowLeft, Banknote, Landmark, Pencil } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
