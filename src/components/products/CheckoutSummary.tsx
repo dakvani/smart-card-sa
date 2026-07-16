@@ -171,41 +171,80 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onEditIt
                 </div>
 
                 {/* Details */}
-                <div className="flex-1">
-                  <h4 className="font-medium">{item.product.name}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {item.customization.front.name && `Name: ${item.customization.front.name}`}
-                    {item.customization.linkedProfileUsername && ` • @${item.customization.linkedProfileUsername}`}
-                  </p>
-                  <div className="flex items-center gap-3 mt-2">
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-medium truncate">{item.product.name}</h4>
+
+                  {/* Compact customization preview — colors, name, linked profile.
+                      Lets the shopper verify their design before placing the order. */}
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-1" title="Front design colors">
+                      <span
+                        className="w-3.5 h-3.5 rounded-full border border-border"
+                        style={{ backgroundColor: item.customization.front.backgroundColor }}
+                      />
+                      <span
+                        className="w-3.5 h-3.5 rounded-full border border-border"
+                        style={{ backgroundColor: item.customization.front.textColor }}
+                      />
+                      <span
+                        className="w-3.5 h-3.5 rounded-full border border-border"
+                        style={{ backgroundColor: item.customization.front.accentColor }}
+                      />
+                    </span>
+                    {item.customization.front.name && (
+                      <span className="truncate">👤 {item.customization.front.name}</span>
+                    )}
+                    {item.customization.front.title && (
+                      <span className="truncate">💼 {item.customization.front.title}</span>
+                    )}
+                    {item.customization.linkedProfileUsername && (
+                      <span className="truncate">🔗 @{item.customization.linkedProfileUsername}</span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3 mt-3">
                     <Button
                       variant="outline"
                       size="icon"
                       className="h-8 w-8"
                       onClick={() => onUpdateQuantity(index, Math.max(1, item.quantity - 1))}
+                      aria-label="Decrease quantity"
                     >
                       <Minus className="w-3 h-3" />
                     </Button>
-                    <span className="font-medium">{item.quantity}</span>
+                    <span className="font-medium w-6 text-center">{item.quantity}</span>
                     <Button
                       variant="outline"
                       size="icon"
                       className="h-8 w-8"
                       onClick={() => onUpdateQuantity(index, item.quantity + 1)}
+                      aria-label="Increase quantity"
                     >
                       <Plus className="w-3 h-3" />
                     </Button>
+                    {onEditItem && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 px-2 text-xs"
+                        onClick={() => onEditItem(index)}
+                      >
+                        <Pencil className="w-3.5 h-3.5 mr-1" />
+                        Edit
+                      </Button>
+                    )}
                   </div>
                 </div>
 
                 {/* Price & Remove */}
-                <div className="text-right">
+                <div className="text-right shrink-0">
                   <p className="font-bold">{formatSAR((item.product.basePrice * item.quantity))}</p>
                   <Button
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 text-destructive hover:text-destructive mt-2"
                     onClick={() => onRemoveItem(index)}
+                    aria-label="Remove item"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
