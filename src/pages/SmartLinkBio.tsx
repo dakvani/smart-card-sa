@@ -384,28 +384,28 @@ export default function SmartLinkBio() {
 
 
         {/* Templates */}
-        <section id="templates" className="py-20">
+        <section id="templates" className="py-8 sm:py-16 md:py-20">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-14 max-w-3xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-                A SmartLink template to suit <span className="gradient-text">every brand and creator</span>
+            <div className="text-center mb-5 sm:mb-12 max-w-3xl mx-auto">
+              <h2 className="text-xl sm:text-4xl md:text-5xl font-bold mb-1.5 sm:mb-4 tracking-tight">
+                A template for <span className="gradient-text">every brand & creator</span>
               </h2>
-              <p className="text-muted-foreground text-lg">
-                Different link styles, integrations and visuals help you build a bio that looks and feels like you.
+              <p className="text-xs sm:text-base md:text-lg text-muted-foreground">
+                Different link styles, integrations and visuals to match your vibe.
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-[220px_1fr] gap-10">
-              <aside className="lg:sticky lg:top-28 self-start">
-                <p className="text-xs font-semibold tracking-widest text-muted-foreground mb-4">
+            <div className="grid lg:grid-cols-[220px_1fr] gap-4 sm:gap-10">
+              <aside className="lg:sticky lg:top-28 self-start -mx-4 px-4 lg:mx-0 lg:px-0">
+                <p className="hidden lg:block text-xs font-semibold tracking-widest text-muted-foreground mb-4">
                   BROWSE BY CATEGORY
                 </p>
-                <div className="flex lg:flex-col flex-wrap gap-2">
+                <div className="flex lg:flex-col gap-1.5 sm:gap-2 overflow-x-auto lg:overflow-visible scrollbar-hide -mx-1 px-1 pb-1 lg:mx-0 lg:px-0">
                   {templateCategories.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => setActiveCategory(cat)}
-                      className={`px-4 py-2.5 rounded-full text-sm font-medium text-left transition-all lg:w-full ${
+                      className={`shrink-0 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium text-left transition-all lg:w-full ${
                         activeCategory === cat
                           ? "bg-foreground text-background"
                           : "bg-secondary/60 text-foreground hover:bg-secondary"
@@ -417,7 +417,7 @@ export default function SmartLinkBio() {
                 </div>
               </aside>
 
-              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-8">
                 {filteredTemplates.map((template, index) => {
                   const isSelected = template.username === editor.username;
                   return (
