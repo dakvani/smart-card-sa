@@ -245,7 +245,7 @@ export default function SmartLinkBio() {
                 variant="ghost"
                 size="sm"
                 className="h-8 text-xs sm:hidden"
-                onClick={() => { setMobileTab("preview"); window.scrollTo({ top: 0 }); }}
+                onClick={() => { setMobileTab("studio"); window.scrollTo({ top: 0 }); }}
               >
                 Try live preview →
               </Button>
