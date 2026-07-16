@@ -410,7 +410,7 @@ export default function SmartLinkBio() {
             </div>
 
 
-            <div className="grid lg:grid-cols-[220px_minmax(0,1fr)] gap-4 sm:gap-10 min-w-0">
+            <div className="flex flex-col lg:grid lg:grid-cols-[220px_minmax(0,1fr)] gap-4 sm:gap-10">
               <aside className="lg:sticky lg:top-28 self-start -mx-4 px-4 lg:mx-0 lg:px-0">
                 <p className="hidden lg:block text-xs font-semibold tracking-widest text-muted-foreground mb-4">
                   BROWSE BY CATEGORY
