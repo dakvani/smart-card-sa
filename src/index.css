@@ -120,7 +120,7 @@
     --radius: 0.75rem;
 
     /* Light custom tokens */
-    --gradient-primary: linear-gradient(135deg, hsl(270 60% 55%) 0%, hsl(330 60% 50%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(243 75% 59%) 0%, hsl(271 81% 56%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(270 50% 60%) 0%, hsl(200 70% 50%) 100%);
     --gradient-dark: linear-gradient(135deg, hsl(240 10% 96%) 0%, hsl(270 20% 94%) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.6) 100%);
@@ -169,7 +169,7 @@
     --input: 240 5% 88%;
     --ring: 270 60% 55%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(270 60% 55%) 0%, hsl(330 60% 50%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(243 75% 59%) 0%, hsl(271 81% 56%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(270 50% 60%) 0%, hsl(200 70% 50%) 100%);
     --gradient-dark: linear-gradient(135deg, hsl(240 10% 96%) 0%, hsl(270 20% 94%) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.6) 100%);
@@ -218,7 +218,7 @@
     --input: 240 10% 12%;
     --ring: 270 55% 55%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(270 50% 40% / 0.8) 0%, hsl(330 50% 40% / 0.6) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(243 75% 59%) 0%, hsl(271 81% 56%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(270 40% 35% / 0.7) 0%, hsl(200 60% 40% / 0.5) 100%);
     --gradient-dark: linear-gradient(135deg, hsl(240 20% 6%) 0%, hsl(270 25% 12%) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
@@ -267,7 +267,7 @@
     --input: 0 0% 25%;
     --ring: 60 100% 50%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(60 100% 50%) 0%, hsl(40 100% 50%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(243 75% 59%) 0%, hsl(271 81% 56%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(180 100% 40%) 0%, hsl(200 100% 50%) 100%);
     --gradient-dark: linear-gradient(135deg, hsl(0 0% 0%) 0%, hsl(0 0% 5%) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
@@ -316,7 +316,7 @@
     --input: 220 12% 18%;
     --ring: 200 80% 55%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(200 80% 45%) 0%, hsl(45 70% 45%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(243 75% 59%) 0%, hsl(271 81% 56%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(200 60% 40%) 0%, hsl(180 60% 40%) 100%);
     --gradient-dark: linear-gradient(135deg, hsl(220 20% 6%) 0%, hsl(200 20% 10%) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
@@ -365,7 +365,7 @@
     --input: 240 10% 16%;
     --ring: 210 90% 60%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(210 90% 50%) 0%, hsl(35 85% 50%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(243 75% 59%) 0%, hsl(271 81% 56%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(210 70% 45%) 0%, hsl(190 70% 45%) 100%);
     --gradient-dark: linear-gradient(135deg, hsl(240 15% 6%) 0%, hsl(210 20% 10%) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
@@ -414,7 +414,7 @@
     --input: 350 10% 16%;
     --ring: 0 75% 60%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(0 75% 50%) 0%, hsl(170 60% 40%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(243 75% 59%) 0%, hsl(271 81% 56%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(0 55% 45%) 0%, hsl(340 55% 45%) 100%);
     --gradient-dark: linear-gradient(135deg, hsl(350 15% 6%) 0%, hsl(0 15% 10%) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
