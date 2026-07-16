@@ -197,22 +197,22 @@ export default function SmartLinkBio() {
       />
       <Navbar />
 
-      <main className="flex-1 pt-16 md:pt-24 mobile-safe-bottom md:pb-0">
+      <main className="flex-1 pt-14 md:pt-24 mobile-safe-bottom md:pb-0">
         {/* Hero */}
-        <section className={`relative py-8 sm:py-16 md:py-20 overflow-hidden ${mobileTab === "hero" ? "" : "hidden"} md:block`}>
+        <section className={`relative py-5 sm:py-16 md:py-20 overflow-hidden ${mobileTab === "hero" ? "" : "hidden"} md:block`}>
           <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
           <div className="container mx-auto px-4 text-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] sm:text-xs font-medium mb-3 sm:mb-6"
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] sm:text-xs font-medium mb-2 sm:mb-6"
             >
               <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> SmartLink Bio
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-4xl md:text-6xl font-bold mb-3 sm:mb-6 leading-tight"
+              className="text-xl sm:text-4xl md:text-6xl font-bold mb-2 sm:mb-6 leading-tight"
             >
               One link for <span className="gradient-text">everything you are</span>
             </motion.h1>
@@ -220,16 +220,39 @@ export default function SmartLinkBio() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-sm sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 sm:mb-8"
+              className="text-xs sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-8"
             >
               Beautiful templates, powerful features, and pricing that scales with you.
             </motion.p>
             <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
-              <Link to="/signup"><Button variant="gradient" size="sm" className="sm:h-11 sm:px-8 shadow-glow">Create your bio free</Button></Link>
-              <a href="#pricing"><Button variant="outline" size="sm" className="sm:h-11 sm:px-8">See pricing</Button></a>
+              <Link to="/signup"><Button variant="gradient" size="sm" className="h-8 text-xs sm:h-11 sm:text-sm sm:px-8 shadow-glow">Create free</Button></Link>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8 text-xs sm:h-11 sm:text-sm sm:px-8"
+                onClick={() => {
+                  setMobileTab("pricing");
+                  requestAnimationFrame(() => {
+                    (pricingRef.current ?? document.getElementById("pricing"))?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  });
+                }}
+              >
+                See pricing
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-8 text-xs sm:hidden"
+                onClick={() => { setMobileTab("preview"); window.scrollTo({ top: 0 }); }}
+              >
+                Try live preview →
+              </Button>
             </div>
           </div>
         </section>
+
 
         {/* Live Preview + Editor */}
         <section id="preview" className={`py-8 sm:py-16 bg-secondary/20 border-y border-border ${mobileTab === "preview" || mobileTab === "editor" ? "" : "hidden"} md:block`}>
