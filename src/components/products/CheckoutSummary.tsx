@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,9 +68,12 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onEditIt
     return () => subscription.unsubscribe();
   }, []);
 
-  const subtotal = cart.reduce((sum, item) => sum + item.product.basePrice * item.quantity, 0);
-  const shipping = subtotal > 50 ? 0 : 5.99;
-  const total = subtotal + shipping;
+  // Recompute on every cart change so quantity edits update pricing instantly.
+  const { subtotal, shipping, total } = useMemo(() => {
+    const s = cart.reduce((sum, item) => sum + item.product.basePrice * item.quantity, 0);
+    const ship = s > 50 ? 0 : 5.99;
+    return { subtotal: s, shipping: ship, total: s + ship };
+  }, [cart]);
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
@@ -406,7 +409,14 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onEditIt
           <Separator />
           <div className="flex justify-between text-lg font-bold">
             <span>Total</span>
-            <span>{formatSAR(total)}</span>
+            <motion.span
+              key={total}
+              initial={{ opacity: 0.4, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.18 }}
+            >
+              {formatSAR(total)}
+            </motion.span>
           </div>
         </div>
 

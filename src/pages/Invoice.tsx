@@ -8,10 +8,22 @@ import { format } from "date-fns";
 import { formatSAR } from "@/lib/currency";
 import { SEO } from "@/components/SEO";
 
+interface CustomizationSide {
+  name?: string;
+  title?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  accentColor?: string;
+}
+
 interface OrderItem {
   product: { id: string; name: string; basePrice: number; category: string };
   quantity: number;
-  customization?: { front?: { name?: string }; linkedProfileUsername?: string };
+  customization?: {
+    front?: CustomizationSide;
+    back?: CustomizationSide;
+    linkedProfileUsername?: string;
+  };
 }
 
 interface OrderRow {
@@ -212,14 +224,46 @@ export default function Invoice() {
               </tr>
             </thead>
             <tbody>
-              {order.items.map((it, i) => (
-                <tr key={i} className="border-b border-slate-100">
+              {order.items.map((it, i) => {
+                const c = it.customization;
+                const front = c?.front;
+                const hasPreview =
+                  !!(front?.name || front?.title || c?.linkedProfileUsername ||
+                     front?.backgroundColor || front?.textColor || front?.accentColor);
+                return (
+                <tr key={i} className="border-b border-slate-100 align-top">
                   <td className="py-4">
                     <div className="font-medium">{it.product.name}</div>
-                    {(it.customization?.front?.name || it.customization?.linkedProfileUsername) && (
-                      <div className="text-xs text-slate-500 mt-1">
-                        {it.customization?.front?.name && `Name: ${it.customization.front.name}`}
-                        {it.customization?.linkedProfileUsername && ` • @${it.customization.linkedProfileUsername}`}
+                    {hasPreview && (
+                      <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+                        {(front?.backgroundColor || front?.textColor || front?.accentColor) && (
+                          <span className="inline-flex items-center gap-1" aria-label="Card colors">
+                            {front?.backgroundColor && (
+                              <span
+                                className="inline-block w-3 h-3 rounded-full border border-slate-300"
+                                style={{ backgroundColor: front.backgroundColor }}
+                                title={`Background ${front.backgroundColor}`}
+                              />
+                            )}
+                            {front?.textColor && (
+                              <span
+                                className="inline-block w-3 h-3 rounded-full border border-slate-300"
+                                style={{ backgroundColor: front.textColor }}
+                                title={`Text ${front.textColor}`}
+                              />
+                            )}
+                            {front?.accentColor && (
+                              <span
+                                className="inline-block w-3 h-3 rounded-full border border-slate-300"
+                                style={{ backgroundColor: front.accentColor }}
+                                title={`Accent ${front.accentColor}`}
+                              />
+                            )}
+                          </span>
+                        )}
+                        {front?.name && <span>Name: {front.name}</span>}
+                        {front?.title && <span>Title: {front.title}</span>}
+                        {c?.linkedProfileUsername && <span>Profile: @{c.linkedProfileUsername}</span>}
                       </div>
                     )}
                   </td>
@@ -227,7 +271,8 @@ export default function Invoice() {
                   <td className="py-4 text-right">{formatSAR(it.product.basePrice)}</td>
                   <td className="py-4 text-right font-medium">{formatSAR(it.product.basePrice * it.quantity)}</td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
 
