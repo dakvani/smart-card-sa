@@ -128,6 +128,7 @@ export default function SmartLinkBio() {
 
   useEffect(() => {
     if (location.hash !== "#pricing") return;
+    setMobileTab("pricing");
     let tries = 0;
     const tick = () => {
       const el = pricingRef.current ?? document.getElementById("pricing");
@@ -174,9 +175,15 @@ export default function SmartLinkBio() {
   const applyTemplate = (t: TemplateProfile) => {
     pushHistory({ username: t.username, name: t.name, bio: t.bio, handle: t.username });
     trackEvent("smartlink_template_selected", { username: t.username, category: t.category });
-    requestAnimationFrame(() => {
-      previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    // On mobile, jump to the Preview tab so the user sees the change immediately.
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      setMobileTab("preview");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      requestAnimationFrame(() => {
+        previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
   };
 
   const updateDraft = (patch: Partial<EditorState>) => setDraft((d) => ({ ...d, ...patch }));
@@ -190,22 +197,22 @@ export default function SmartLinkBio() {
       />
       <Navbar />
 
-      <main className="flex-1 pt-16 md:pt-24 mobile-safe-bottom md:pb-0">
+      <main className="flex-1 pt-14 md:pt-24 mobile-safe-bottom md:pb-0">
         {/* Hero */}
-        <section className={`relative py-8 sm:py-16 md:py-20 overflow-hidden ${mobileTab === "hero" ? "" : "hidden"} md:block`}>
+        <section className={`relative py-5 sm:py-16 md:py-20 overflow-hidden ${mobileTab === "hero" ? "" : "hidden"} md:block`}>
           <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
           <div className="container mx-auto px-4 text-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] sm:text-xs font-medium mb-3 sm:mb-6"
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] sm:text-xs font-medium mb-2 sm:mb-6"
             >
               <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> SmartLink Bio
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-4xl md:text-6xl font-bold mb-3 sm:mb-6 leading-tight"
+              className="text-xl sm:text-4xl md:text-6xl font-bold mb-2 sm:mb-6 leading-tight"
             >
               One link for <span className="gradient-text">everything you are</span>
             </motion.h1>
@@ -213,28 +220,52 @@ export default function SmartLinkBio() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-sm sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 sm:mb-8"
+              className="text-xs sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-8"
             >
               Beautiful templates, powerful features, and pricing that scales with you.
             </motion.p>
             <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
-              <Link to="/signup"><Button variant="gradient" size="sm" className="sm:h-11 sm:px-8 shadow-glow">Create your bio free</Button></Link>
-              <a href="#pricing"><Button variant="outline" size="sm" className="sm:h-11 sm:px-8">See pricing</Button></a>
+              <Link to="/signup"><Button variant="gradient" size="sm" className="h-8 text-xs sm:h-11 sm:text-sm sm:px-8 shadow-glow">Create free</Button></Link>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8 text-xs sm:h-11 sm:text-sm sm:px-8"
+                onClick={() => {
+                  setMobileTab("pricing");
+                  requestAnimationFrame(() => {
+                    (pricingRef.current ?? document.getElementById("pricing"))?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  });
+                }}
+              >
+                See pricing
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-8 text-xs sm:hidden"
+                onClick={() => { setMobileTab("preview"); window.scrollTo({ top: 0 }); }}
+              >
+                Try live preview →
+              </Button>
             </div>
           </div>
         </section>
 
+
         {/* Live Preview + Editor */}
-        <section id="preview" className={`py-8 sm:py-16 bg-secondary/20 border-y border-border ${mobileTab === "preview" || mobileTab === "editor" ? "" : "hidden"} md:block`}>
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-5 sm:mb-10 max-w-2xl mx-auto">
-              <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">
+        <section id="preview" className={`py-4 sm:py-16 bg-secondary/20 border-y border-border ${mobileTab === "preview" || mobileTab === "editor" ? "" : "hidden"} md:block`}>
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="text-center mb-3 sm:mb-10 max-w-2xl mx-auto">
+              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-3 leading-tight">
                 Try it live — <span className="gradient-text">edit as you go</span>
               </h2>
-              <p className="text-xs sm:text-base text-muted-foreground">
+              <p className="hidden sm:block text-xs sm:text-base text-muted-foreground">
                 Change your name, pick a template, and watch your SmartLink update instantly.
               </p>
             </div>
+
 
             <div ref={previewRef} data-smartlink-editor className="grid lg:grid-cols-[1fr_420px] gap-4 sm:gap-10 items-start max-w-6xl mx-auto">
               {/* Live preview with mode toggle — first on mobile so it's in-view */}
@@ -260,7 +291,7 @@ export default function SmartLinkBio() {
                   </button>
                 </div>
 
-                <div className={previewMode === "phone" ? "mx-auto w-full max-w-[190px] sm:max-w-[300px]" : "mx-auto w-full max-w-[240px] sm:max-w-[420px]"}>
+                <div className={previewMode === "phone" ? "mx-auto w-full max-w-[170px] sm:max-w-[300px]" : "mx-auto w-full max-w-[210px] sm:max-w-[420px]"}>
                   <TemplatePhoneCard
                     template={selected}
                     size="full"
@@ -274,7 +305,13 @@ export default function SmartLinkBio() {
                 <p className="mt-1.5 sm:mt-3 text-center text-[10px] sm:text-xs text-muted-foreground">
                   Live preview · saved automatically
                 </p>
+                <div className="md:hidden mt-2 flex justify-center">
+                  <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => { setMobileTab("editor"); window.scrollTo({ top: 0 }); }}>
+                    <Pencil className="w-3 h-3 mr-1" /> Edit content
+                  </Button>
+                </div>
               </div>
+
 
               {/* Editor */}
               <div className={`order-2 lg:order-1 space-y-3 sm:space-y-5 rounded-xl sm:rounded-2xl border border-border bg-card p-3 sm:p-6 ${mobileTab === "editor" ? "" : "hidden"} md:block`}>
@@ -376,11 +413,22 @@ export default function SmartLinkBio() {
                 <div className="rounded-lg bg-secondary/40 px-2.5 py-1.5 sm:px-3 sm:py-2 text-[10px] sm:text-xs text-muted-foreground truncate">
                   Template: <span className="font-semibold text-foreground">{selected.name}</span> · {selected.category}
                 </div>
-                <Link to="/signup" className="block">
-                  <Button variant="gradient" size="sm" className="w-full sm:h-11 sm:text-base" disabled={!validation.success}>
-                    {validation.success ? "Publish this bio" : "Fix errors to publish"}
+                <div className="grid grid-cols-1 md:block gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="md:hidden h-9 text-xs"
+                    onClick={() => { setMobileTab("preview"); window.scrollTo({ top: 0 }); }}
+                  >
+                    <Eye className="w-3.5 h-3.5 mr-1" /> See live preview
                   </Button>
-                </Link>
+                  <Link to="/signup" className="block">
+                    <Button variant="gradient" size="sm" className="w-full sm:h-11 sm:text-base" disabled={!validation.success}>
+                      {validation.success ? "Publish this bio" : "Fix errors to publish"}
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -388,16 +436,17 @@ export default function SmartLinkBio() {
 
 
         {/* Templates */}
-        <section id="templates" className={`py-8 sm:py-16 md:py-20 ${mobileTab === "templates" ? "" : "hidden"} md:block`}>
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-5 sm:mb-12 max-w-3xl mx-auto">
-              <h2 className="text-xl sm:text-4xl md:text-5xl font-bold mb-1.5 sm:mb-4 tracking-tight">
-                A template for <span className="gradient-text">every brand & creator</span>
+        <section id="templates" className={`py-4 sm:py-16 md:py-20 ${mobileTab === "templates" ? "" : "hidden"} md:block`}>
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="text-center mb-3 sm:mb-12 max-w-3xl mx-auto">
+              <h2 className="text-lg sm:text-4xl md:text-5xl font-bold mb-1 sm:mb-4 tracking-tight leading-tight">
+                A template for <span className="gradient-text">every brand</span>
               </h2>
-              <p className="text-xs sm:text-base md:text-lg text-muted-foreground">
+              <p className="hidden sm:block text-xs sm:text-base md:text-lg text-muted-foreground">
                 Different link styles, integrations and visuals to match your vibe.
               </p>
             </div>
+
 
             <div className="grid lg:grid-cols-[220px_1fr] gap-4 sm:gap-10">
               <aside className="lg:sticky lg:top-28 self-start -mx-4 px-4 lg:mx-0 lg:px-0">
@@ -470,12 +519,13 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Features */}
-        <section id="features" className={`py-8 sm:py-16 md:py-20 bg-secondary/30 ${mobileTab === "features" ? "" : "hidden"} md:block`}>
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-5 sm:mb-12">
-              <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">Everything you need to <span className="gradient-text">grow</span></h2>
-              <p className="text-xs sm:text-base text-muted-foreground">Powerful features for creators, makers, and brands.</p>
+        <section id="features" className={`py-4 sm:py-16 md:py-20 bg-secondary/30 ${mobileTab === "features" ? "" : "hidden"} md:block`}>
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="text-center mb-3 sm:mb-12">
+              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-3 leading-tight">Everything you need to <span className="gradient-text">grow</span></h2>
+              <p className="hidden sm:block text-xs sm:text-base text-muted-foreground">Powerful features for creators, makers, and brands.</p>
             </div>
+
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6">
               {features.map((f, i) => (
                 <motion.div
@@ -498,13 +548,13 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" ref={pricingRef} className={`py-8 sm:py-16 md:py-20 scroll-mt-24 ${mobileTab === "pricing" ? "" : "hidden"} md:block`}>
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-5 sm:mb-12">
-              <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">Simple, transparent <span className="gradient-text">pricing</span></h2>
-              <p className="text-xs sm:text-base text-muted-foreground">Start free. Scale when you are ready.</p>
+        <section id="pricing" ref={pricingRef} className={`py-4 sm:py-16 md:py-20 scroll-mt-24 ${mobileTab === "pricing" ? "" : "hidden"} md:block`}>
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="text-center mb-3 sm:mb-12">
+              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-3 leading-tight">Simple, transparent <span className="gradient-text">pricing</span></h2>
+              <p className="hidden sm:block text-xs sm:text-base text-muted-foreground">Start free. Scale when you are ready.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-8 max-w-6xl mx-auto">
+            <div className="flex md:grid md:grid-cols-3 gap-2.5 sm:gap-8 max-w-6xl mx-auto overflow-x-auto snap-x snap-mandatory md:overflow-visible -mx-3 px-3 md:mx-0 md:px-0 scrollbar-hide pb-1">
               {plans.map((plan, index) => (
                 <motion.div
                   key={plan.name}
@@ -512,41 +562,42 @@ export default function SmartLinkBio() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className={`relative rounded-xl sm:rounded-2xl p-4 sm:p-8 ${plan.popular ? "gradient-primary text-primary-foreground shadow-glow" : "bg-card border border-border"}`}
+                  className={`snap-start shrink-0 w-[80%] md:w-auto relative rounded-xl sm:rounded-2xl p-3 sm:p-8 ${plan.popular ? "gradient-primary text-primary-foreground shadow-glow" : "bg-card border border-border"}`}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 sm:px-4 sm:py-1 bg-background text-foreground text-xs sm:text-sm font-semibold rounded-full">
-                      Most Popular
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 sm:px-4 sm:py-1 bg-background text-foreground text-[10px] sm:text-sm font-semibold rounded-full">
+                      Popular
                     </div>
                   )}
                   <div className="flex items-baseline justify-between sm:block">
-                    <h3 className="text-base sm:text-xl font-bold mb-0 sm:mb-2">{plan.name}</h3>
+                    <h3 className="text-sm sm:text-xl font-bold mb-0 sm:mb-2">{plan.name}</h3>
                     <div className="sm:mb-6">
-                      <span className="text-2xl sm:text-5xl font-bold">{plan.price}</span>
-                      {plan.period && <span className={`text-xs sm:text-base ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.period}</span>}
+                      <span className="text-xl sm:text-5xl font-bold">{plan.price}</span>
+                      {plan.period && <span className={`text-[10px] sm:text-base ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.period}</span>}
                     </div>
                   </div>
-                  <p className={`text-xs sm:text-sm mb-3 sm:mb-6 ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.description}</p>
+                  <p className={`text-[11px] sm:text-sm mb-2 sm:mb-6 leading-snug ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.description}</p>
                   <Link to="/signup">
                     <Button
                       size="sm"
                       variant={plan.popular ? "heroOutline" : "gradient"}
-                      className={`w-full mb-3 sm:mb-8 sm:h-11 sm:text-base ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
+                      className={`w-full h-8 text-xs mb-2 sm:mb-8 sm:h-11 sm:text-base ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
                     >
                       {plan.cta}
                     </Button>
                   </Link>
-                  <ul className="space-y-1.5 sm:space-y-3">
+                  <ul className="space-y-1 sm:space-y-3">
                     {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2 sm:gap-3">
-                        <Check className={`w-4 h-4 sm:w-5 sm:h-5 mt-0.5 shrink-0 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
-                        <span className={`text-xs sm:text-sm ${plan.popular ? "text-primary-foreground/90" : ""}`}>{feature}</span>
+                      <li key={feature} className="flex items-start gap-1.5 sm:gap-3">
+                        <Check className={`w-3 h-3 sm:w-5 sm:h-5 mt-0.5 shrink-0 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
+                        <span className={`text-[11px] leading-snug sm:text-sm ${plan.popular ? "text-primary-foreground/90" : ""}`}>{feature}</span>
                       </li>
                     ))}
                   </ul>
                 </motion.div>
               ))}
             </div>
+
             <p className="text-center text-xs sm:text-sm text-muted-foreground mt-5 sm:mt-8">
               Need bulk seats or enterprise?{" "}
               <Link to="/contact" className="text-primary hover:underline">Contact sales</Link>
