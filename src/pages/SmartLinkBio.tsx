@@ -177,7 +177,7 @@ export default function SmartLinkBio() {
     trackEvent("smartlink_template_selected", { username: t.username, category: t.category });
     // On mobile, jump to the Preview tab so the user sees the change immediately.
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
-      setMobileTab("preview");
+      setMobileTab("studio");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       requestAnimationFrame(() => {
