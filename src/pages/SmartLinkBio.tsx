@@ -436,16 +436,17 @@ export default function SmartLinkBio() {
 
 
         {/* Templates */}
-        <section id="templates" className={`py-8 sm:py-16 md:py-20 ${mobileTab === "templates" ? "" : "hidden"} md:block`}>
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-5 sm:mb-12 max-w-3xl mx-auto">
-              <h2 className="text-xl sm:text-4xl md:text-5xl font-bold mb-1.5 sm:mb-4 tracking-tight">
-                A template for <span className="gradient-text">every brand & creator</span>
+        <section id="templates" className={`py-4 sm:py-16 md:py-20 ${mobileTab === "templates" ? "" : "hidden"} md:block`}>
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="text-center mb-3 sm:mb-12 max-w-3xl mx-auto">
+              <h2 className="text-lg sm:text-4xl md:text-5xl font-bold mb-1 sm:mb-4 tracking-tight leading-tight">
+                A template for <span className="gradient-text">every brand</span>
               </h2>
-              <p className="text-xs sm:text-base md:text-lg text-muted-foreground">
+              <p className="hidden sm:block text-xs sm:text-base md:text-lg text-muted-foreground">
                 Different link styles, integrations and visuals to match your vibe.
               </p>
             </div>
+
 
             <div className="grid lg:grid-cols-[220px_1fr] gap-4 sm:gap-10">
               <aside className="lg:sticky lg:top-28 self-start -mx-4 px-4 lg:mx-0 lg:px-0">
