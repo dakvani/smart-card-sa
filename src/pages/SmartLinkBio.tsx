@@ -10,6 +10,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BarChart3, CreditCard, Layers, Lock, Palette, Smartphone,
   Check, Sparkles, Wand2, Undo2, Redo2, Monitor, AlertCircle,
+  Home, Grid3x3, Zap, DollarSign, Eye, Pencil,
 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { SEO } from "@/components/SEO";
