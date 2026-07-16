@@ -238,7 +238,7 @@ export default function SmartLinkBio() {
 
             <div ref={previewRef} data-smartlink-editor className="grid lg:grid-cols-[1fr_420px] gap-4 sm:gap-10 items-start max-w-6xl mx-auto">
               {/* Live preview with mode toggle — first on mobile so it's in-view */}
-              <div className="order-1 lg:order-2">
+              <div className={`order-1 lg:order-2 ${mobileTab === "preview" ? "" : "hidden"} md:block`}>
                 <div className="flex items-center justify-center gap-1 mb-2 sm:mb-4 p-0.5 sm:p-1 rounded-full bg-secondary/60 w-fit mx-auto">
                   <button
                     type="button"
