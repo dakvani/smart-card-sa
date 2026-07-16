@@ -291,7 +291,7 @@ export default function SmartLinkBio() {
                   </button>
                 </div>
 
-                <div className={previewMode === "phone" ? "mx-auto w-full max-w-[190px] sm:max-w-[300px]" : "mx-auto w-full max-w-[240px] sm:max-w-[420px]"}>
+                <div className={previewMode === "phone" ? "mx-auto w-full max-w-[170px] sm:max-w-[300px]" : "mx-auto w-full max-w-[210px] sm:max-w-[420px]"}>
                   <TemplatePhoneCard
                     template={selected}
                     size="full"
