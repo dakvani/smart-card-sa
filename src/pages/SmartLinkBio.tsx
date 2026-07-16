@@ -10,6 +10,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BarChart3, CreditCard, Layers, Lock, Palette, Smartphone,
   Check, Sparkles, Wand2, Undo2, Redo2, Monitor, AlertCircle,
+  Home, Grid3x3, Zap, DollarSign, Eye, Pencil,
 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { SEO } from "@/components/SEO";
@@ -71,9 +72,12 @@ const loadInitial = (): EditorState => {
   }
 };
 
+type MobileTab = "hero" | "preview" | "editor" | "templates" | "features" | "pricing";
+
 export default function SmartLinkBio() {
   const [activeCategory, setActiveCategory] = useState<string>("All templates");
   const [previewMode, setPreviewMode] = useState<"phone" | "full">("phone");
+  const [mobileTab, setMobileTab] = useState<MobileTab>("hero");
 
   // Persisted, history-tracked editor state.
   const initial = useMemo(loadInitial, []);
@@ -186,9 +190,9 @@ export default function SmartLinkBio() {
       />
       <Navbar />
 
-      <main className="flex-1 pt-16 md:pt-24">
+      <main className="flex-1 pt-16 md:pt-24 mobile-safe-bottom md:pb-0">
         {/* Hero */}
-        <section className="relative py-8 sm:py-16 md:py-20 overflow-hidden">
+        <section className={`relative py-8 sm:py-16 md:py-20 overflow-hidden ${mobileTab === "hero" ? "" : "hidden"} md:block`}>
           <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
           <div className="container mx-auto px-4 text-center">
             <motion.div
@@ -221,7 +225,7 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Live Preview + Editor */}
-        <section id="preview" className="py-8 sm:py-16 bg-secondary/20 border-y border-border">
+        <section id="preview" className={`py-8 sm:py-16 bg-secondary/20 border-y border-border ${mobileTab === "preview" || mobileTab === "editor" ? "" : "hidden"} md:block`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-5 sm:mb-10 max-w-2xl mx-auto">
               <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">
@@ -234,7 +238,7 @@ export default function SmartLinkBio() {
 
             <div ref={previewRef} data-smartlink-editor className="grid lg:grid-cols-[1fr_420px] gap-4 sm:gap-10 items-start max-w-6xl mx-auto">
               {/* Live preview with mode toggle — first on mobile so it's in-view */}
-              <div className="order-1 lg:order-2">
+              <div className={`order-1 lg:order-2 ${mobileTab === "preview" ? "" : "hidden"} md:block`}>
                 <div className="flex items-center justify-center gap-1 mb-2 sm:mb-4 p-0.5 sm:p-1 rounded-full bg-secondary/60 w-fit mx-auto">
                   <button
                     type="button"
@@ -273,7 +277,7 @@ export default function SmartLinkBio() {
               </div>
 
               {/* Editor */}
-              <div className="order-2 lg:order-1 space-y-3 sm:space-y-5 rounded-xl sm:rounded-2xl border border-border bg-card p-3 sm:p-6">
+              <div className={`order-2 lg:order-1 space-y-3 sm:space-y-5 rounded-xl sm:rounded-2xl border border-border bg-card p-3 sm:p-6 ${mobileTab === "editor" ? "" : "hidden"} md:block`}>
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold">
                     <Wand2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" /> Your bio content
@@ -384,7 +388,7 @@ export default function SmartLinkBio() {
 
 
         {/* Templates */}
-        <section id="templates" className="py-8 sm:py-16 md:py-20">
+        <section id="templates" className={`py-8 sm:py-16 md:py-20 ${mobileTab === "templates" ? "" : "hidden"} md:block`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-5 sm:mb-12 max-w-3xl mx-auto">
               <h2 className="text-xl sm:text-4xl md:text-5xl font-bold mb-1.5 sm:mb-4 tracking-tight">
@@ -466,7 +470,7 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Features */}
-        <section id="features" className="py-8 sm:py-16 md:py-20 bg-secondary/30">
+        <section id="features" className={`py-8 sm:py-16 md:py-20 bg-secondary/30 ${mobileTab === "features" ? "" : "hidden"} md:block`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-5 sm:mb-12">
               <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">Everything you need to <span className="gradient-text">grow</span></h2>
@@ -494,7 +498,7 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" ref={pricingRef} className="py-8 sm:py-16 md:py-20 scroll-mt-24">
+        <section id="pricing" ref={pricingRef} className={`py-8 sm:py-16 md:py-20 scroll-mt-24 ${mobileTab === "pricing" ? "" : "hidden"} md:block`}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-5 sm:mb-12">
               <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">Simple, transparent <span className="gradient-text">pricing</span></h2>
@@ -550,6 +554,45 @@ export default function SmartLinkBio() {
           </div>
         </section>
       </main>
+
+      {/* Mobile-only bottom section tabs — single-screen navigation */}
+      <nav
+        aria-label="SmartLink sections"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]"
+      >
+        <ul className="grid grid-cols-6">
+          {([
+            { id: "hero", label: "Home", Icon: Home },
+            { id: "preview", label: "Preview", Icon: Eye },
+            { id: "editor", label: "Edit", Icon: Pencil },
+            { id: "templates", label: "Themes", Icon: Grid3x3 },
+            { id: "features", label: "Features", Icon: Zap },
+            { id: "pricing", label: "Pricing", Icon: DollarSign },
+          ] as const).map(({ id, label, Icon }) => {
+            const active = mobileTab === id;
+            return (
+              <li key={id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileTab(id);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  aria-current={active ? "page" : undefined}
+                  className={`w-full min-h-[52px] flex flex-col items-center justify-center gap-0.5 transition-colors ${
+                    active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${active ? "scale-110" : ""} transition-transform`} />
+                  <span className="text-[9px] font-medium tracking-wide">{label}</span>
+                  {active && <span className="block w-5 h-0.5 rounded-full bg-primary mt-0.5" />}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
       <Footer />
     </div>
   );
