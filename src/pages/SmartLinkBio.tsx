@@ -432,7 +432,7 @@ export default function SmartLinkBio() {
                 </div>
               </aside>
 
-              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-8">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-8 min-w-0">
                 {filteredTemplates.map((template, index) => {
                   const isSelected = template.username === editor.username;
                   return (
