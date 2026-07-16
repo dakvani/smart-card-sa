@@ -466,13 +466,13 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Features */}
-        <section id="features" className="py-20 bg-secondary/30">
+        <section id="features" className="py-8 sm:py-16 md:py-20 bg-secondary/30">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-3">Everything you need to <span className="gradient-text">grow</span></h2>
-              <p className="text-muted-foreground">Powerful features built for creators, makers, and brands.</p>
+            <div className="text-center mb-5 sm:mb-12">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">Everything you need to <span className="gradient-text">grow</span></h2>
+              <p className="text-xs sm:text-base text-muted-foreground">Powerful features for creators, makers, and brands.</p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6">
               {features.map((f, i) => (
                 <motion.div
                   key={f.title}
@@ -480,13 +480,13 @@ export default function SmartLinkBio() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.05 }}
-                  className="p-6 rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-glow transition-all"
+                  className="p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-glow transition-all"
                 >
-                  <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mb-4">
-                    <f.icon className="w-6 h-6 text-primary-foreground" />
+                  <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl gradient-primary flex items-center justify-center mb-2 sm:mb-4">
+                    <f.icon className="w-4 h-4 sm:w-6 sm:h-6 text-primary-foreground" />
                   </div>
-                  <h3 className="text-lg font-semibold mb-2">{f.title}</h3>
-                  <p className="text-sm text-muted-foreground">{f.description}</p>
+                  <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2">{f.title}</h3>
+                  <p className="text-[11px] leading-snug sm:text-sm text-muted-foreground">{f.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -494,13 +494,13 @@ export default function SmartLinkBio() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" ref={pricingRef} className="py-20 scroll-mt-24">
+        <section id="pricing" ref={pricingRef} className="py-8 sm:py-16 md:py-20 scroll-mt-24">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-3">Simple, transparent <span className="gradient-text">pricing</span></h2>
-              <p className="text-muted-foreground">Start free. Scale when you are ready.</p>
+            <div className="text-center mb-5 sm:mb-12">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-1.5 sm:mb-3">Simple, transparent <span className="gradient-text">pricing</span></h2>
+              <p className="text-xs sm:text-base text-muted-foreground">Start free. Scale when you are ready.</p>
             </div>
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-8 max-w-6xl mx-auto">
               {plans.map((plan, index) => (
                 <motion.div
                   key={plan.name}
@@ -508,39 +508,42 @@ export default function SmartLinkBio() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className={`relative rounded-2xl p-8 ${plan.popular ? "gradient-primary text-primary-foreground shadow-glow" : "bg-card border border-border"}`}
+                  className={`relative rounded-xl sm:rounded-2xl p-4 sm:p-8 ${plan.popular ? "gradient-primary text-primary-foreground shadow-glow" : "bg-card border border-border"}`}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-background text-foreground text-sm font-semibold rounded-full">
+                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 sm:px-4 sm:py-1 bg-background text-foreground text-xs sm:text-sm font-semibold rounded-full">
                       Most Popular
                     </div>
                   )}
-                  <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                  <p className={`text-sm mb-6 ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.description}</p>
-                  <div className="mb-6">
-                    <span className="text-5xl font-bold">{plan.price}</span>
-                    {plan.period && <span className={plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}>{plan.period}</span>}
+                  <div className="flex items-baseline justify-between sm:block">
+                    <h3 className="text-base sm:text-xl font-bold mb-0 sm:mb-2">{plan.name}</h3>
+                    <div className="sm:mb-6">
+                      <span className="text-2xl sm:text-5xl font-bold">{plan.price}</span>
+                      {plan.period && <span className={`text-xs sm:text-base ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.period}</span>}
+                    </div>
                   </div>
+                  <p className={`text-xs sm:text-sm mb-3 sm:mb-6 ${plan.popular ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{plan.description}</p>
                   <Link to="/signup">
                     <Button
+                      size="sm"
                       variant={plan.popular ? "heroOutline" : "gradient"}
-                      className={`w-full mb-8 ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
+                      className={`w-full mb-3 sm:mb-8 sm:h-11 sm:text-base ${plan.popular ? "border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" : ""}`}
                     >
                       {plan.cta}
                     </Button>
                   </Link>
-                  <ul className="space-y-3">
+                  <ul className="space-y-1.5 sm:space-y-3">
                     {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-3">
-                        <Check className={`w-5 h-5 mt-0.5 shrink-0 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
-                        <span className={`text-sm ${plan.popular ? "text-primary-foreground/90" : ""}`}>{feature}</span>
+                      <li key={feature} className="flex items-start gap-2 sm:gap-3">
+                        <Check className={`w-4 h-4 sm:w-5 sm:h-5 mt-0.5 shrink-0 ${plan.popular ? "text-primary-foreground" : "text-primary"}`} />
+                        <span className={`text-xs sm:text-sm ${plan.popular ? "text-primary-foreground/90" : ""}`}>{feature}</span>
                       </li>
                     ))}
                   </ul>
                 </motion.div>
               ))}
             </div>
-            <p className="text-center text-sm text-muted-foreground mt-8">
+            <p className="text-center text-xs sm:text-sm text-muted-foreground mt-5 sm:mt-8">
               Need bulk seats or enterprise?{" "}
               <Link to="/contact" className="text-primary hover:underline">Contact sales</Link>
             </p>
