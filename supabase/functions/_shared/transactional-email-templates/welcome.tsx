@@ -137,7 +137,7 @@ const brandRow = { marginBottom: '24px' }
 const brand = {
   fontSize: '18px',
   fontWeight: 700 as const,
-  color: 'hsl(270, 60%, 55%)',
+  color: '#4f46e5',
   margin: 0,
   letterSpacing: '-0.01em',
 }
@@ -152,8 +152,8 @@ const text = { fontSize: '15px', color: '#3f3f4d', lineHeight: '1.6', margin: '0
 const list = { fontSize: '15px', color: '#3f3f4d', lineHeight: '1.9', margin: '0 0 24px' }
 const ctaWrap = { margin: '28px 0' }
 const button = {
-  backgroundImage: 'linear-gradient(135deg, hsl(270, 60%, 55%) 0%, hsl(330, 75%, 60%) 100%)',
-  backgroundColor: 'hsl(270, 60%, 55%)',
+  backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #1e1e5a 100%)',
+  backgroundColor: '#4f46e5',
   color: '#ffffff',
   fontSize: '15px',
   fontWeight: 600 as const,
@@ -162,7 +162,7 @@ const button = {
   textDecoration: 'none',
   display: 'inline-block',
 }
-const link = { color: 'hsl(270, 60%, 55%)', textDecoration: 'underline' }
+const link = { color: '#4f46e5', textDecoration: 'underline' }
 const mutedLink = { color: '#8a8a98', textDecoration: 'underline' }
 const footer = { fontSize: '12px', color: '#8a8a98', margin: '32px 0 0', lineHeight: '1.6' }
 const prefsFooter = { fontSize: '11px', color: '#a1a1ad', margin: '16px 0 0', lineHeight: '1.6' }
