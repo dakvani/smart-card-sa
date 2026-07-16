@@ -175,9 +175,15 @@ export default function SmartLinkBio() {
   const applyTemplate = (t: TemplateProfile) => {
     pushHistory({ username: t.username, name: t.name, bio: t.bio, handle: t.username });
     trackEvent("smartlink_template_selected", { username: t.username, category: t.category });
-    requestAnimationFrame(() => {
-      previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    // On mobile, jump to the Preview tab so the user sees the change immediately.
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      setMobileTab("preview");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      requestAnimationFrame(() => {
+        previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
   };
 
   const updateDraft = (patch: Partial<EditorState>) => setDraft((d) => ({ ...d, ...patch }));
