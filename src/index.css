@@ -588,3 +588,21 @@
   animation: wiggle-bell 1.6s ease-in-out infinite;
   transform-origin: 50% 0%;
 }
+
+/* ============================================================
+ * Mobile compact typography & spacing scale
+ * Utility classes for consistent compact mobile layouts.
+ * Use on section wrappers/headings to auto-scale on <sm screens.
+ * ============================================================ */
+@layer utilities {
+  .section-y        { @apply py-8 sm:py-16 md:py-20; }
+  .section-y-tight  { @apply py-6 sm:py-12 md:py-16; }
+  .heading-hero     { @apply text-2xl sm:text-4xl md:text-6xl font-bold leading-tight; }
+  .heading-section  { @apply text-xl sm:text-3xl md:text-4xl font-bold leading-tight; }
+  .heading-sub      { @apply text-sm sm:text-lg font-semibold leading-snug; }
+  .text-lede        { @apply text-xs sm:text-base text-muted-foreground leading-snug; }
+  .text-body-sm     { @apply text-[11px] sm:text-sm leading-snug; }
+  .card-compact     { @apply p-3 sm:p-6 rounded-xl sm:rounded-2xl; }
+  .stack-compact > * + * { @apply mt-2 sm:mt-4; }
+  .mobile-safe-bottom { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4.5rem); }
+}
