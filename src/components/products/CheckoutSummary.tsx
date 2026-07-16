@@ -409,7 +409,14 @@ export function CheckoutSummary({ cart, onUpdateQuantity, onRemoveItem, onEditIt
           <Separator />
           <div className="flex justify-between text-lg font-bold">
             <span>Total</span>
-            <span>{formatSAR(total)}</span>
+            <motion.span
+              key={total}
+              initial={{ opacity: 0.4, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.18 }}
+            >
+              {formatSAR(total)}
+            </motion.span>
           </div>
         </div>
 
