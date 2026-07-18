@@ -391,7 +391,7 @@ export function Navbar() {
                     onClick={() => setMobileOpen(false)}
                     role="menuitem"
                     aria-current={active ? "page" : undefined}
-                    className={`flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium transition-colors ${
+                    className={`flex items-center gap-2.5 px-2.5 py-1.5 text-[13px] leading-none font-medium transition-colors ${
                       active
                         ? "bg-accent text-accent-foreground"
                         : "text-foreground/85 hover:bg-accent/60 hover:text-foreground"
@@ -415,7 +415,7 @@ export function Navbar() {
                     to="/"
                     onClick={() => setMobileOpen(false)}
                     role="menuitem"
-                    className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
+                    className="flex items-center gap-2.5 px-2.5 py-1.5 text-[13px] leading-none font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
                   >
                     <Home className="w-4 h-4 shrink-0 text-muted-foreground" /> Home
                   </Link>
@@ -424,7 +424,7 @@ export function Navbar() {
                   to="/dashboard"
                   onClick={() => setMobileOpen(false)}
                   role="menuitem"
-                  className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
+                  className="flex items-center gap-2.5 px-2.5 py-1.5 text-[13px] leading-none font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
                 >
                   <LayoutDashboard className="w-4 h-4 shrink-0 text-muted-foreground" /> Dashboard
                 </Link>
@@ -433,7 +433,7 @@ export function Navbar() {
                     to="/admin"
                     onClick={() => setMobileOpen(false)}
                     role="menuitem"
-                    className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-primary hover:bg-primary/10 transition-colors"
+                    className="flex items-center gap-2.5 px-2.5 py-1.5 text-[13px] leading-none font-medium text-primary hover:bg-primary/10 transition-colors"
                   >
                     <Shield className="w-4 h-4 shrink-0" /> Admin Panel
                   </Link>
@@ -442,7 +442,7 @@ export function Navbar() {
                   to="/settings"
                   onClick={() => setMobileOpen(false)}
                   role="menuitem"
-                  className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
+                  className="flex items-center gap-2.5 px-2.5 py-1.5 text-[13px] leading-none font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
                 >
                   <Settings className="w-4 h-4 shrink-0 text-muted-foreground" /> Settings
                 </Link>
@@ -450,7 +450,7 @@ export function Navbar() {
                   type="button"
                   role="menuitem"
                   onClick={() => { handleLogout(); setMobileOpen(false); }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-destructive hover:bg-destructive/10 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 text-[13px] leading-none font-medium text-destructive hover:bg-destructive/10 transition-colors"
                 >
                   <LogOut className="w-4 h-4 shrink-0" /> Log out
                 </button>
@@ -461,7 +461,7 @@ export function Navbar() {
                   to="/login"
                   onClick={() => setMobileOpen(false)}
                   role="menuitem"
-                  className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
+                  className="flex items-center gap-2.5 px-2.5 py-1.5 text-[13px] leading-none font-medium text-foreground/85 hover:bg-accent/60 hover:text-foreground transition-colors"
                 >
                   <LogIn className="w-4 h-4 shrink-0 text-muted-foreground" /> Log in
                 </Link>
@@ -469,7 +469,7 @@ export function Navbar() {
                   to="/signup"
                   onClick={() => setMobileOpen(false)}
                   role="menuitem"
-                  className="flex items-center gap-2.5 mx-2 my-1 px-3 py-2 rounded-lg text-[13px] font-semibold gradient-primary text-primary-foreground shadow-glow transition-transform hover:scale-[1.02]"
+                  className="flex items-center gap-2.5 mx-2 my-1 px-2.5 py-1.5 rounded-lg text-[13px] leading-none font-semibold gradient-primary text-primary-foreground shadow-glow transition-transform hover:scale-[1.02]"
                 >
                   <UserPlus className="w-4 h-4 shrink-0" /> Sign up free
                 </Link>
