@@ -21,8 +21,11 @@ export default function NFCPage() {
   useEffect(() => {
     (async () => {
       const res = await checkNfcAvailability();
-      if (res.available) setAvailability({ available: true });
-      else setAvailability({ available: false, reason: res.reason });
+      if (res.available === true) {
+        setAvailability({ available: true });
+      } else {
+        setAvailability({ available: false, reason: res.reason });
+      }
     })();
 
     // Pre-fill the "write" field with the current user's public profile URL
