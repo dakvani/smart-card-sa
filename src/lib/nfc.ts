@@ -24,8 +24,9 @@ export type NfcAvailability =
 async function loadPlugin(): Promise<any | null> {
   if (!Capacitor.isNativePlatform()) return null;
   try {
-    // @ts-expect-error — optional peer, installed only when building native
-    const mod = await import("@exxili/capacitor-nfc");
+    // @vite-ignore — optional peer, installed only when building native
+    const pkg = "@exxili/capacitor-nfc";
+    const mod: any = await import(/* @vite-ignore */ pkg);
     return mod.NFC ?? mod.Nfc ?? mod.default ?? null;
   } catch {
     return null;
