@@ -359,22 +359,22 @@ export function Navbar() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.98 }}
           transition={{ duration: 0.18, ease: "easeOut" }}
-          className="lg:hidden absolute right-3 sm:right-6 mt-2 w-64 origin-top-right rounded-xl border border-border/60 bg-popover/95 backdrop-blur-xl shadow-2xl overflow-hidden"
+          className="lg:hidden absolute right-3 sm:right-6 mt-2 w-60 origin-top-right rounded-xl border border-border/60 bg-popover/95 backdrop-blur-xl shadow-2xl overflow-hidden"
           role="menu"
           aria-label="Mobile navigation menu"
         >
           {/* Signed-in user header */}
           {isAuthenticated && (
-            <div className="flex items-center gap-2.5 px-3 py-2.5 border-b border-border/60">
-              <Avatar className="h-8 w-8">
+            <div className="flex items-center gap-2 px-2.5 py-1.5 border-b border-border/60">
+              <Avatar className="h-7 w-7">
                 <AvatarImage src={avatarUrl || undefined} alt="Your profile" />
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                <AvatarFallback className="bg-primary text-primary-foreground text-[10px]">
                   {getUserInitials()}
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold truncate leading-tight">{userEmail}</p>
-                <p className="text-[10px] text-muted-foreground leading-tight">Signed in</p>
+                <p className="text-[12px] font-semibold truncate leading-none">{userEmail}</p>
+                <p className="text-[10px] text-muted-foreground leading-none mt-1">Signed in</p>
               </div>
             </div>
           )}
