@@ -10,6 +10,7 @@ import { KeyboardShortcutsHelp } from "./components/accessibility/KeyboardShortc
 import { FocusVisibilityManager } from "./components/accessibility/FocusRing";
 import { LoadingScreen, shouldShowLoadingScreen } from "./components/LoadingScreen";
 import { WelcomeEmailTrigger } from "./components/WelcomeEmailTrigger";
+import { InstallPrompt } from "./components/InstallPrompt";
 import { useTheme } from "./components/ThemeToggle";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => {
           <KeyboardShortcutsHelp />
           <WelcomeEmailTrigger />
           <AnimatedRoutes />
+          <InstallPrompt />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
