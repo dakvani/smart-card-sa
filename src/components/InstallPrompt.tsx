@@ -20,6 +20,32 @@ export function InstallPrompt() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [bottomOffset, setBottomOffset] = useState(16);
+  const location = useLocation();
+
+  // Never interrupt public profile pages (e.g. NFC tap landings): single-segment routes
+  const isPublicProfileRoute =
+    /^\/[^/]+$/.test(location.pathname) &&
+    !["/auth", "/nfc", "/pricing", "/shop", "/cart", "/checkout", "/dashboard", "/admin", "/smartlink-bio"].includes(
+      location.pathname,
+    );
+
+  // Keep the banner above any page-level fixed bottom navigation
+  useEffect(() => {
+    if (!visible) return;
+    const measure = () => {
+      const nav = document.querySelector<HTMLElement>("[data-bottom-nav]");
+      const h = nav && getComputedStyle(nav).display !== "none" ? nav.offsetHeight : 0;
+      setBottomOffset(h + 16);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    const id = window.setTimeout(measure, 300);
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.clearTimeout(id);
+    };
+  }, [visible, location.pathname]);
 
   useEffect(() => {
     // Respect recent dismissal
