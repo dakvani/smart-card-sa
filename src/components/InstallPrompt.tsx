@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Download, X, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
