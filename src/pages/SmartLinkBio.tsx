@@ -625,6 +625,7 @@ export default function SmartLinkBio() {
 
       {/* Mobile-only bottom section tabs — single-screen navigation */}
       <nav
+        data-bottom-nav
         aria-label="SmartLink sections"
         className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]"
       >

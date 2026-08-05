@@ -19,6 +19,7 @@ const TABS = [
 export function MobileTabBar({ activeTab, onChange }: MobileTabBarProps) {
   return (
     <nav
+      data-bottom-nav
       aria-label="Profile builder sections"
       className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]"
     >
