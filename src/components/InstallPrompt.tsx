@@ -90,16 +90,18 @@ export function InstallPrompt() {
     setVisible(false);
   };
 
-  if (!visible) return null;
+  if (!visible || isPublicProfileRoute) return null;
 
   return (
     <div
       role="dialog"
       aria-label="Install SmartCard app"
-      className="fixed bottom-4 inset-x-4 sm:left-auto sm:right-4 sm:w-[360px] z-50
+      style={{ bottom: `calc(${bottomOffset}px + env(safe-area-inset-bottom, 0px))` }}
+      className="fixed inset-x-4 sm:left-auto sm:right-4 sm:w-[360px] z-30
                  rounded-2xl border border-border/60 bg-popover/95 backdrop-blur-xl
                  shadow-2xl p-3 flex items-start gap-3"
     >
+
       <div className="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 grid place-items-center text-white">
         <Download className="w-5 h-5" />
       </div>
