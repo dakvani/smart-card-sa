@@ -148,13 +148,14 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
           <p className="text-sm text-muted-foreground">Pick a ready-made layout to edit or upload your custom design</p>
         </div>
         <Button
-          variant={showPreview ? "gradient" : "outline"}
+          type="button"
+          variant="outline"
           size="sm"
           onClick={() => setShowPreview(!showPreview)}
-          className="gap-2"
+          className="gap-2 bg-muted/20 border-border/50 hover:bg-muted/40"
         >
           <Eye className="w-4 h-4" />
-          {showPreview ? "Edit Design" : "View Preview"}
+          <span className="text-xs font-bold uppercase tracking-wider">{showPreview ? "Edit Design" : "View Preview"}</span>
         </Button>
       </div>
 
@@ -290,15 +291,18 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       </div>
                       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                         {['All', 'Real Estate', 'Tech', 'Creative', 'Healthcare', 'Corporate', 'Food'].map((ind) => (
-                          <Button
+                          <button
                             key={ind}
-                            size="sm"
-                            variant={(!customization.industry && ind === 'All') || customization.industry === ind ? 'secondary' : 'outline'}
-                            className="whitespace-nowrap rounded-full h-9"
+                            type="button"
                             onClick={() => onChange({ ...customization, industry: ind === 'All' ? null : ind })}
+                            className={`whitespace-nowrap rounded-full px-4 py-1.5 text-[11px] font-bold transition-all ${
+                              (!customization.industry && ind === 'All') || customization.industry === ind 
+                                ? 'bg-foreground text-background shadow-md' 
+                                : 'bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-border/50'
+                            }`}
                           >
                             {ind}
-                          </Button>
+                          </button>
                         ))}
                       </div>
                     </div>
