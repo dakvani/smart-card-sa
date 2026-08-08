@@ -65,12 +65,17 @@ export function Testimonials() {
 
         {/* Desktop/tablet: bento masonry */}
         <div className="mx-auto hidden max-w-6xl grid-cols-6 gap-4 sm:grid lg:gap-5">
-          <TestimonialCard t={testimonials[0]} i={0} className="col-span-6 lg:col-span-4" featured />
-          <TestimonialCard t={testimonials[1]} i={1} className="col-span-3 lg:col-span-2" />
-          <TestimonialCard t={testimonials[2]} i={2} className="col-span-3 lg:col-span-2" />
-          <TestimonialCard t={testimonials[3]} i={3} className="col-span-3 lg:col-span-2" />
-          <TestimonialCard t={testimonials[4]} i={4} className="col-span-6 lg:col-span-4" featured />
-          <TestimonialCard t={testimonials[5]} i={5} className="col-span-6 lg:col-span-6" />
+          {/* Row 1: 4 + 2 */}
+          <TestimonialCard t={testimonials[0]} i={0} className="col-span-4" featured />
+          <TestimonialCard t={testimonials[1]} i={1} className="col-span-2" />
+          
+          {/* Row 2: 2 + 2 + 2 */}
+          <TestimonialCard t={testimonials[2]} i={2} className="col-span-2" />
+          <TestimonialCard t={testimonials[3]} i={3} className="col-span-2" />
+          <TestimonialCard t={testimonials[4]} i={4} className="col-span-2" />
+          
+          {/* Row 3: 6 (full width) */}
+          <TestimonialCard t={testimonials[5]} i={5} className="col-span-6" featured />
         </div>
       </div>
     </section>
