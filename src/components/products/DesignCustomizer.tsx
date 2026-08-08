@@ -24,6 +24,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
   const [loadingProfiles, setLoadingProfiles] = useState(false);
   const [canvaUrl, setCanvaUrl] = useState("");
   const [showPreview, setShowPreview] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   const supportsTwoSides = product.category === 'card' || product.category === 'keychain';
   const activeSide = customization.activeSide;
@@ -175,7 +177,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             exit={{ opacity: 0 }}
             className="space-y-6"
           >
-            {/* Stage 1: Initialization and Design Input */}
+            {/* Stage 1: Design Input Methods */}
             <div className="grid grid-cols-2 gap-3">
               <Button
                 variant={customization.inputMethod === 'template' ? 'gradient' : 'outline'}
@@ -184,8 +186,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
               >
                 <Palette className="w-5 h-5" />
                 <div className="text-left">
-                  <div className="font-bold">Templates</div>
-                  <div className="text-[10px] opacity-80">Choose from collection</div>
+                  <div className="font-bold">Template</div>
+                  <div className="text-[10px] opacity-80">Choose & Customize</div>
                 </div>
               </Button>
               <Button
@@ -195,11 +197,12 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
               >
                 <FileUp className="w-5 h-5" />
                 <div className="text-left">
-                  <div className="font-bold">Upload Print-Ready</div>
-                  <div className="text-[10px] opacity-80">PDF, AI, 300 DPI</div>
+                  <div className="font-bold">Upload File</div>
+                  <div className="text-[10px] opacity-80">Print-Ready (PDF/AI)</div>
                 </div>
               </Button>
             </div>
+
 
             <AnimatePresence mode="wait">
               {customization.inputMethod === 'upload' ? (
@@ -265,62 +268,74 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                   className="space-y-6"
                 >
                   {/* Stage 2: Template Refinement */}
-                  <div className="space-y-3">
-                    <Label>Industry / Theme Filter</Label>
-                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                      {['Real Estate', 'Tech', 'Creative', 'Healthcare', 'Corporate', 'Food'].map((ind) => (
-                        <Button
-                          key={ind}
-                          size="sm"
-                          variant={customization.industry === ind ? 'secondary' : 'outline'}
-                          className="whitespace-nowrap rounded-full"
-                          onClick={() => onChange({ ...customization, industry: ind })}
-                        >
-                          {ind}
-                        </Button>
-                      ))}
+                  {/* Stage 2: Template Selection with Filter/Search */}
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <div className="flex-1 relative">
+                        <Grid3X3 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input 
+                          placeholder="Search templates..." 
+                          className="pl-10 h-10"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                        {['All', 'Real Estate', 'Tech', 'Creative', 'Healthcare', 'Corporate', 'Food'].map((ind) => (
+                          <Button
+                            key={ind}
+                            size="sm"
+                            variant={(!customization.industry && ind === 'All') || customization.industry === ind ? 'secondary' : 'outline'}
+                            className="whitespace-nowrap rounded-full h-9"
+                            onClick={() => onChange({ ...customization, industry: ind === 'All' ? null : ind })}
+                          >
+                            {ind}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Customization & Layout</h3>
+
+
+                  <div className="flex items-center justify-between mt-2">
+                    <h3 className="text-lg font-bold gradient-text">Customization & Layout</h3>
                     {supportsTwoSides && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onChange({ ...customization, isDoubleSided: !customization.isDoubleSided })}
-                        className="gap-2"
-                      >
-                        <Settings2 className="w-4 h-4" />
-                        <span>{customization.isDoubleSided ? 'Double-Sided' : 'Single-Sided'}</span>
-                      </Button>
+                      <div className="flex items-center gap-2">
+                         <span className="text-[10px] font-medium text-muted-foreground hidden sm:inline">Double Sided?</span>
+                         <Switch 
+                           checked={customization.isDoubleSided}
+                           onCheckedChange={(val) => onChange({ ...customization, isDoubleSided: val })}
+                         />
+                      </div>
                     )}
                   </div>
 
                   {customization.isDoubleSided && (
-                    <div className="flex gap-2 p-1 bg-muted rounded-lg">
+                    <div className="flex gap-2 p-1.5 bg-muted/50 backdrop-blur-sm rounded-xl border border-border/50">
                       <button
                         onClick={() => onChange({ ...customization, activeSide: 'front' })}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                        className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
                           activeSide === 'front'
-                            ? 'bg-background shadow text-foreground'
-                            : 'text-muted-foreground hover:text-foreground'
+                            ? 'bg-primary shadow-lg text-primary-foreground'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                         }`}
                       >
                         Front Side
                       </button>
                       <button
                         onClick={() => onChange({ ...customization, activeSide: 'back' })}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                        className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
                           activeSide === 'back'
-                            ? 'bg-background shadow text-foreground'
-                            : 'text-muted-foreground hover:text-foreground'
+                            ? 'bg-primary shadow-lg text-primary-foreground'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                         }`}
                       >
                         Back Side
                       </button>
                     </div>
                   )}
+
 
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -354,45 +369,53 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
 
                         <TabsContent value="templates" className="space-y-4 mt-4">
                           <div className="flex items-center justify-between">
-                            <Label>Ready-Made Layouts</Label>
-                            <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                              Select to Edit
-                            </span>
+                            <Label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Select a Template</Label>
                           </div>
-                          <div className="grid grid-cols-2 gap-4 mt-2">
-                            {designTemplates.map((template) => (
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                            {designTemplates
+                              .filter(t => {
+                                const matchesIndustry = !customization.industry || (t as any).category === customization.industry;
+                                const matchesSearch = t.name.toLowerCase().includes(searchTerm.toLowerCase());
+                                return matchesIndustry && matchesSearch;
+                              })
+                              .map((template) => (
+
                               <button
                                 key={template.id}
                                 onClick={() => handleTemplateSelect(template.id)}
-                                className={`group relative aspect-[1.6/1] overflow-hidden rounded-xl border-2 transition-all ${
+                                className={`group relative aspect-[1.58/1] overflow-hidden rounded-xl border-2 transition-all duration-300 ${
                                   customization.templateId === template.id
-                                    ? "border-primary ring-2 ring-primary/20 scale-[0.98]"
-                                    : "border-border hover:border-primary/50"
+                                    ? "border-primary ring-4 ring-primary/20 scale-[0.98]"
+                                    : "border-border hover:border-primary/50 hover:shadow-xl"
                                 }`}
                               >
                                 <div 
-                                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                                   style={{ 
                                     backgroundImage: `url(${(template as any).image})`,
                                     backgroundColor: template.colors.bg 
                                   }}
                                 />
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                                  <div className="bg-white/10 border border-white/20 px-3 py-1 rounded-full">
-                                    <span className="text-white text-[10px] font-bold uppercase tracking-widest">Apply Layout</span>
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center backdrop-blur-[2px] p-2">
+                                  <div className="bg-primary text-white p-2 rounded-full mb-2">
+                                    <Sparkles className="w-4 h-4" />
                                   </div>
+                                  <span className="text-white text-[10px] font-bold uppercase tracking-widest text-center">Use {template.name}</span>
                                 </div>
-                                <div className="absolute bottom-0 inset-x-0 p-2 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
-                                  <span className="text-[10px] font-bold text-white uppercase tracking-wider">{template.name}</span>
-                                </div>
+                                
                                 {customization.templateId === template.id && (
-                                  <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1 shadow-lg">
+                                  <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1 shadow-lg z-10">
                                     <Sparkles className="w-3 h-3" />
                                   </div>
                                 )}
+                                
+                                <div className="absolute bottom-0 inset-x-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                                  <p className="text-[10px] font-bold text-white truncate">{template.name}</p>
+                                </div>
                               </button>
                             ))}
                           </div>
+
                         </TabsContent>
 
                         <TabsContent value="colors" className="space-y-4 mt-4">

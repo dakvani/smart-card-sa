@@ -173,14 +173,15 @@ export const nfcProducts: NFCProduct[] = [
 ];
 
 export const designTemplates = [
-  { id: 'classic-white', name: 'Classic White', colors: { bg: '#ffffff', text: '#111827', accent: '#6366f1' }, image: 'https://images.unsplash.com/photo-1589330273594-fade1ee91647?auto=format&fit=crop&q=80&w=300' },
-  { id: 'midnight-gold', name: 'Midnight Gold', colors: { bg: '#020617', text: '#f8fafc', accent: '#eab308' }, image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=300' },
-  { id: 'modern-slate', name: 'Modern Slate', colors: { bg: '#1e293b', text: '#f1f5f9', accent: '#38bdf8' }, image: 'https://images.unsplash.com/photo-1614850523296-e8c041de4398?auto=format&fit=crop&q=80&w=300' },
-  { id: 'emerald-eco', name: 'Emerald Eco', colors: { bg: '#064e3b', text: '#ecfdf5', accent: '#34d399' }, image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=300' },
-  { id: 'royal-velvet', name: 'Royal Velvet', colors: { bg: '#4c1d95', text: '#f5f3ff', accent: '#a78bfa' }, image: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=300' },
-  { id: 'terracotta', name: 'Terracotta', colors: { bg: '#7c2d12', text: '#fff7ed', accent: '#fb923c' }, image: 'https://images.unsplash.com/photo-1604147706323-d039d47dd3d0?auto=format&fit=crop&q=80&w=300' },
-  { id: 'deep-ocean', name: 'Deep Ocean', colors: { bg: '#0c4a6e', text: '#f0f9ff', accent: '#0ea5e9' }, image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=300' },
-  { id: 'industrial', name: 'Industrial', colors: { bg: '#27272a', text: '#fafafa', accent: '#71717a' }, image: 'https://images.unsplash.com/photo-1533035353720-f1c6a75cd8ab?auto=format&fit=crop&q=80&w=300' },
-  { id: 'minimalist-soft', name: 'Soft Gray', colors: { bg: '#f8fafc', text: '#334155', accent: '#94a3b8' }, image: 'https://images.unsplash.com/photo-1516541196182-6bdb0516ed27?auto=format&fit=crop&q=80&w=300' },
-  { id: 'vibrant-rose', name: 'Vibrant Rose', colors: { bg: '#831843', text: '#fdf2f8', accent: '#f472b6' }, image: 'https://images.unsplash.com/photo-1554188248-986adbb73be4?auto=format&fit=crop&q=80&w=300' },
+  { id: 'classic-white', name: 'Classic Executive', category: 'Corporate', colors: { bg: '#ffffff', text: '#111827', accent: '#6366f1' }, image: 'https://images.unsplash.com/photo-1589330273594-fade1ee91647?auto=format&fit=crop&q=80&w=300' },
+  { id: 'midnight-gold', name: 'Midnight Premium', category: 'Corporate', colors: { bg: '#020617', text: '#f8fafc', accent: '#eab308' }, image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=300' },
+  { id: 'modern-slate', name: 'Tech Minimal', category: 'Tech', colors: { bg: '#1e293b', text: '#f1f5f9', accent: '#38bdf8' }, image: 'https://images.unsplash.com/photo-1614850523296-e8c041de4398?auto=format&fit=crop&q=80&w=300' },
+  { id: 'emerald-eco', name: 'Eco Studio', category: 'Creative', colors: { bg: '#064e3b', text: '#ecfdf5', accent: '#34d399' }, image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=300' },
+  { id: 'royal-velvet', name: 'Royal Creative', category: 'Creative', colors: { bg: '#4c1d95', text: '#f5f3ff', accent: '#a78bfa' }, image: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=300' },
+  { id: 'real-estate-pro', name: 'Modern Estate', category: 'Real Estate', colors: { bg: '#f8fafc', text: '#0f172a', accent: '#2563eb' }, image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=300' },
+  { id: 'healthcare-clean', name: 'Health Connect', category: 'Healthcare', colors: { bg: '#f0fdfa', text: '#134e4a', accent: '#0d9488' }, image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=300' },
+  { id: 'food-bistro', name: 'Bistro Card', category: 'Food', colors: { bg: '#450a0a', text: '#fef2f2', accent: '#dc2626' }, image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=300' },
+  { id: 'deep-ocean', name: 'Oceanic Corporate', category: 'Corporate', colors: { bg: '#0c4a6e', text: '#f0f9ff', accent: '#0ea5e9' }, image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=300' },
+  { id: 'industrial', name: 'Steel Industry', category: 'Corporate', colors: { bg: '#27272a', text: '#fafafa', accent: '#71717a' }, image: 'https://images.unsplash.com/photo-1533035353720-f1c6a75cd8ab?auto=format&fit=crop&q=80&w=300' },
 ];
+
