@@ -143,7 +143,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-2xl font-bold">Design Customization</h2>
-          <p className="text-sm text-muted-foreground">Select a professional template or upload your design</p>
+          <p className="text-sm text-muted-foreground">Pick a ready-made layout to edit or upload your custom design</p>
         </div>
         <Button
           variant={showPreview ? "gradient" : "outline"}
@@ -353,31 +353,43 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                         </TabsList>
 
                         <TabsContent value="templates" className="space-y-4 mt-4">
-                          <Label>Business Card Templates</Label>
-                          <div className="grid grid-cols-2 gap-4 mt-4">
+                          <div className="flex items-center justify-between">
+                            <Label>Ready-Made Layouts</Label>
+                            <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                              Select to Edit
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 mt-2">
                             {designTemplates.map((template) => (
                               <button
                                 key={template.id}
                                 onClick={() => handleTemplateSelect(template.id)}
                                 className={`group relative aspect-[1.6/1] overflow-hidden rounded-xl border-2 transition-all ${
                                   customization.templateId === template.id
-                                    ? "border-primary ring-2 ring-primary/20"
+                                    ? "border-primary ring-2 ring-primary/20 scale-[0.98]"
                                     : "border-border hover:border-primary/50"
                                 }`}
                               >
                                 <div 
-                                  className="absolute inset-0 bg-cover bg-center transition-transform group-hover:scale-110"
+                                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                                   style={{ 
                                     backgroundImage: `url(${(template as any).image})`,
                                     backgroundColor: template.colors.bg 
                                   }}
                                 />
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                  <span className="text-white text-xs font-bold uppercase tracking-widest">Select</span>
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                  <div className="bg-white/10 border border-white/20 px-3 py-1 rounded-full">
+                                    <span className="text-white text-[10px] font-bold uppercase tracking-widest">Apply Layout</span>
+                                  </div>
                                 </div>
-                                <div className="absolute bottom-0 inset-x-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                                <div className="absolute bottom-0 inset-x-0 p-2 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
                                   <span className="text-[10px] font-bold text-white uppercase tracking-wider">{template.name}</span>
                                 </div>
+                                {customization.templateId === template.id && (
+                                  <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1 shadow-lg">
+                                    <Sparkles className="w-3 h-3" />
+                                  </div>
+                                )}
                               </button>
                             ))}
                           </div>
