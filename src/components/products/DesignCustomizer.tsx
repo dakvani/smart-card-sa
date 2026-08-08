@@ -359,16 +359,16 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       exit={{ opacity: 0, x: activeSide === 'front' ? 20 : -20 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Tabs defaultValue="templates" className="w-full">
+                      <Tabs defaultValue="text" className="w-full">
                         <TabsList className="grid w-full grid-cols-6 h-12 bg-muted/30 p-1">
+                          <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                            <User className="w-4 h-4" />
+                          </TabsTrigger>
                           <TabsTrigger value="templates" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Palette className="w-4 h-4" />
                           </TabsTrigger>
                           <TabsTrigger value="colors" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Sparkles className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <User className="w-4 h-4" />
                           </TabsTrigger>
                           <TabsTrigger value="elements" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Grid3X3 className="w-4 h-4" />
@@ -380,6 +380,32 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                             <Link className="w-4 h-4" />
                           </TabsTrigger>
                         </TabsList>
+
+                        <TabsContent value="text" className="space-y-4 mt-4">
+                          <div className="p-4 bg-muted/20 rounded-xl border border-border/50 space-y-4">
+                            <h4 className="text-xs font-bold uppercase tracking-wider text-primary">Information</h4>
+                            <div className="space-y-3">
+                              <div className="space-y-1.5">
+                                <Label className="text-[10px] uppercase text-muted-foreground">Full Name</Label>
+                                <Input 
+                                  value={currentSide.name}
+                                  onChange={(e) => updateSide('name', e.target.value)}
+                                  placeholder="John Doe"
+                                  className="h-9 bg-background/50"
+                                />
+                              </div>
+                              <div className="space-y-1.5">
+                                <Label className="text-[10px] uppercase text-muted-foreground">Job Title</Label>
+                                <Input 
+                                  value={currentSide.title}
+                                  onChange={(e) => updateSide('title', e.target.value)}
+                                  placeholder="Software Engineer"
+                                  className="h-9 bg-background/50"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </TabsContent>
 
                         <TabsContent value="templates" className="space-y-4 mt-4">
                           <div className="flex items-center justify-between">
@@ -393,7 +419,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                                 return matchesIndustry && matchesSearch;
                               })
                               .map((template) => (
-
                               <button
                                 key={template.id}
                                 onClick={() => handleTemplateSelect(template.id)}
@@ -429,7 +454,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                               </button>
                             ))}
                           </div>
-
                         </TabsContent>
 
                         <TabsContent value="colors" className="space-y-4 mt-4">
