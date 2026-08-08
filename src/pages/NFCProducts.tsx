@@ -516,9 +516,9 @@ export default function NFCProducts() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="grid lg:grid-cols-2 gap-8">
+                <div className="max-w-4xl mx-auto space-y-8">
                   {/* Customizer Panel */}
-                  <div className="bg-card rounded-2xl border border-border p-6">
+                  <div className="bg-card/50 backdrop-blur-sm rounded-3xl border border-border/50 shadow-xl p-6 sm:p-10">
                     <DesignCustomizer
                       product={selectedProduct}
                       customization={customization}
@@ -526,28 +526,21 @@ export default function NFCProducts() {
                     />
                   </div>
 
-                  {/* Live Preview */}
-                  <div className="lg:sticky lg:top-24 h-fit">
-                    <LivePreview
-                      product={selectedProduct}
-                      customization={customization}
-                    />
-
-                    {/* Actions */}
-                    <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                      <Button
-                        variant="outline"
-                        className="flex-1"
-                        onClick={handleBack}
-                      >
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="flex-1"
-                        onClick={() => handleAddToCart()}
-                      >
+                  {/* Actions */}
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button
+                      variant="outline"
+                      className="flex-1 h-12"
+                      onClick={handleBack}
+                    >
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                      Back to Products
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex-1 h-12"
+                      onClick={() => handleAddToCart()}
+                    >
                         <ShoppingCart className="w-4 h-4 mr-2" />
                         Add to Cart
                       </Button>
