@@ -266,22 +266,35 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                   className="space-y-6"
                 >
                   {/* Stage 2: Template Refinement */}
-                  <div className="space-y-3">
-                    <Label>Industry / Theme Filter</Label>
-                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                      {['Real Estate', 'Tech', 'Creative', 'Healthcare', 'Corporate', 'Food'].map((ind) => (
-                        <Button
-                          key={ind}
-                          size="sm"
-                          variant={customization.industry === ind ? 'secondary' : 'outline'}
-                          className="whitespace-nowrap rounded-full"
-                          onClick={() => onChange({ ...customization, industry: ind })}
-                        >
-                          {ind}
-                        </Button>
-                      ))}
+                  {/* Stage 2: Template Selection with Filter/Search */}
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <div className="flex-1 relative">
+                        <Grid3X3 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input 
+                          placeholder="Search templates..." 
+                          className="pl-10 h-10"
+                          onChange={(e) => {
+                            // Local search filter could be implemented here
+                          }}
+                        />
+                      </div>
+                      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                        {['All', 'Real Estate', 'Tech', 'Creative', 'Healthcare', 'Corporate', 'Food'].map((ind) => (
+                          <Button
+                            key={ind}
+                            size="sm"
+                            variant={(!customization.industry && ind === 'All') || customization.industry === ind ? 'secondary' : 'outline'}
+                            className="whitespace-nowrap rounded-full h-9"
+                            onClick={() => onChange({ ...customization, industry: ind === 'All' ? null : ind })}
+                          >
+                            {ind}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
                   </div>
+
 
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold">Customization & Layout</h3>
