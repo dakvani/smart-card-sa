@@ -200,8 +200,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
               </Button>
             </div>
 
-      <AnimatePresence mode="wait">
-        {customization.inputMethod === 'upload' ? (
+            <AnimatePresence mode="wait">
+              {customization.inputMethod === 'upload' ? (
           <motion.div
             key="upload-flow"
             initial={{ opacity: 0, y: 10 }}
