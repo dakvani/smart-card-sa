@@ -121,46 +121,28 @@ export function ProductBenefits() {
             <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">Works natively on iPhone &amp; Android.</p>
           </BentoTile>
 
-          {/* Analytics wide */}
+          {/* Analytics wide -> Now matched size */}
           <BentoTile
-            className="col-span-4 sm:col-span-6 lg:col-span-6 min-h-[140px] sm:min-h-[180px]"
+            className="col-span-2 sm:col-span-3 lg:col-span-3 min-h-[120px] sm:min-h-[180px]"
             delay={0.09}
           >
-            <div className="flex h-full items-center justify-between gap-4 sm:gap-6">
-              <div>
-                <IconBadge><BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" /></IconBadge>
-                <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">Real ROI on every handshake</h3>
-                <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">See who tapped, what they clicked, and when.</p>
-              </div>
-              {/* Mini bar chart */}
-              <div className="flex shrink-0 items-end gap-1 sm:gap-1.5">
-                {[38, 62, 44, 78, 55, 90, 72].map((h, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ height: 0 }}
-                    whileInView={{ height: `${h}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.1 + i * 0.03 }}
-                    className={`w-1.5 rounded-sm sm:w-2 ${i === 5 ? "bg-[#4f46e5]" : "bg-[#4f46e5]/30"}`}
-                    style={{ minHeight: 8, height: 40 }}
-                  />
-                ))}
-              </div>
-            </div>
+            <IconBadge><BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" /></IconBadge>
+            <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">Real ROI</h3>
+            <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">See who tapped and when.</p>
           </BentoTile>
 
           {/* QR backup */}
-          <BentoTile className="col-span-2 sm:col-span-3 lg:col-span-3 min-h-[120px] sm:min-h-[160px]" delay={0.12}>
+          <BentoTile className="col-span-2 sm:col-span-3 lg:col-span-3 min-h-[120px] sm:min-h-[180px]" delay={0.12}>
             <IconBadge><Smartphone className="h-4 w-4 sm:h-5 sm:w-5" /></IconBadge>
-            <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">QR backup built in</h3>
-            <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">Non-NFC devices connect instantly too.</p>
+            <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">QR backup</h3>
+            <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">Connect instantly too.</p>
           </BentoTile>
 
           {/* Built to last */}
-          <BentoTile className="col-span-2 sm:col-span-3 lg:col-span-3 min-h-[120px] sm:min-h-[160px]" delay={0.15}>
+          <BentoTile className="col-span-2 sm:col-span-3 lg:col-span-3 min-h-[120px] sm:min-h-[180px]" delay={0.15}>
             <IconBadge><InfinityIcon className="h-4 w-4 sm:h-5 sm:w-5" /></IconBadge>
             <h3 className="mt-2 font-display text-sm font-bold sm:mt-4 sm:text-xl">Built to last</h3>
-            <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">Premium PVC, metal &amp; silicone.</p>
+            <p className="mt-0.5 font-body-alt text-[11px] leading-snug text-white/55 sm:mt-1 sm:text-sm">Premium PVC & metal.</p>
           </BentoTile>
         </div>
       </div>
