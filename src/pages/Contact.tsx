@@ -80,9 +80,9 @@ export default function Contact() {
 
         <section className="pb-24">
           <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-5 gap-8 max-w-6xl mx-auto items-stretch">
               {/* Info */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 flex flex-col gap-6">
                 <div className="grid sm:grid-cols-2 gap-4">
                   {inquiryTypes.map((t) => (
                     <div key={t.value} className="p-4 rounded-xl bg-card border border-border">
@@ -92,7 +92,7 @@ export default function Contact() {
                   ))}
                 </div>
 
-                <div className="p-5 sm:p-6 rounded-2xl bg-card border border-border">
+                <div className="p-5 sm:p-6 rounded-2xl bg-card border border-border flex-grow">
                   <h3 className="font-semibold text-lg mb-4">Reach us directly</h3>
                   <ul className="divide-y divide-border/60">
                     <li className="flex items-start gap-3 py-3 first:pt-0">
