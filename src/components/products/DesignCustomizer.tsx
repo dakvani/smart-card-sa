@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { DesignCustomization, designTemplates, NFCProduct, patternOptions, borderOptions, iconOptions, SideCustomization } from "./types";
-import { Upload, Link, Palette, Image, ExternalLink, User, RotateCw, QrCode, Grid3X3, Square, Sparkles, FileUp, Settings2, Info } from "lucide-react";
+import { Upload, Link, Palette, Image, ExternalLink, User, RotateCw, QrCode, Grid3X3, Square, Sparkles, FileUp, Settings2, Info, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { LivePreview } from "./LivePreview";
 
 interface DesignCustomizerProps {
   product: NFCProduct;
@@ -22,6 +23,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
   const [profiles, setProfiles] = useState<Array<{ id: string; username: string; title: string | null }>>([]);
   const [loadingProfiles, setLoadingProfiles] = useState(false);
   const [canvaUrl, setCanvaUrl] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
 
   const supportsTwoSides = product.category === 'card' || product.category === 'keychain';
   const activeSide = customization.activeSide;
@@ -137,31 +139,66 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
 
   return (
     <div className="space-y-6">
-      {/* Stage 1: Initialization and Design Input */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Header with Preview Toggle */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-2xl font-bold">Design Customization</h2>
+          <p className="text-sm text-muted-foreground">Select a professional template or upload your design</p>
+        </div>
         <Button
-          variant={customization.inputMethod === 'template' ? 'gradient' : 'outline'}
-          className="h-auto py-4 flex-col gap-2"
-          onClick={() => onChange({ ...customization, inputMethod: 'template' })}
+          variant={showPreview ? "gradient" : "outline"}
+          size="sm"
+          onClick={() => setShowPreview(!showPreview)}
+          className="gap-2"
         >
-          <Palette className="w-5 h-5" />
-          <div className="text-left">
-            <div className="font-bold">Generate Design</div>
-            <div className="text-[10px] opacity-80">Use templates and AI</div>
-          </div>
-        </Button>
-        <Button
-          variant={customization.inputMethod === 'upload' ? 'gradient' : 'outline'}
-          className="h-auto py-4 flex-col gap-2"
-          onClick={() => onChange({ ...customization, inputMethod: 'upload' })}
-        >
-          <FileUp className="w-5 h-5" />
-          <div className="text-left">
-            <div className="font-bold">Upload Print-Ready</div>
-            <div className="text-[10px] opacity-80">PDF, AI, 300 DPI</div>
-          </div>
+          <Eye className="w-4 h-4" />
+          {showPreview ? "Edit Design" : "View Preview"}
         </Button>
       </div>
+
+      <AnimatePresence mode="wait">
+        {showPreview ? (
+          <motion.div
+            key="preview-mode"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            className="w-full"
+          >
+            <LivePreview product={product} customization={customization} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="editor-mode"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-6"
+          >
+            {/* Stage 1: Initialization and Design Input */}
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                variant={customization.inputMethod === 'template' ? 'gradient' : 'outline'}
+                className="h-auto py-4 flex-col gap-2"
+                onClick={() => onChange({ ...customization, inputMethod: 'template' })}
+              >
+                <Palette className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="font-bold">Templates</div>
+                  <div className="text-[10px] opacity-80">Choose from collection</div>
+                </div>
+              </Button>
+              <Button
+                variant={customization.inputMethod === 'upload' ? 'gradient' : 'outline'}
+                className="h-auto py-4 flex-col gap-2"
+                onClick={() => onChange({ ...customization, inputMethod: 'upload' })}
+              >
+                <FileUp className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="font-bold">Upload Print-Ready</div>
+                  <div className="text-[10px] opacity-80">PDF, AI, 300 DPI</div>
+                </div>
+              </Button>
+            </div>
 
       <AnimatePresence mode="wait">
         {customization.inputMethod === 'upload' ? (
