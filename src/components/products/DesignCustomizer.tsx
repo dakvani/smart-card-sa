@@ -175,7 +175,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             exit={{ opacity: 0 }}
             className="space-y-6"
           >
-            {/* Stage 1: Initialization and Design Input */}
+            {/* Stage 1: Design Input Methods */}
             <div className="grid grid-cols-2 gap-3">
               <Button
                 variant={customization.inputMethod === 'template' ? 'gradient' : 'outline'}
@@ -184,8 +184,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
               >
                 <Palette className="w-5 h-5" />
                 <div className="text-left">
-                  <div className="font-bold">Templates</div>
-                  <div className="text-[10px] opacity-80">Choose from collection</div>
+                  <div className="font-bold">Template</div>
+                  <div className="text-[10px] opacity-80">Choose & Customize</div>
                 </div>
               </Button>
               <Button
@@ -195,11 +195,12 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
               >
                 <FileUp className="w-5 h-5" />
                 <div className="text-left">
-                  <div className="font-bold">Upload Print-Ready</div>
-                  <div className="text-[10px] opacity-80">PDF, AI, 300 DPI</div>
+                  <div className="font-bold">Upload File</div>
+                  <div className="text-[10px] opacity-80">Print-Ready (PDF/AI)</div>
                 </div>
               </Button>
             </div>
+
 
             <AnimatePresence mode="wait">
               {customization.inputMethod === 'upload' ? (
