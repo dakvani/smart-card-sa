@@ -368,45 +368,48 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
 
                         <TabsContent value="templates" className="space-y-4 mt-4">
                           <div className="flex items-center justify-between">
-                            <Label>Ready-Made Layouts</Label>
-                            <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                              Select to Edit
-                            </span>
+                            <Label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Select a Template</Label>
                           </div>
-                          <div className="grid grid-cols-2 gap-4 mt-2">
-                            {designTemplates.map((template) => (
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                            {designTemplates
+                              .filter(t => !customization.industry || (t as any).category === customization.industry)
+                              .map((template) => (
                               <button
                                 key={template.id}
                                 onClick={() => handleTemplateSelect(template.id)}
-                                className={`group relative aspect-[1.6/1] overflow-hidden rounded-xl border-2 transition-all ${
+                                className={`group relative aspect-[1.58/1] overflow-hidden rounded-xl border-2 transition-all duration-300 ${
                                   customization.templateId === template.id
-                                    ? "border-primary ring-2 ring-primary/20 scale-[0.98]"
-                                    : "border-border hover:border-primary/50"
+                                    ? "border-primary ring-4 ring-primary/20 scale-[0.98]"
+                                    : "border-border hover:border-primary/50 hover:shadow-xl"
                                 }`}
                               >
                                 <div 
-                                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                                   style={{ 
                                     backgroundImage: `url(${(template as any).image})`,
                                     backgroundColor: template.colors.bg 
                                   }}
                                 />
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                                  <div className="bg-white/10 border border-white/20 px-3 py-1 rounded-full">
-                                    <span className="text-white text-[10px] font-bold uppercase tracking-widest">Apply Layout</span>
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center backdrop-blur-[2px] p-2">
+                                  <div className="bg-primary text-white p-2 rounded-full mb-2">
+                                    <Sparkles className="w-4 h-4" />
                                   </div>
+                                  <span className="text-white text-[10px] font-bold uppercase tracking-widest text-center">Use {template.name}</span>
                                 </div>
-                                <div className="absolute bottom-0 inset-x-0 p-2 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
-                                  <span className="text-[10px] font-bold text-white uppercase tracking-wider">{template.name}</span>
-                                </div>
+                                
                                 {customization.templateId === template.id && (
-                                  <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1 shadow-lg">
+                                  <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1 shadow-lg z-10">
                                     <Sparkles className="w-3 h-3" />
                                   </div>
                                 )}
+                                
+                                <div className="absolute bottom-0 inset-x-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                                  <p className="text-[10px] font-bold text-white truncate">{template.name}</p>
+                                </div>
                               </button>
                             ))}
                           </div>
+
                         </TabsContent>
 
                         <TabsContent value="colors" className="space-y-4 mt-4">
