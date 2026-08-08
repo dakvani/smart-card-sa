@@ -152,10 +152,10 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
           variant="outline"
           size="sm"
           onClick={() => setShowPreview(!showPreview)}
-          className="gap-2 bg-muted/20 border-border/50 hover:bg-muted/40"
+          className="gap-2 bg-background/50 border-border/50 hover:bg-muted/40 transition-all active:scale-95 shadow-sm rounded-full px-4"
         >
-          <Eye className="w-4 h-4" />
-          <span className="text-xs font-bold uppercase tracking-wider">{showPreview ? "Edit Design" : "View Preview"}</span>
+          {showPreview ? <RotateCw className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+          <span className="text-[10px] font-bold uppercase tracking-widest">{showPreview ? "Back to Edit" : "Preview Design"}</span>
         </Button>
       </div>
 
@@ -179,35 +179,35 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             className="space-y-6"
           >
             {/* Stage 1: Design Input Methods */}
-            <div className="flex bg-muted/30 p-1.5 rounded-2xl border border-border/50">
+            <div className="flex bg-muted/20 p-1 rounded-2xl border border-border/40 shadow-inner">
               <button
                 type="button"
                 onClick={() => onChange({ ...customization, inputMethod: 'template' })}
-                className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-bold transition-all duration-300 ${
+                className={`flex-1 flex items-center justify-center gap-3 py-3.5 px-6 rounded-[14px] font-bold transition-all duration-300 ${
                   customization.inputMethod === 'template'
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02]'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'bg-foreground text-background shadow-lg scale-[1.01]'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 }`}
               >
-                <Palette className="w-5 h-5" />
+                <Palette className="w-4 h-4" />
                 <div className="text-left leading-tight">
-                  <div className="text-sm">Template</div>
-                  <div className="text-[10px] opacity-70 font-medium">Choose & Customize</div>
+                  <div className="text-xs">Smart Templates</div>
+                  <div className="text-[9px] opacity-60 font-medium">Professional Layouts</div>
                 </div>
               </button>
               <button
                 type="button"
                 onClick={() => onChange({ ...customization, inputMethod: 'upload' })}
-                className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-bold transition-all duration-300 ${
+                className={`flex-1 flex items-center justify-center gap-3 py-3.5 px-6 rounded-[14px] font-bold transition-all duration-300 ${
                   customization.inputMethod === 'upload'
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02]'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'bg-foreground text-background shadow-lg scale-[1.01]'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 }`}
               >
-                <FileUp className="w-5 h-5" />
+                <FileUp className="w-4 h-4" />
                 <div className="text-left leading-tight">
-                  <div className="text-sm">Upload File</div>
-                  <div className="text-[10px] opacity-70 font-medium">Print-Ready (PDF/AI)</div>
+                  <div className="text-xs">Custom Upload</div>
+                  <div className="text-[9px] opacity-60 font-medium">Ready-to-Print Files</div>
                 </div>
               </button>
             </div>
