@@ -516,16 +516,6 @@ export default function NFCProducts() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="max-w-4xl mx-auto space-y-8">
-                  {/* Customizer Panel */}
-                  <div className="bg-card/50 backdrop-blur-sm rounded-3xl border border-border/50 shadow-xl p-6 sm:p-10">
-                    <DesignCustomizer
-                      product={selectedProduct}
-                      customization={customization}
-                      onChange={setCustomization}
-                    />
-                  </div>
-
                   {/* Actions */}
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button
@@ -541,19 +531,19 @@ export default function NFCProducts() {
                       className="flex-1 h-12"
                       onClick={() => handleAddToCart()}
                     >
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        Add to Cart
-                      </Button>
-                      <Button
-                        variant="gradient"
-                        className="flex-1"
-                        onClick={handleProceedToCheckout}
-                      >
-                        Checkout
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </div>
+                      <ShoppingCart className="w-4 h-4 mr-2" />
+                      Add to Cart
+                    </Button>
+                    <Button
+                      variant="gradient"
+                      className="flex-1 h-12"
+                      onClick={handleProceedToCheckout}
+                    >
+                      Checkout
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </div>
+                </div>
                 </div>
               </motion.div>
             )}
