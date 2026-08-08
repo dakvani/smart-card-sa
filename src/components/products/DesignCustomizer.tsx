@@ -152,10 +152,10 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
           variant="outline"
           size="sm"
           onClick={() => setShowPreview(!showPreview)}
-          className="gap-2 bg-muted/20 border-border/50 hover:bg-muted/40"
+          className="gap-2 bg-background/50 border-border/50 hover:bg-muted/40 transition-all active:scale-95 shadow-sm rounded-full px-4"
         >
-          <Eye className="w-4 h-4" />
-          <span className="text-xs font-bold uppercase tracking-wider">{showPreview ? "Edit Design" : "View Preview"}</span>
+          {showPreview ? <RotateCw className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+          <span className="text-[10px] font-bold uppercase tracking-widest">{showPreview ? "Back to Edit" : "Preview Design"}</span>
         </Button>
       </div>
 
@@ -179,35 +179,35 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             className="space-y-6"
           >
             {/* Stage 1: Design Input Methods */}
-            <div className="flex bg-muted/30 p-1.5 rounded-2xl border border-border/50">
+            <div className="flex bg-muted/20 p-1 rounded-2xl border border-border/40 shadow-inner">
               <button
                 type="button"
                 onClick={() => onChange({ ...customization, inputMethod: 'template' })}
-                className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-bold transition-all duration-300 ${
+                className={`flex-1 flex items-center justify-center gap-3 py-3.5 px-6 rounded-[14px] font-bold transition-all duration-300 ${
                   customization.inputMethod === 'template'
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02]'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'bg-foreground text-background shadow-lg scale-[1.01]'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 }`}
               >
-                <Palette className="w-5 h-5" />
+                <Palette className="w-4 h-4" />
                 <div className="text-left leading-tight">
-                  <div className="text-sm">Template</div>
-                  <div className="text-[10px] opacity-70 font-medium">Choose & Customize</div>
+                  <div className="text-xs">Smart Templates</div>
+                  <div className="text-[9px] opacity-60 font-medium">Professional Layouts</div>
                 </div>
               </button>
               <button
                 type="button"
                 onClick={() => onChange({ ...customization, inputMethod: 'upload' })}
-                className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-bold transition-all duration-300 ${
+                className={`flex-1 flex items-center justify-center gap-3 py-3.5 px-6 rounded-[14px] font-bold transition-all duration-300 ${
                   customization.inputMethod === 'upload'
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02]'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'bg-foreground text-background shadow-lg scale-[1.01]'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 }`}
               >
-                <FileUp className="w-5 h-5" />
+                <FileUp className="w-4 h-4" />
                 <div className="text-left leading-tight">
-                  <div className="text-sm">Upload File</div>
-                  <div className="text-[10px] opacity-70 font-medium">Print-Ready (PDF/AI)</div>
+                  <div className="text-xs">Custom Upload</div>
+                  <div className="text-[9px] opacity-60 font-medium">Ready-to-Print Files</div>
                 </div>
               </button>
             </div>
@@ -359,16 +359,16 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       exit={{ opacity: 0, x: activeSide === 'front' ? 20 : -20 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Tabs defaultValue="templates" className="w-full">
+                      <Tabs defaultValue="text" className="w-full">
                         <TabsList className="grid w-full grid-cols-6 h-12 bg-muted/30 p-1">
+                          <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                            <User className="w-4 h-4" />
+                          </TabsTrigger>
                           <TabsTrigger value="templates" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Palette className="w-4 h-4" />
                           </TabsTrigger>
                           <TabsTrigger value="colors" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Sparkles className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <User className="w-4 h-4" />
                           </TabsTrigger>
                           <TabsTrigger value="elements" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Grid3X3 className="w-4 h-4" />
@@ -380,6 +380,32 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                             <Link className="w-4 h-4" />
                           </TabsTrigger>
                         </TabsList>
+
+                        <TabsContent value="text" className="space-y-4 mt-4">
+                          <div className="p-4 bg-muted/20 rounded-xl border border-border/50 space-y-4">
+                            <h4 className="text-xs font-bold uppercase tracking-wider text-primary">Information</h4>
+                            <div className="space-y-3">
+                              <div className="space-y-1.5">
+                                <Label className="text-[10px] uppercase text-muted-foreground">Full Name</Label>
+                                <Input 
+                                  value={currentSide.name}
+                                  onChange={(e) => updateSide('name', e.target.value)}
+                                  placeholder="John Doe"
+                                  className="h-9 bg-background/50"
+                                />
+                              </div>
+                              <div className="space-y-1.5">
+                                <Label className="text-[10px] uppercase text-muted-foreground">Job Title</Label>
+                                <Input 
+                                  value={currentSide.title}
+                                  onChange={(e) => updateSide('title', e.target.value)}
+                                  placeholder="Software Engineer"
+                                  className="h-9 bg-background/50"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </TabsContent>
 
                         <TabsContent value="templates" className="space-y-4 mt-4">
                           <div className="flex items-center justify-between">
@@ -393,7 +419,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                                 return matchesIndustry && matchesSearch;
                               })
                               .map((template) => (
-
                               <button
                                 key={template.id}
                                 onClick={() => handleTemplateSelect(template.id)}
@@ -429,7 +454,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                               </button>
                             ))}
                           </div>
-
                         </TabsContent>
 
                         <TabsContent value="colors" className="space-y-4 mt-4">
@@ -488,28 +512,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                           </div>
                         </TabsContent>
 
-                        <TabsContent value="text" className="space-y-4 mt-4">
-                          <div>
-                            <Label htmlFor="name">Your Name</Label>
-                            <Input
-                              id="name"
-                              placeholder="John Doe"
-                              value={currentSide.name}
-                              onChange={(e) => updateSide("name", e.target.value)}
-                              className="mt-1"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="title">Title / Tagline</Label>
-                            <Input
-                              id="title"
-                              placeholder="Software Developer"
-                              value={currentSide.title}
-                              onChange={(e) => updateSide("title", e.target.value)}
-                              className="mt-1"
-                            />
-                          </div>
-                        </TabsContent>
 
                         <TabsContent value="elements" className="space-y-6 mt-4">
                           <div>
