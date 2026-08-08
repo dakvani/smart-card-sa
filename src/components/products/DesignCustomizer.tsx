@@ -178,29 +178,37 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             className="space-y-6"
           >
             {/* Stage 1: Design Input Methods */}
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                variant={customization.inputMethod === 'template' ? 'gradient' : 'outline'}
-                className="h-auto py-4 flex-col gap-2"
+            <div className="flex bg-muted/30 p-1.5 rounded-2xl border border-border/50">
+              <button
+                type="button"
                 onClick={() => onChange({ ...customization, inputMethod: 'template' })}
+                className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-bold transition-all duration-300 ${
+                  customization.inputMethod === 'template'
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02]'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
               >
                 <Palette className="w-5 h-5" />
-                <div className="text-left">
-                  <div className="font-bold">Template</div>
-                  <div className="text-[10px] opacity-80">Choose & Customize</div>
+                <div className="text-left leading-tight">
+                  <div className="text-sm">Template</div>
+                  <div className="text-[10px] opacity-70 font-medium">Choose & Customize</div>
                 </div>
-              </Button>
-              <Button
-                variant={customization.inputMethod === 'upload' ? 'gradient' : 'outline'}
-                className="h-auto py-4 flex-col gap-2"
+              </button>
+              <button
+                type="button"
                 onClick={() => onChange({ ...customization, inputMethod: 'upload' })}
+                className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-bold transition-all duration-300 ${
+                  customization.inputMethod === 'upload'
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02]'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
               >
                 <FileUp className="w-5 h-5" />
-                <div className="text-left">
-                  <div className="font-bold">Upload File</div>
-                  <div className="text-[10px] opacity-80">Print-Ready (PDF/AI)</div>
+                <div className="text-left leading-tight">
+                  <div className="text-sm">Upload File</div>
+                  <div className="text-[10px] opacity-70 font-medium">Print-Ready (PDF/AI)</div>
                 </div>
-              </Button>
+              </button>
             </div>
 
 
@@ -299,7 +307,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
 
 
                   <div className="flex items-center justify-between mt-2">
-                    <h3 className="text-lg font-bold gradient-text">Customization & Layout</h3>
+                    <h3 className="text-lg font-bold text-primary">Customization & Layout</h3>
                     {supportsTwoSides && (
                       <div className="flex items-center gap-2">
                          <span className="text-[10px] font-medium text-muted-foreground hidden sm:inline">Double Sided?</span>
@@ -312,23 +320,25 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                   </div>
 
                   {customization.isDoubleSided && (
-                    <div className="flex gap-2 p-1.5 bg-muted/50 backdrop-blur-sm rounded-xl border border-border/50">
+                    <div className="flex gap-2 p-1 bg-muted/30 rounded-xl border border-border/50">
                       <button
+                        type="button"
                         onClick={() => onChange({ ...customization, activeSide: 'front' })}
-                        className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+                        className={`flex-1 py-2 px-4 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all ${
                           activeSide === 'front'
-                            ? 'bg-primary shadow-lg text-primary-foreground'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                            ? 'bg-muted-foreground/20 text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
                         Front Side
                       </button>
                       <button
+                        type="button"
                         onClick={() => onChange({ ...customization, activeSide: 'back' })}
-                        className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+                        className={`flex-1 py-2 px-4 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all ${
                           activeSide === 'back'
-                            ? 'bg-primary shadow-lg text-primary-foreground'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                            ? 'bg-muted-foreground/20 text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
                         Back Side
@@ -346,30 +356,30 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       transition={{ duration: 0.2 }}
                     >
                       <Tabs defaultValue="templates" className="w-full">
-                        <TabsList className="grid w-full grid-cols-6">
-                          <TabsTrigger value="templates" className="text-xs">
+                        <TabsList className="grid w-full grid-cols-6 h-12 bg-muted/30 p-1">
+                          <TabsTrigger value="templates" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Palette className="w-4 h-4" />
                           </TabsTrigger>
-                          <TabsTrigger value="colors" className="text-xs">
+                          <TabsTrigger value="colors" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Sparkles className="w-4 h-4" />
                           </TabsTrigger>
-                          <TabsTrigger value="text" className="text-xs">
+                          <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <User className="w-4 h-4" />
                           </TabsTrigger>
-                          <TabsTrigger value="elements" className="text-xs">
+                          <TabsTrigger value="elements" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Grid3X3 className="w-4 h-4" />
                           </TabsTrigger>
-                          <TabsTrigger value="upload" className="text-xs">
+                          <TabsTrigger value="upload" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Upload className="w-4 h-4" />
                           </TabsTrigger>
-                          <TabsTrigger value="link" className="text-xs">
+                          <TabsTrigger value="link" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Link className="w-4 h-4" />
                           </TabsTrigger>
                         </TabsList>
 
                         <TabsContent value="templates" className="space-y-4 mt-4">
                           <div className="flex items-center justify-between">
-                            <Label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Select a Template</Label>
+                            <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Select a Template</Label>
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
                             {designTemplates
@@ -385,8 +395,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                                 onClick={() => handleTemplateSelect(template.id)}
                                 className={`group relative aspect-[1.58/1] overflow-hidden rounded-xl border-2 transition-all duration-300 ${
                                   customization.templateId === template.id
-                                    ? "border-primary ring-4 ring-primary/20 scale-[0.98]"
-                                    : "border-border hover:border-primary/50 hover:shadow-xl"
+                                    ? "border-primary ring-2 ring-primary/50"
+                                    : "border-transparent hover:border-primary/30"
                                 }`}
                               >
                                 <div 
