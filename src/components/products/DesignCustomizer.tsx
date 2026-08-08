@@ -196,7 +196,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    // In a real app, upload to storage here
                     onChange({ 
                       ...customization, 
                       printReadyFileUrl: URL.createObjectURL(file),
@@ -284,339 +283,337 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
               </div>
             )}
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeSide}
-          initial={{ opacity: 0, x: activeSide === 'front' ? -20 : 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: activeSide === 'front' ? 20 : -20 }}
-          transition={{ duration: 0.2 }}
-        >
-          <Tabs defaultValue="templates" className="w-full">
-            <TabsList className="grid w-full grid-cols-6">
-              <TabsTrigger value="templates" className="text-xs">
-                <Palette className="w-4 h-4" />
-              </TabsTrigger>
-              <TabsTrigger value="colors" className="text-xs">
-                <Sparkles className="w-4 h-4" />
-              </TabsTrigger>
-              <TabsTrigger value="text" className="text-xs">
-                <User className="w-4 h-4" />
-              </TabsTrigger>
-              <TabsTrigger value="elements" className="text-xs">
-                <Grid3X3 className="w-4 h-4" />
-              </TabsTrigger>
-              <TabsTrigger value="upload" className="text-xs">
-                <Upload className="w-4 h-4" />
-              </TabsTrigger>
-              <TabsTrigger value="link" className="text-xs">
-                <Link className="w-4 h-4" />
-              </TabsTrigger>
-            </TabsList>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSide}
+                initial={{ opacity: 0, x: activeSide === 'front' ? -20 : 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: activeSide === 'front' ? 20 : -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Tabs defaultValue="templates" className="w-full">
+                  <TabsList className="grid w-full grid-cols-6">
+                    <TabsTrigger value="templates" className="text-xs">
+                      <Palette className="w-4 h-4" />
+                    </TabsTrigger>
+                    <TabsTrigger value="colors" className="text-xs">
+                      <Sparkles className="w-4 h-4" />
+                    </TabsTrigger>
+                    <TabsTrigger value="text" className="text-xs">
+                      <User className="w-4 h-4" />
+                    </TabsTrigger>
+                    <TabsTrigger value="elements" className="text-xs">
+                      <Grid3X3 className="w-4 h-4" />
+                    </TabsTrigger>
+                    <TabsTrigger value="upload" className="text-xs">
+                      <Upload className="w-4 h-4" />
+                    </TabsTrigger>
+                    <TabsTrigger value="link" className="text-xs">
+                      <Link className="w-4 h-4" />
+                    </TabsTrigger>
+                  </TabsList>
 
-            <TabsContent value="templates" className="space-y-4 mt-4">
-              <Label>Choose a Template</Label>
-              <div className="grid grid-cols-3 gap-3">
-                {designTemplates.map((template) => (
-                  <button
-                    key={template.id}
-                    onClick={() => handleTemplateSelect(template.id)}
-                    className={`p-3 rounded-xl border-2 transition-all ${
-                      customization.templateId === template.id
-                        ? "border-primary ring-2 ring-primary/20"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <div
-                      className="w-full h-12 rounded-lg mb-2"
-                      style={{ backgroundColor: template.colors.bg }}
-                    />
-                    <span className="text-xs font-medium">{template.name}</span>
-                  </button>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="colors" className="space-y-4 mt-4">
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="bgColor">Background</Label>
-                  <div className="flex gap-2 mt-1">
-                    <Input
-                      id="bgColor"
-                      type="color"
-                      value={currentSide.backgroundColor}
-                      onChange={(e) => updateSide("backgroundColor", e.target.value)}
-                      className="w-12 h-10 p-1 cursor-pointer"
-                    />
-                    <Input
-                      value={currentSide.backgroundColor}
-                      onChange={(e) => updateSide("backgroundColor", e.target.value)}
-                      className="flex-1"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="textColor">Text</Label>
-                  <div className="flex gap-2 mt-1">
-                    <Input
-                      id="textColor"
-                      type="color"
-                      value={currentSide.textColor}
-                      onChange={(e) => updateSide("textColor", e.target.value)}
-                      className="w-12 h-10 p-1 cursor-pointer"
-                    />
-                    <Input
-                      value={currentSide.textColor}
-                      onChange={(e) => updateSide("textColor", e.target.value)}
-                      className="flex-1"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="accentColor">Accent</Label>
-                  <div className="flex gap-2 mt-1">
-                    <Input
-                      id="accentColor"
-                      type="color"
-                      value={currentSide.accentColor}
-                      onChange={(e) => updateSide("accentColor", e.target.value)}
-                      className="w-12 h-10 p-1 cursor-pointer"
-                    />
-                    <Input
-                      value={currentSide.accentColor}
-                      onChange={(e) => updateSide("accentColor", e.target.value)}
-                      className="flex-1"
-                    />
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="text" className="space-y-4 mt-4">
-              <div>
-                <Label htmlFor="name">Your Name</Label>
-                <Input
-                  id="name"
-                  placeholder="John Doe"
-                  value={currentSide.name}
-                  onChange={(e) => updateSide("name", e.target.value)}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="title">Title / Tagline</Label>
-                <Input
-                  id="title"
-                  placeholder="Software Developer"
-                  value={currentSide.title}
-                  onChange={(e) => updateSide("title", e.target.value)}
-                  className="mt-1"
-                />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="elements" className="space-y-6 mt-4">
-              {/* Pattern Selection */}
-              <div>
-                <Label className="mb-3 block">Background Pattern</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {patternOptions.map((pattern) => (
-                    <button
-                      key={pattern.id}
-                      onClick={() => updateSide("pattern", pattern.id)}
-                      className={`p-3 rounded-xl border-2 transition-all text-center ${
-                        currentSide.pattern === pattern.id
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
-                      <span className="text-xs font-medium">{pattern.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Border Style */}
-              <div>
-                <Label className="mb-3 block">Border Style</Label>
-                <div className="grid grid-cols-5 gap-2">
-                  {borderOptions.map((border) => (
-                    <button
-                      key={border.id}
-                      onClick={() => updateSide("borderStyle", border.id)}
-                      className={`p-2 rounded-lg border-2 transition-all text-center ${
-                        currentSide.borderStyle === border.id
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
-                      <span className="text-xs font-medium">{border.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Icon Selection */}
-              <div>
-                <Label className="mb-3 block">Add Icon</Label>
-                <div className="grid grid-cols-5 gap-2">
-                  {iconOptions.map((icon) => (
-                    <button
-                      key={icon.id || 'none'}
-                      onClick={() => updateSide("icon", icon.id)}
-                      className={`p-3 rounded-xl border-2 transition-all text-center ${
-                        currentSide.icon === icon.id
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
-                      <span className="text-xl">{icon.icon}</span>
-                      <span className="text-xs block mt-1">{icon.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* QR Code Toggle */}
-              <div className="flex items-center justify-between p-4 bg-muted rounded-xl">
-                <div className="flex items-center gap-3">
-                  <QrCode className="w-5 h-5 text-primary" />
-                  <div>
-                    <Label>Add QR Code</Label>
-                    <p className="text-xs text-muted-foreground">Links to your profile</p>
-                  </div>
-                </div>
-                <Switch
-                  checked={currentSide.showQRCode}
-                  onCheckedChange={(checked) => updateSide("showQRCode", checked)}
-                />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="upload" className="space-y-4 mt-4">
-              <div>
-                <Label>Upload Logo</Label>
-                <div className="mt-2">
-                  <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/50 transition-colors">
-                    <div className="text-center">
-                      <Image className="w-8 h-8 mx-auto text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground mt-1 block">
-                        Click to upload logo
-                      </span>
+                  <TabsContent value="templates" className="space-y-4 mt-4">
+                    <Label>Choose a Template</Label>
+                    <div className="grid grid-cols-3 gap-3">
+                      {designTemplates.map((template) => (
+                        <button
+                          key={template.id}
+                          onClick={() => handleTemplateSelect(template.id)}
+                          className={`p-3 rounded-xl border-2 transition-all ${
+                            customization.templateId === template.id
+                              ? "border-primary ring-2 ring-primary/20"
+                              : "border-border hover:border-primary/50"
+                          }`}
+                        >
+                          <div
+                            className="w-full h-12 rounded-lg mb-2"
+                            style={{ backgroundColor: template.colors.bg }}
+                          />
+                          <span className="text-xs font-medium">{template.name}</span>
+                        </button>
+                      ))}
                     </div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileUpload(e, 'logoUrl')}
-                      className="hidden"
-                    />
-                  </label>
-                  {currentSide.logoUrl && (
-                    <p className="text-sm text-green-600 mt-2">✓ Logo uploaded</p>
-                  )}
-                </div>
-              </div>
+                  </TabsContent>
 
-              <div>
-                <Label>Upload Custom Artwork</Label>
-                <div className="mt-2">
-                  <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/50 transition-colors">
-                    <div className="text-center">
-                      <Upload className="w-8 h-8 mx-auto text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground mt-1 block">
-                        Click to upload artwork
-                      </span>
+                  <TabsContent value="colors" className="space-y-4 mt-4">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="bgColor">Background</Label>
+                        <div className="flex gap-2 mt-1">
+                          <Input
+                            id="bgColor"
+                            type="color"
+                            value={currentSide.backgroundColor}
+                            onChange={(e) => updateSide("backgroundColor", e.target.value)}
+                            className="w-12 h-10 p-1 cursor-pointer"
+                          />
+                          <Input
+                            value={currentSide.backgroundColor}
+                            onChange={(e) => updateSide("backgroundColor", e.target.value)}
+                            className="flex-1"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="textColor">Text</Label>
+                        <div className="flex gap-2 mt-1">
+                          <Input
+                            id="textColor"
+                            type="color"
+                            value={currentSide.textColor}
+                            onChange={(e) => updateSide("textColor", e.target.value)}
+                            className="w-12 h-10 p-1 cursor-pointer"
+                          />
+                          <Input
+                            value={currentSide.textColor}
+                            onChange={(e) => updateSide("textColor", e.target.value)}
+                            className="flex-1"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="accentColor">Accent</Label>
+                        <div className="flex gap-2 mt-1">
+                          <Input
+                            id="accentColor"
+                            type="color"
+                            value={currentSide.accentColor}
+                            onChange={(e) => updateSide("accentColor", e.target.value)}
+                            className="w-12 h-10 p-1 cursor-pointer"
+                          />
+                          <Input
+                            value={currentSide.accentColor}
+                            onChange={(e) => updateSide("accentColor", e.target.value)}
+                            className="flex-1"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileUpload(e, 'customArtworkUrl')}
-                      className="hidden"
-                    />
-                  </label>
-                  {currentSide.customArtworkUrl && (
-                    <p className="text-sm text-green-600 mt-2">✓ Artwork uploaded</p>
-                  )}
-                </div>
-              </div>
+                  </TabsContent>
 
-              <div>
-                <Label>Import from Canva</Label>
-                <div className="flex gap-2 mt-2">
-                  <Input
-                    placeholder="Paste Canva design URL..."
-                    value={canvaUrl}
-                    onChange={(e) => setCanvaUrl(e.target.value)}
-                  />
-                  <Button onClick={handleCanvaImport} variant="outline">
-                    <ExternalLink className="w-4 h-4 mr-1" />
-                    Import
-                  </Button>
-                </div>
-                {customization.canvaDesignUrl && (
-                  <p className="text-sm text-green-600 mt-2">✓ Canva design linked</p>
-                )}
-              </div>
-            </TabsContent>
+                  <TabsContent value="text" className="space-y-4 mt-4">
+                    <div>
+                      <Label htmlFor="name">Your Name</Label>
+                      <Input
+                        id="name"
+                        placeholder="John Doe"
+                        value={currentSide.name}
+                        onChange={(e) => updateSide("name", e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="title">Title / Tagline</Label>
+                      <Input
+                        id="title"
+                        placeholder="Software Developer"
+                        value={currentSide.title}
+                        onChange={(e) => updateSide("title", e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                  </TabsContent>
 
-            <TabsContent value="link" className="space-y-4 mt-4">
-              <div>
-                <Label>Link Your SmartCard Profile</Label>
-                <p className="text-sm text-muted-foreground mt-1 mb-3">
-                  Connect this NFC product to your existing SmartCard profile.
-                </p>
-                
-                {customization.linkedProfileUsername ? (
-                  <div className="p-4 bg-primary/10 rounded-xl border border-primary/20">
-                    <p className="text-sm font-medium">
-                      Linked to: <span className="text-primary">@{customization.linkedProfileUsername}</span>
-                    </p>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="mt-2"
-                      onClick={() => onChange({ ...customization, linkedProfileId: null, linkedProfileUsername: null })}
-                    >
-                      Unlink
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <Button
-                      variant="outline"
-                      onClick={loadUserProfiles}
-                      disabled={loadingProfiles}
-                      className="w-full"
-                    >
-                      <Link className="w-4 h-4 mr-2" />
-                      {loadingProfiles ? "Loading..." : "Load My Profiles"}
-                    </Button>
-                    
-                    {profiles.length > 0 && (
-                      <div className="mt-4 space-y-2">
-                        {profiles.map((profile) => (
+                  <TabsContent value="elements" className="space-y-6 mt-4">
+                    <div>
+                      <Label className="mb-3 block">Background Pattern</Label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {patternOptions.map((pattern) => (
                           <button
-                            key={profile.id}
-                            onClick={() => handleLinkProfile(profile.id, profile.username)}
-                            className="w-full p-3 text-left rounded-xl border border-border hover:border-primary/50 transition-colors"
+                            key={pattern.id}
+                            onClick={() => updateSide("pattern", pattern.id)}
+                            className={`p-3 rounded-xl border-2 transition-all text-center ${
+                              currentSide.pattern === pattern.id
+                                ? "border-primary bg-primary/10"
+                                : "border-border hover:border-primary/50"
+                            }`}
                           >
-                            <span className="font-medium">@{profile.username}</span>
-                            {profile.title && (
-                              <span className="text-sm text-muted-foreground ml-2">
-                                {profile.title}
-                              </span>
-                            )}
+                            <span className="text-xs font-medium">{pattern.name}</span>
                           </button>
                         ))}
                       </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </motion.div>
+                    </div>
+
+                    <div>
+                      <Label className="mb-3 block">Border Style</Label>
+                      <div className="grid grid-cols-5 gap-2">
+                        {borderOptions.map((border) => (
+                          <button
+                            key={border.id}
+                            onClick={() => updateSide("borderStyle", border.id)}
+                            className={`p-2 rounded-lg border-2 transition-all text-center ${
+                              currentSide.borderStyle === border.id
+                                ? "border-primary bg-primary/10"
+                                : "border-border hover:border-primary/50"
+                            }`}
+                          >
+                            <span className="text-xs font-medium">{border.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="mb-3 block">Add Icon</Label>
+                      <div className="grid grid-cols-5 gap-2">
+                        {iconOptions.map((icon) => (
+                          <button
+                            key={icon.id || 'none'}
+                            onClick={() => updateSide("icon", icon.id)}
+                            className={`p-3 rounded-xl border-2 transition-all text-center ${
+                              currentSide.icon === icon.id
+                                ? "border-primary bg-primary/10"
+                                : "border-border hover:border-primary/50"
+                            }`}
+                          >
+                            <span className="text-xl">{icon.icon}</span>
+                            <span className="text-xs block mt-1">{icon.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-muted rounded-xl">
+                      <div className="flex items-center gap-3">
+                        <QrCode className="w-5 h-5 text-primary" />
+                        <div>
+                          <Label>Add QR Code</Label>
+                          <p className="text-xs text-muted-foreground">Links to your profile</p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={currentSide.showQRCode}
+                        onCheckedChange={(checked) => updateSide("showQRCode", checked)}
+                      />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="upload" className="space-y-4 mt-4">
+                    <div>
+                      <Label>Upload Logo</Label>
+                      <div className="mt-2">
+                        <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/50 transition-colors">
+                          <div className="text-center">
+                            <Image className="w-8 h-8 mx-auto text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground mt-1 block">
+                              Click to upload logo
+                            </span>
+                          </div>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleFileUpload(e, 'logoUrl')}
+                            className="hidden"
+                          />
+                        </label>
+                        {currentSide.logoUrl && (
+                          <p className="text-sm text-green-600 mt-2">✓ Logo uploaded</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label>Upload Custom Artwork</Label>
+                      <div className="mt-2">
+                        <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/50 transition-colors">
+                          <div className="text-center">
+                            <Upload className="w-8 h-8 mx-auto text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground mt-1 block">
+                              Click to upload artwork
+                            </span>
+                          </div>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleFileUpload(e, 'customArtworkUrl')}
+                            className="hidden"
+                          />
+                        </label>
+                        {currentSide.customArtworkUrl && (
+                          <p className="text-sm text-green-600 mt-2">✓ Artwork uploaded</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label>Import from Canva</Label>
+                      <div className="flex gap-2 mt-2">
+                        <Input
+                          placeholder="Paste Canva design URL..."
+                          value={canvaUrl}
+                          onChange={(e) => setCanvaUrl(e.target.value)}
+                        />
+                        <Button onClick={handleCanvaImport} variant="outline">
+                          <ExternalLink className="w-4 h-4 mr-1" />
+                          Import
+                        </Button>
+                      </div>
+                      {customization.canvaDesignUrl && (
+                        <p className="text-sm text-green-600 mt-2">✓ Canva design linked</p>
+                      )}
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="link" className="space-y-4 mt-4">
+                    <div>
+                      <Label>Link Your SmartCard Profile</Label>
+                      <p className="text-sm text-muted-foreground mt-1 mb-3">
+                        Connect this NFC product to your existing SmartCard profile.
+                      </p>
+                      
+                      {customization.linkedProfileUsername ? (
+                        <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/20">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                              <User className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <p className="font-semibold text-primary">@{customization.linkedProfileUsername}</p>
+                              <p className="text-xs text-muted-foreground">Linked successfully</p>
+                            </div>
+                          </div>
+                          <Button variant="ghost" size="sm" onClick={() => handleLinkProfile('', '')}>
+                            Change
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <Button 
+                            className="w-full" 
+                            variant="outline" 
+                            onClick={loadUserProfiles}
+                            disabled={loadingProfiles}
+                          >
+                            {loadingProfiles ? "Loading..." : "Find My Profiles"}
+                          </Button>
+                          
+                          {profiles.length > 0 && (
+                            <div className="grid gap-2">
+                              {profiles.map(p => (
+                                <button
+                                  key={p.id}
+                                  onClick={() => handleLinkProfile(p.id, p.username)}
+                                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-primary/50 transition-colors text-left"
+                                >
+                                  <div>
+                                    <p className="font-medium">@{p.username}</p>
+                                    <p className="text-xs text-muted-foreground">{p.title || 'No title'}</p>
+                                  </div>
+                                  <Link className="w-4 h-4 text-muted-foreground" />
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
