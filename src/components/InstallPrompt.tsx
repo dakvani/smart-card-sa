@@ -23,10 +23,12 @@ export function InstallPrompt() {
   const [bottomOffset, setBottomOffset] = useState(16);
   const location = useLocation();
 
-  // Never interrupt public profile pages (e.g. NFC tap landings): single-segment routes
+  // Only suppress on public profile pages (/:username) which are the ONLY 
+  // single-segment routes not explicitly defined as core app routes.
   const isPublicProfileRoute =
+    location.pathname.split("/").filter(Boolean).length === 1 &&
     /^\/[^/]+$/.test(location.pathname) &&
-    !["/auth", "/nfc", "/pricing", "/shop", "/cart", "/checkout", "/dashboard", "/admin", "/smartlink-bio"].includes(
+    !["/auth", "/login", "/signup", "/reset-password", "/admin-login", "/contact", "/nfc", "/nfc-products", "/order-history", "/marketplace", "/learn", "/dashboard", "/settings", "/unsubscribe", "/marketing-unsubscribe", "/pricing", "/shop", "/cart", "/checkout", "/dashboard", "/admin", "/smartlink-bio", "/templates", "/products"].includes(
       location.pathname,
     );
 
@@ -97,7 +99,7 @@ export function InstallPrompt() {
       role="dialog"
       aria-label="Install SmartCard app"
       style={{ bottom: `calc(${bottomOffset}px + env(safe-area-inset-bottom, 0px))` }}
-      className="fixed inset-x-4 sm:left-auto sm:right-4 sm:w-[360px] z-30
+      className="fixed inset-x-4 sm:left-auto sm:right-4 sm:w-[360px] z-[60]
                  rounded-2xl border border-border/60 bg-popover/95 backdrop-blur-xl
                  shadow-2xl p-3 flex items-start gap-3"
     >

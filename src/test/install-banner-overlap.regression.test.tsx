@@ -35,11 +35,8 @@ describe("Install Banner Regression (Implementation check)", () => {
     // The bottom nav must have the identification attribute
     expect(src).toContain('data-bottom-nav');
     
-    // It should also have z-index high enough but lower than the dialog if needed (though here dialog uses z-30 and nav uses z-40)
-    // Actually in the code: dialog is z-30, nav is z-40.
-    // Wait, if nav is z-40 and dialog is z-30, the nav will be ABOVE the dialog.
-    // That's fine if the dialog is pushed up (bottomOffset), but we should ensure the dialog is Z-higher if we want it to float OVER.
-    // However, the fix was to push the dialog ABOVE the nav, so overlap is avoided.
+    // It should also have z-index high enough but lower than the dialog if needed
+    // SmartLinkBio nav uses z-40.
   });
 
   it("InstallPrompt is disabled on public profile pages", () => {
@@ -50,7 +47,10 @@ describe("Install Banner Regression (Implementation check)", () => {
     
     // Must have the check for public profile routes
     expect(src).toContain('isPublicProfileRoute');
-    expect(src).toContain('!["/auth", "/nfc", "/pricing", "/shop", "/cart", "/checkout", "/dashboard", "/admin", "/smartlink-bio"].includes');
+    // Check that we've expanded the list to include more app routes
+    expect(src).toContain('"/login"');
+    expect(src).toContain('"/signup"');
+    expect(src).toContain('"/settings"');
     expect(src).toContain('if (!visible || isPublicProfileRoute) return null;');
   });
 });
