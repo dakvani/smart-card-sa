@@ -298,45 +298,44 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
 
 
 
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Customization & Layout</h3>
+                  <div className="flex items-center justify-between mt-2">
+                    <h3 className="text-lg font-bold gradient-text">Customization & Layout</h3>
                     {supportsTwoSides && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onChange({ ...customization, isDoubleSided: !customization.isDoubleSided })}
-                        className="gap-2"
-                      >
-                        <Settings2 className="w-4 h-4" />
-                        <span>{customization.isDoubleSided ? 'Double-Sided' : 'Single-Sided'}</span>
-                      </Button>
+                      <div className="flex items-center gap-2">
+                         <span className="text-[10px] font-medium text-muted-foreground hidden sm:inline">Double Sided?</span>
+                         <Switch 
+                           checked={customization.isDoubleSided}
+                           onCheckedChange={(val) => onChange({ ...customization, isDoubleSided: val })}
+                         />
+                      </div>
                     )}
                   </div>
 
                   {customization.isDoubleSided && (
-                    <div className="flex gap-2 p-1 bg-muted rounded-lg">
+                    <div className="flex gap-2 p-1.5 bg-muted/50 backdrop-blur-sm rounded-xl border border-border/50">
                       <button
                         onClick={() => onChange({ ...customization, activeSide: 'front' })}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                        className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
                           activeSide === 'front'
-                            ? 'bg-background shadow text-foreground'
-                            : 'text-muted-foreground hover:text-foreground'
+                            ? 'bg-primary shadow-lg text-primary-foreground'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                         }`}
                       >
                         Front Side
                       </button>
                       <button
                         onClick={() => onChange({ ...customization, activeSide: 'back' })}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                        className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
                           activeSide === 'back'
-                            ? 'bg-background shadow text-foreground'
-                            : 'text-muted-foreground hover:text-foreground'
+                            ? 'bg-primary shadow-lg text-primary-foreground'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                         }`}
                       >
                         Back Side
                       </button>
                     </div>
                   )}
+
 
                   <AnimatePresence mode="wait">
                     <motion.div
