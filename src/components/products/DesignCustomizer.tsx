@@ -314,23 +314,31 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                   </TabsList>
 
                   <TabsContent value="templates" className="space-y-4 mt-4">
-                    <Label>Choose a Template</Label>
-                    <div className="grid grid-cols-3 gap-3">
+                    <Label>Business Card Templates</Label>
+                    <div className="grid grid-cols-2 gap-4 mt-4">
                       {designTemplates.map((template) => (
                         <button
                           key={template.id}
                           onClick={() => handleTemplateSelect(template.id)}
-                          className={`p-3 rounded-xl border-2 transition-all ${
+                          className={`group relative aspect-[1.6/1] overflow-hidden rounded-xl border-2 transition-all ${
                             customization.templateId === template.id
                               ? "border-primary ring-2 ring-primary/20"
                               : "border-border hover:border-primary/50"
                           }`}
                         >
-                          <div
-                            className="w-full h-12 rounded-lg mb-2"
-                            style={{ backgroundColor: template.colors.bg }}
+                          <div 
+                            className="absolute inset-0 bg-cover bg-center transition-transform group-hover:scale-110"
+                            style={{ 
+                              backgroundImage: `url(${(template as any).image})`,
+                              backgroundColor: template.colors.bg 
+                            }}
                           />
-                          <span className="text-xs font-medium">{template.name}</span>
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span className="text-white text-xs font-bold uppercase tracking-widest">Select</span>
+                          </div>
+                          <div className="absolute bottom-0 inset-x-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                            <span className="text-[10px] font-bold text-white uppercase tracking-wider">{template.name}</span>
+                          </div>
                         </button>
                       ))}
                     </div>
