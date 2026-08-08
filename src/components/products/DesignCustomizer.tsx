@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { DesignCustomization, designTemplates, NFCProduct, patternOptions, borderOptions, iconOptions, SideCustomization } from "./types";
-import { Upload, Link, Palette, Image, ExternalLink, User, RotateCw, QrCode, Grid3X3, Square, Sparkles } from "lucide-react";
+import { Upload, Link, Palette, Image, ExternalLink, User, RotateCw, QrCode, Grid3X3, Square, Sparkles, FileUp, Settings2, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
 
 interface DesignCustomizerProps {
   product: NFCProduct;
@@ -119,47 +120,169 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     });
   };
 
+  const isCustomizable = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card';
+
+  if (!isCustomizable) {
+    return (
+      <div className="p-8 text-center bg-muted/30 rounded-2xl border-2 border-dashed border-border">
+        <Info className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+        <h3 className="text-xl font-semibold mb-2">No Customization Available</h3>
+        <p className="text-muted-foreground">
+          This product is shipped with the standard SmartCard design. 
+          Finalize your order to proceed.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Customize Your {product.name}</h3>
-        {supportsTwoSides && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleFlipSide}
-            className="gap-2"
-          >
-            <RotateCw className="w-4 h-4" />
-            <span className="capitalize">{activeSide === 'front' ? 'Edit Back' : 'Edit Front'}</span>
-          </Button>
-        )}
+      {/* Stage 1: Initialization and Design Input */}
+      <div className="grid grid-cols-2 gap-3">
+        <Button
+          variant={customization.inputMethod === 'template' ? 'gradient' : 'outline'}
+          className="h-auto py-4 flex-col gap-2"
+          onClick={() => onChange({ ...customization, inputMethod: 'template' })}
+        >
+          <Palette className="w-5 h-5" />
+          <div className="text-left">
+            <div className="font-bold">Generate Design</div>
+            <div className="text-[10px] opacity-80">Use templates and AI</div>
+          </div>
+        </Button>
+        <Button
+          variant={customization.inputMethod === 'upload' ? 'gradient' : 'outline'}
+          className="h-auto py-4 flex-col gap-2"
+          onClick={() => onChange({ ...customization, inputMethod: 'upload' })}
+        >
+          <FileUp className="w-5 h-5" />
+          <div className="text-left">
+            <div className="font-bold">Upload Print-Ready</div>
+            <div className="text-[10px] opacity-80">PDF, AI, 300 DPI</div>
+          </div>
+        </Button>
       </div>
 
-      {supportsTwoSides && (
-        <div className="flex gap-2 p-1 bg-muted rounded-lg">
-          <button
-            onClick={() => onChange({ ...customization, activeSide: 'front' })}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-              activeSide === 'front'
-                ? 'bg-background shadow text-foreground'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
+      <AnimatePresence mode="wait">
+        {customization.inputMethod === 'upload' ? (
+          <motion.div
+            key="upload-flow"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="space-y-4 p-5 bg-card rounded-2xl border border-border"
           >
-            Front Side
-          </button>
-          <button
-            onClick={() => onChange({ ...customization, activeSide: 'back' })}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-              activeSide === 'back'
-                ? 'bg-background shadow text-foreground'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
+            <div className="flex items-center gap-2 text-primary mb-2">
+              <Info className="w-4 h-4" />
+              <span className="text-xs font-semibold uppercase tracking-wider">Technical Specifications</span>
+            </div>
+            <ul className="text-[11px] space-y-1.5 text-muted-foreground list-disc pl-4 mb-4">
+              <li>Resolution: Minimum 300 DPI</li>
+              <li>Color Mode: CMYK preferred</li>
+              <li>Formats: PDF, AI, high-res PNG/JPG</li>
+              <li>Dimensions: 85.6mm x 54mm + 3mm bleed margin</li>
+            </ul>
+            
+            <Label>Upload Complete Design</Label>
+            <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/50 transition-colors bg-muted/20">
+              <div className="text-center p-4">
+                <FileUp className="w-10 h-10 mx-auto text-primary mb-2" />
+                <span className="text-sm font-medium block">Select Design File</span>
+                <span className="text-[10px] text-muted-foreground mt-1 block">PDF, AI, or High-Res Image</span>
+              </div>
+              <input
+                type="file"
+                accept=".pdf,.ai,image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    // In a real app, upload to storage here
+                    onChange({ 
+                      ...customization, 
+                      printReadyFileUrl: URL.createObjectURL(file),
+                      designMetadata: {
+                        dpi: 300,
+                        colorMode: 'CMYK',
+                        dimensions: '85.6x54mm',
+                        bleed: '3mm'
+                      }
+                    });
+                    toast({ title: "Design Uploaded", description: "Your print-ready file has been received." });
+                  }
+                }}
+                className="hidden"
+              />
+            </label>
+            {customization.printReadyFileUrl && (
+              <Badge variant="secondary" className="w-full justify-center py-1">
+                ✓ File Received: Design will be routed to production
+              </Badge>
+            )}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="template-flow"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-6"
           >
-            Back Side
-          </button>
-        </div>
-      )}
+            {/* Stage 2: Template Refinement */}
+            <div className="space-y-3">
+              <Label>Industry / Theme Filter</Label>
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                {['Real Estate', 'Tech', 'Creative', 'Healthcare', 'Corporate', 'Food'].map((ind) => (
+                  <Button
+                    key={ind}
+                    size="sm"
+                    variant={customization.industry === ind ? 'secondary' : 'outline'}
+                    className="whitespace-nowrap rounded-full"
+                    onClick={() => onChange({ ...customization, industry: ind })}
+                  >
+                    {ind}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Customization & Layout</h3>
+              {supportsTwoSides && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onChange({ ...customization, isDoubleSided: !customization.isDoubleSided })}
+                  className="gap-2"
+                >
+                  <Settings2 className="w-4 h-4" />
+                  <span>{customization.isDoubleSided ? 'Double-Sided' : 'Single-Sided'}</span>
+                </Button>
+              )}
+            </div>
+
+            {customization.isDoubleSided && (
+              <div className="flex gap-2 p-1 bg-muted rounded-lg">
+                <button
+                  onClick={() => onChange({ ...customization, activeSide: 'front' })}
+                  className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                    activeSide === 'front'
+                      ? 'bg-background shadow text-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Front Side
+                </button>
+                <button
+                  onClick={() => onChange({ ...customization, activeSide: 'back' })}
+                  className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                    activeSide === 'back'
+                      ? 'bg-background shadow text-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Back Side
+                </button>
+              </div>
+            )}
 
       <AnimatePresence mode="wait">
         <motion.div
