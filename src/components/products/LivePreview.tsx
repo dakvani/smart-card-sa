@@ -74,7 +74,7 @@ export function LivePreview({ product, customization }: LivePreviewProps) {
 
   const renderBusinessCard = (side: SideCustomization, isBack: boolean) => (
     <motion.div
-      className="relative w-[340px] h-[200px] rounded-2xl shadow-2xl overflow-hidden"
+      className="relative w-[340px] h-[200px] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
       style={{ 
         backgroundColor: side.backgroundColor,
         backgroundImage: getPatternStyle(side.pattern, side.accentColor),
@@ -84,75 +84,101 @@ export function LivePreview({ product, customization }: LivePreviewProps) {
       animate={{ rotateY: isBack ? 180 : 0 }}
       transition={{ duration: 0.6 }}
     >
+      {/* Glossy overlay effect */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent pointer-events-none" />
+      
       {/* Custom artwork background */}
       {side.customArtworkUrl && (
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-30"
+          className="absolute inset-0 bg-cover bg-center opacity-40"
           style={{ backgroundImage: `url(${side.customArtworkUrl})` }}
         />
       )}
       
-      {/* Icon decoration */}
-      {getIconEmoji(side.icon) && (
-        <div className="absolute top-4 left-4 text-2xl">
-          {getIconEmoji(side.icon)}
-        </div>
-      )}
+      {/* Top Bar Decoration */}
+      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
       
       {/* NFC icon */}
-      <div className="absolute top-4 right-4">
-        <Wifi className="w-6 h-6" style={{ color: side.accentColor }} />
+      <div className="absolute top-6 right-6 flex flex-col items-center gap-1 opacity-80">
+        <Wifi className="w-5 h-5" style={{ color: side.accentColor }} />
+        <span className="text-[6px] font-bold uppercase tracking-widest" style={{ color: side.textColor }}>Tap to Connect</span>
       </div>
       
-      {/* Logo */}
-      {side.logoUrl && (
-        <div className="absolute top-4 left-4">
-          <img
-            src={side.logoUrl}
-            alt="Logo"
-            className="w-12 h-12 rounded-lg object-cover"
-          />
-        </div>
-      )}
-      
-      {/* QR Code */}
-      {side.showQRCode && (
-        <div className="absolute bottom-4 right-4 bg-white p-1 rounded-lg">
-          <QRCodeSVG
-            value={customization.linkedProfileUsername ? `https://smartcard.link/@${customization.linkedProfileUsername}` : "https://smartcard.link"}
-            size={48}
-          />
-        </div>
-      )}
-      
-      {/* Content */}
-      <div className="absolute bottom-6 left-6 right-6">
-        <h3
-          className="text-xl font-bold"
-          style={{ color: side.textColor }}
-        >
-          {side.name || "Your Name"}
-        </h3>
-        <p
-          className="text-sm mt-1"
-          style={{ color: `${side.textColor}99` }}
-        >
-          {side.title || "Your Title"}
-        </p>
-        {!isBack && customization.linkedProfileUsername && (
-          <p
-            className="text-xs mt-2 font-medium"
+      {/* Logo Container */}
+      <div className="absolute top-8 left-8">
+        {side.logoUrl ? (
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-white/10 blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <img
+              src={side.logoUrl}
+              alt="Logo"
+              className="relative w-14 h-14 rounded-xl object-contain shadow-lg"
+            />
+          </div>
+        ) : (
+          <div 
+            className="w-12 h-12 rounded-2xl flex items-center justify-center backdrop-blur-md bg-white/5 border border-white/10"
             style={{ color: side.accentColor }}
           >
-            @{customization.linkedProfileUsername}
-          </p>
+            {getIconEmoji(side.icon) ? (
+              <span className="text-2xl">{getIconEmoji(side.icon)}</span>
+            ) : (
+              <CreditCard className="w-6 h-6" />
+            )}
+          </div>
         )}
       </div>
       
-      {/* Accent line */}
+      {/* QR Code Section */}
+      {side.showQRCode && (
+        <div className="absolute bottom-6 right-6 p-2 bg-white rounded-[14px] shadow-xl group hover:scale-105 transition-transform">
+          <QRCodeSVG
+            value={customization.linkedProfileUsername ? `https://smartcard.link/@${customization.linkedProfileUsername}` : "https://smartcard.link"}
+            size={42}
+            level="H"
+          />
+        </div>
+      )}
+      
+      {/* Main Content Area */}
+      <div className="absolute bottom-8 left-8 right-20 space-y-1">
+        <motion.h3
+          layoutId={`name-${isBack}`}
+          className="text-2xl font-black tracking-tight leading-none"
+          style={{ 
+            color: side.textColor,
+            fontFamily: "'Inter', sans-serif"
+          }}
+        >
+          {side.name || "YOUR NAME"}
+        </motion.h3>
+        <motion.p
+          layoutId={`title-${isBack}`}
+          className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-70"
+          style={{ color: side.textColor }}
+        >
+          {side.title || "PROFESSIONAL TITLE"}
+        </motion.p>
+        
+        {!isBack && customization.linkedProfileUsername && (
+          <div className="flex items-center gap-1.5 pt-2">
+            <div className="w-4 h-4 rounded-full flex items-center justify-center bg-white/10 border border-white/5">
+              <Star className="w-2.5 h-2.5" style={{ color: side.accentColor }} />
+            </div>
+            <span
+              className="text-[9px] font-bold tracking-widest uppercase"
+              style={{ color: side.accentColor }}
+            >
+              smartcard.link/@{customization.linkedProfileUsername}
+            </span>
+          </div>
+        )}
+      </div>
+      
+      {/* Side Decorative Accent */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-1"
-        style={{ backgroundColor: side.accentColor }}
+        className="absolute bottom-0 right-0 w-32 h-1 bg-gradient-to-l from-transparent to-transparent opacity-50"
+        style={{ backgroundImage: `linear-gradient(to right, transparent, ${side.accentColor})` }}
       />
     </motion.div>
   );
