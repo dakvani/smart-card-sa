@@ -24,6 +24,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
   const [loadingProfiles, setLoadingProfiles] = useState(false);
   const [canvaUrl, setCanvaUrl] = useState("");
   const [showPreview, setShowPreview] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   const supportsTwoSides = product.category === 'card' || product.category === 'keychain';
   const activeSide = customization.activeSide;
@@ -274,9 +276,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                         <Input 
                           placeholder="Search templates..." 
                           className="pl-10 h-10"
-                          onChange={(e) => {
-                            // Local search filter could be implemented here
-                          }}
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
                         />
                       </div>
                       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
@@ -294,6 +295,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       </div>
                     </div>
                   </div>
+
 
 
                   <div className="flex items-center justify-between">
@@ -372,8 +374,13 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
                             {designTemplates
-                              .filter(t => !customization.industry || (t as any).category === customization.industry)
+                              .filter(t => {
+                                const matchesIndustry = !customization.industry || (t as any).category === customization.industry;
+                                const matchesSearch = t.name.toLowerCase().includes(searchTerm.toLowerCase());
+                                return matchesIndustry && matchesSearch;
+                              })
                               .map((template) => (
+
                               <button
                                 key={template.id}
                                 onClick={() => handleTemplateSelect(template.id)}
