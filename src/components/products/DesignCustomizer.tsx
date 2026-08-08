@@ -172,6 +172,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             key="editor-mode"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="space-y-6"
           >
             {/* Stage 1: Initialization and Design Input */}
