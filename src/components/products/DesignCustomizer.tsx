@@ -512,28 +512,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                           </div>
                         </TabsContent>
 
-                        <TabsContent value="text" className="space-y-4 mt-4">
-                          <div>
-                            <Label htmlFor="name">Your Name</Label>
-                            <Input
-                              id="name"
-                              placeholder="John Doe"
-                              value={currentSide.name}
-                              onChange={(e) => updateSide("name", e.target.value)}
-                              className="mt-1"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="title">Title / Tagline</Label>
-                            <Input
-                              id="title"
-                              placeholder="Software Developer"
-                              value={currentSide.title}
-                              onChange={(e) => updateSide("title", e.target.value)}
-                              className="mt-1"
-                            />
-                          </div>
-                        </TabsContent>
 
                         <TabsContent value="elements" className="space-y-6 mt-4">
                           <div>
