@@ -174,6 +174,11 @@ export function DraftManager({
       templateId: custom.templateId || null,
       linkedProfileId: custom.linkedProfileId || null,
       linkedProfileUsername: custom.linkedProfileUsername || null,
+      inputMethod: custom.inputMethod || 'template',
+      industry: custom.industry || null,
+      isDoubleSided: custom.isDoubleSided || false,
+      printReadyFileUrl: custom.printReadyFileUrl || null,
+      designMetadata: custom.designMetadata || null,
     };
   };
 

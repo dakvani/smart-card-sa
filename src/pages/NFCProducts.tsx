@@ -269,21 +269,16 @@ export default function NFCProducts() {
             category: item.product.category,
           },
           customization: {
-            front: {
-              name: item.customization.front.name,
-              title: item.customization.front.title,
-              backgroundColor: item.customization.front.backgroundColor,
-              textColor: item.customization.front.textColor,
-              accentColor: item.customization.front.accentColor,
-            },
-            back: {
-              name: item.customization.back.name,
-              title: item.customization.back.title,
-              backgroundColor: item.customization.back.backgroundColor,
-              textColor: item.customization.back.textColor,
-              accentColor: item.customization.back.accentColor,
-            },
+            ...item.customization,
+            // Keep existing structure for backward compat in UI
+            front: item.customization.front,
+            back: item.customization.back,
             linkedProfileUsername: item.customization.linkedProfileUsername,
+            // Finalized design parameters for admin
+            isUploadFlow: item.customization.inputMethod === 'upload',
+            printReadyFileUrl: item.customization.printReadyFileUrl,
+            designMetadata: item.customization.designMetadata,
+            industryFilter: item.customization.industry,
           },
           quantity: item.quantity,
         })) as unknown as Json,
@@ -373,7 +368,8 @@ export default function NFCProducts() {
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Custom NFC products that link directly to your SmartCard profile. 
-              Design your own and start networking smarter.
+              Upload print-ready designs or create your own with our template engine. 
+              Orders are routed directly to our admin team for physical production.
             </p>
           </motion.div>
 

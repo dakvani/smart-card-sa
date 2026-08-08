@@ -38,6 +38,17 @@ export interface DesignCustomization {
   templateId: string | null;
   linkedProfileId: string | null;
   linkedProfileUsername: string | null;
+  // New workflow fields
+  inputMethod: 'template' | 'upload';
+  industry: string | null;
+  isDoubleSided: boolean;
+  printReadyFileUrl: string | null;
+  designMetadata: {
+    dpi: number;
+    colorMode: string;
+    dimensions: string;
+    bleed: string;
+  } | null;
 }
 
 export interface CartItem {
@@ -68,6 +79,11 @@ export const defaultCustomization: DesignCustomization = {
   templateId: null,
   linkedProfileId: null,
   linkedProfileUsername: null,
+  inputMethod: 'template',
+  industry: null,
+  isDoubleSided: false,
+  printReadyFileUrl: null,
+  designMetadata: null,
 };
 
 export const patternOptions = [
