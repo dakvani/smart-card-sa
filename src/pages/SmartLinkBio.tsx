@@ -35,10 +35,10 @@ const plans = [
     features: ["Unlimited links", "5 base themes", "Tip jar", "28-day analytics"],
     cta: "Start free", popular: false },
   { name: "Starter", price: "SAR 19", period: "/mo", description: "For growing creators",
-    features: ["Everything in Free", "Custom fonts & BGs", "Spotlight links", "6 months analytics", "Priority Help & Support"],
+    features: ["Everything in Free", "Custom fonts & BGs", "Spotlight links", "Priority Help & Support"],
     cta: "Try Starter", popular: true },
   { name: "Pro", price: "SAR 56", period: "/mo", description: "Power users & brands",
-    features: ["Everything in Starter", "Remove branding", "Export email list", "GA / Pixel", "Custom CSS", "API access"],
+    features: ["Everything in Starter", "Remove branding", "Custom CSS", "API access"],
     cta: "Try Pro", popular: false },
 ];
 
