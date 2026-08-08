@@ -38,9 +38,9 @@ export function Footer() {
       <div className="pointer-events-none absolute -bottom-40 left-1/2 h-80 w-[600px] -translate-x-1/2 rounded-full bg-[#4f46e5]/10 blur-[140px]" />
 
       <div className="container relative z-10 mx-auto px-4 pb-20 pt-10 sm:pb-16 sm:pt-20">
-        <div className="grid grid-cols-2 gap-5 sm:gap-10 md:grid-cols-6">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-10 md:grid-cols-5">
           {/* Brand + contact */}
-          <div className="col-span-2 md:col-span-2">
+          <div className="col-span-2 md:col-span-1">
             <Link to="/" className="group inline-flex items-center gap-2" aria-label="SmartCard — homepage">
               <SmartCardLogo className="h-6 w-6 text-[#a5b4fc] transition-transform group-hover:scale-110 group-hover:-rotate-3 sm:h-7 sm:w-7" />
               <span className="font-display text-lg font-bold tracking-tight sm:text-xl">
@@ -61,7 +61,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-2 text-white/70 sm:gap-2.5">
                 <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#a5b4fc] sm:h-4 sm:w-4" />
-                <span className="leading-snug">King Fahad St, Al Faisaliya<br />Jeddah 23435, KSA</span>
+                <span className="leading-snug">Jeddah 23435, KSA</span>
               </li>
             </ul>
           </div>
