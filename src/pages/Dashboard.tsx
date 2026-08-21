@@ -725,34 +725,34 @@ export default function Dashboard() {
           <div className="flex-1 min-w-0">
             <div className="bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 shadow-sm overflow-hidden">
               {/* Panel Header */}
-              <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 border-b border-border/60 bg-secondary/30 gap-2">
-                <div className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center justify-between px-3 sm:px-6 py-4 border-b border-border/60 bg-secondary/30 gap-4">
+                <div className="flex items-center gap-3 min-w-0">
                   {(() => {
                     const t = tabs.find(x => x.id === activeTab)!;
-                    return <t.icon className="w-3.5 h-3.5 text-primary shrink-0" />;
+                    return <t.icon className="w-5 h-5 text-primary shrink-0" />;
                   })()}
-                  <h2 className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider truncate">
+                  <h2 className="text-sm sm:text-base font-bold tracking-tight truncate">
                     {tabs.find(x => x.id === activeTab)?.label}
                     <span className="hidden sm:inline"> Builder</span>
                   </h2>
                 </div>
-                <div className="flex items-center gap-1 sm:gap-1.5">
+                <div className="flex items-center gap-2 sm:gap-3">
                   {/* Autosave status pill — icon only on mobile */}
                   <div
                     data-testid="autosave-status"
-                    className={`flex items-center gap-1 text-[10px] font-medium px-1.5 sm:px-2 py-1 rounded-full border transition-colors ${
+                    className={`flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-all duration-300 ${
                       saveStatus === "saving"
-                        ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                        ? "bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.1)]"
                         : saveStatus === "error"
                         ? "bg-destructive/10 text-destructive border-destructive/30"
                         : saveStatus === "saved"
-                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                        : "bg-secondary/60 text-muted-foreground border-border/60"
+                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
+                        : "bg-white/5 text-white/40 border-white/5"
                     }`}
                   >
                     {saveStatus === "saving" && (
                       <>
-                        <Loader2 className="w-3 h-3 animate-spin" />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
                         <span className="hidden sm:inline">Saving…</span>
                       </>
                     )}

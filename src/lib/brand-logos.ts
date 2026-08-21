@@ -1,11 +1,11 @@
 export const BRAND_LOGOS: Record<string, string> = {
-  twitter: "https://upload.wikimedia.org/wikipedia/commons/5/5a/X_icon_2.svg",
+  twitter: "https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg",
   instagram: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg",
-  facebook: "https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png",
+  facebook: "https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg",
   whatsapp: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
   youtube: "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg",
   tiktok: "https://upload.wikimedia.org/wikipedia/commons/3/34/Ionicons_logo-tiktok.svg",
-  linkedin: "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png",
+  linkedin: "https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg",
   snapchat: "https://upload.wikimedia.org/wikipedia/en/a/ad/Snapchat_logo.svg",
   messenger: "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg",
   github: "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg",
@@ -14,6 +14,6 @@ export const BRAND_LOGOS: Record<string, string> = {
   pinterest: "https://upload.wikimedia.org/wikipedia/commons/0/08/Pinterest-logo.png",
   twitch: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Twitch_Glitch_Logo_Purple.svg",
   spotify: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
-  reddit: "https://upload.wikimedia.org/wikipedia/commons/5/58/Reddit_logo_new.svg",
+  reddit: "https://upload.wikimedia.org/wikipedia/commons/b/b4/Reddit_logo.svg",
   website: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Globe_icon.svg",
 };
