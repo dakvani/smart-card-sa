@@ -264,8 +264,8 @@ export function SortableLinkItem({
                   </div>
                   <p className="text-[10px] text-muted-foreground">
                     {currentType === "whatsapp"
-                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Implement a live preview that shows exactly what changed on the public profile before I publish it."
-                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Implement a live preview that shows exactly what changed on the public profile before I publish it."}
+                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Add a live preview that shows exactly what changed on the public profile before I publish it."
+                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Add a live preview that shows exactly what changed on the public profile before I publish it."}
                   </p>
                 </div>
               );
