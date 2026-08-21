@@ -53,7 +53,7 @@ export function SocialIcons({ socialLinks }: SocialIconsProps) {
             className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all shadow-lg"
           >
             {brandLogo ? (
-              <img src={brandLogo} alt={key} className="w-5 h-5 object-contain brightness-0 invert" />
+              <img src={brandLogo} alt={key} className="w-5 h-5 object-contain" />
             ) : (
               <Icon className="w-5 h-5 text-primary-foreground" />
             )}

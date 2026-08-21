@@ -310,7 +310,7 @@ export default function PublicProfile() {
         <img 
           src={brandLogo} 
           alt={t} 
-          className={`${size} object-contain shrink-0 brightness-0 invert`} 
+          className={`${size} object-contain shrink-0`} 
         />
       );
     }
