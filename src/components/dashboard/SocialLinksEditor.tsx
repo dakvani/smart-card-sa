@@ -62,6 +62,7 @@ export function SocialLinksEditor({ socialLinks, onChange, onBlur }: SocialLinks
       <div className="space-y-2">
         {socialPlatforms.map(({ key, label, placeholder }) => {
           const brandLogo = BRAND_LOGOS[key];
+          const value = (socialLinks as Record<string, string>)[key] || "";
           const result = results[key];
           const hasValue = value.trim().length > 0;
           return (
