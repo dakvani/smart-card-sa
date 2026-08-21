@@ -728,8 +728,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     </div>
   );
 }
-// Verification: Ensures correct closing of all blocks.
-// 2026-05-20 Fix.
 
 
 
