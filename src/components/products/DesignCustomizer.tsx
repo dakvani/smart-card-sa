@@ -720,12 +720,13 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                   </AnimatePresence>
                 </motion.div>
               )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    );
-  }
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 
 
