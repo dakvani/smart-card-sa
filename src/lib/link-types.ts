@@ -42,7 +42,7 @@ export const LINK_TYPES: LinkTypeDef[] = [
   { value: "snapchat", label: "Snapchat", placeholder: "username", icon: "Ghost" },
   { value: "instagram", label: "Instagram", placeholder: "username", icon: "Instagram" },
   { value: "facebook", label: "Facebook", placeholder: "username or page", icon: "Facebook" },
-  { value: "twitter", label: "X / Twitter", placeholder: "username", icon: "Twitter" },
+  { value: "twitter", label: "X", placeholder: "username", icon: "Twitter" },
   { value: "linkedin", label: "LinkedIn", placeholder: "username", icon: "Linkedin" },
   { value: "youtube", label: "YouTube", placeholder: "@channel", icon: "Youtube" },
   { value: "tiktok", label: "TikTok", placeholder: "username", icon: "Music2" },
