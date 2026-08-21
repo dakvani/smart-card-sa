@@ -728,7 +728,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     </div>
   );
 }
-// Clean fix.
+// Syntax check: ensure tags are balanced.
 
 
 
