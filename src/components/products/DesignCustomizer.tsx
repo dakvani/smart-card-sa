@@ -124,12 +124,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     });
   };
 
-  const isCustomizable = true;
-
-  if (product.id !== 'smartcard-nfc-card' && product.id !== 'smartcard-review-card') {
-    // For other products, we only allow basic customization (Link + Profile)
-    // to match "No Customization Available" findings but still provide promised features
-  }
+  const isFullCustomization = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card';
 
   return (
     <div className="space-y-6">
@@ -205,7 +200,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             </div>
 
 
-            <AnimatePresence mode="wait">
+            {isFullCustomization && (
+              <AnimatePresence mode="wait">
               {customization.inputMethod === 'upload' ? (
                 <motion.div
                   key="upload-flow"
