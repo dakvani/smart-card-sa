@@ -162,7 +162,13 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             <LivePreview product={product} customization={customization} />
           </motion.div>
         ) : (
-          <>
+          <motion.div
+            key="editor-mode"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="space-y-6"
+          >
           <motion.div
             key="editor-mode"
             initial={{ opacity: 0 }}
@@ -731,7 +737,3 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     </div>
   );
 }
-        </AnimatePresence>
-      </div>
-    );
-  }
