@@ -1,4 +1,5 @@
-import { Instagram, Twitter, Youtube, Facebook, Linkedin, Github, Globe, CheckCircle2, AlertCircle } from "lucide-react";
+import { CheckCircle2, AlertCircle } from "lucide-react";
+import { BRAND_LOGOS } from "@/lib/brand-logos";
 import { useMemo } from "react";
 import { validateSocialHandle } from "@/lib/link-validation";
 import { toast } from "@/hooks/use-toast";
@@ -20,13 +21,13 @@ interface SocialLinksEditorProps {
 }
 
 const socialPlatforms = [
-  { key: "instagram", label: "Instagram", icon: Instagram, placeholder: "username" },
-  { key: "twitter", label: "Twitter/X", icon: Twitter, placeholder: "username" },
-  { key: "youtube", label: "YouTube", icon: Youtube, placeholder: "channel" },
-  { key: "facebook", label: "Facebook", icon: Facebook, placeholder: "username" },
-  { key: "linkedin", label: "LinkedIn", icon: Linkedin, placeholder: "username" },
-  { key: "github", label: "GitHub", icon: Github, placeholder: "username" },
-  { key: "website", label: "Website", icon: Globe, placeholder: "https://..." },
+  { key: "instagram", label: "Instagram", placeholder: "username" },
+  { key: "twitter", label: "X", placeholder: "username" },
+  { key: "youtube", label: "YouTube", placeholder: "channel" },
+  { key: "facebook", label: "Facebook", placeholder: "username" },
+  { key: "linkedin", label: "LinkedIn", placeholder: "username" },
+  { key: "github", label: "GitHub", placeholder: "username" },
+  { key: "website", label: "Website", placeholder: "https://..." },
 ] as const;
 
 export function SocialLinksEditor({ socialLinks, onChange, onBlur }: SocialLinksEditorProps) {
@@ -59,15 +60,15 @@ export function SocialLinksEditor({ socialLinks, onChange, onBlur }: SocialLinks
     <div className="space-y-3">
       <label className="block text-sm font-medium">Social Media Links</label>
       <div className="space-y-2">
-        {socialPlatforms.map(({ key, label, icon: Icon, placeholder }) => {
-          const value = (socialLinks as Record<string, string>)[key] || "";
+        {socialPlatforms.map(({ key, label, placeholder }) => {
+          const brandLogo = BRAND_LOGOS[key];
           const result = results[key];
           const hasValue = value.trim().length > 0;
           return (
             <div key={key}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-5 h-5 text-muted-foreground" />
+                <div className="w-10 h-10 rounded-lg bg-[#2C2D31] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {brandLogo && <img src={brandLogo} alt={label} className="w-5 h-5 object-contain" />}
                 </div>
                 <div className="relative flex-1">
                   <input
