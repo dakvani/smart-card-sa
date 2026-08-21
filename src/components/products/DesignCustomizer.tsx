@@ -127,6 +127,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
   const isFullCustomization = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card';
   const showEditor = true;
 
+  // Render
   return (
     <div className="space-y-6">
       {/* Header with Preview Toggle */}
