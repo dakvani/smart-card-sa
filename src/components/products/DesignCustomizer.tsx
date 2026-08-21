@@ -705,6 +705,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                               </div>
                             )}
                           </div>
+                        </TabsContent>
                         {!isFullCustomization && (
                           <TabsContent value="info" className="space-y-4 mt-4">
                             <div className="p-4 bg-muted/20 rounded-xl border border-border/50 space-y-4">
@@ -716,6 +717,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                           </TabsContent>
                         )}
                       </Tabs>
+
                     </motion.div>
                   </AnimatePresence>
                 </motion.div>
