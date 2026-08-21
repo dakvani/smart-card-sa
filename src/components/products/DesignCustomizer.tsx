@@ -160,6 +160,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             <LivePreview product={product} customization={customization} />
           </motion.div>
         ) : (
+          <>
           <motion.div
             key="editor-mode"
             initial={{ opacity: 0 }}
@@ -733,7 +734,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                 </div>
               )}
             </motion.div>
-          )}
+          </>
+        )}
         </AnimatePresence>
       </div>
     );
