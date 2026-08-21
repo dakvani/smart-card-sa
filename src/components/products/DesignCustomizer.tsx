@@ -124,19 +124,11 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     });
   };
 
-  const isCustomizable = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card';
+  const isCustomizable = true;
 
-  if (!isCustomizable) {
-    return (
-      <div className="p-8 text-center bg-muted/30 rounded-2xl border-2 border-dashed border-border">
-        <Info className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-        <h3 className="text-xl font-semibold mb-2">No Customization Available</h3>
-        <p className="text-muted-foreground">
-          This product is shipped with the standard SmartCard design. 
-          Finalize your order to proceed.
-        </p>
-      </div>
-    );
+  if (product.id !== 'smartcard-nfc-card' && product.id !== 'smartcard-review-card') {
+    // For other products, we only allow basic customization (Link + Profile)
+    // to match "No Customization Available" findings but still provide promised features
   }
 
   return (

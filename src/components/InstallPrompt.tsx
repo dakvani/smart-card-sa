@@ -37,8 +37,14 @@ export function InstallPrompt() {
     if (!visible) return;
     const measure = () => {
       const nav = document.querySelector<HTMLElement>("[data-bottom-nav]");
+      // If bottom nav is present and visible, we offset.
+      // On mobile, the SmartLinkBio tabs have fixed bottom-0 and z-40.
       const h = nav && getComputedStyle(nav).display !== "none" ? nav.offsetHeight : 0;
-      setBottomOffset(h + 16);
+      
+      // If we are on mobile and have a bottom nav, we need to push it up further
+      // so it doesn't overlap the tabs which are at the very bottom.
+      const extraGap = h > 0 ? 8 : 0;
+      setBottomOffset(h + 16 + extraGap);
     };
     measure();
     window.addEventListener("resize", measure);
