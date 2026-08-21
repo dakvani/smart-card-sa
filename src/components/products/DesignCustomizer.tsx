@@ -124,20 +124,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     });
   };
 
-  const isCustomizable = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card';
-
-  if (!isCustomizable) {
-    return (
-      <div className="p-8 text-center bg-muted/30 rounded-2xl border-2 border-dashed border-border">
-        <Info className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-        <h3 className="text-xl font-semibold mb-2">No Customization Available</h3>
-        <p className="text-muted-foreground">
-          This product is shipped with the standard SmartCard design. 
-          Finalize your order to proceed.
-        </p>
-      </div>
-    );
-  }
+  const isFullCustomization = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card';
+  const showEditor = true;
 
   return (
     <div className="space-y-6">
@@ -213,15 +201,16 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             </div>
 
 
-            <AnimatePresence mode="wait">
-              {customization.inputMethod === 'upload' ? (
-                <motion.div
-                  key="upload-flow"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-4 p-5 bg-card rounded-2xl border border-border"
-                >
+            {showEditor && (
+              <AnimatePresence mode="wait">
+                {customization.inputMethod === 'upload' ? (
+                  <motion.div
+                    key="upload-flow"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="space-y-4 p-5 bg-card rounded-2xl border border-border"
+                  >
                   <div className="flex items-center gap-2 text-primary mb-2">
                     <Info className="w-4 h-4" />
                     <span className="text-xs font-semibold uppercase tracking-wider">Technical Specifications</span>
@@ -359,26 +348,35 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       exit={{ opacity: 0, x: activeSide === 'front' ? 20 : -20 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Tabs defaultValue="text" className="w-full">
-                        <TabsList className="grid w-full grid-cols-6 h-12 bg-muted/30 p-1">
-                          <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <User className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="templates" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <Palette className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="colors" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <Sparkles className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="elements" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <Grid3X3 className="w-4 h-4" />
-                          </TabsTrigger>
+                      <Tabs defaultValue={isFullCustomization ? "text" : "link"} className="w-full">
+                        <TabsList className={`grid w-full h-12 bg-muted/30 p-1 ${isFullCustomization ? 'grid-cols-6' : 'grid-cols-3'}`}>
+                          {isFullCustomization && (
+                            <>
+                              <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <User className="w-4 h-4" />
+                              </TabsTrigger>
+                              <TabsTrigger value="templates" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <Palette className="w-4 h-4" />
+                              </TabsTrigger>
+                              <TabsTrigger value="colors" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <Sparkles className="w-4 h-4" />
+                              </TabsTrigger>
+                              <TabsTrigger value="elements" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <Grid3X3 className="w-4 h-4" />
+                              </TabsTrigger>
+                            </>
+                          )}
                           <TabsTrigger value="upload" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Upload className="w-4 h-4" />
                           </TabsTrigger>
                           <TabsTrigger value="link" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Link className="w-4 h-4" />
                           </TabsTrigger>
+                          {!isFullCustomization && (
+                            <TabsTrigger value="info" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                              <Info className="w-4 h-4" />
+                            </TabsTrigger>
+                          )}
                         </TabsList>
 
                         <TabsContent value="text" className="space-y-4 mt-4">
@@ -707,6 +705,16 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                             )}
                           </div>
                         </TabsContent>
+                        {!isFullCustomization && (
+                          <TabsContent value="info" className="space-y-4 mt-4">
+                            <div className="p-4 bg-muted/20 rounded-xl border border-border/50 space-y-4">
+                              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">Product Info</h4>
+                              <p className="text-xs text-muted-foreground">
+                                This product features the standard SmartCard design. You can upload your logo and link your profile above.
+                              </p>
+                            </div>
+                          </TabsContent>
+                        )}
                       </Tabs>
                     </motion.div>
                   </AnimatePresence>
@@ -719,3 +727,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     </div>
   );
 }
+
+
+
+
