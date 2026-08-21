@@ -202,7 +202,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             </div>
 
 
-            {isFullCustomization ? (
+            {isFullCustomization && (
               <AnimatePresence mode="wait">
               {customization.inputMethod === 'upload' ? (
                 <motion.div
