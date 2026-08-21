@@ -729,7 +729,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     </div>
   );
 }
-/* end of component */
 
 
 
