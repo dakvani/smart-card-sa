@@ -694,7 +694,7 @@ export default function Dashboard() {
         {/* Builder Layout: Left Nav | Edit Panel | Live Preview */}
         <div className="flex flex-col lg:flex-row gap-4 mt-4 pb-20 md:pb-0">
           {/* Left: Vertical Builder Nav — hidden on mobile (replaced by bottom tab bar) */}
-          <aside className="hidden md:flex lg:w-16 lg:flex-col gap-1 p-1.5 bg-background/60 backdrop-blur-sm rounded-xl border border-border/60 lg:sticky lg:top-20 lg:h-fit shadow-sm">
+          <aside className="hidden md:flex lg:w-20 lg:flex-col gap-1.5 p-2 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/60 lg:sticky lg:top-20 lg:h-fit shadow-sm">
             {tabs.map(tab => {
               const active = activeTab === tab.id;
               return (
@@ -702,15 +702,20 @@ export default function Dashboard() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   title={tab.label}
-                  className={`group relative flex-1 lg:flex-none flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-lg transition-all ${
+                  className={`group relative flex-1 lg:flex-none flex flex-col items-center justify-center gap-1.5 py-4 px-2 rounded-xl transition-all ${
                     active
-                      ? "bg-primary text-primary-foreground shadow-glow"
-                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(59,130,246,0.1)]"
+                      : "text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
                   }`}
                 >
-                  <tab.icon className="w-4 h-4" />
-                  <span className="text-[9px] font-semibold uppercase tracking-wider">{tab.label}</span>
-                  {active && <span className="hidden lg:block absolute -right-1.5 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full bg-primary" />}
+                  {active && (
+                    <motion.div
+                      layoutId="sidebarActiveIndicator"
+                      className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-l-full"
+                    />
+                  )}
+                  <tab.icon className={`w-5 h-5 ${active ? "text-primary" : ""}`} />
+                  <span className={`text-[9px] font-bold uppercase tracking-widest ${active ? "text-primary" : ""}`}>{tab.label}</span>
                 </button>
               );
             })}
