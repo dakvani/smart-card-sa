@@ -207,13 +207,13 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             {showEditor && (
               <AnimatePresence mode="wait">
                 {customization.inputMethod === 'upload' ? (
-                <motion.div
-                  key="upload-flow"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-4 p-5 bg-card rounded-2xl border border-border"
-                >
+                  <motion.div
+                    key="upload-flow"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="space-y-4 p-5 bg-card rounded-2xl border border-border"
+                  >
                   <div className="flex items-center gap-2 text-primary mb-2">
                     <Info className="w-4 h-4" />
                     <span className="text-xs font-semibold uppercase tracking-wider">Technical Specifications</span>
