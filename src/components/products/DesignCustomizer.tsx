@@ -125,6 +125,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
   };
 
   const isFullCustomization = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card';
+  const showEditor = true; // Always show editor but adjust functionality
+
 
   return (
     <div className="space-y-6">
@@ -200,7 +202,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             </div>
 
 
-            {isFullCustomization && (
+            {isFullCustomization ? (
               <AnimatePresence mode="wait">
               {customization.inputMethod === 'upload' ? (
                 <motion.div
@@ -347,26 +349,35 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       exit={{ opacity: 0, x: activeSide === 'front' ? 20 : -20 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Tabs defaultValue="text" className="w-full">
-                        <TabsList className="grid w-full grid-cols-6 h-12 bg-muted/30 p-1">
-                          <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <User className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="templates" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <Palette className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="colors" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <Sparkles className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="elements" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <Grid3X3 className="w-4 h-4" />
-                          </TabsTrigger>
+                      <Tabs defaultValue={isFullCustomization ? "text" : "link"} className="w-full">
+                        <TabsList className={`grid w-full h-12 bg-muted/30 p-1 ${isFullCustomization ? 'grid-cols-6' : 'grid-cols-3'}`}>
+                          {isFullCustomization && (
+                            <>
+                              <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <User className="w-4 h-4" />
+                              </TabsTrigger>
+                              <TabsTrigger value="templates" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <Palette className="w-4 h-4" />
+                              </TabsTrigger>
+                              <TabsTrigger value="colors" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <Sparkles className="w-4 h-4" />
+                              </TabsTrigger>
+                              <TabsTrigger value="elements" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <Grid3X3 className="w-4 h-4" />
+                              </TabsTrigger>
+                            </>
+                          )}
                           <TabsTrigger value="upload" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Upload className="w-4 h-4" />
                           </TabsTrigger>
                           <TabsTrigger value="link" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Link className="w-4 h-4" />
                           </TabsTrigger>
+                          {!isFullCustomization && (
+                            <TabsTrigger value="info" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                              <Info className="w-4 h-4" />
+                            </TabsTrigger>
+                          )}
                         </TabsList>
 
                         <TabsContent value="text" className="space-y-4 mt-4">
@@ -694,11 +705,31 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                               </div>
                             )}
                           </div>
-                        </TabsContent>
+                        {!isFullCustomization && (
+                          <TabsContent value="info" className="space-y-4 mt-4">
+                            <div className="p-4 bg-muted/20 rounded-xl border border-border/50 space-y-4">
+                              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">Product Info</h4>
+                              <p className="text-xs text-muted-foreground">
+                                This product features the standard SmartCard design. You can upload your logo and link your profile above.
+                              </p>
+                            </div>
+                          </TabsContent>
+                        )}
                       </Tabs>
                     </motion.div>
                   </AnimatePresence>
                 </motion.div>
+              ) : (
+                <div className="p-6 bg-muted/20 rounded-2xl border border-border/40 text-center">
+                   <p className="text-sm text-muted-foreground">This product follows the standard SmartCard layout.</p>
+                   <Button 
+                     variant="outline" 
+                     className="mt-4"
+                     onClick={() => onChange({ ...customization, inputMethod: 'template' })}
+                   >
+                     Customize Links & Logo
+                   </Button>
+                </div>
               )}
             </AnimatePresence>
           </motion.div>
