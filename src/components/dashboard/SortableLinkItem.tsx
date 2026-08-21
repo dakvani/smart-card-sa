@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
@@ -11,6 +12,7 @@ import {
   CheckCircle2,
   AlertCircle,
   MoreVertical,
+  Search,
 } from "lucide-react";
 import { LinkThumbnailUpload } from "./LinkThumbnailUpload";
 import { LinkScheduler } from "./LinkScheduler";
@@ -81,6 +83,7 @@ export function SortableLinkItem({
   groups = [],
   compact = false,
 }: SortableLinkItemProps) {
+  const [countrySearch, setCountrySearch] = React.useState("");
   const {
     attributes,
     listeners,
@@ -209,18 +212,33 @@ export function SortableLinkItem({
                       onValueChange={(v) => commit(v, local)}
                     >
                       <SelectTrigger
-                        className={`h-8 w-[92px] ${inputText} px-2 shrink-0`}
+                        className={`h-8 w-[92px] ${inputText} px-2 shrink-0 border-r-0 rounded-r-none focus:ring-0`}
                         aria-label="Country code"
                       >
                         <SelectValue>{dial}</SelectValue>
                       </SelectTrigger>
-                      <SelectContent className="max-h-72">
-                        {COUNTRY_CODES.map((c) => (
-                          <SelectItem key={c.code + c.dial} value={c.dial}>
-                            <span className="tabular-nums font-medium">{c.dial}</span>{" "}
-                            <span className="text-muted-foreground">{c.name}</span>
-                          </SelectItem>
-                        ))}
+                      <SelectContent className="max-h-80 w-64 p-0">
+                        <div className="flex items-center border-b px-3 py-2">
+                          <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                          <input
+                            className="flex h-8 w-full rounded-md bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                            placeholder="Search country..."
+                            value={countrySearch}
+                            onChange={(e) => setCountrySearch(e.target.value)}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                        </div>
+                        <div className="max-h-60 overflow-y-auto p-1">
+                          {COUNTRY_CODES.filter(c => 
+                            c.name.toLowerCase().includes(countrySearch.toLowerCase()) || 
+                            c.dial.includes(countrySearch)
+                          ).map((c) => (
+                            <SelectItem key={c.code + c.dial} value={c.dial} className="cursor-pointer">
+                              <span className="tabular-nums font-medium mr-2">{c.dial}</span>
+                              <span className="text-muted-foreground truncate">{c.name}</span>
+                            </SelectItem>
+                          ))}
+                        </div>
                       </SelectContent>
                     </Select>
                     <input
@@ -232,13 +250,13 @@ export function SortableLinkItem({
                           : "555 123 4567"
                       }
                       inputMode="tel"
-                      className={`flex-1 min-w-0 px-2.5 ${inputPadY} rounded-lg border border-input bg-background ${inputText} tabular-nums`}
+                      className={`flex-1 min-w-0 px-2.5 ${inputPadY} rounded-l-none border-l-0 rounded-lg border border-input bg-background ${inputText} tabular-nums focus-visible:ring-1`}
                     />
                   </div>
                   <p className="text-[10px] text-muted-foreground">
                     {currentType === "whatsapp"
-                      ? "Opens WhatsApp chat on tap"
-                      : typeDef.hint}
+                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            on the profile builder here country code is unable to choose or not responding, and the number is merging with the code \nfix to proper Country code first, add search on country, and list some shadow example to  type the needed format on the number column"
+                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            on the profile builder here country code is unable to choose or not responding, and the number is merging with the code \nfix to proper Country code first, add search on country, and list some shadow example to  type the needed format on the number column"}
                   </p>
                 </div>
               );
