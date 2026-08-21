@@ -160,7 +160,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
           </motion.div>
         ) : (
           <motion.div
-            key="editor-mode"
+            key="editor-mode-custom"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
