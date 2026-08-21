@@ -97,7 +97,10 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-2xl font-bold">Design Customization</h2>
-          <p className="text-sm text-muted-foreground">Pick a ready-made layout to edit or upload your custom design</p>
+          <p className="text-sm text-muted-foreground">'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            Run a clean production build again to confirm the DesignCustomizer changes compile without errors.</p>
         </div>
         <Button
           type="button"
