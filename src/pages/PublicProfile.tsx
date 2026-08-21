@@ -302,6 +302,18 @@ export default function PublicProfile() {
   // fall back to a generic icon so every button has a visual anchor.
   const renderAutoIcon = (url: string, size = "w-5 h-5", title?: string) => {
     const t = detectLinkType(url, title);
+    const brandLogo = BRAND_LOGOS[t];
+    
+    if (brandLogo) {
+      return (
+        <img 
+          src={brandLogo} 
+          alt={t} 
+          className={`${size} object-contain shrink-0 brightness-0 invert`} 
+        />
+      );
+    }
+
     const def = getLinkTypeDef(t);
     const iconName = def.icon || (t === "website" ? "Globe" : "Link2");
     const Ico =

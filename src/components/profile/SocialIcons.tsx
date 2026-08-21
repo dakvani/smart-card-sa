@@ -1,5 +1,6 @@
 import { Instagram, Twitter, Youtube, Facebook, Linkedin, Github, Globe } from "lucide-react";
 import { motion } from "framer-motion";
+import { BRAND_LOGOS } from "@/lib/brand-logos";
 
 interface SocialLinks {
   instagram?: string;
@@ -41,6 +42,8 @@ export function SocialIcons({ socialLinks }: SocialIconsProps) {
     >
       {activeLinks.map(({ key, icon: Icon, getUrl }) => {
         const value = (socialLinks as Record<string, string>)[key];
+        const brandLogo = BRAND_LOGOS[key];
+
         return (
           <a
             key={key}
@@ -49,7 +52,11 @@ export function SocialIcons({ socialLinks }: SocialIconsProps) {
             rel="noopener noreferrer"
             className="w-10 h-10 rounded-full bg-primary-foreground/20 backdrop-blur flex items-center justify-center hover:bg-primary-foreground/30 hover:scale-110 transition-all"
           >
-            <Icon className="w-5 h-5 text-primary-foreground" />
+            {brandLogo ? (
+              <img src={brandLogo} alt={key} className="w-5 h-5 object-contain brightness-0 invert" />
+            ) : (
+              <Icon className="w-5 h-5 text-primary-foreground" />
+            )}
           </a>
         );
       })}
