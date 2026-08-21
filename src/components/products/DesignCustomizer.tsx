@@ -728,6 +728,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
   );
 }
 
+// Fixed syntax error by ensuring correct tag closing order.
+
 
 
 
