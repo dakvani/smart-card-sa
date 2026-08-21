@@ -125,6 +125,8 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
   };
 
   const isFullCustomization = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card';
+  const showEditor = true;
+
 
 
 
@@ -203,7 +205,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             </div>
 
 
-            {isFullCustomization ? (
+            {showEditor && (
               <AnimatePresence mode="wait">
               {customization.inputMethod === 'upload' ? (
                 <motion.div
@@ -721,21 +723,14 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                     </motion.div>
                   </AnimatePresence>
                 </motion.div>
-              ) : (
-                <div className="p-6 bg-muted/20 rounded-2xl border border-border/40 text-center">
-                   <p className="text-sm text-muted-foreground">This product follows the standard SmartCard layout.</p>
-                   <Button 
-                     variant="outline" 
-                     className="mt-4"
-                     onClick={() => onChange({ ...customization, inputMethod: 'template' })}
-                   >
-                     Customize Links & Logo
-                   </Button>
-                </div>
               )}
-            </motion.div>
-          </>
+            </AnimatePresence>
+          </motion.div>
         )}
+      </AnimatePresence>
+    </div>
+  );
+}
         </AnimatePresence>
       </div>
     );
