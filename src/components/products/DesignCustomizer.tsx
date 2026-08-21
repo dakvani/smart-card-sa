@@ -727,6 +727,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     </div>
   );
 }
+// Verification: Ensures correct closing of all blocks.
 
 
 
