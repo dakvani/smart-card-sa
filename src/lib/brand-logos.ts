@@ -1,33 +1,17 @@
-import xLogo from "@/assets/icons/x.svg.asset.json";
-import instagramLogo from "@/assets/icons/instagram.svg.asset.json";
-import facebookLogo from "@/assets/icons/facebook.svg.asset.json";
-import whatsappLogo from "@/assets/icons/whatsapp.svg.asset.json";
-import youtubeLogo from "@/assets/icons/youtube.svg.asset.json";
-import tiktokLogo from "@/assets/icons/tiktok.svg.asset.json";
-import linkedinLogo from "@/assets/icons/linkedin.svg.asset.json";
-import snapchatLogo from "@/assets/icons/snapchat.svg.asset.json";
-import messengerLogo from "@/assets/icons/messenger.svg.asset.json";
-import githubLogo from "@/assets/icons/github.svg.asset.json";
-import telegramLogo from "@/assets/icons/telegram.svg.asset.json";
-import discordLogo from "@/assets/icons/discord.svg.asset.json";
-import pinterestLogo from "@/assets/icons/pinterest.svg.asset.json";
-import twitchLogo from "@/assets/icons/twitch.svg.asset.json";
-import spotifyLogo from "@/assets/icons/spotify.svg.asset.json";
-
 export const BRAND_LOGOS: Record<string, string> = {
-  twitter: xLogo.url,
-  instagram: instagramLogo.url,
-  facebook: facebookLogo.url,
-  whatsapp: whatsappLogo.url,
-  youtube: youtubeLogo.url,
-  tiktok: tiktokLogo.url,
-  linkedin: linkedinLogo.url,
-  snapchat: snapchatLogo.url,
-  messenger: messengerLogo.url,
-  github: githubLogo.url,
-  telegram: telegramLogo.url,
-  discord: discordLogo.url,
-  pinterest: pinterestLogo.url,
-  twitch: twitchLogo.url,
-  spotify: spotifyLogo.url,
+  twitter: "https://upload.wikimedia.org/wikipedia/commons/5/5a/X_icon_2.svg",
+  instagram: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg",
+  facebook: "https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png",
+  whatsapp: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
+  youtube: "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg",
+  tiktok: "https://upload.wikimedia.org/wikipedia/commons/3/34/Ionicons_logo-tiktok.svg",
+  linkedin: "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png",
+  snapchat: "https://upload.wikimedia.org/wikipedia/en/a/ad/Snapchat_logo.svg",
+  messenger: "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg",
+  github: "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg",
+  telegram: "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
+  discord: "https://upload.wikimedia.org/wikipedia/commons/7/73/Discord_Color_Text_Logo.svg",
+  pinterest: "https://upload.wikimedia.org/wikipedia/commons/0/08/Pinterest-logo.png",
+  twitch: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Twitch_Glitch_Logo_Purple.svg",
+  spotify: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
 };
