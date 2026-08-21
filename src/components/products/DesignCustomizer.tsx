@@ -717,7 +717,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                           </TabsContent>
                         )}
                       </Tabs>
-
                     </motion.div>
                   </AnimatePresence>
                 </motion.div>
