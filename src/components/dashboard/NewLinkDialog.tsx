@@ -27,12 +27,12 @@ export function NewLinkDialog({ onCreate, trigger }: NewLinkDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-md p-0 gap-0">
-        <DialogHeader className="p-4 border-b border-border">
-          <DialogTitle className="text-base">Add a new link</DialogTitle>
+      <DialogContent className="max-w-[500px] p-0 gap-0 bg-[#1A1B1E] border-none text-white shadow-2xl">
+        <DialogHeader className="p-4 border-b border-white/5">
+          <DialogTitle className="text-base font-semibold">Add a new link</DialogTitle>
         </DialogHeader>
-        <div className="p-3 max-h-[70vh] overflow-y-auto">
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+        <div className="p-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+          <div className="grid grid-cols-4 gap-3">
             {LINK_TYPES.map((t) => {
               const brandLogo = BRAND_LOGOS[t.value];
               const Icon = (t.icon && (icons as Record<string, React.ComponentType<{ className?: string }>>)[t.icon]) || icons.Link2;
@@ -41,16 +41,16 @@ export function NewLinkDialog({ onCreate, trigger }: NewLinkDialogProps) {
                 <button
                   key={t.value}
                   onClick={() => handlePick(t.value)}
-                  className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-lg border border-border bg-secondary/40 hover:bg-secondary hover:border-primary/50 transition-colors text-center group"
+                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-[#2C2D31] hover:bg-[#3A3B40] transition-all duration-200 text-center group border-none"
                 >
-                  <div className="w-6 h-6 flex items-center justify-center">
+                  <div className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-full group-hover:scale-110 transition-transform duration-200 overflow-hidden">
                     {brandLogo ? (
-                      <img src={brandLogo} alt={t.label} className="w-5 h-5 object-contain filter brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity" />
+                      <img src={brandLogo} alt={t.label} className="w-7 h-7 object-contain" />
                     ) : (
-                      <Icon className="w-5 h-5 text-primary" />
+                      <Icon className="w-6 h-6 text-white/70" />
                     )}
                   </div>
-                  <span className="text-[11px] leading-tight font-medium text-foreground">
+                  <span className="text-[11px] leading-tight font-medium text-white/80 group-hover:text-white transition-colors">
                     {t.label}
                   </span>
                 </button>
