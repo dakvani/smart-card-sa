@@ -169,6 +169,12 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             exit={{ opacity: 0 }}
             className="space-y-6"
           >
+            key="editor-mode"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="space-y-6"
+          >
           <motion.div
             key="editor-mode"
             initial={{ opacity: 0 }}
