@@ -50,7 +50,7 @@ export function SocialIcons({ socialLinks }: SocialIconsProps) {
             href={getUrl(value)}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-10 h-10 rounded-full bg-primary-foreground/20 backdrop-blur flex items-center justify-center hover:bg-primary-foreground/30 hover:scale-110 transition-all"
+            className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all shadow-lg"
           >
             {brandLogo ? (
               <img src={brandLogo} alt={key} className="w-5 h-5 object-contain brightness-0 invert" />
