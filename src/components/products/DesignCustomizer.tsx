@@ -151,6 +151,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
       </div>
 
       <AnimatePresence mode="wait">
+
         {showPreview ? (
           <motion.div
             key="preview-mode"
