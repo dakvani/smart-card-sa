@@ -169,19 +169,6 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             exit={{ opacity: 0 }}
             className="space-y-6"
           >
-            key="editor-mode"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-6"
-          >
-          <motion.div
-            key="editor-mode"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-6"
-          >
             {/* Stage 1: Design Input Methods */}
             <div className="flex bg-muted/20 p-1 rounded-2xl border border-border/40 shadow-inner">
               <button
