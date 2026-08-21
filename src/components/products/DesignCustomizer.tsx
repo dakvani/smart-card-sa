@@ -720,6 +720,17 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                     </motion.div>
                   </AnimatePresence>
                 </motion.div>
+              ) : (
+                <div className="p-6 bg-muted/20 rounded-2xl border border-border/40 text-center">
+                   <p className="text-sm text-muted-foreground">This product follows the standard SmartCard layout.</p>
+                   <Button 
+                     variant="outline" 
+                     className="mt-4"
+                     onClick={() => onChange({ ...customization, inputMethod: 'template' })}
+                   >
+                     Customize Links & Logo
+                   </Button>
+                </div>
               )}
             </motion.div>
           )}
