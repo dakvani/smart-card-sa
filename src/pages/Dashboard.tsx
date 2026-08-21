@@ -756,9 +756,6 @@ export default function Dashboard() {
                         <span className="hidden sm:inline">Saving…</span>
                       </>
                     )}
-                        <span className="hidden sm:inline">Saving…</span>
-                      </>
-                    )}
                     {saveStatus === "saved" && (
                       <>
                         <Check className="w-3 h-3" />
