@@ -32,6 +32,7 @@ import {
   COUNTRY_CODES,
   type LinkType,
 } from "@/lib/link-types";
+import { BRAND_LOGOS } from "@/lib/brand-logos";
 
 import {
   Select,
@@ -136,12 +137,19 @@ export function SortableLinkItem({
           {(() => {
             const t = detectLinkType(link.url || "", link.title);
             const def = getLinkTypeDef(t);
+            const brandLogo = BRAND_LOGOS[t];
             const Ico =
               (def.icon &&
                 (icons as Record<string, React.ComponentType<{ className?: string }>>)[def.icon]) ||
               icons.Link2;
             const fallback =
-              t !== "custom" ? <Ico className="w-5 h-5" /> : null;
+              t !== "custom" ? (
+                brandLogo ? (
+                  <img src={brandLogo} alt={def.label} className="w-5 h-5 object-contain filter brightness-0 invert" />
+                ) : (
+                  <Ico className="w-5 h-5" />
+                )
+              ) : null;
             return (
               <LinkThumbnailUpload
                 userId={link.user_id}
@@ -256,8 +264,8 @@ export function SortableLinkItem({
                   </div>
                   <p className="text-[10px] text-muted-foreground">
                     {currentType === "whatsapp"
-                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            sorry it has not fixed yet (attached), there is +1 is selected by default, and it is duplicating too, also it is very slow while texting on the number table, fix it please"
-                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            sorry it has not fixed yet (attached), there is +1 is selected by default, and it is duplicating too, also it is very slow while texting on the number table, fix it please"}
+                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            attached pre designed links all are the major platforms, so use the actual logo of each popular platforms and replace twitter with X only but all brand actual logo is mandatory"
+                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            attached pre designed links all are the major platforms, so use the actual logo of each popular platforms and replace twitter with X only but all brand actual logo is mandatory"}
                   </p>
                 </div>
               );

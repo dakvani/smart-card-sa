@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { LINK_TYPES, type LinkType } from "@/lib/link-types";
 import { icons } from "lucide-react";
+import { BRAND_LOGOS } from "@/lib/brand-logos";
+
 
 interface NewLinkDialogProps {
   onCreate: (type: LinkType) => void;
@@ -32,14 +34,22 @@ export function NewLinkDialog({ onCreate, trigger }: NewLinkDialogProps) {
         <div className="p-3 max-h-[70vh] overflow-y-auto">
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
             {LINK_TYPES.map((t) => {
+              const brandLogo = BRAND_LOGOS[t.value];
               const Icon = (t.icon && (icons as Record<string, React.ComponentType<{ className?: string }>>)[t.icon]) || icons.Link2;
+              
               return (
                 <button
                   key={t.value}
                   onClick={() => handlePick(t.value)}
-                  className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-lg border border-border bg-secondary/40 hover:bg-secondary hover:border-primary/50 transition-colors text-center"
+                  className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-lg border border-border bg-secondary/40 hover:bg-secondary hover:border-primary/50 transition-colors text-center group"
                 >
-                  <Icon className="w-5 h-5 text-primary" />
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    {brandLogo ? (
+                      <img src={brandLogo} alt={t.label} className="w-5 h-5 object-contain filter brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity" />
+                    ) : (
+                      <Icon className="w-5 h-5 text-primary" />
+                    )}
+                  </div>
                   <span className="text-[11px] leading-tight font-medium text-foreground">
                     {t.label}
                   </span>
