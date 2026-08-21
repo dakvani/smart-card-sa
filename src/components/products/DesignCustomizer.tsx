@@ -720,8 +720,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                   </AnimatePresence>
                 </motion.div>
               )}
-              </AnimatePresence>
-            )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
