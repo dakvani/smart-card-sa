@@ -145,7 +145,7 @@ export function SortableLinkItem({
             const fallback =
               t !== "custom" ? (
                 brandLogo ? (
-                  <img src={brandLogo} alt={def.label} className="w-5 h-5 object-contain filter brightness-0 invert" />
+                  <img src={brandLogo} alt={def.label} className="w-5 h-5 object-contain" />
                 ) : (
                   <Ico className="w-5 h-5" />
                 )
@@ -264,8 +264,8 @@ export function SortableLinkItem({
                   </div>
                   <p className="text-[10px] text-muted-foreground">
                     {currentType === "whatsapp"
-                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            attached pre designed links all are the major platforms, so use the actual logo of each popular platforms and replace twitter with X only but all brand actual logo is mandatory"
-                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            attached pre designed links all are the major platforms, so use the actual logo of each popular platforms and replace twitter with X only but all brand actual logo is mandatory"}
+                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            update as attached in the field of add new link and update already created links too even published users"
+                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            update as attached in the field of add new link and update already created links too even published users"}
                   </p>
                 </div>
               );

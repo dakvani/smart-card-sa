@@ -14,4 +14,6 @@ export const BRAND_LOGOS: Record<string, string> = {
   pinterest: "https://upload.wikimedia.org/wikipedia/commons/0/08/Pinterest-logo.png",
   twitch: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Twitch_Glitch_Logo_Purple.svg",
   spotify: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
+  reddit: "https://upload.wikimedia.org/wikipedia/commons/5/58/Reddit_logo_new.svg",
+  website: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Globe_icon.svg",
 };
