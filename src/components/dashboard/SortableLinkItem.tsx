@@ -264,8 +264,8 @@ export function SortableLinkItem({
                   </div>
                   <p className="text-[10px] text-muted-foreground whitespace-pre-line">
                     {currentType === "whatsapp"
-                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            appearance section inside allowed maximum 4 only. so the appearance change to a type of dropdown option, once all 4 is done then not allowed 5th one"
-                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            appearance section inside allowed maximum 4 only. so the appearance change to a type of dropdown option, once all 4 is done then not allowed 5th one"}
+                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Enforce that the Appearance section supports only four theme options and prevent selecting a fifth option."
+                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Enforce that the Appearance section supports only four theme options and prevent selecting a fifth option."}
                   </p>
                 </div>
               );
