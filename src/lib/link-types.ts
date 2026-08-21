@@ -261,6 +261,7 @@ export function splitPhone(raw: string): { dial: string; local: string } {
 /** Pretty-format the "local" portion — grouping digits without changing meaning. */
 export function formatLocalPhone(local: string): string {
   const digits = (local || "").replace(/\D/g, "");
+  if (!digits) return "";
   if (digits.length <= 3) return digits;
   if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
   if (digits.length <= 10) return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
