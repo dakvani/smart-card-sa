@@ -18,6 +18,7 @@ interface DesignCustomizerProps {
   onChange: (customization: DesignCustomization) => void;
 }
 
+/** Design Customizer Component */
 export function DesignCustomizer({ product, customization, onChange }: DesignCustomizerProps) {
   const { toast } = useToast();
   const [profiles, setProfiles] = useState<Array<{ id: string; username: string; title: string | null }>>([]);
