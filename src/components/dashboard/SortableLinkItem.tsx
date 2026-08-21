@@ -175,27 +175,23 @@ export function SortableLinkItem({
 
             // Phone & WhatsApp get a dedicated country-code + local number editor.
             if (currentType === "phone" || currentType === "whatsapp") {
-              const rawForSplit =
-                currentType === "whatsapp"
-                  ? (() => {
-                      const m = (link.url || "").match(/wa\.me\/(\+?[\d]+)/i);
-                      return m ? `+${m[1].replace(/^\+/, "")}` : "";
-                    })()
-                  : link.url || "";
-              const { dial, local } = splitPhone(rawForSplit);
+              const { dial, local } = splitPhone(link.url || "");
+              
               const commit = (nextDial: string, nextLocal: string) => {
                 const digits = nextLocal.replace(/\D/g, "");
-                if (!digits) {
+                if (!digits && !nextDial) {
                   onUpdate(link.id, { url: "" });
                   return;
                 }
+                
+                const dialDigits = nextDial.replace(/^\+/, "");
                 if (currentType === "whatsapp") {
-                  const full = `${nextDial}${digits}`.replace(/^\+/, "");
-                  onUpdate(link.id, { url: `https://wa.me/${full}` });
+                  onUpdate(link.id, { url: `https://wa.me/${dialDigits}${digits}` });
                 } else {
-                  onUpdate(link.id, { url: `tel:${nextDial}${digits}` });
+                  onUpdate(link.id, { url: `tel:+${dialDigits}${digits}` });
                 }
               };
+
               return (
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
@@ -208,14 +204,16 @@ export function SortableLinkItem({
                   </div>
                   <div className="flex gap-1.5">
                     <Select
-                      value={dial}
-                      onValueChange={(v) => commit(v, local)}
+                      value={dial || "none"}
+                      onValueChange={(v) => commit(v === "none" ? "" : v, local)}
                     >
                       <SelectTrigger
                         className={`h-8 w-[92px] ${inputText} px-2 shrink-0 border-r-0 rounded-r-none focus:ring-0`}
                         aria-label="Country code"
                       >
-                        <SelectValue>{dial}</SelectValue>
+                        <SelectValue placeholder="Code">
+                          {dial || <span className="text-muted-foreground">Code</span>}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent className="max-h-80 w-64 p-0">
                         <div className="flex items-center border-b px-3 py-2">
@@ -229,6 +227,9 @@ export function SortableLinkItem({
                           />
                         </div>
                         <div className="max-h-60 overflow-y-auto p-1">
+                          <SelectItem value="none" className="cursor-pointer text-muted-foreground">
+                            None
+                          </SelectItem>
                           {COUNTRY_CODES.filter(c => 
                             c.name.toLowerCase().includes(countrySearch.toLowerCase()) || 
                             c.dial.includes(countrySearch)
@@ -242,8 +243,8 @@ export function SortableLinkItem({
                       </SelectContent>
                     </Select>
                     <input
-                      value={formatLocalPhone(local)}
-                      onChange={(e) => commit(dial, e.target.value)}
+                      defaultValue={formatLocalPhone(local)}
+                      onBlur={(e) => commit(dial, e.target.value)}
                       placeholder={
                         currentType === "whatsapp"
                           ? "WhatsApp number"
@@ -255,8 +256,8 @@ export function SortableLinkItem({
                   </div>
                   <p className="text-[10px] text-muted-foreground">
                     {currentType === "whatsapp"
-                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            on the profile builder here country code is unable to choose or not responding, and the number is merging with the code \nfix to proper Country code first, add search on country, and list some shadow example to  type the needed format on the number column"
-                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            on the profile builder here country code is unable to choose or not responding, and the number is merging with the code \nfix to proper Country code first, add search on country, and list some shadow example to  type the needed format on the number column"}
+                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            sorry it has not fixed yet (attached), there is +1 is selected by default, and it is duplicating too, also it is very slow while texting on the number table, fix it please"
+                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            sorry it has not fixed yet (attached), there is +1 is selected by default, and it is duplicating too, also it is very slow while texting on the number table, fix it please"}
                   </p>
                 </div>
               );

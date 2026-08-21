@@ -229,16 +229,33 @@ export const COUNTRY_CODES: { code: string; name: string; dial: string }[] = [
 ];
 
 export function splitPhone(raw: string): { dial: string; local: string } {
-  const v = (raw || "").replace(/^tel:/i, "").trim();
-  if (!v) return { dial: "+1", local: "" };
+  let v = (raw || "").trim();
+  // Handle tel: or WhatsApp URLs
+  if (v.startsWith("tel:")) {
+    v = v.replace(/^tel:/i, "");
+  } else if (v.includes("wa.me/")) {
+    const m = v.match(/wa\.me\/(\+?[\d]+)/i);
+    v = m ? (m[1].startsWith("+") ? m[1] : "+" + m[1]) : v;
+  }
+
+  if (!v) return { dial: "", local: "" };
+
+  // Sort country codes by dial length descending to match longest code first (e.g. +971 before +9)
+  const sortedCodes = [...COUNTRY_CODES].sort((a, b) => b.dial.length - a.dial.length);
+  
+  for (const c of sortedCodes) {
+    if (v.startsWith(c.dial)) {
+      return { dial: c.dial, local: v.slice(c.dial.length).trim() };
+    }
+  }
+
+  // Fallback for codes not in our list
   const match = v.match(/^(\+\d{1,4})[\s.-]*(.*)$/);
   if (match) {
-    const dial = match[1];
-    // Prefer the exact match from our list; else fall back to the parsed code.
-    const known = COUNTRY_CODES.find((c) => c.dial === dial);
-    return { dial: known ? known.dial : dial, local: match[2] };
+    return { dial: match[1], local: match[2] };
   }
-  return { dial: "+1", local: v };
+  
+  return { dial: "", local: v };
 }
 
 /** Pretty-format the "local" portion — grouping digits without changing meaning. */
