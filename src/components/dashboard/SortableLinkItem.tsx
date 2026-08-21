@@ -264,8 +264,8 @@ export function SortableLinkItem({
                   </div>
                   <p className="text-[10px] text-muted-foreground whitespace-pre-line">
                     {currentType === "whatsapp"
-                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            i didn't understand"
-                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            i didn't understand"}
+                      ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            update the SmartCard\n\nMVP Product & Technical Handbook"
+                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            update the SmartCard\n\nMVP Product & Technical Handbook"}
                   </p>
                 </div>
               );
