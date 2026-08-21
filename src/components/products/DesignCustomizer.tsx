@@ -718,15 +718,16 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       </Tabs>
                     </motion.div>
                   </AnimatePresence>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         )}
       </AnimatePresence>
     </div>
   );
 }
+
 
 
 
