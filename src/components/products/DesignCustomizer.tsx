@@ -202,7 +202,7 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
             </div>
 
 
-            {isFullCustomization && (
+            {isFullCustomization ? (
               <AnimatePresence mode="wait">
               {customization.inputMethod === 'upload' ? (
                 <motion.div
@@ -349,26 +349,35 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       exit={{ opacity: 0, x: activeSide === 'front' ? 20 : -20 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Tabs defaultValue="text" className="w-full">
-                        <TabsList className="grid w-full grid-cols-6 h-12 bg-muted/30 p-1">
-                          <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <User className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="templates" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <Palette className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="colors" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <Sparkles className="w-4 h-4" />
-                          </TabsTrigger>
-                          <TabsTrigger value="elements" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
-                            <Grid3X3 className="w-4 h-4" />
-                          </TabsTrigger>
+                      <Tabs defaultValue={isFullCustomization ? "text" : "link"} className="w-full">
+                        <TabsList className={`grid w-full h-12 bg-muted/30 p-1 ${isFullCustomization ? 'grid-cols-6' : 'grid-cols-3'}`}>
+                          {isFullCustomization && (
+                            <>
+                              <TabsTrigger value="text" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <User className="w-4 h-4" />
+                              </TabsTrigger>
+                              <TabsTrigger value="templates" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <Palette className="w-4 h-4" />
+                              </TabsTrigger>
+                              <TabsTrigger value="colors" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <Sparkles className="w-4 h-4" />
+                              </TabsTrigger>
+                              <TabsTrigger value="elements" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                                <Grid3X3 className="w-4 h-4" />
+                              </TabsTrigger>
+                            </>
+                          )}
                           <TabsTrigger value="upload" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Upload className="w-4 h-4" />
                           </TabsTrigger>
                           <TabsTrigger value="link" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
                             <Link className="w-4 h-4" />
                           </TabsTrigger>
+                          {!isFullCustomization && (
+                            <TabsTrigger value="info" className="data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground">
+                              <Info className="w-4 h-4" />
+                            </TabsTrigger>
+                          )}
                         </TabsList>
 
                         <TabsContent value="text" className="space-y-4 mt-4">
