@@ -90,7 +90,9 @@ const tabs = [
   { id: "appearance", label: "Appearance", icon: Palette },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "settings", label: "Settings", icon: SettingsIcon },
-];
+] as const;
+
+type TabId = (typeof tabs)[number]["id"];
 
 const presetThemes = [
   { name: "Midnight", gradient: "from-indigo-900 via-purple-900 to-pink-900" },
