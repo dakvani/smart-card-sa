@@ -265,7 +265,7 @@ export function SortableLinkItem({
                   <p className="text-[10px] text-muted-foreground">
                     {currentType === "whatsapp"
                       ? "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Update all already published users’ links to show the new brand logos immediately without requiring manual edits."
-                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Update all already published users’ links to show the new brand logos immediately without requiring manual edits."
+                      : "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Update all already published users’ links to show the new brand logos immediately without requiring manual edits."}
                   </p>
                 </div>
               );
