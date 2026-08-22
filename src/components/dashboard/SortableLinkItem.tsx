@@ -264,7 +264,7 @@ export function SortableLinkItem({
                   </div>
                 </div>
               );
-              );
+            }
             }
 
             // Everything else: single input, prefixed with a small type badge.
