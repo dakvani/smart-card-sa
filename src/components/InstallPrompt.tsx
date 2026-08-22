@@ -36,8 +36,8 @@ export function InstallPrompt() {
   useEffect(() => {
     if (!visible) return;
     const measure = () => {
-      // Find the mobile bottom nav used in SmartLinkBio
-      const nav = document.querySelector<HTMLElement>(".fixed.bottom-0.inset-x-0.z-40");
+      // Find the mobile bottom nav used in SmartLinkBio via the data attribute
+      const nav = document.querySelector<HTMLElement>("[data-bottom-nav]");
       
       // If bottom nav is present and visible (not hidden via md:hidden)
       const isVisible = nav && getComputedStyle(nav).display !== "none";
