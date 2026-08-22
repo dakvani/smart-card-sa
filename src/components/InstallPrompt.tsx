@@ -36,14 +36,16 @@ export function InstallPrompt() {
   useEffect(() => {
     if (!visible) return;
     const measure = () => {
-      const nav = document.querySelector<HTMLElement>("[data-bottom-nav]");
-      // If bottom nav is present and visible, we offset.
-      // On mobile, the SmartLinkBio tabs have fixed bottom-0 and z-40.
-      const h = nav && getComputedStyle(nav).display !== "none" ? nav.offsetHeight : 0;
+      // Find the mobile bottom nav used in SmartLinkBio
+      const nav = document.querySelector<HTMLElement>(".fixed.bottom-0.inset-x-0.z-40");
+      
+      // If bottom nav is present and visible (not hidden via md:hidden)
+      const isVisible = nav && getComputedStyle(nav).display !== "none";
+      const h = isVisible ? nav.offsetHeight : 0;
       
       // If we are on mobile and have a bottom nav, we need to push it up further
       // so it doesn't overlap the tabs which are at the very bottom.
-      const extraGap = h > 0 ? 8 : 0;
+      const extraGap = h > 0 ? 12 : 0;
       setBottomOffset(h + 16 + extraGap);
     };
     measure();
