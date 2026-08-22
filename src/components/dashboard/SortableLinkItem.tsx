@@ -261,6 +261,9 @@ export function SortableLinkItem({
                       inputMode="tel"
                       className={`flex-1 min-w-0 px-2.5 ${inputPadY} rounded-l-none border-l-0 rounded-lg border border-input bg-background ${inputText} tabular-nums focus-visible:ring-1`}
                     />
+                  </div>
+                </div>
+              );
               );
             }
 
