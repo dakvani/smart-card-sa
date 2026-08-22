@@ -105,7 +105,7 @@ export function InstallPrompt() {
       role="dialog"
       aria-label="Install SmartCard app"
       style={{ bottom: `calc(${bottomOffset}px + env(safe-area-inset-bottom, 0px))` }}
-      className="fixed inset-x-4 sm:left-auto sm:right-4 sm:w-[360px] z-[60]
+      className="fixed inset-x-4 sm:left-auto sm:right-4 sm:w-[360px] z-[60] bottom-[calc(env(safe-area-inset-bottom,0px)+80px)] md:bottom-4
                  rounded-2xl border border-border/60 bg-popover/95 backdrop-blur-xl
                  shadow-2xl p-3 flex items-start gap-3"
     >

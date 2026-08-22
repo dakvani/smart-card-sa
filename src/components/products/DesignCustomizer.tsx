@@ -90,17 +90,14 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
     toast({ title: "Profile linked", description: `Linked to @${username}` });
   };
 
-  const isFullCustomization = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card';
+  const isFullCustomization = true; // All products are now customizable per request
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-2xl font-bold">Design Customization</h2>
-          <p className="text-sm text-muted-foreground">'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                        
-                                            
-                                            Run a clean production build again to confirm the DesignCustomizer changes compile without errors.</p>
+          <p className="text-sm text-muted-foreground">Pick a ready-made layout to edit or upload your custom design.</p>
         </div>
         <Button
           type="button"
@@ -202,53 +199,137 @@ export function DesignCustomizer({ product, customization, onChange }: DesignCus
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="templates" className="grid grid-cols-2 gap-3 mt-4">
-                      {designTemplates
-                        .filter(t => t.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                        .map((template) => (
-                          <button
-                            key={template.id}
-                            onClick={() => handleTemplateSelect(template.id)}
-                            className={`group relative aspect-[1.58/1] overflow-hidden rounded-xl border-2 transition-all ${customization.templateId === template.id ? "border-primary" : "border-transparent"}`}
-                          >
-                            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundColor: template.colors.bg }} />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <span className="text-white text-[10px] font-bold">Use Template</span>
-                            </div>
-                          </button>
-                        ))}
+                    <TabsContent value="templates" className="space-y-4 mt-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        {designTemplates
+                          .filter(t => t.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                          .map((template) => (
+                            <button
+                              key={template.id}
+                              onClick={() => handleTemplateSelect(template.id)}
+                              className={`group relative aspect-[1.58/1] overflow-hidden rounded-xl border-2 transition-all ${customization.templateId === template.id ? "border-primary" : "border-transparent"}`}
+                            >
+                              <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundColor: template.colors.bg }} />
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span className="text-white text-[10px] font-bold">Use Template</span>
+                              </div>
+                            </button>
+                          ))}
+                      </div>
                     </TabsContent>
 
-                    <TabsContent value="colors" className="grid grid-cols-3 gap-4 mt-4">
-                      <div className="space-y-2">
-                        <Label>Background</Label>
-                        <Input type="color" value={currentSide.backgroundColor} onChange={(e) => updateSide("backgroundColor", e.target.value)} className="h-10 p-1" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Text</Label>
-                        <Input type="color" value={currentSide.textColor} onChange={(e) => updateSide("textColor", e.target.value)} className="h-10 p-1" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Accent</Label>
-                        <Input type="color" value={currentSide.accentColor} onChange={(e) => updateSide("accentColor", e.target.value)} className="h-10 p-1" />
+                    <TabsContent value="colors" className="space-y-4 mt-4">
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <Label>Background</Label>
+                          <Input type="color" value={currentSide.backgroundColor} onChange={(e) => updateSide("backgroundColor", e.target.value)} className="h-10 p-1" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Text</Label>
+                          <Input type="color" value={currentSide.textColor} onChange={(e) => updateSide("textColor", e.target.value)} className="h-10 p-1" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Accent</Label>
+                          <Input type="color" value={currentSide.accentColor} onChange={(e) => updateSide("accentColor", e.target.value)} className="h-10 p-1" />
+                        </div>
                       </div>
                     </TabsContent>
 
                     <TabsContent value="elements" className="space-y-6 mt-4">
-                      <div className="flex items-center justify-between p-4 bg-muted rounded-xl">
-                        <div className="flex items-center gap-3">
-                          <QrCode className="w-5 h-5 text-primary" />
-                          <Label>Show QR Code</Label>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between p-4 bg-muted rounded-xl">
+                          <div className="flex items-center gap-3">
+                            <QrCode className="w-5 h-5 text-primary" />
+                            <Label>Show QR Code</Label>
+                          </div>
+                          <Switch checked={currentSide.showQRCode} onCheckedChange={(checked) => updateSide("showQRCode", checked)} />
                         </div>
-                        <Switch checked={currentSide.showQRCode} onCheckedChange={(checked) => updateSide("showQRCode", checked)} />
+
+                        <div className="space-y-4">
+                          <Label>Background Pattern</Label>
+                          <div className="grid grid-cols-3 gap-2">
+                            {patternOptions.map((opt) => (
+                              <Button
+                                key={opt.id}
+                                variant={currentSide.pattern === opt.id ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => updateSide("pattern", opt.id)}
+                                className="text-[10px]"
+                              >
+                                {opt.name}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <Label>Border Style</Label>
+                          <div className="grid grid-cols-3 gap-2">
+                            {borderOptions.map((opt) => (
+                              <Button
+                                key={opt.id}
+                                variant={currentSide.borderStyle === opt.id ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => updateSide("borderStyle", opt.id)}
+                                className="text-[10px]"
+                              >
+                                {opt.name}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <Label>Decorative Icon</Label>
+                          <div className="grid grid-cols-5 gap-2">
+                            {iconOptions.map((opt) => (
+                              <Button
+                                key={opt.id || 'none'}
+                                variant={currentSide.icon === opt.id ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => updateSide("icon", opt.id)}
+                                className="text-lg"
+                                title={opt.name}
+                              >
+                                {opt.icon}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="upload" className="space-y-4 mt-4">
-                      <div className="space-y-2">
-                        <Label>Upload Logo</Label>
-                        <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'logoUrl')} />
-                        {currentSide.logoUrl && <p className="text-xs text-green-600">✓ Logo uploaded</p>}
+                    <TabsContent value="upload" className="space-y-6 mt-4">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label>Logo</Label>
+                          <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'logoUrl')} />
+                          {currentSide.logoUrl && <p className="text-xs text-green-600">✓ Logo uploaded</p>}
+                        </div>
+
+                        <div className="space-y-2 border-t pt-4">
+                          <Label>Custom Artwork</Label>
+                          <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'customArtworkUrl')} />
+                          {currentSide.customArtworkUrl && <p className="text-xs text-green-600">✓ Artwork uploaded</p>}
+                        </div>
+
+                        <div className="space-y-2 border-t pt-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Sparkles className="w-4 h-4 text-primary" />
+                            <Label>Import from Canva</Label>
+                          </div>
+                          <div className="flex gap-2">
+                            <Input
+                              placeholder="Paste Canva share link"
+                              value={canvaUrl}
+                              onChange={(e) => setCanvaUrl(e.target.value)}
+                            />
+                            <Button onClick={handleCanvaImport} variant="outline">Import</Button>
+                          </div>
+                          <p className="text-[10px] text-muted-foreground">
+                            Use Canva to design and paste the "Share" link here.
+                          </p>
+                        </div>
                       </div>
                     </TabsContent>
 
