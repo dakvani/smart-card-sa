@@ -262,6 +262,30 @@ export function SortableLinkItem({
                       className={`flex-1 min-w-0 px-2.5 ${inputPadY} rounded-l-none border-l-0 rounded-lg border border-input bg-background ${inputText} tabular-nums focus-visible:ring-1`}
                     />
                   </div>
+                  <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed px-1">
+                    '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            For the code present, I get the error below.
+
+Please think step-by-step in order to resolve it.
+```
+src/components/dashboard/SortableLinkItem.tsx(113,6): error TS17008: JSX element 'motion.div' has no corresponding closing tag.
+src/components/dashboard/SortableLinkItem.tsx(125,8): error TS17008: JSX element 'div' has no corresponding closing tag.
+src/components/dashboard/SortableLinkItem.tsx(265,13): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/dashboard/SortableLinkItem.tsx(273,43): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/dashboard/SortableLinkItem.tsx(274,15): error TS1109: Expression expected.
+src/components/dashboard/SortableLinkItem.tsx(277,38): error TS1005: '}' expected.
+src/components/dashboard/SortableLinkItem.tsx(277,48): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/dashboard/SortableLinkItem.tsx(278,13): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/dashboard/SortableLinkItem.tsx(342,11): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/dashboard/SortableLinkItem.tsx(342,15): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/dashboard/SortableLinkItem.tsx(481,5): error TS1005: ')' expected.
+src/components/dashboard/SortableLinkItem.tsx(481,7): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/components/dashboard/SortableLinkItem.tsx(483,1): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/dashboard/SortableLinkItem.tsx(484,1): error TS1005: '</' expected.
+```
+                  </p>
                 </div>
               );
             }
