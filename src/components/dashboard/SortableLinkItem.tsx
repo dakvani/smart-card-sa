@@ -266,25 +266,23 @@ export function SortableLinkItem({
                     {`'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''`}
                                         
                                             
-                                            {`For the code present, I get the error below.`}
+                                            {`Try to fix these 2 Project monitoring findings:`}
 
-{`Please think step-by-step in order to resolve it.`}
-{`
-src/components/dashboard/SortableLinkItem.tsx(113,6): error TS17008: JSX element 'motion.div' has no corresponding closing tag.
-src/components/dashboard/SortableLinkItem.tsx(125,8): error TS17008: JSX element 'div' has no corresponding closing tag.
-src/components/dashboard/SortableLinkItem.tsx(265,13): error TS1381: Unexpected token. Did you mean {'}'} or &rbrace;?
-src/components/dashboard/SortableLinkItem.tsx(273,43): error TS1382: Unexpected token. Did you mean {'>'} or &gt;?
-src/components/dashboard/SortableLinkItem.tsx(274,15): error TS1109: Expression expected.
-src/components/dashboard/SortableLinkItem.tsx(277,38): error TS1005: '}' expected.
-src/components/dashboard/SortableLinkItem.tsx(277,48): error TS1381: Unexpected token. Did you mean {'}'} or &rbrace;?
-src/components/dashboard/SortableLinkItem.tsx(278,13): error TS1381: Unexpected token. Did you mean {'}'} or &rbrace;?
-src/components/dashboard/SortableLinkItem.tsx(342,11): error TS1381: Unexpected token. Did you mean {'}'} or &rbrace;?
-src/components/dashboard/SortableLinkItem.tsx(342,15): error TS1381: Unexpected token. Did you mean {'}'} or &rbrace;?
-src/components/dashboard/SortableLinkItem.tsx(481,5): error TS1005: ')' expected.
-src/components/dashboard/SortableLinkItem.tsx(481,7): error TS17002: Expected corresponding JSX closing tag for 'div'.
-src/components/dashboard/SortableLinkItem.tsx(483,1): error TS1381: Unexpected token. Did you mean {'}'} or &rbrace;?
-src/components/dashboard/SortableLinkItem.tsx(484,1): error TS1005: '</' expected.
-`}
+{`1. Most NFC products can no longer be customized
+Summary: Shoppers who pick the phone sticker, NFC sticker, keychain, or social‑tag product on the NFC Products page now see a "No Customization Available" placeholder instead of the design editor, so they can't upload a logo, pick colors, choose a template, or link a profile before ordering — even though each of those product descriptions still promises "custom design" and "logo upload."
+Severity: high
+Source: qa
+Affected paths: src/components/products/DesignCustomizer.tsx, src/components/products/types.ts, src/pages/NFCProducts.tsx
+Code range: e60ea09c40e1586cb7028a508143ac43550fca75..9c31911d4f8cf734b2cc70877cf15288acac24a0
+Evidence: In src/components/products/DesignCustomizer.tsx the component now hard‑codes const isCustomizable = product.id === 'smartcard-nfc-card' || product.id === 'smartcard-review-card'; and, when false, early‑returns a static "No Customization Available" panel (lines ~127‑140). Four of the six products defined in src/components/products/types.ts (smartcard-phone-sticker, smartcard-nfc-sticker, smartcard-keychain, smartcard-social-tag) — all of which have descriptions like "Upload your custom logo" — fall into this branch, so the entire tabs UI (Templates, Colors, Text, Elements, Upload, Link) never renders for them. src/pages/NFCProducts.tsx still routes users into the customize step and only exposes Back/Add to Cart/Checkout underneath, meaning the item is added to the cart with only defaultCustomization values and no way to edit them.
+
+2. Install banner blocks SmartLink Bio bottom tabs on iPhone
+Summary: On iPhones, an "Install SmartCard" banner pops up over the SmartLink Bio page and completely covers the mobile Home/Studio/Themes tabs at the bottom, so visitors can't switch between the page's main sections until they close the banner.
+Severity: medium
+Source: qa
+Affected paths: src/components/InstallPrompt.tsx, src/App.tsx, src/pages/SmartLinkBio.tsx
+Code range: 0cebcc1a491f10a61f3340d338a55561ef025b67..d0204b0d2f766882149f749a2a5a9db01ec351a1
+Evidence: InstallPrompt is mounted globally in src/App.tsx and, on iOS Safari, unconditionally calls setVisible(true) 2.5s after mount (no user gesture required). Its container uses fixed bottom-4 inset-x-4 ... z-50 on mobile (src/components/InstallPrompt.tsx). src/pages/SmartLinkBio.tsx line 627–659 renders a mobile-only bottom navigation with md:hidden fixed bottom-0 inset-x-0 z-40 containing the primary section tabs (Home / Studio / Themes) — the single-screen navigation for that page. Since the install prompt has a higher z-index, wider bounds, and sits ~16px above the bottom edge, its ~90px card fully overlaps the 52px-tall tab bar on iPhone widths, intercepting taps on all three tabs until the user dismisses the banner. Note also that the prompt appears on every route (including /:username public profile pages recipients land on after tapping an NFC card).`}
                   </p>
                 </div>
               );
