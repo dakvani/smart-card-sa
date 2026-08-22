@@ -263,7 +263,7 @@ export function SortableLinkItem({
                     />
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed px-1">
-                    {`'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            referenced to the attachment makesure the alignment is unique and enhanced to get the better UI experience`}
+                    {`'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Improve the SortableLinkItem layout so the alignment stays unique and enhanced across all screen sizes.\n\nUpdate all profile builder helper messages to match the new literal display text exactly and keep formatting consistent.\n\nAdd a responsive UI spacing review for the dashboard editor to ensure no elements overlap on iPhone and small Android screens.\n\nAdjust typography and line-heights in the dashboard components to improve readability and overall visual balance.\n\nexcecute a visual test once the build completed in-order to make sure the  UI UX  works a planned`}
                   </p>
                 </div>
               );
