@@ -265,7 +265,6 @@ export function SortableLinkItem({
                 </div>
               );
             }
-            }
 
             // Everything else: single input, prefixed with a small type badge.
             const isSocialOrContact =
